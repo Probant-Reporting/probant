@@ -106,7 +106,12 @@ class VersionToutEnUnTests(SimpleTestCase):
         t = texte("portable.yml")
         self.assertRegex(t, r"release:\n\s+types: \[published\]")
         self.assertIn("workflow_dispatch:", t)
-        self.assertIn('gh release upload "$TAG" probant-windows.zip probant-mac.zip --clobber', t)
+        # chaque archive est fabriquée et essayée sur son système (Windows, Mac), puis jointe à la release
+        for archive in ("probant-windows.zip", "probant-mac.zip"):
+            self.assertIn(f'gh release upload "$TAG" {archive} --clobber', t)
+        self.assertRegex(t, r"(?m)^  windows:\n    runs-on: windows-latest$")
+        self.assertRegex(t, r"(?m)^  mac:\n    runs-on: macos-latest$")
+        self.assertIn("zip -r -y", t, "archive Mac : liens et droits d'exécution gardés")
         # dossiers fabriqués par build_package.py, mis dans les archives
         recette = (RACINE / "portable" / "build_package.py").read_text(encoding="utf-8")
         for dossier in ("Probant-windows", "Probant-mac"):
