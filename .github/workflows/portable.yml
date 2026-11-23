@@ -52,7 +52,8 @@ jobs:
           fetch() { # fetch <file name> <sha256> <folder>
             curl -sSfL -o "$RUNNER_TEMP/$1" "$PBS/$1"
             echo "$2  $RUNNER_TEMP/$1" | sha256sum -c -
-            tar -xz -f "$RUNNER_TEMP/$1" -C "$3"
+            # read from standard input: on Windows the path starts with "D:", which tar takes for a remote machine
+            tar -xz -C "$3" < "$RUNNER_TEMP/$1"
           }
           fetch "cpython-3.12.10+20250409-x86_64-pc-windows-msvc-install_only_stripped.tar.gz" 08670ab68f041481b8127b2ea27e01ddf56131e61fcf845f489024fddcd3deec runtimes/win
           fetch "cpython-3.12.10+20250409-aarch64-apple-darwin-install_only_stripped.tar.gz" 0be1fe0b35a4d3c382141764ef16ed3b8cc2b4620b657f678daa7b7f8df39699 runtimes/mac-arm
