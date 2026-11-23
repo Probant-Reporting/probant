@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "cadre.compte.titre" %}{% endblock %}
+{% block contenu %}
+<div class="page-compte">
+  <div class="carte carte-moi">
+    {% avatar user %}
+    <div><h1>{{ user }}</h1>
+      <p class="discret">{{ user.email }} · <span class="role role-{{ user.role }}">{{ user|choix:"role" }}</span>{% if user.equipe %} · {{ user.equipe }}{% endif %}</p></div>
+  </div>
+  {% if user.est_admin and not user.doit_changer_mdp %}
+  <section class="carte raccourcis-compte" aria-labelledby="titre-raccourcis">
+    <h2 id="titre-raccourcis">{% libelle "cadre.compte.raccourcis.titre" %}</h2>
+    <p><a class="bouton secondaire" href="{% url 'parametres:referentiel_nouveau' %}">{% icone "plus" %} {% libelle "cadre.compte.raccourcis.ajouter_referentiel" %}</a></p>
+    <p class="aide-champ">{% libelle "cadre.compte.raccourcis.aide" %}</p>
+  </section>
+  {% endif %}
+  {% if user.doit_changer_mdp %}
+  {% encart "info" %}{% libelle_html "cadre.compte.bienvenue" %}{% endencart %}
+  {% endif %}
+  {% if langues|length > 1 and not user.doit_changer_mdp %}
+  <form method="post" class="carte formulaire-mdp">
+    {% csrf_token %}<input type="hidden" name="action" value="langue">
+    <h2>{% libelle "cadre.compte.langue.titre" %}</h2>
+    <div class="champ"><label for="langue">{% libelle "cadre.compte.langue.champ" %}</label>
+      <select name="langue" id="langue" aria-describedby="aide-langue">
+        <option value="" {% if not user.langue %}selected{% endif %}>{% libelle "cadre.compte.langue.installation" nom=langue_defaut %}</option>
+        {% for code, nom in langues %}<option value="{{ code }}" lang="{{ code }}" {% if user.langue == code %}selected{% endif %}>{{ nom }}</option>{% endfor %}
+      </select></div>
+    <p class="aide-champ" id="aide-langue">{% libelle "cadre.compte.langue.aide" %}</p>
+    <div class="barre-enregistrement"><button type="submit">{% libelle "commun.enregistrer" %}</button></div>
+  </form>
+  {% endif %}
+  {% if not user.doit_changer_mdp %}{# apparence : un appui l'applique (boutons du formulaire, sans JavaScript) #}
+  <form method="post" class="carte formulaire-mdp formulaire-apparence" id="apparence" action="#apparence" data-apparence-direct>
+    {% csrf_token %}<input type="hidden" name="action" value="apparence">
+    <h2 id="titre-apparence">{% libelle "cadre.compte.apparence.titre" %}</h2>
+    <div class="segments" role="group" aria-labelledby="titre-apparence" aria-describedby="aide-apparence">
+      {% for code, nom in choix_apparence %}<button type="submit" name="apparence" value="{{ code }}" aria-pressed="{% if code == apparence %}true{% else %}false{% endif %}">{{ nom }}</button>{% endfor %}
+    </div>
+    <p class="aide-champ" id="aide-apparence">{% libelle "cadre.compte.apparence.aide" %}</p>
+    <p class="succes-discret" role="status" data-apparence-statut hidden>{% libelle "cadre.compte.apparence.enregistree" %}</p>
+  </form>
+  {% endif %}
+  <form method="post" class="carte formulaire-mdp" id="mot-de-passe" action="#mot-de-passe">
+    {% csrf_token %}
+    <h2>{% libelle "cadre.compte.mdp.titre" %}</h2>
+    {% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+    {% for champ in form %}{# apparence d'origine des erreurs, gardée exprès #}
+    <div class="champ"><label for="{{ champ.id_for_label }}">{{ champ.label }}</label>{{ champ }}{{ champ.errors }}</div>
+    {% endfor %}
+    <p class="aide-champ">{% libelle "cadre.compte.mdp.aide" %}</p>
+    {% if mcp.jetons %}<p class="aide-champ">{% libelle "mcp.jetons.mdp_aide" %}</p>{% endif %}{# serveur_mcp/jetons.py #}
+    <div class="barre-enregistrement"><button type="submit">{% libelle "cadre.compte.mdp.enregistrer" %}</button>
+      {% if not user.doit_changer_mdp %}<a class="bouton secondaire" href="{% url 'collecte:accueil' %}">{% libelle "commun.annuler" %}</a>{% endif %}</div>
+  </form>
+  <p class="discret">{% libelle "cadre.compte.mdp.oublie" %}</p>
+  {% if not user.doit_changer_mdp %}{# Récemment supprimés : ce que la personne a supprimé, encore restaurable (corbeille.py) #}
+  <section class="carte" id="recemment-supprimes" aria-labelledby="titre-supprimes">
+    <h2 id="titre-supprimes">{% libelle "cadre.supprimes.titre" %}</h2>
+    {% if supprimes %}
+    <p class="aide-champ remonte">{% libelle "cadre.supprimes.aide" n=jours_corbeille %}</p>
+    {% url 'collecte:mon_compte' as url_compte %}{% include "collecte/_supprimes.html" with retour=url_compte|add:"#recemment-supprimes" avec_auteur=False %}
+    {% else %}
+    <p class="discret m-0">{% if user.lecture_seule %}{% libelle "cadre.supprimes.vide_vues" n=jours_corbeille %}{% else %}{% libelle "cadre.supprimes.vide" n=jours_corbeille %}{% endif %}</p>
+    {% endif %}
+    {% if user.est_admin %}<p class="m-0 mt-12"><a href="{% url 'collecte:admin_supprimes' %}">{% libelle "cadre.supprimes.tous_lien" %}</a></p>{% endif %}
+  </section>
+  {% endif %}
+  {% if not user.doit_changer_mdp %}{# dernières connexions de la personne dans cet espace (referentiel/historique_connexions.py) #}
+  <section class="carte" id="mes-connexions" aria-labelledby="titre-connexions">
+    <h2 id="titre-connexions">{% libelle "cadre.compte.connexions.titre" %}</h2>
+    {% if connexions %}
+    <ul class="liste-connexions">
+      {% for c in connexions %}<li><span>{{ c.date|date_courte }} <span class="discret">{{ c.date|date:"H:i" }}</span></span>
+        {% if c.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "cadre.compte.connexions.reussie" %}</span>{% elif c.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "cadre.compte.connexions.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "cadre.compte.connexions.echec" %}</span>{% endif %}</li>{% endfor %}
+    </ul>
+    <p class="aide-champ">{% libelle "cadre.compte.connexions.aide" %}</p>
+    {% else %}
+    <p class="discret m-0">{% libelle "cadre.compte.connexions.vide" %}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+  {% if not user.doit_changer_mdp %}{% include "serveur_mcp/_compte.html" %}{% endif %}{# assistants (MCP) : jetons de la personne #}
+  <section class="carte" aria-labelledby="titre-donnees">
+    <h2 id="titre-donnees">{% libelle "cadre.compte.donnees.titre" %}</h2>
+    <p>{% libelle "cadre.compte.donnees.texte" %}</p>
+    <p class="m-0"><a href="{% url 'collecte:confidentialite' %}">{% libelle "cadre.compte.donnees.lien" %}</a></p>
+  </section>
+</div>
+{% endblock %}

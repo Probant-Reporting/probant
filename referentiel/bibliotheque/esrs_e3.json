@@ -1,0 +1,2094 @@
+{
+ "referentiel": {
+  "code": "ESRS_E3",
+  "identifiant": "22e8d0f5-8654-59c7-8fff-7da3e20af38e",
+  "nom": {
+   "fr": "ESRS E3 – Eau",
+   "en": "ESRS E3 – Water",
+   "es": "ESRS E3 – Agua",
+   "de": "ESRS E3 – Wasser",
+   "it": "ESRS E3 – Acque",
+   "nl": "ESRS E3 – Water",
+   "pt": "ESRS E3 – Água"
+  },
+  "description": {
+   "fr": "Norme ESRS E3 révisée : politiques, actions et cibles sur l'eau, consommation, prélèvement, rejet, recyclage et stockage de l'eau. À installer si le sujet est important, avec le modèle ESRS 2. Construit d'après le règlement délégué (UE) 2026/1563 du 3 juillet 2026.",
+   "en": "Revised ESRS E3: policies, actions and targets on water, water consumption, withdrawal, discharge, recycling and storage. Install it if the topic is material, with the ESRS 2 template. Built from Delegated Regulation (EU) 2026/1563 of 3 July 2026.",
+   "es": "Norma ESRS E3 revisada: políticas, acciones y metas sobre el agua, consumo, captación, vertido, reciclado y almacenamiento de agua. Instálelo si el tema es material, con el modelo ESRS 2. Reglamento Delegado (UE) 2026/1563 de 3 de julio de 2026; inventario hecho con la lista de puntos de datos del EFRAG (borrador de 28 de agosto de 2026).",
+   "de": "Überarbeiteter ESRS E3: Konzepte, Maßnahmen und Ziele zum Wasser, Wasserverbrauch, -entnahme, -ableitung, -recycling und -speicherung. Installieren, wenn das Thema wesentlich ist, zusammen mit der Vorlage ESRS 2. Delegierte Verordnung (EU) 2026/1563 vom 3. Juli 2026; Bestandsaufnahme mit der Liste der Datenpunkte der EFRAG (Entwurf vom 28. August 2026).",
+   "it": "ESRS E3 rivisto: politiche, azioni e obiettivi sull'acqua, consumo, prelievo, scarico, riciclo e stoccaggio dell'acqua. Da installare se il tema è rilevante, con il modello ESRS 2. Regolamento delegato (UE) 2026/1563 del 3 luglio 2026; inventario fatto con l'elenco dei punti dati dell'EFRAG (bozza del 28 agosto 2026).",
+   "nl": "Herziene ESRS E3: beleid, acties en streefdoelen voor water, waterverbruik, -onttrekking, -lozing, -recycling en -opslag. Installeer het als het onderwerp materieel is, samen met het model ESRS 2. Gedelegeerde Verordening (EU) 2026/1563 van 3 juli 2026; inventaris gemaakt met de lijst van datapunten van EFRAG (ontwerp van 28 augustus 2026).",
+   "pt": "ESRS E3 revista: políticas, ações e metas sobre a água, consumo, captação, descarga, reciclagem e armazenamento de água. Instale-o se o tema for material, com o modelo ESRS 2. Regulamento Delegado (UE) 2026/1563 de 3 de julho de 2026; inventário feito com a lista de pontos de dados do EFRAG (projeto de 28 de agosto de 2026)."
+  },
+  "thematique": {
+   "fr": "Normes de reporting",
+   "en": "Reporting standards",
+   "es": "Normas de reporting",
+   "de": "Berichtsstandards",
+   "it": "Norme di rendicontazione",
+   "nl": "Rapportagestandaarden",
+   "pt": "Normas de reporte"
+  },
+  "couleur": "#1C6E9E",
+  "frequence": "annee",
+  "mois_debut": 1,
+  "comparaison": "N-1",
+  "version": "1.1",
+  "date_version": "2026-11-19",
+  "origine": "fourni"
+ },
+ "langue_reference": "fr",
+ "langues": [
+  {
+   "code": "fr",
+   "libelle": "Français"
+  },
+  {
+   "code": "en",
+   "libelle": "English"
+  },
+  {
+   "code": "es",
+   "libelle": "Español"
+  },
+  {
+   "code": "de",
+   "libelle": "Deutsch"
+  },
+  {
+   "code": "it",
+   "libelle": "Italiano"
+  },
+  {
+   "code": "nl",
+   "libelle": "Nederlands"
+  },
+  {
+   "code": "pt",
+   "libelle": "Português"
+  }
+ ],
+ "niveaux": [],
+ "unites": [
+  {
+   "code": "m³",
+   "symbole": {
+    "fr": "m³",
+    "en": "m³"
+   },
+   "libelle": {
+    "fr": "mètre cube",
+    "en": "cubic metre"
+   },
+   "entier": false,
+   "decimales": 0,
+   "famille": "Volume"
+  }
+ ],
+ "types_saisie": [
+  {
+   "code": "Saisi",
+   "libelle": {
+    "fr": "Saisi",
+    "en": "Input"
+   },
+   "abrege": {
+    "fr": "Saisie",
+    "en": "Input"
+   },
+   "couleur": "#5A6B85",
+   "comportement": "saisie"
+  },
+  {
+   "code": "Calculé",
+   "libelle": {
+    "fr": "Calculé",
+    "en": "Calculated"
+   },
+   "abrege": {
+    "fr": "Calcul",
+    "en": "Calc."
+   },
+   "couleur": "#2B4596",
+   "comportement": "calcul"
+  }
+ ],
+ "types_reponse": [
+  {
+   "code": "Numérique",
+   "libelle": {
+    "fr": "Numérique",
+    "en": "Number",
+    "es": "Número",
+    "de": "Zahl",
+    "it": "Numero",
+    "nl": "Getal",
+    "pt": "Número"
+   },
+   "format": "nombre",
+   "valeurs": {}
+  },
+  {
+   "code": "OuiNon",
+   "libelle": {
+    "fr": "Oui / non",
+    "en": "Yes / no",
+    "es": "Sí / no",
+    "de": "Ja / Nein",
+    "it": "Sì / no",
+    "nl": "Ja / nee",
+    "pt": "Sim / não"
+   },
+   "format": "oui_non",
+   "valeurs": {
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "Texte",
+   "libelle": {
+    "fr": "Texte rédigé",
+    "en": "Written text",
+    "es": "Texto redactado",
+    "de": "Ausformulierter Text",
+    "it": "Testo redatto",
+    "nl": "Uitgeschreven tekst",
+    "pt": "Texto redigido"
+   },
+   "format": "texte",
+   "valeurs": {}
+  },
+  {
+   "code": "ESRS-OUI-NON",
+   "libelle": {
+    "fr": "Oui / non (tableau)",
+    "en": "Yes / no (table)",
+    "es": "Sí / no (tabla)",
+    "de": "Ja / Nein (Tabelle)",
+    "it": "Sì / no (tabella)",
+    "nl": "Ja / nee (tabel)",
+    "pt": "Sim / não (tabela)"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non"
+    ],
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-OUI-NON-SO",
+   "libelle": {
+    "fr": "Oui / non / sans objet",
+    "en": "Yes / no / not applicable",
+    "es": "Sí / no / no aplica",
+    "de": "Ja / Nein / nicht zutreffend",
+    "it": "Sì / no / non applicabile",
+    "nl": "Ja / nee / niet van toepassing",
+    "pt": "Sim / não / não aplicável"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non",
+     "Sans objet"
+    ],
+    "en": [
+     "Yes",
+     "No",
+     "Not applicable"
+    ],
+    "es": [
+     "Sí",
+     "No",
+     "No aplica"
+    ],
+    "de": [
+     "Ja",
+     "Nein",
+     "Nicht zutreffend"
+    ],
+    "it": [
+     "Sì",
+     "No",
+     "Non applicabile"
+    ],
+    "nl": [
+     "Ja",
+     "Nee",
+     "Niet van toepassing"
+    ],
+    "pt": [
+     "Sim",
+     "Não",
+     "Não aplicável"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-HORIZON",
+   "libelle": {
+    "fr": "Horizon de temps",
+    "en": "Time horizon",
+    "es": "Horizonte temporal",
+    "de": "Zeithorizont",
+    "it": "Orizzonte temporale",
+    "nl": "Tijdshorizon",
+    "pt": "Horizonte temporal"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Court terme (période de reporting)",
+     "Moyen terme (jusqu'à 5 ans)",
+     "Long terme (plus de 5 ans)"
+    ],
+    "en": [
+     "Short term (reporting period)",
+     "Medium term (up to 5 years)",
+     "Long term (more than 5 years)"
+    ],
+    "es": [
+     "Corto plazo (periodo de referencia)",
+     "Medio plazo (hasta 5 años)",
+     "Largo plazo (más de 5 años)"
+    ],
+    "de": [
+     "Kurzfristig (Berichtszeitraum)",
+     "Mittelfristig (bis zu 5 Jahre)",
+     "Langfristig (mehr als 5 Jahre)"
+    ],
+    "it": [
+     "Breve termine (periodo di rendicontazione)",
+     "Medio termine (fino a 5 anni)",
+     "Lungo termine (oltre 5 anni)"
+    ],
+    "nl": [
+     "Korte termijn (verslagperiode)",
+     "Middellange termijn (tot 5 jaar)",
+     "Lange termijn (meer dan 5 jaar)"
+    ],
+    "pt": [
+     "Curto prazo (período de reporte)",
+     "Médio prazo (até 5 anos)",
+     "Longo prazo (mais de 5 anos)"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-STATUT-ACTION",
+   "libelle": {
+    "fr": "État d'une action",
+    "en": "Status of an action",
+    "es": "Estado de una acción",
+    "de": "Status einer Maßnahme",
+    "it": "Stato di un'azione",
+    "nl": "Status van een actie",
+    "pt": "Estado de uma ação"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Réalisée dans la période",
+     "En cours",
+     "Prévue"
+    ],
+    "en": [
+     "Taken in the period",
+     "Under way",
+     "Planned"
+    ],
+    "es": [
+     "Realizada en el periodo",
+     "En curso",
+     "Prevista"
+    ],
+    "de": [
+     "Im Zeitraum durchgeführt",
+     "Laufend",
+     "Geplant"
+    ],
+    "it": [
+     "Realizzata nel periodo",
+     "In corso",
+     "Pianificata"
+    ],
+    "nl": [
+     "In de periode uitgevoerd",
+     "Lopend",
+     "Gepland"
+    ],
+    "pt": [
+     "Realizada no período",
+     "Em curso",
+     "Planeada"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-NATURE-CIBLE",
+   "libelle": {
+    "fr": "Cible absolue ou relative",
+    "en": "Absolute or relative target",
+    "es": "Meta absoluta o relativa",
+    "de": "Absolutes oder relatives Ziel",
+    "it": "Obiettivo assoluto o relativo",
+    "nl": "Absoluut of relatief streefdoel",
+    "pt": "Meta absoluta ou relativa"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Absolue",
+     "Relative"
+    ],
+    "en": [
+     "Absolute",
+     "Relative"
+    ],
+    "es": [
+     "Absoluta",
+     "Relativa"
+    ],
+    "de": [
+     "Absolut",
+     "Relativ"
+    ],
+    "it": [
+     "Assoluto",
+     "Relativo"
+    ],
+    "nl": [
+     "Absoluut",
+     "Relatief"
+    ],
+    "pt": [
+     "Absoluta",
+     "Relativa"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-TAB-CIBLES",
+   "libelle": {
+    "fr": "Cibles",
+    "en": "Targets",
+    "es": "Metas",
+    "de": "Ziele",
+    "it": "Obiettivi",
+    "nl": "Streefdoelen",
+    "pt": "Metas"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "cible",
+     "libelle": {
+      "fr": "Cible",
+      "en": "Target",
+      "es": "Meta",
+      "de": "Ziel",
+      "it": "Obiettivo",
+      "nl": "Streefdoel",
+      "pt": "Meta"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "indicateur",
+     "libelle": {
+      "fr": "Indicateur",
+      "en": "Metric",
+      "es": "Parámetro",
+      "de": "Kennzahl",
+      "it": "Metrica",
+      "nl": "Metriek",
+      "pt": "Métrica"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "nature",
+     "libelle": {
+      "fr": "Absolue ou relative",
+      "en": "Absolute or relative",
+      "es": "Absoluta o relativa",
+      "de": "Absolut oder relativ",
+      "it": "Assoluto o relativo",
+      "nl": "Absoluut of relatief",
+      "pt": "Absoluta ou relativa"
+     },
+     "type": "liste",
+     "liste": "ESRS-NATURE-CIBLE"
+    },
+    {
+     "code": "unite",
+     "libelle": {
+      "fr": "Unité",
+      "en": "Unit",
+      "es": "Unidad",
+      "de": "Einheit",
+      "it": "Unità",
+      "nl": "Eenheid",
+      "pt": "Unidade"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "annee_ref",
+     "libelle": {
+      "fr": "Année de référence",
+      "en": "Base year",
+      "es": "Año de referencia",
+      "de": "Basisjahr",
+      "it": "Anno di base",
+      "nl": "Basisjaar",
+      "pt": "Ano de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_ref",
+     "libelle": {
+      "fr": "Valeur de référence",
+      "en": "Baseline value",
+      "es": "Valor de referencia",
+      "de": "Basiswert",
+      "it": "Valore di base",
+      "nl": "Basiswaarde",
+      "pt": "Valor de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_etape",
+     "libelle": {
+      "fr": "Année d'étape",
+      "en": "Milestone year",
+      "es": "Año del hito",
+      "de": "Jahr des Meilensteins",
+      "it": "Anno della tappa",
+      "nl": "Jaar van de mijlpaal",
+      "pt": "Ano da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_etape",
+     "libelle": {
+      "fr": "Valeur d'étape",
+      "en": "Milestone value",
+      "es": "Valor del hito",
+      "de": "Wert des Meilensteins",
+      "it": "Valore della tappa",
+      "nl": "Waarde van de mijlpaal",
+      "pt": "Valor da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_cible",
+     "libelle": {
+      "fr": "Année cible",
+      "en": "Target year",
+      "es": "Año objetivo",
+      "de": "Zieljahr",
+      "it": "Anno obiettivo",
+      "nl": "Doeljaar",
+      "pt": "Ano-alvo"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_cible",
+     "libelle": {
+      "fr": "Valeur cible",
+      "en": "Target value",
+      "es": "Valor de la meta",
+      "de": "Zielwert",
+      "it": "Valore obiettivo",
+      "nl": "Streefwaarde",
+      "pt": "Valor da meta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "loi",
+     "libelle": {
+      "fr": "Imposée par la loi",
+      "en": "Required by law",
+      "es": "Exigida por ley",
+      "de": "Gesetzlich vorgeschrieben",
+      "it": "Richiesto dalla legge",
+      "nl": "Wettelijk vereist",
+      "pt": "Exigida por lei"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    },
+    {
+     "code": "science",
+     "libelle": {
+      "fr": "Fondée sur des preuves scientifiques concluantes",
+      "en": "Based on conclusive scientific evidence",
+      "es": "Basada en pruebas científicas concluyentes",
+      "de": "Auf eindeutigen wissenschaftlichen Belegen beruhend",
+      "it": "Basato su prove scientifiche conclusive",
+      "nl": "Gebaseerd op overtuigend wetenschappelijk bewijs",
+      "pt": "Baseada em provas científicas conclusivas"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON-SO"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    }
+   ]
+  },
+  {
+   "code": "EAU-TAB-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés sur l'eau",
+    "en": "Key actions on water",
+    "es": "Acciones principales sobre el agua",
+    "de": "Wichtigste Maßnahmen zu Wasser",
+    "it": "Azioni principali sulle acque",
+    "nl": "Belangrijkste acties voor water",
+    "pt": "Ações principais sobre a água"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "action",
+     "libelle": {
+      "fr": "Action clé",
+      "en": "Key action",
+      "es": "Acción principal",
+      "de": "Wichtigste Maßnahme",
+      "it": "Azione principale",
+      "nl": "Belangrijkste actie",
+      "pt": "Ação principal"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "statut",
+     "libelle": {
+      "fr": "État",
+      "en": "Status",
+      "es": "Estado",
+      "de": "Status",
+      "it": "Stato",
+      "nl": "Status",
+      "pt": "Estado"
+     },
+     "type": "liste",
+     "liste": "ESRS-STATUT-ACTION"
+    },
+    {
+     "code": "horizon",
+     "libelle": {
+      "fr": "Horizon",
+      "en": "Timeframe",
+      "es": "Plazo",
+      "de": "Zeitrahmen",
+      "it": "Tempi",
+      "nl": "Tijdsbestek",
+      "pt": "Prazo"
+     },
+     "type": "liste",
+     "liste": "ESRS-HORIZON"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "capex",
+     "libelle": {
+      "fr": "Dépenses d'investissement de la période",
+      "en": "Capital expenditure of the period",
+      "es": "Gastos de capital del periodo",
+      "de": "Investitionsausgaben des Zeitraums",
+      "it": "Spese in conto capitale del periodo",
+      "nl": "Kapitaaluitgaven van de periode",
+      "pt": "Despesas de capital do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "opex",
+     "libelle": {
+      "fr": "Dépenses d'exploitation de la période",
+      "en": "Operating expenditure of the period",
+      "es": "Gastos operativos del periodo",
+      "de": "Betriebsausgaben des Zeitraums",
+      "it": "Spese operative del periodo",
+      "nl": "Operationele uitgaven van de periode",
+      "pt": "Despesas operacionais do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_bas",
+     "libelle": {
+      "fr": "Ressources futures, estimation basse",
+      "en": "Future resources, low estimate",
+      "es": "Recursos futuros, estimación baja",
+      "de": "Künftige Ressourcen, untere Schätzung",
+      "it": "Risorse future, stima minima",
+      "nl": "Toekomstige middelen, lage schatting",
+      "pt": "Recursos futuros, estimativa baixa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_haut",
+     "libelle": {
+      "fr": "Ressources futures, estimation haute",
+      "en": "Future resources, high estimate",
+      "es": "Recursos futuros, estimación alta",
+      "de": "Künftige Ressourcen, obere Schätzung",
+      "it": "Risorse future, stima massima",
+      "nl": "Toekomstige middelen, hoge schatting",
+      "pt": "Recursos futuros, estimativa alta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "conditions",
+     "libelle": {
+      "fr": "Dépend de conditions préalables",
+      "en": "Depends on preconditions",
+      "es": "Depende de condiciones previas",
+      "de": "Hängt von Voraussetzungen ab",
+      "it": "Dipende da condizioni preliminari",
+      "nl": "Afhankelijk van voorwaarden",
+      "pt": "Depende de condições prévias"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    },
+    {
+     "code": "stress",
+     "libelle": {
+      "fr": "Liée aux zones de stress hydrique",
+      "en": "Related to areas with water stress",
+      "es": "Relacionado con zonas con estrés hídrico",
+      "de": "Bezogen auf Gebiete mit Wasserstress",
+      "it": "Relativo ad aree a stress idrico",
+      "nl": "Betreffende gebieden met waterstress",
+      "pt": "Relacionado com zonas de stresse hídrico"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    }
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "code": "description",
+   "libelle": {
+    "fr": "Description",
+    "en": "Description"
+   },
+   "ordre": 1,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_inclure",
+   "libelle": {
+    "fr": "À inclure",
+    "en": "Include"
+   },
+   "ordre": 2,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_exclure",
+   "libelle": {
+    "fr": "À exclure",
+    "en": "Exclude"
+   },
+   "ordre": 3,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "source",
+   "libelle": {
+    "fr": "Source des données",
+    "en": "Data source"
+   },
+   "ordre": 4,
+   "affichee": true,
+   "obligatoire": false
+  }
+ ],
+ "champs": [],
+ "themes": [
+  {
+   "code": "E3_1",
+   "parent": "",
+   "nom": {
+    "fr": "E3-1 – Politiques relatives à l'eau",
+    "en": "E3-1 – Policies related to water",
+    "es": "E3-1 – Políticas relacionadas con el agua",
+    "de": "E3-1 – Konzepte im Zusammenhang mit Wasser",
+    "it": "E3-1 – Politiche relative alle acque",
+    "nl": "E3-1 – Beleid met betrekking tot water",
+    "pt": "E3-1 – Políticas relacionadas com a água"
+   },
+   "ordre": 1
+  },
+  {
+   "code": "E3_2",
+   "parent": "",
+   "nom": {
+    "fr": "E3-2 – Actions et ressources relatives à l'eau",
+    "en": "E3-2 – Actions and resources related to water",
+    "es": "E3-2 – Acciones y recursos relacionados con el agua",
+    "de": "E3-2 – Maßnahmen und Ressourcen im Zusammenhang mit Wasser",
+    "it": "E3-2 – Azioni e risorse relative alle acque",
+    "nl": "E3-2 – Acties en middelen met betrekking tot water",
+    "pt": "E3-2 – Ações e recursos relacionados com a água"
+   },
+   "ordre": 2
+  },
+  {
+   "code": "E3_3",
+   "parent": "",
+   "nom": {
+    "fr": "E3-3 – Cibles relatives à l'eau",
+    "en": "E3-3 – Targets related to water",
+    "es": "E3-3 – Metas relacionadas con el agua",
+    "de": "E3-3 – Ziele im Zusammenhang mit Wasser",
+    "it": "E3-3 – Obiettivi relativi alle acque",
+    "nl": "E3-3 – Streefdoelen met betrekking tot water",
+    "pt": "E3-3 – Metas relacionadas com a água"
+   },
+   "ordre": 3
+  },
+  {
+   "code": "E3_4",
+   "parent": "",
+   "nom": {
+    "fr": "E3-4 – Indicateurs de l'eau",
+    "en": "E3-4 – Water metrics",
+    "es": "E3-4 – Parámetros del agua",
+    "de": "E3-4 – Wasserkennzahlen",
+    "it": "E3-4 – Metriche sulle acque",
+    "nl": "E3-4 – Watermetrieken",
+    "pt": "E3-4 – Métricas da água"
+   },
+   "ordre": 4
+  }
+ ],
+ "kpis": [
+  {
+   "code": "EAU-POLITIQUES",
+   "libelle": {
+    "fr": "Politiques adoptées sur l'eau",
+    "en": "Policies adopted on water",
+    "es": "Políticas adoptadas sobre el agua",
+    "de": "Verabschiedete Konzepte zu Wasser",
+    "it": "Politiche adottate sulle acque",
+    "nl": "Vastgesteld beleid voor water",
+    "pt": "Políticas adotadas sobre a água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle adopté des politiques pour gérer ses impacts, risques et opportunités importants liés à l'eau ? Sinon, répondre Non : la norme demande de le dire (ESRS 2 §39). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Has the company adopted policies to manage its material impacts, risks and opportunities on water? If not, answer No: the standard asks to say so (ESRS 2 §39). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "¿Ha adoptado la empresa políticas para gestionar sus impactos, riesgos y oportunidades materiales relacionados con el agua? Si no, responda No: la norma exige indicarlo (ESRS 2 §39). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen Konzepte verabschiedet, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit Wasser zu steuern? Wenn nicht, mit Nein antworten: Der Standard verlangt diese Angabe (ESRS 2 §39). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "L'impresa ha adottato politiche per gestire i suoi impatti, rischi e opportunità rilevanti relativi alle acque? In caso contrario, rispondere No: la norma richiede di indicarlo (ESRS 2 §39). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming beleid vastgesteld om haar materiële effecten, risico's en kansen met betrekking tot water te beheren? Zo niet, antwoord dan Nee: de standaard vraagt dit te vermelden (ESRS 2 §39). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "A empresa adotou políticas para gerir os seus impactos, riscos e oportunidades materiais relacionados com a água? Se não, responda Não: a norma exige que seja indicado (ESRS 2 §39). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_1",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-POLIT-CONTENU",
+   "libelle": {
+    "fr": "Politiques sur l'eau : contenu et changements",
+    "en": "Policies on water: contents and changes",
+    "es": "Políticas sobre el agua: contenido y cambios",
+    "de": "Konzepte zu Wasser: Inhalte und Änderungen",
+    "it": "Politiche sulle acque: contenuto e modifiche",
+    "nl": "Beleid voor water: inhoud en wijzigingen",
+    "pt": "Políticas sobre a água: conteúdo e alterações"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son contenu principal, ses objectifs généraux et les impacts, risques ou opportunités importants qu'elle traite ; décrire les changements faits pendant la période (ESRS 2 §42(a)). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "For each policy: its key contents, its general objectives and the material impacts, risks or opportunities it addresses; describe the changes made during the period (ESRS 2 §42(a)). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Para cada política: su contenido principal, sus objetivos generales y los impactos, riesgos u oportunidades materiales que aborda; describa los cambios realizados durante el periodo (ESRS 2 §42(a)). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: seine wesentlichen Inhalte, seine allgemeinen Ziele und die wesentlichen Auswirkungen, Risiken oder Chancen, die es adressiert; die im Zeitraum vorgenommenen Änderungen beschreiben (ESRS 2 §42(a)). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: i suoi contenuti principali, i suoi obiettivi generali e gli impatti, rischi od opportunità rilevanti che affronta; descrivere le modifiche apportate nel periodo (ESRS 2 §42(a)). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de belangrijkste inhoud, de algemene doelstellingen en de materiële effecten, risico's of kansen waarop het ingaat; beschrijf de wijzigingen tijdens de periode (ESRS 2 §42(a)). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu conteúdo principal, os seus objetivos gerais e os impactos, riscos ou oportunidades materiais que aborda; descreva as alterações feitas durante o período (ESRS 2 §42(a)). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_1",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-POLIT-PERIMETRE",
+   "libelle": {
+    "fr": "Politiques sur l'eau : périmètre et exclusions",
+    "en": "Policies on water: scope and exclusions",
+    "es": "Políticas sobre el agua: alcance y exclusiones",
+    "de": "Konzepte zu Wasser: Geltungsbereich und Ausnahmen",
+    "it": "Politiche sulle acque: ambito ed esclusioni",
+    "nl": "Beleid voor water: reikwijdte en uitsluitingen",
+    "pt": "Políticas sobre a água: âmbito e exclusões"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son périmètre ou ses exclusions (activités propres, chaîne de valeur amont et aval, zones géographiques et, s'ils sont définis, groupes de parties prenantes concernés) (ESRS 2 §42(b)). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "For each policy: its scope or exclusions (own operations, upstream and downstream value chain, geographies and, if defined, the affected stakeholder groups) (ESRS 2 §42(b)). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Para cada política: su alcance o exclusiones (operaciones propias, cadena de valor ascendente y descendente, zonas geográficas y, si se han definido, los grupos de partes interesadas afectadas) (ESRS 2 §42(b)). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: sein Geltungsbereich oder seine Ausnahmen (eigene Geschäftstätigkeit, vor- und nachgelagerte Wertschöpfungskette, Regionen und, falls festgelegt, die betroffenen Gruppen von Interessenträgern) (ESRS 2 §42(b)). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: il suo ambito o le sue esclusioni (attività proprie, catena del valore a monte e a valle, aree geografiche e, se definiti, i gruppi di portatori di interessi interessati) (ESRS 2 §42(b)). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de reikwijdte of uitsluitingen (eigen activiteiten, upstream- en downstream-waardeketen, geografische gebieden en, indien vastgesteld, de getroffen groepen belanghebbenden) (ESRS 2 §42(b)). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu âmbito ou exclusões (operações próprias, cadeia de valor a montante e a jusante, zonas geográficas e, se definidos, os grupos de partes interessadas afetadas) (ESRS 2 §42(b)). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_1",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-POLIT-REFERENCES",
+   "libelle": {
+    "fr": "Politiques sur l'eau : normes ou initiatives de tiers",
+    "en": "Policies on water: third-party standards or initiatives",
+    "es": "Políticas sobre el agua: normas o iniciativas de terceros",
+    "de": "Konzepte zu Wasser: Standards oder Initiativen Dritter",
+    "it": "Politiche sulle acque: norme o iniziative di terzi",
+    "nl": "Beleid voor water: standaarden of initiatieven van derden",
+    "pt": "Políticas sobre a água: normas ou iniciativas de terceiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Normes ou initiatives de tiers que l'entreprise s'engage à respecter par ses politiques (ESRS 2 §42(c)). Répondre N/A si aucune politique n'y renvoie. Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Third-party standards or initiatives that the company commits to respect through its policies (ESRS 2 §42(c)). Answer N/A if no policy refers to one. Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Normas o iniciativas de terceros que la empresa se compromete a respetar mediante sus políticas (ESRS 2 §42(c)). Responda N/A si ninguna política hace referencia a ellas. Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Standards oder Initiativen Dritter, zu deren Einhaltung sich das Unternehmen mit seinen Konzepten verpflichtet (ESRS 2 §42(c)). Mit N/A antworten, wenn kein Konzept darauf verweist. Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Norme o iniziative di terzi che l'impresa si impegna a rispettare attraverso le sue politiche (ESRS 2 §42(c)). Rispondere N/A se nessuna politica vi fa riferimento. Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Standaarden of initiatieven van derden die de onderneming met haar beleid zegt na te leven (ESRS 2 §42(c)). Antwoord N/A als geen enkel beleid ernaar verwijst. Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Normas ou iniciativas de terceiros que a empresa se compromete a respeitar através das suas políticas (ESRS 2 §42(c)). Responda N/A se nenhuma política fizer referência a elas. Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_1",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-STRESS-HORS-POLITIQUE",
+   "libelle": {
+    "fr": "Sites en zone de stress hydrique non couverts par les politiques sur l'eau",
+    "en": "Sites in water-stress areas not covered by the water policies",
+    "es": "Centros en zonas con estrés hídrico no cubiertos por las políticas sobre el agua",
+    "de": "Standorte in Gebieten mit Wasserstress, die von den Wasserkonzepten nicht erfasst sind",
+    "it": "Siti in aree a stress idrico non coperti dalle politiche sulle acque",
+    "nl": "Locaties in gebieden met waterstress die niet onder het waterbeleid vallen",
+    "pt": "Locais em zonas de stresse hídrico não abrangidos pelas políticas sobre a água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle des sites situés dans des zones de stress hydrique que ses politiques sur l'eau ne couvrent pas ? Si oui, la norme demande de le dire (E3-1 §11). Zones de stress hydrique : indicateurs de E3 AR 2, par exemple un stress hydrique de base « élevé » ou plus dans l'outil Aqueduct du WRI. Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Politiques sur l'eau, liste des sites, outil Aqueduct du WRI."
+    },
+    "en": {
+     "description": "Does the company have sites in areas with water stress that its water policies do not cover? If yes, the standard asks to say so (E3-1 §11). Areas with water stress: indicators of E3 AR 2, for example a baseline water stress of ‘High’ or more in the WRI Aqueduct tool. Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Water policies, list of sites, WRI Aqueduct tool."
+    },
+    "es": {
+     "description": "¿Tiene la empresa centros en zonas con estrés hídrico que sus políticas sobre el agua no cubren? En caso afirmativo, la norma exige indicarlo (E3-1 §11). Zonas con estrés hídrico: indicadores de E3 AR 2, por ejemplo un estrés hídrico de referencia «High» o superior en la herramienta WRI Aqueduct. Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Políticas sobre el agua, lista de centros, herramienta WRI Aqueduct."
+    },
+    "de": {
+     "description": "Hat das Unternehmen Standorte in Gebieten mit Wasserstress, die seine Wasserkonzepte nicht abdecken? Wenn ja, verlangt der Standard diese Angabe (E3-1 §11). Gebiete mit Wasserstress: Indikatoren aus E3 AR 2, zum Beispiel ein Basis-Wasserstress von „High“ oder höher im Tool WRI Aqueduct. Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Wasserkonzepte, Standortliste, Tool WRI Aqueduct."
+    },
+    "it": {
+     "description": "L'impresa ha siti in aree a stress idrico che le sue politiche sulle acque non coprono? In caso affermativo, la norma richiede di indicarlo (E3-1 §11). Aree a stress idrico: indicatori di E3 AR 2, ad esempio uno stress idrico di base «High» o superiore nello strumento WRI Aqueduct. Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Politiche sulle acque, elenco dei siti, strumento WRI Aqueduct."
+    },
+    "nl": {
+     "description": "Heeft de onderneming locaties in gebieden met waterstress die niet onder haar waterbeleid vallen? Zo ja, dan vraagt de standaard dit te vermelden (E3-1 §11). Gebieden met waterstress: indicatoren van E3 AR 2, bijvoorbeeld een basiswaterstress van ‘High’ of hoger in de tool WRI Aqueduct. Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Waterbeleid, lijst van locaties, tool WRI Aqueduct."
+    },
+    "pt": {
+     "description": "A empresa tem locais em zonas de stresse hídrico que as suas políticas sobre a água não abrangem? Em caso afirmativo, a norma exige que seja indicado (E3-1 §11). Zonas de stresse hídrico: indicadores de E3 AR 2, por exemplo um stresse hídrico de base «High» ou superior na ferramenta WRI Aqueduct. Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Políticas sobre a água, lista de locais, ferramenta WRI Aqueduct."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_1",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés sur l'eau",
+    "en": "Key actions on water",
+    "es": "Acciones principales sobre el agua",
+    "de": "Wichtigste Maßnahmen zu Wasser",
+    "it": "Azioni principali sulle acque",
+    "nl": "Belangrijkste acties voor water",
+    "pt": "Ações principais sobre a água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle mené ou prévu des actions clés pour gérer ses impacts, risques et opportunités importants liés à l'eau ? Sinon, répondre Non (ESRS 2 §39). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Has the company taken or planned key actions to manage its material impacts, risks and opportunities on water? If not, answer No (ESRS 2 §39). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "¿Ha realizado o planificado la empresa acciones principales para gestionar sus impactos, riesgos y oportunidades materiales relacionados con el agua? Si no, responda No (ESRS 2 §39). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen wichtigste Maßnahmen ergriffen oder geplant, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit Wasser zu steuern? Wenn nicht, mit Nein antworten (ESRS 2 §39). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "L'impresa ha realizzato o pianificato azioni principali per gestire i suoi impatti, rischi e opportunità rilevanti relativi alle acque? In caso contrario, rispondere No (ESRS 2 §39). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming belangrijkste acties ondernomen of gepland om haar materiële effecten, risico's en kansen met betrekking tot water te beheren? Zo niet, antwoord dan Nee (ESRS 2 §39). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "A empresa realizou ou planeou ações principais para gerir os seus impactos, riscos e oportunidades materiais relacionados com a água? Se não, responda Não (ESRS 2 §39). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_2",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-ACT-DESC",
+   "libelle": {
+    "fr": "Actions clés sur l'eau : description, périmètre et résultats attendus",
+    "en": "Key actions on water: description, scope and expected outcomes",
+    "es": "Acciones principales sobre el agua: descripción, alcance y resultados esperados",
+    "de": "Wichtigste Maßnahmen zu Wasser: Beschreibung, Geltungsbereich und erwartete Ergebnisse",
+    "it": "Azioni principali sulle acque: descrizione, ambito e risultati attesi",
+    "nl": "Belangrijkste acties voor water: beschrijving, reikwijdte en verwachte resultaten",
+    "pt": "Ações principais sobre a água: descrição, âmbito e resultados esperados"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Actions clés menées pendant la période et prévues, avec leur calendrier, leur périmètre (activités propres, chaîne de valeur, filiales, zones géographiques, parties prenantes) et leurs résultats attendus, et comment elles servent les objectifs des politiques (ESRS 2 §45). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Key actions taken during the period and planned, with their timeframe, their scope (own operations, value chain, subsidiaries, geographies, stakeholders) and their expected outcomes, and how they serve the policy objectives (ESRS 2 §45). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Acciones principales realizadas durante el periodo y previstas, con su calendario, su alcance (operaciones propias, cadena de valor, filiales, zonas geográficas, partes interesadas) y sus resultados esperados, y cómo contribuyen a los objetivos de las políticas (ESRS 2 §45). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Im Zeitraum durchgeführte und geplante wichtigste Maßnahmen mit ihrem Zeitrahmen, ihrem Geltungsbereich (eigene Geschäftstätigkeit, Wertschöpfungskette, Tochterunternehmen, Regionen, Interessenträger) und ihren erwarteten Ergebnissen sowie dazu, wie sie den Zielen der Konzepte dienen (ESRS 2 §45). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Azioni principali realizzate nel periodo e previste, con i loro tempi, il loro ambito (attività proprie, catena del valore, controllate, aree geografiche, portatori di interessi) e i risultati attesi, e il modo in cui servono gli obiettivi delle politiche (ESRS 2 §45). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Tijdens de periode uitgevoerde en geplande belangrijkste acties, met hun tijdsbestek, hun reikwijdte (eigen activiteiten, waardeketen, dochterondernemingen, geografische gebieden, belanghebbenden) en hun verwachte resultaten, en hoe zij de doelstellingen van het beleid dienen (ESRS 2 §45). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Ações principais realizadas durante o período e previstas, com o seu calendário, o seu âmbito (operações próprias, cadeia de valor, filiais, zonas geográficas, partes interessadas) e os seus resultados esperados, e a forma como servem os objetivos das políticas (ESRS 2 §45). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_2",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-ACT-TAB",
+   "libelle": {
+    "fr": "Actions clés sur l'eau : calendrier et ressources financières",
+    "en": "Key actions on water: timeframe and financial resources",
+    "es": "Acciones principales sobre el agua: calendario y recursos financieros",
+    "de": "Wichtigste Maßnahmen zu Wasser: Zeitrahmen und finanzielle Ressourcen",
+    "it": "Azioni principali sulle acque: tempi e risorse finanziarie",
+    "nl": "Belangrijkste acties voor water: tijdschema en financiële middelen",
+    "pt": "Ações principais sobre a água: calendário e recursos financeiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "EAU-TAB-ACTIONS",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par action clé : état, horizon, périmètre, dépenses d'investissement et d'exploitation de la période, fourchette des ressources futures, et si l'action dépend de conditions préalables (ESRS 2 §45-46). Les montants seulement quand des ressources importantes y sont consacrées. Montants dans la monnaie des états financiers (ESRS 1 AR 50). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Plans d'action, budget, comptabilité (dépenses d'investissement et d'exploitation)."
+    },
+    "en": {
+     "description": "One row per key action: status, timeframe, scope, capital and operating expenditure of the period, range of future resources, and whether the action depends on preconditions (ESRS 2 §45-46). Amounts only when significant resources are allocated. Amounts in the currency of the financial statements (ESRS 1 AR 50). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Action plans, budget, accounting (capital and operating expenditure)."
+    },
+    "es": {
+     "description": "Una fila por acción principal: estado, calendario, alcance, gastos de capital y operativos del periodo, intervalo de recursos futuros y si la acción depende de condiciones previas (ESRS 2 §45-46). Importes solo cuando se asignan recursos significativos. Importes en la moneda de los estados financieros (ESRS 1 AR 50). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Planes de acción, presupuesto, contabilidad (gastos de capital y operativos)."
+    },
+    "de": {
+     "description": "Eine Zeile je wichtigster Maßnahme: Status, Zeitrahmen, Geltungsbereich, Investitions- und Betriebsausgaben des Zeitraums, Spanne der künftigen Ressourcen und ob die Maßnahme von Voraussetzungen abhängt (ESRS 2 §45-46). Beträge nur, wenn erhebliche Ressourcen zugewiesen werden. Beträge in der Währung des Abschlusses (ESRS 1 AR 50). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Aktionspläne, Budget, Buchhaltung (Investitions- und Betriebsausgaben)."
+    },
+    "it": {
+     "description": "Una riga per azione principale: stato, tempi, ambito, spese in conto capitale e operative del periodo, intervallo delle risorse future e se l'azione dipende da condizioni preliminari (ESRS 2 §45-46). Importi solo quando sono assegnate risorse significative. Importi nella valuta del bilancio (ESRS 1 AR 50). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Piani d'azione, budget, contabilità (spese in conto capitale e operative)."
+    },
+    "nl": {
+     "description": "Eén rij per belangrijkste actie: status, tijdsbestek, reikwijdte, kapitaal- en operationele uitgaven van de periode, bandbreedte van de toekomstige middelen en of de actie van voorwaarden afhangt (ESRS 2 §45-46). Bedragen alleen als er aanzienlijke middelen worden toegewezen. Bedragen in de valuta van de jaarrekening (ESRS 1 AR 50). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Actieplannen, budget, boekhouding (kapitaal- en operationele uitgaven)."
+    },
+    "pt": {
+     "description": "Uma linha por ação principal: estado, calendário, âmbito, despesas de capital e operacionais do período, intervalo de recursos futuros e se a ação depende de condições prévias (ESRS 2 §45-46). Montantes apenas quando são afetados recursos significativos. Montantes na moeda das demonstrações financeiras (ESRS 1 AR 50). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Planos de ação, orçamento, contabilidade (despesas de capital e operacionais)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_2",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-ACT-MOYENS",
+   "libelle": {
+    "fr": "Actions clés sur l'eau : nature des ressources, conditions et postes comptables",
+    "en": "Key actions on water: type of resources, preconditions and line items",
+    "es": "Acciones principales sobre el agua: tipo de recursos, condiciones previas y partidas",
+    "de": "Wichtigste Maßnahmen zu Wasser: Art der Ressourcen, Voraussetzungen und Posten",
+    "it": "Azioni principali sulle acque: tipo di risorse, condizioni preliminari e voci di bilancio",
+    "nl": "Belangrijkste acties voor water: soort middelen, voorwaarden en posten",
+    "pt": "Ações principais sobre a água: tipo de recursos, condições prévias e rubricas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Quand des ressources financières importantes sont consacrées aux actions : leur nature (actuelles et futures), les conditions préalables dont les actions dépendent (aide financière, politiques publiques, marché) et les postes ou notes des états financiers qui contiennent les montants (ESRS 2 §46). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "When significant financial resources are allocated to the actions: their type (current and future), the preconditions the actions depend on (financial support, public policy, market) and the line items or notes of the financial statements that contain the amounts (ESRS 2 §46). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Cuando se asignan recursos financieros significativos a las acciones: su tipo (actuales y futuros), las condiciones previas de las que dependen las acciones (apoyo financiero, política pública, mercado) y las partidas o notas de los estados financieros que contienen los importes (ESRS 2 §46). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Wenn den Maßnahmen erhebliche finanzielle Ressourcen zugewiesen werden: ihre Art (laufend und künftig), die Voraussetzungen, von denen die Maßnahmen abhängen (finanzielle Unterstützung, öffentliche Politik, Markt), und die Posten oder Anhangangaben des Abschlusses, die die Beträge enthalten (ESRS 2 §46). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Quando alle azioni sono assegnate risorse finanziarie significative: il loro tipo (correnti e future), le condizioni preliminari da cui dipendono le azioni (sostegno finanziario, politica pubblica, mercato) e le voci o note del bilancio che contengono gli importi (ESRS 2 §46). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Wanneer aan de acties aanzienlijke financiële middelen worden toegewezen: hun soort (huidige en toekomstige), de voorwaarden waarvan de acties afhangen (financiële steun, overheidsbeleid, markt) en de posten of toelichtingen van de jaarrekening waarin de bedragen staan (ESRS 2 §46). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Quando são afetados recursos financeiros significativos às ações: o seu tipo (atuais e futuros), as condições prévias de que as ações dependem (apoio financeiro, política pública, mercado) e as rubricas ou notas das demonstrações financeiras que contêm os montantes (ESRS 2 §46). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_2",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-CIBLES",
+   "libelle": {
+    "fr": "Cibles mesurables sur l'eau",
+    "en": "Measurable targets on water",
+    "es": "Metas medibles sobre el agua",
+    "de": "Messbare Ziele zu Wasser",
+    "it": "Obiettivi misurabili sulle acque",
+    "nl": "Meetbare streefdoelen voor water",
+    "pt": "Metas mensuráveis sobre a água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle fixé des cibles mesurables, datées et axées sur les résultats pour l'eau ? Sinon, répondre Non et décrire ci-dessous comment elle suit l'efficacité de ses politiques et actions (ESRS 2 §52). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Has the company set measurable, time-bound and outcome-oriented targets on water? If not, answer No and describe below how it tracks the effectiveness of its policies and actions (ESRS 2 §52). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "¿Ha fijado la empresa metas medibles, con plazo y orientadas a resultados sobre el agua? Si no, responda No y describa a continuación cómo realiza el seguimiento de la eficacia de sus políticas y acciones (ESRS 2 §52). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen messbare, terminierte und ergebnisorientierte Ziele zu Wasser gesetzt? Wenn nicht, mit Nein antworten und unten beschreiben, wie die Wirksamkeit der Konzepte und Maßnahmen überwacht wird (ESRS 2 §52). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "L'impresa ha fissato obiettivi misurabili, con scadenza e orientati ai risultati sulle acque? In caso contrario, rispondere No e descrivere di seguito come si monitora l'efficacia delle politiche e delle azioni (ESRS 2 §52). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming meetbare, tijdgebonden en resultaatgerichte streefdoelen voor water vastgesteld? Zo niet, antwoord dan Nee en beschrijf hieronder hoe de doeltreffendheid van het beleid en de acties wordt gemonitord (ESRS 2 §52). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "A empresa fixou metas mensuráveis, com prazo e orientadas para resultados sobre a água? Se não, responda Não e descreva abaixo como acompanha a eficácia das suas políticas e ações (ESRS 2 §52). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_3",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-CIB-TAB",
+   "libelle": {
+    "fr": "Cibles sur l'eau : valeurs, années et périmètre",
+    "en": "Targets on water: values, years and scope",
+    "es": "Metas sobre el agua: valores, años y alcance",
+    "de": "Ziele zu Wasser: Werte, Jahre und Geltungsbereich",
+    "it": "Obiettivi sulle acque: valori, anni e ambito",
+    "nl": "Streefdoelen voor water: waarden, jaren en reikwijdte",
+    "pt": "Metas sobre a água: valores, anos e âmbito"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-CIBLES",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par cible : indicateur et unité, cible absolue ou relative, valeur et année de référence, étape, valeur et année cibles, imposée par la loi ou non, fondée ou non sur des preuves scientifiques concluantes (sujets environnementaux), périmètre (ESRS 2 §51). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Stratégie, feuilles de route et tableaux de bord de l'entreprise."
+    },
+    "en": {
+     "description": "One row per target: metric and unit, absolute or relative target, baseline value and year, milestone, target value and year, whether it is required by law, whether it is based on conclusive scientific evidence (environmental topics), scope (ESRS 2 §51). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Company strategy, roadmaps and dashboards."
+    },
+    "es": {
+     "description": "Una fila por meta: parámetro y unidad, meta absoluta o relativa, valor y año de referencia, hito, valor y año de la meta, si es exigida por ley, si se basa en pruebas científicas concluyentes (temas medioambientales), alcance (ESRS 2 §51). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Estrategia de la empresa, hojas de ruta y cuadros de mando."
+    },
+    "de": {
+     "description": "Eine Zeile je Ziel: Kennzahl und Einheit, absolutes oder relatives Ziel, Basiswert und Basisjahr, Meilenstein, Zielwert und Zieljahr, ob gesetzlich vorgeschrieben, ob auf eindeutigen wissenschaftlichen Belegen beruhend (Umweltthemen), Geltungsbereich (ESRS 2 §51). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Unternehmensstrategie, Fahrpläne und Dashboards."
+    },
+    "it": {
+     "description": "Una riga per obiettivo: metrica e unità, obiettivo assoluto o relativo, valore e anno di base, tappa, valore e anno dell'obiettivo, se richiesto dalla legge, se basato su prove scientifiche conclusive (temi ambientali), ambito (ESRS 2 §51). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Strategia dell'impresa, piani e cruscotti."
+    },
+    "nl": {
+     "description": "Eén rij per streefdoel: metriek en eenheid, absoluut of relatief streefdoel, basiswaarde en basisjaar, mijlpaal, streefwaarde en streefjaar, of het wettelijk vereist is, of het op overtuigend wetenschappelijk bewijs is gebaseerd (milieuonderwerpen), reikwijdte (ESRS 2 §51). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Strategie van de onderneming, stappenplannen en dashboards."
+    },
+    "pt": {
+     "description": "Uma linha por meta: métrica e unidade, meta absoluta ou relativa, valor e ano de base, etapa, valor e ano da meta, se é exigida por lei, se se baseia em provas científicas conclusivas (temas ambientais), âmbito (ESRS 2 §51). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Estratégia da empresa, roteiros e painéis de controlo."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_3",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-CIB-DESC",
+   "libelle": {
+    "fr": "Cibles sur l'eau : lien avec les politiques, étapes, méthodes et scénarios",
+    "en": "Targets on water: link to policies, milestones, methods and scenarios",
+    "es": "Metas sobre el agua: vínculo con las políticas, hitos, métodos y escenarios",
+    "de": "Ziele zu Wasser: Bezug zu Konzepten, Meilensteine, Methoden und Szenarien",
+    "it": "Obiettivi sulle acque: collegamento con le politiche, tappe, metodi e scenari",
+    "nl": "Streefdoelen voor water: verband met beleid, mijlpalen, methoden en scenario's",
+    "pt": "Metas sobre a água: ligação às políticas, etapas, métodos e cenários"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque cible : son lien avec les objectifs des politiques et les actions, les étapes ou cibles intermédiaires, les méthodes et hypothèses importantes et, le cas échéant, les scénarios, les principales sources de données et la compatibilité avec les objectifs nationaux, européens ou internationaux (ESRS 2 §51(a), (e), (f), (h)). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "For each target: its link to the policy objectives and actions, the milestones or interim targets, the methods and significant assumptions and, where applicable, the scenarios, the key data sources and the compatibility with national, EU or international policy goals (ESRS 2 §51(a), (e), (f), (h)). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Para cada meta: su vínculo con los objetivos y las acciones de las políticas, los hitos o metas intermedias, los métodos y las hipótesis significativas y, en su caso, los escenarios, las principales fuentes de datos y la compatibilidad con los objetivos de las políticas nacionales, de la UE o internacionales (ESRS 2 §51(a), (e), (f), (h)). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Für jedes Ziel: sein Bezug zu den Zielen und Maßnahmen der Konzepte, die Meilensteine oder Zwischenziele, die Methoden und wesentlichen Annahmen und gegebenenfalls die Szenarien, die wichtigsten Datenquellen und die Vereinbarkeit mit nationalen, EU-weiten oder internationalen politischen Zielen (ESRS 2 §51(a), (e), (f), (h)). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Per ogni obiettivo: il suo collegamento con gli obiettivi e le azioni delle politiche, le tappe o gli obiettivi intermedi, i metodi e le ipotesi significative e, se del caso, gli scenari, le principali fonti di dati e la compatibilità con gli obiettivi delle politiche nazionali, dell'UE o internazionali (ESRS 2 §51(a), (e), (f), (h)). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Voor elk streefdoel: het verband met de doelstellingen en acties van het beleid, de mijlpalen of tussentijdse streefdoelen, de methoden en belangrijke aannames en, indien van toepassing, de scenario's, de belangrijkste gegevensbronnen en de verenigbaarheid met nationale, EU- of internationale beleidsdoelen (ESRS 2 §51(a), (e), (f), (h)). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Para cada meta: a sua ligação aos objetivos e às ações das políticas, as etapas ou metas intermédias, os métodos e pressupostos significativos e, se aplicável, os cenários, as principais fontes de dados e a compatibilidade com os objetivos das políticas nacionais, da UE ou internacionais (ESRS 2 §51(a), (e), (f), (h)). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_3",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-SUIVI-SS-CIBLE",
+   "libelle": {
+    "fr": "Suivi de l'efficacité sans cible sur l'eau",
+    "en": "Tracking of effectiveness without targets on water",
+    "es": "Seguimiento de la eficacia sin metas sobre el agua",
+    "de": "Wirksamkeitsüberwachung ohne Ziele zu Wasser",
+    "it": "Monitoraggio dell'efficacia in assenza di obiettivi sulle acque",
+    "nl": "Monitoring van de doeltreffendheid zonder streefdoelen voor water",
+    "pt": "Acompanhamento da eficácia sem metas sobre a água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si aucune cible mesurable n'est fixée : si et comment l'entreprise suit malgré tout l'efficacité de ses politiques et actions (ESRS 2 §52). Répondre N/A si des cibles sont fixées. Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Only if no measurable target is set: whether and how the company still tracks the effectiveness of its policies and actions (ESRS 2 §52). Answer N/A if targets are set. Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Solo si no se fija ninguna meta medible: si la empresa sigue, y cómo, la eficacia de sus políticas y acciones (ESRS 2 §52). Responda N/A si se han fijado metas. Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Nur wenn kein messbares Ziel gesetzt ist: ob und wie das Unternehmen die Wirksamkeit seiner Konzepte und Maßnahmen dennoch überwacht (ESRS 2 §52). Mit N/A antworten, wenn Ziele gesetzt sind. Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Solo se non è fissato alcun obiettivo misurabile: se e come l'impresa monitora comunque l'efficacia delle sue politiche e azioni (ESRS 2 §52). Rispondere N/A se sono fissati obiettivi. Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Alleen als er geen meetbaar streefdoel is vastgesteld: of en hoe de onderneming de doeltreffendheid van haar beleid en acties toch monitort (ESRS 2 §52). Antwoord N/A als er streefdoelen zijn vastgesteld. Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Apenas se não for fixada nenhuma meta mensurável: se a empresa acompanha, e como, a eficácia das suas políticas e ações (ESRS 2 §52). Responda N/A se forem fixadas metas. Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_3",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-CONSOMMATION",
+   "libelle": {
+    "fr": "Consommation totale d'eau",
+    "en": "Total water consumption",
+    "es": "Consumo total de agua",
+    "de": "Gesamter Wasserverbrauch",
+    "it": "Consumo totale di acqua",
+    "nl": "Totaal waterverbruik",
+    "pt": "Consumo total de água"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[EAU-PRELEVEMENT] - [EAU-REJET]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil : eau prélevée moins eau rejetée (E3-4 §16(a), E3 AR 4). C'est l'eau qui entre sur le site et n'en ressort ni vers l'environnement ni vers un tiers. Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Calculated by the tool: water withdrawn minus water discharged (E3-4 §16(a), E3 AR 4). It is the water that enters the site and does not leave it to the environment or to a third party. Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Calculado por la herramienta: agua extraída menos agua vertida (E3-4 §16(a), E3 AR 4). Es el agua que entra en el centro y no sale de él hacia el medio ambiente ni hacia un tercero. Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Von der Software berechnet: entnommenes Wasser minus eingeleitetes Wasser (E3-4 §16(a), E3 AR 4). Es ist das Wasser, das in den Standort gelangt und ihn nicht in die Umwelt oder zu einem Dritten wieder verlässt. Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Calcolato dallo strumento: acqua prelevata meno acqua scaricata (E3-4 §16(a), E3 AR 4). È l'acqua che entra nel sito e non ne esce verso l'ambiente o verso un terzo. Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Berekend door de tool: onttrokken water min geloosd water (E3-4 §16(a), E3 AR 4). Het is het water dat de locatie binnenkomt en deze niet verlaat naar het milieu of naar een derde. Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Calculado pela ferramenta: água captada menos água descarregada (E3-4 §16(a), E3 AR 4). É a água que entra no local e não sai dele para o ambiente nem para um terceiro. Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-CONSO-STRESS",
+   "libelle": {
+    "fr": "Consommation d'eau en zone de stress hydrique (tous les rejets déduits)",
+    "en": "Water consumption in areas with water stress (all discharges deducted)",
+    "es": "Consumo de agua en zonas con estrés hídrico (todos los vertidos deducidos)",
+    "de": "Wasserverbrauch in Gebieten mit Wasserstress (alle Einleitungen abgezogen)",
+    "it": "Consumo di acqua in aree a stress idrico (tutti gli scarichi dedotti)",
+    "nl": "Waterverbruik in gebieden met waterstress (alle lozingen afgetrokken)",
+    "pt": "Consumo de água em zonas de stresse hídrico (todas as descargas deduzidas)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour un site situé dans une zone de stress hydrique (indicateurs de E3 AR 2, par exemple un stress hydrique de base « élevé » ou plus dans l'outil Aqueduct du WRI) : sa consommation d'eau de la période, eau prélevée moins toute l'eau rejetée, comme la consommation totale (E3-4 §16(b), E3 AR 4), en mètres cubes ; un site hors zone de stress hydrique saisit 0. La norme volontaire VS a son propre KPI, qui ne déduit que les rejets des procédés de production (B6 §37). Saisir 0 s'il n'y en a pas (N/A rendrait le total non applicable). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Relevés de compteurs, factures d'eau, outil Aqueduct du WRI."
+    },
+    "en": {
+     "description": "For a site located in an area with water stress (indicators of E3 AR 2, for example a baseline water stress of ‘High’ or more in the WRI Aqueduct tool): its water consumption of the period, water withdrawn minus all water discharged, like the total consumption (E3-4 §16(b), E3 AR 4), in cubic metres; a site outside areas with water stress enters 0. The Voluntary Standard VS has its own KPI, which deducts only the discharge of production processes (B6 §37). Enter 0 if there is none (N/A would make the total not applicable). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meter readings, water bills, WRI Aqueduct tool."
+    },
+    "es": {
+     "description": "Para un centro situado en una zona con estrés hídrico (indicadores de E3 AR 2, por ejemplo un estrés hídrico de referencia «High» o superior en la herramienta WRI Aqueduct): su consumo de agua del periodo, agua extraída menos todos los vertidos, como el consumo total (E3-4 §16(b), E3 AR 4), en metros cúbicos; un centro fuera de zonas con estrés hídrico introduce 0. La norma voluntaria VS tiene su propio KPI, que deduce solo el vertido de los procesos de producción (B6 §37). Introduzca 0 si no hay ninguno (N/A haría que el total no fuera aplicable). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Lecturas de contadores, facturas de agua, herramienta WRI Aqueduct."
+    },
+    "de": {
+     "description": "Für einen Standort in einem Gebiet mit Wasserstress (Indikatoren aus E3 AR 2, zum Beispiel ein Basis-Wasserstress von „High“ oder höher im Tool WRI Aqueduct): sein Wasserverbrauch im Zeitraum, entnommenes Wasser minus alle Einleitungen, wie beim Gesamtverbrauch (E3-4 §16(b), E3 AR 4), in Kubikmetern; ein Standort außerhalb von Gebieten mit Wasserstress gibt 0 ein. Der freiwillige Standard VS hat eine eigene Kennzahl (KPI), die nur die Einleitung der Produktionsprozesse abzieht (B6 §37). 0 eingeben, wenn es keine gibt (N/A würde die Summe nicht anwendbar machen). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Zählerstände, Wasserrechnungen, Tool WRI Aqueduct."
+    },
+    "it": {
+     "description": "Per un sito situato in un'area a stress idrico (indicatori di E3 AR 2, ad esempio uno stress idrico di base «High» o superiore nello strumento WRI Aqueduct): il suo consumo di acqua nel periodo, acqua prelevata meno tutti gli scarichi, come per il consumo totale (E3-4 §16(b), E3 AR 4), in metri cubi; un sito fuori dalle aree a stress idrico inserisce 0. La norma volontaria VS ha un proprio KPI, che deduce solo lo scarico dei processi produttivi (B6 §37). Inserire 0 se non ce ne sono (N/A renderebbe il totale non applicabile). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Letture dei contatori, bollette dell'acqua, strumento WRI Aqueduct."
+    },
+    "nl": {
+     "description": "Voor een locatie in een gebied met waterstress (indicatoren van E3 AR 2, bijvoorbeeld een basiswaterstress van ‘High’ of hoger in de tool WRI Aqueduct): het waterverbruik van de periode, onttrokken water min alle lozingen, zoals bij het totaalverbruik (E3-4 §16(b), E3 AR 4), in kubieke meter; een locatie buiten gebieden met waterstress voert 0 in. De vrijwillige standaard VS heeft een eigen KPI, die alleen de lozing van de productieprocessen aftrekt (B6 §37). Voer 0 in als er geen zijn (N/A zou het totaal niet van toepassing maken). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meterstanden, waterrekeningen, tool WRI Aqueduct."
+    },
+    "pt": {
+     "description": "Para um local situado numa zona de stresse hídrico (indicadores de E3 AR 2, por exemplo um stresse hídrico de base «High» ou superior na ferramenta WRI Aqueduct): o seu consumo de água do período, água captada menos todas as descargas, como o consumo total (E3-4 §16(b), E3 AR 4), em metros cúbicos; um local fora de zonas de stresse hídrico introduz 0. A norma voluntária VS tem o seu próprio KPI, que deduz apenas a descarga dos processos de produção (B6 §37). Introduza 0 se não houver nenhum (N/A tornaria o total não aplicável). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Leituras de contadores, faturas da água, ferramenta WRI Aqueduct."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-PRELEVEMENT",
+   "libelle": {
+    "fr": "Eau prélevée",
+    "en": "Water withdrawn",
+    "es": "Agua extraída",
+    "de": "Wasserentnahme",
+    "it": "Acqua prelevata",
+    "nl": "Onttrokken water",
+    "pt": "Água captada"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Eau prélevée sur le site pendant la période (réseau, forage, cours d'eau). Saisir 0 s'il n'y en a pas (N/A rendrait le total non applicable).",
+     "source": "Factures d'eau, relevés de compteurs."
+    },
+    "en": {
+     "description": "Water withdrawn by the site during the period (mains, borehole, river). Enter 0 if there is none (N/A would make the total not applicable).",
+     "source": "Water bills, meter readings."
+    },
+    "es": {
+     "description": "Agua extraída por el centro durante el periodo (red pública, pozo, río). Introduzca 0 si no hay ninguno (N/A haría que el total no fuera aplicable).",
+     "source": "Facturas de agua, lecturas de contadores."
+    },
+    "de": {
+     "description": "Vom Standort im Zeitraum entnommenes Wasser (Leitungsnetz, Bohrbrunnen, Fluss). 0 eingeben, wenn es keine gibt (N/A würde die Summe nicht anwendbar machen).",
+     "source": "Wasserrechnungen, Zählerstände."
+    },
+    "it": {
+     "description": "Acqua prelevata dal sito nel periodo (acquedotto, pozzo, fiume). Inserire 0 se non ce ne sono (N/A renderebbe il totale non applicabile).",
+     "source": "Bollette dell'acqua, letture dei contatori."
+    },
+    "nl": {
+     "description": "Door de locatie tijdens de periode onttrokken water (leidingnet, boorput, rivier). Voer 0 in als er geen zijn (N/A zou het totaal niet van toepassing maken).",
+     "source": "Waterrekeningen, meterstanden."
+    },
+    "pt": {
+     "description": "Água captada pelo local durante o período (rede pública, furo, rio). Introduza 0 se não houver nenhum (N/A tornaria o total não aplicável).",
+     "source": "Faturas da água, leituras de contadores."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-REJET",
+   "libelle": {
+    "fr": "Total des rejets d'eau",
+    "en": "Total water discharge",
+    "es": "Vertido total de agua",
+    "de": "Gesamte Wassereinleitung",
+    "it": "Scarico totale di acqua",
+    "nl": "Totale waterlozing",
+    "pt": "Descarga total de água"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Effluents et autres eaux qui quittent le site vers les eaux de surface, les eaux souterraines ou des tiers pendant la période, en mètres cubes (E3-4 §16(d)). Saisir 0 s'il n'y en a pas (N/A rendrait le total non applicable). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Relevés de compteurs, factures d'eau, autorisations de prélèvement et de rejet."
+    },
+    "en": {
+     "description": "Effluents and other water leaving the site to surface water, groundwater or third parties during the period, in cubic metres (E3-4 §16(d)). Enter 0 if there is none (N/A would make the total not applicable). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meter readings, water bills, withdrawal and discharge permits."
+    },
+    "es": {
+     "description": "Efluentes y otras aguas que salen del centro hacia aguas superficiales, aguas subterráneas o terceros durante el periodo, en metros cúbicos (E3-4 §16(d)). Introduzca 0 si no hay ninguno (N/A haría que el total no fuera aplicable). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Lecturas de contadores, facturas de agua, autorizaciones de extracción y vertido."
+    },
+    "de": {
+     "description": "Abwässer und anderes Wasser, das den Standort im Zeitraum in Oberflächengewässer, Grundwasser oder zu Dritten verlässt, in Kubikmetern (E3-4 §16(d)). 0 eingeben, wenn es keine gibt (N/A würde die Summe nicht anwendbar machen). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Zählerstände, Wasserrechnungen, Entnahme- und Einleitungsgenehmigungen."
+    },
+    "it": {
+     "description": "Effluenti e altre acque che escono dal sito verso acque superficiali, acque sotterranee o terzi nel periodo, in metri cubi (E3-4 §16(d)). Inserire 0 se non ce ne sono (N/A renderebbe il totale non applicabile). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Letture dei contatori, bollette dell'acqua, autorizzazioni al prelievo e allo scarico."
+    },
+    "nl": {
+     "description": "Afvalwater en ander water dat de locatie tijdens de periode verlaat naar oppervlaktewater, grondwater of derden, in kubieke meter (E3-4 §16(d)). Voer 0 in als er geen zijn (N/A zou het totaal niet van toepassing maken). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meterstanden, waterrekeningen, onttrekkings- en lozingsvergunningen."
+    },
+    "pt": {
+     "description": "Efluentes e outras águas que saem do local para águas superficiais, águas subterrâneas ou terceiros durante o período, em metros cúbicos (E3-4 §16(d)). Introduza 0 se não houver nenhum (N/A tornaria o total não aplicável). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Leituras de contadores, faturas da água, licenças de captação e descarga."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-RECYCLEE",
+   "libelle": {
+    "fr": "Total de l'eau recyclée et réutilisée",
+    "en": "Total water recycled and reused",
+    "es": "Total de agua reciclada y reutilizada",
+    "de": "Gesamtmenge des recycelten und wiederverwendeten Wassers",
+    "it": "Totale dell'acqua riciclata e riutilizzata",
+    "nl": "Totaal gerecycled en hergebruikt water",
+    "pt": "Total de água reciclada e reutilizada"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Eau et eaux usées (traitées ou non) utilisées plus d'une fois avant de quitter l'entreprise : dans le même procédé (recyclée), dans un autre procédé ou un autre site de l'entreprise (réutilisée), en mètres cubes (E3-4 §16(e)). Saisir 0 s'il n'y en a pas (N/A rendrait le total non applicable). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Compteurs des boucles de recyclage, bilans de la station de traitement."
+    },
+    "en": {
+     "description": "Water and wastewater (treated or not) used more than once before it leaves the company: in the same process (recycled), in another process or another site of the company (reused), in cubic metres (E3-4 §16(e)). Enter 0 if there is none (N/A would make the total not applicable). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meters of the recycling loops, reports of the treatment plant."
+    },
+    "es": {
+     "description": "Agua y aguas residuales (tratadas o no) utilizadas más de una vez antes de salir de la empresa: en el mismo proceso (reciclada), en otro proceso u otro centro de la empresa (reutilizada), en metros cúbicos (E3-4 §16(e)). Introduzca 0 si no hay ninguno (N/A haría que el total no fuera aplicable). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Contadores de los circuitos de reciclaje, informes de la depuradora."
+    },
+    "de": {
+     "description": "Wasser und Abwasser (behandelt oder nicht), das vor dem Verlassen des Unternehmens mehrfach verwendet wird: im selben Prozess (recycelt), in einem anderen Prozess oder an einem anderen Standort des Unternehmens (wiederverwendet), in Kubikmetern (E3-4 §16(e)). 0 eingeben, wenn es keine gibt (N/A würde die Summe nicht anwendbar machen). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Zähler der Recyclingkreisläufe, Berichte der Kläranlage."
+    },
+    "it": {
+     "description": "Acqua e acque reflue (trattate o no) utilizzate più di una volta prima di uscire dall'impresa: nello stesso processo (riciclata), in un altro processo o in un altro sito dell'impresa (riutilizzata), in metri cubi (E3-4 §16(e)). Inserire 0 se non ce ne sono (N/A renderebbe il totale non applicabile). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Contatori dei circuiti di riciclaggio, rapporti dell'impianto di trattamento."
+    },
+    "nl": {
+     "description": "Water en afvalwater (behandeld of niet) dat meer dan eens wordt gebruikt voordat het de onderneming verlaat: in hetzelfde proces (gerecycled), in een ander proces of op een andere locatie van de onderneming (hergebruikt), in kubieke meter (E3-4 §16(e)). Voer 0 in als er geen zijn (N/A zou het totaal niet van toepassing maken). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Meters van de recyclinglussen, rapporten van de zuiveringsinstallatie."
+    },
+    "pt": {
+     "description": "Água e águas residuais (tratadas ou não) utilizadas mais de uma vez antes de saírem da empresa: no mesmo processo (reciclada), noutro processo ou noutro local da empresa (reutilizada), em metros cúbicos (E3-4 §16(e)). Introduza 0 se não houver nenhum (N/A tornaria o total não aplicável). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Contadores dos circuitos de reciclagem, relatórios da estação de tratamento."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-STOCKEE",
+   "libelle": {
+    "fr": "Total de l'eau stockée",
+    "en": "Total water stored",
+    "es": "Total de agua almacenada",
+    "de": "Gesamtmenge des gespeicherten Wassers",
+    "it": "Totale dell'acqua immagazzinata",
+    "nl": "Totaal opgeslagen water",
+    "pt": "Total de água armazenada"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "m³",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Eau contenue dans les installations de stockage ou les réservoirs du site à la fin de la période, en mètres cubes (E3-4 §16(f)). Saisir 0 s'il n'y en a pas (N/A rendrait le total non applicable). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Relevés de niveau des réservoirs, capacité des cuves."
+    },
+    "en": {
+     "description": "Water held in the storage facilities or reservoirs of the site at the end of the period, in cubic metres (E3-4 §16(f)). Enter 0 if there is none (N/A would make the total not applicable). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Reservoir level readings, tank capacity."
+    },
+    "es": {
+     "description": "Agua contenida en las instalaciones de almacenamiento o los depósitos del centro al final del periodo, en metros cúbicos (E3-4 §16(f)). Introduzca 0 si no hay ninguno (N/A haría que el total no fuera aplicable). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Lecturas del nivel de los depósitos, capacidad de los tanques."
+    },
+    "de": {
+     "description": "Wasser, das am Ende des Zeitraums in den Speicheranlagen oder Becken des Standorts gehalten wird, in Kubikmetern (E3-4 §16(f)). 0 eingeben, wenn es keine gibt (N/A würde die Summe nicht anwendbar machen). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Pegelstände der Becken, Fassungsvermögen der Tanks."
+    },
+    "it": {
+     "description": "Acqua contenuta negli impianti di stoccaggio o nei serbatoi del sito alla fine del periodo, in metri cubi (E3-4 §16(f)). Inserire 0 se non ce ne sono (N/A renderebbe il totale non applicabile). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Letture del livello dei serbatoi, capacità delle cisterne."
+    },
+    "nl": {
+     "description": "Water in de opslagvoorzieningen of reservoirs van de locatie aan het einde van de periode, in kubieke meter (E3-4 §16(f)). Voer 0 in als er geen zijn (N/A zou het totaal niet van toepassing maken). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Peilstanden van de reservoirs, capaciteit van de tanks."
+    },
+    "pt": {
+     "description": "Água contida nas instalações de armazenamento ou nos reservatórios do local no final do período, em metros cúbicos (E3-4 §16(f)). Introduza 0 se não houver nenhum (N/A tornaria o total não aplicável). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a)).",
+     "source": "Leituras do nível dos reservatórios, capacidade dos depósitos."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "EAU-METHODES",
+   "libelle": {
+    "fr": "Indicateurs sur l'eau : méthodes, sources, chaîne de valeur et contexte",
+    "en": "Metrics on water: methods, sources, value chain data and context",
+    "es": "Parámetros sobre el agua: métodos, fuentes, datos de la cadena de valor y contexto",
+    "de": "Kennzahlen zu Wasser: Methoden, Quellen, Daten der Wertschöpfungskette und Kontext",
+    "it": "Metriche sulle acque: metodi, fonti, dati della catena del valore e contesto",
+    "nl": "Metrieken voor water: methoden, bronnen, gegevens uit de waardeketen en context",
+    "pt": "Métricas sobre a água: métodos, fontes, dados da cadeia de valor e contexto"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque indicateur : unité, méthode de calcul et sources, méthode d'estimation avec ses hypothèses et limites importantes ; pour un indicateur de la chaîne de valeur, part des données indirectes ou approchées et améliorations prévues ; informations de contexte (ESRS 2 §49(a) à (c)). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "For each metric: unit, calculation method and sources, estimation method with its significant assumptions and limitations; for a value chain metric, reliance on indirect sources or proxies and the planned improvements; contextual information (ESRS 2 §49(a) to (c)). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Para cada parámetro: unidad, método de cálculo y fuentes, método de estimación con sus hipótesis y limitaciones significativas; para un parámetro de la cadena de valor, el recurso a fuentes indirectas o aproximaciones y las mejoras previstas; información de contexto (ESRS 2 §49(a) a (c)). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Für jede Kennzahl: Einheit, Berechnungsmethode und Quellen, Schätzmethode mit ihren wesentlichen Annahmen und Einschränkungen; bei einer Kennzahl der Wertschöpfungskette die Nutzung indirekter Quellen oder Näherungswerte und die geplanten Verbesserungen; Kontextinformationen (ESRS 2 §49(a) bis (c)). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Per ogni metrica: unità, metodo di calcolo e fonti, metodo di stima con le sue ipotesi e limiti significativi; per una metrica della catena del valore, il ricorso a fonti indirette o a stime di approssimazione e i miglioramenti previsti; informazioni di contesto (ESRS 2 §49(a)-(c)). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Voor elke metriek: eenheid, berekeningsmethode en bronnen, schattingsmethode met de belangrijke aannames en beperkingen; voor een metriek van de waardeketen het gebruik van indirecte bronnen of benaderingen en de geplande verbeteringen; contextinformatie (ESRS 2 §49(a) tot en met (c)). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Para cada métrica: unidade, método de cálculo e fontes, método de estimativa com os seus pressupostos e limitações significativos; para uma métrica da cadeia de valor, o recurso a fontes indiretas ou aproximações e as melhorias previstas; informação de contexto (ESRS 2 §49(a) a (c)). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "EAU-EVOLUTION",
+   "libelle": {
+    "fr": "Indicateurs sur l'eau : évolutions importantes et progrès",
+    "en": "Metrics on water: significant changes and progress",
+    "es": "Parámetros sobre el agua: cambios significativos y avances",
+    "de": "Kennzahlen zu Wasser: wesentliche Änderungen und Fortschritte",
+    "it": "Metriche sulle acque: cambiamenti significativi e progressi",
+    "nl": "Metrieken voor water: belangrijke wijzigingen en voortgang",
+    "pt": "Métricas sobre a água: alterações significativas e progressos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Évolutions importantes des résultats par rapport aux périodes précédentes, progrès vers les cibles et effet des acquisitions ou cessions importantes (ESRS 2 §49(d)). Entrée progressive : les entreprises de la première vague qui, à la date de clôture, ne dépassent pas un chiffre d'affaires net de 450 millions d'euros ou un effectif moyen de 1 000 salariés sur l'exercice peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "en": {
+     "description": "Significant changes in performance compared with the previous periods, progress towards the targets and effect of major acquisitions or disposals (ESRS 2 §49(d)). Phase-in: wave-one companies that, at the balance sheet date, do not exceed a net turnover of EUR 450 million or an average of 1,000 employees during the financial year may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "es": {
+     "description": "Cambios significativos del desempeño respecto a los periodos anteriores, avances hacia las metas y efecto de las adquisiciones o enajenaciones importantes (ESRS 2 §49(d)). Disposición transitoria: las empresas de la primera oleada que, en la fecha de cierre del balance, no superen un importe neto de la cifra de negocios de 450 millones de euros ni una media de 1 000 empleados durante el ejercicio pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "de": {
+     "description": "Wesentliche Veränderungen der Leistung gegenüber den Vorperioden, Fortschritte bei den Zielen und Auswirkung größerer Übernahmen oder Veräußerungen (ESRS 2 §49(d)). Übergangsbestimmung: Unternehmen der ersten Welle, die am Bilanzstichtag im Geschäftsjahr weder einen Nettoumsatz von 450 Mio. EUR noch durchschnittlich 1 000 Beschäftigte überschreiten, dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "it": {
+     "description": "Cambiamenti significativi della performance rispetto ai periodi precedenti, progressi verso gli obiettivi ed effetto di acquisizioni o cessioni rilevanti (ESRS 2 §49(d)). Disposizione transitoria: le imprese della prima ondata che, alla data di chiusura del bilancio, non superano un fatturato netto di 450 milioni di EUR né una media di 1 000 dipendenti nel corso dell'esercizio possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "nl": {
+     "description": "Belangrijke veranderingen in de prestaties ten opzichte van eerdere perioden, voortgang richting de streefdoelen en effect van grote overnames of afstotingen (ESRS 2 §49(d)). Overgangsbepaling: ondernemingen van de eerste golf die op de balansdatum in het boekjaar niet meer dan 450 miljoen EUR netto-omzet en gemiddeld niet meer dan 1 000 werknemers hebben, mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2) (ESRS 1 §126(a))."
+    },
+    "pt": {
+     "description": "Alterações significativas do desempenho face aos períodos anteriores, progressos em direção às metas e efeito de aquisições ou alienações importantes (ESRS 2 §49(d)). Disposição transitória: as empresas da primeira vaga que, na data do balanço, não ultrapassem um volume de negócios líquido de 450 milhões de EUR nem uma média de 1 000 empregados durante o exercício podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2) (ESRS 1 §126(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E3_4",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  }
+ ],
+ "regles": [
+  {
+   "nom": "Consommation en zone de stress hydrique ≤ consommation totale",
+   "description": "La consommation d'eau d'un site en zone de stress hydrique fait partie de sa consommation totale (mêmes rejets déduits).",
+   "gauche": "[EAU-CONSO-STRESS]",
+   "operateur": "<=",
+   "droite": "[EAU-CONSOMMATION]",
+   "tolerance": "0",
+   "bloquante": false,
+   "actif": true,
+   "traductions": {
+    "en": {
+     "nom": "Consumption in water-stress areas ≤ total consumption",
+     "description": "The water consumption of a site in an area with water stress is part of its total consumption (same discharges deducted)."
+    },
+    "es": {
+     "nom": "Consumo en zonas con estrés hídrico ≤ consumo total",
+     "description": "El consumo de agua de un centro en una zona con estrés hídrico forma parte de su consumo total (mismos vertidos deducidos)."
+    },
+    "de": {
+     "nom": "Verbrauch in Gebieten mit Wasserstress ≤ Gesamtverbrauch",
+     "description": "Der Wasserverbrauch eines Standorts in einem Gebiet mit Wasserstress ist Teil seines Gesamtverbrauchs (dieselben Einleitungen abgezogen)."
+    },
+    "it": {
+     "nom": "Consumo in aree a stress idrico ≤ consumo totale",
+     "description": "Il consumo di acqua di un sito in un'area a stress idrico fa parte del suo consumo totale (stessi scarichi dedotti)."
+    },
+    "nl": {
+     "nom": "Verbruik in gebieden met waterstress ≤ totaal verbruik",
+     "description": "Het waterverbruik van een locatie in een gebied met waterstress maakt deel uit van het totaalverbruik (dezelfde lozingen afgetrokken)."
+    },
+    "pt": {
+     "nom": "Consumo em zonas de stresse hídrico ≤ consumo total",
+     "description": "O consumo de água de um local numa zona de stresse hídrico faz parte do seu consumo total (as mesmas descargas deduzidas)."
+    }
+   }
+  }
+ ],
+ "exporte_le": "",
+ "exporte_de": "Bibliothèque de l'outil",
+ "documents": [
+  {
+   "titre": "Commission Delegated Regulation (EU) 2026/1563 of 3 July 2026 amending Delegated Regulation (EU) 2023/2772 (revised ESRS: ESRS 1, ESRS 2, E1 to E5, S1 to S4, G1, glossary)",
+   "editeur": "European Commission",
+   "version": "OJ L, 21 September 2026",
+   "date": "2026-07-03",
+   "url": "http://data.europa.eu/eli/reg_del/2026/1563/oj",
+   "consulte_le": "2026-11-18",
+   "licence": "EU law: reuse allowed with acknowledgement of the source (Commission Decision 2011/833/EU)"
+  },
+  {
+   "titre": "Draft List of Datapoints effective from 2026, Revised ESRS Delegated Act of 3 July 2026, clean version (workbook)",
+   "editeur": "EFRAG",
+   "version": "Draft, version of 28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; non-authoritative draft, reproduction and use rights restricted; consulted only to check that the inventory is complete, nothing of it is reproduced in the templates"
+  },
+  {
+   "titre": "Explanatory Note: Revised ESRS, Draft List of Datapoints and Draft XBRL Taxonomy 2026",
+   "editeur": "EFRAG",
+   "version": "28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; read for reference only, nothing of it is reproduced in the templates"
+  }
+ ]
+}

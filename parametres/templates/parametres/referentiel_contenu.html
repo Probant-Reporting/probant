@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.contenu.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% include "parametres/_entete_referentiel.html" %}
+{% libelle "referentiels.contenu.recherche_placeholder" as t_recherche %}{% libelle "referentiels.contenu.ajouter_depuis" as t_depuis %}
+<div class="editeur-contenu{% if tiroir_ouvert %} tiroir-ouvert{% endif %}" data-editeur data-url="{% url 'parametres:referentiel_contenu_action' ref.code %}">
+  <div class="colonne-contenu">
+    {# même barre que les autres pages : recherche avec son libellé, puis les boutons à droite #}
+    <div class="barre-filtres outils-contenu">
+      <div class="champ-filtre"><label for="recherche-contenu">{% libelle "commun.filtres.recherche" %}</label>
+        <input type="search" id="recherche-contenu" data-filtre-contenu placeholder="{{ t_recherche }}"></div>
+      <div class="filtres-droite">
+        <button type="button" class="secondaire" data-tout-deplier>{% libelle "referentiels.contenu.tout_deplier" %}</button>
+        <button type="button" class="secondaire" data-tout-replier>{% libelle "referentiels.contenu.tout_replier" %}</button>
+        <button type="button" class="secondaire" data-nouveau-theme>{% libelle "referentiels.contenu.plus_theme" %}</button>
+        <a class="bouton secondaire" href="{% url 'collecte:referentiel_kpi_nouveau' %}?place={{ ref.code }}|" data-panneau>{% icone "plus" %} {% libelle "referentiels.contenu.nouveau_kpi" %}</a>
+        <a class="bouton secondaire" href="{% url 'parametres:referentiel_choisir' ref.code %}">{% libelle "referentiels.choisir.lien" %}</a>
+        <button type="button" data-ouvrir-tiroir aria-expanded="{% if tiroir_ouvert %}true{% else %}false{% endif %}" aria-controls="tiroir-ajout">{{ t_depuis }}</button>
+      </div>
+      {% include "_etat_filtres.html" %}
+    </div>
+    {% comment %}Référentiel pas encore utilisé (aucune campagne) : la suite est dite ici.{% endcomment %}
+    {% if not ref.nb_campagnes and ref.nb_kpi %}<div class="suite-creation">
+      <strong>{% libelle "referentiels.creation.suite_titre" %}</strong>
+      <ol><li>{% libelle "referentiels.creation.suite_ranger" %}</li>
+        <li><a href="{% url 'collecte:admin_attributions' %}">{% libelle "referentiels.creation.suite_attribuer" %}</a> <span class="discret">{% libelle "referentiels.creation.suite_attribuer_aide" %}</span></li>
+        <li><a href="{% url 'collecte:admin_campagnes' %}">{% libelle "referentiels.creation.suite_campagne" %}</a> <span class="discret">{% libelle "referentiels.creation.suite_campagne_aide" %}</span></li></ol>
+    </div>{% endif %}
+    {% if retour_mep %}{% encart "info" classe="retour-mep" role="status" %}<p>{% libelle "referentiels.mep.retour_compo" %}</p>
+      <a class="bouton" href="{{ retour_mep }}">{% libelle "referentiels.mep.retour_bouton" %}</a>{% endencart %}{% endif %}
+    {% if request.GET.installe %}{% encart "info" classe="info-niveaux" id="regler-niveaux" %}{% libelle_html "referentiels.contenu.regler_niveaux" %}{% endencart %}{% endif %}
+    <details class="aide-repliable aide-contenu">
+      <summary>{% libelle "referentiels.contenu.aide_titre" %}</summary>
+      <ul>
+        <li><span class="poignee-ex">{% icone "poignee" %}</span> {% libelle "referentiels.contenu.aide_glisser" %}</li>
+        <li>{% libelle "referentiels.contenu.aide_clavier" %}</li>
+        <li><span class="poignee-ex">{% icone "chevron-haut" %}{% icone "chevron-bas" %}</span> {% libelle "referentiels.contenu.aide_tactile" %}</li>
+        <li>{% libelle "referentiels.contenu.aide_lot" %}</li>
+        <li>{% libelle "referentiels.contenu.aide_depuis" %}</li>
+        <li>{% libelle "referentiels.contenu.aide_ouvrir" %}</li>
+      </ul>
+    </details>
+    <p class="aide-champ astuce-clavier">{% libelle "referentiels.contenu.astuce_clavier" %}</p>
+    <div id="contenu-referentiel" data-rafraichir>{% include "parametres/_contenu_arbre.html" %}</div>
+  </div>
+  <aside class="tiroir-ajout" id="tiroir-ajout" aria-label="{{ t_depuis }}">
+    <div class="tete-bibliotheque">
+      <div class="titre-tiroir"><h2>{{ t_depuis }}</h2><button type="button" class="icone" data-fermer-tiroir aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+      <p class="discret petit">{% libelle_html "referentiels.contenu.tiroir_aide" %}</p>
+      <label class="champ petit"><span class="libelle">{% libelle "referentiels.contenu.ajoute_dans" %}</span>
+        <select data-cible-ajout><option value="">{% libelle "referentiels.contenu.theme.premier_niveau" %}</option>{% for v, l in options_themes %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></label>
+      <label class="recherche-icone">
+        {% libelle "referentiels.contenu.tiroir_recherche" as t_tiroir %}{% libelle "commun.rechercher" as t_rechercher %}<input type="search" data-filtre-bibliotheque placeholder="{{ t_tiroir }}" aria-label="{{ t_rechercher }}"></label>
+    </div>
+    {% include "parametres/_sources_compo.html" %}
+  </aside>
+</div>
+{% endblock %}

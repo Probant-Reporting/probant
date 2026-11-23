@@ -1,0 +1,6 @@
+{% load collecte %}<!doctype html>
+<html lang="{% langue_page %}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{% libelle "cadre.erreur.csrf.titre" %} – {% libelle "cadre.erreur.code" code=403 %}</title>
+{% include "_style_erreur.html" %}</head>
+<body><main><p class="code-erreur">{% libelle "cadre.erreur.code" code=403 %}</p><h1>{% libelle "cadre.erreur.csrf.titre" %}</h1><p>{% libelle "cadre.erreur.csrf.texte" %}</p><p><a href="{{ retour }}">{% libelle "cadre.erreur.csrf.retour" %}</a></p>{% if retour != "/" %}<p><a href="/">{% libelle "cadre.erreur.accueil" %}</a></p>{% endif %}</main></body>
+</html>

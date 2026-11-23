@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a vulnerability (private)
+    url: https://github.com/Probant-Reporting/probant/security/advisories/new
+    about: Do not open a public issue for a security problem. Use GitHub's private vulnerability reporting (see SECURITY.md).
+  - name: Installation guide
+    url: https://github.com/Probant-Reporting/probant/blob/main/docs/installation.md
+    about: Install, update, back up and restore the tool.

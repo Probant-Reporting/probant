@@ -1,0 +1,28 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.compte.intro" %}</p>{% endblock %}
+{% block etape %}
+<form method="post" class="formulaire carte form-mep" autocomplete="off">
+  {% csrf_token %}
+  {% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+  <div class="grille-fiche">
+    {% include "collecte/administration/_champ.html" with champ=form.prenom %}
+    {% include "collecte/administration/_champ.html" with champ=form.nom %}
+    {% include "collecte/administration/_champ.html" with champ=form.email classe="large" %}
+    {% include "collecte/administration/_champ.html" with champ=form.mot_de_passe %}
+    {% include "collecte/administration/_champ.html" with champ=form.confirmation %}
+  </div>
+  <p class="aide-champ">{% libelle "referentiels.mep.compte.mdp_aide" %}</p>
+  {% libelle "referentiels.mep.compte.creer" as t_creer %}
+  {% include "parametres/mise_en_place/_boutons.html" with libelle_suivant=t_creer %}
+</form>
+{% endblock %}
+{% block apercu %}
+<div class="mini-connexion">
+  <strong>{% libelle "referentiels.mep.compte.apercu_connexion" %}</strong>
+  <span class="discret">{{ instance.titre }} · {{ instance.nom }}</span>
+  <span class="faux-champ">{% libelle "referentiels.mep.compte.apercu_email" %}</span><span class="faux-champ">{% libelle "referentiels.mep.compte.apercu_mdp" %}</span>
+  <span class="ap-bouton">{% libelle "referentiels.mep.compte.apercu_bouton" %}</span>
+</div>
+<p class="discret">{% libelle "referentiels.mep.compte.apercu_aide" %}</p>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.mep.cadre.titre" titre=etape.titre %}{% endblock %}
+{% block contenu %}
+<div class="mise-en-place">
+  {% libelle "referentiels.mep.cadre.etapes_aria" as t_etapes %}
+  <aside class="etapes-mep" aria-label="{{ t_etapes }}">
+    <h2>{% libelle "referentiels.mep.cadre.titre_court" %}</h2>
+    <p class="discret">{% if terminee %}{% libelle "referentiels.mep.cadre.terminee_aide" %}{% else %}{% libelle "referentiels.mep.cadre.huit_etapes" %}{% endif %}</p>
+    <ol>
+      {% for e in etapes %}
+      <li class="{% if e.numero == etape.numero %}actuelle{% elif e.numero < atteinte or terminee %}faite{% else %}a-venir{% endif %}">
+        {% if e.numero != etape.numero and e.numero > 1 and user.is_authenticated and e.numero <= atteinte or e.numero != etape.numero and e.numero > 1 and terminee %}<a href="{% url 'parametres:mise_en_place_etape' e.numero %}">{% else %}<span class="lien-etape">{% endif %}
+          <span class="num">{% if e.numero < atteinte and e.numero != etape.numero or terminee and e.numero != etape.numero %}{% icone "coche" %}{% else %}{{ e.numero }}{% endif %}</span>
+          <span class="texte"><b>{{ e.titre }}</b><small>{{ e.resume }}</small></span>
+        {% if e.numero != etape.numero and e.numero > 1 and user.is_authenticated and e.numero <= atteinte or e.numero != etape.numero and e.numero > 1 and terminee %}</a>{% else %}</span>{% endif %}
+      </li>
+      {% endfor %}
+    </ol>
+  </aside>
+  <section class="corps-mep">
+    <div class="tete-mep">
+      <span class="discret">{% libelle "referentiels.mep.cadre.etape_sur" numero=etape.numero total=etapes|length %}</span>
+      <h1>{{ etape.titre }}</h1>
+      {% block intro %}{% endblock %}
+    </div>
+    {% block etape %}{% endblock %}
+    <p class="discret ensuite-mep">{% libelle "referentiels.mep.cadre.modifiable_ensuite" ou=etape.ensuite %}</p>
+  </section>
+  {% block colonne_apercu %}
+  {% libelle "referentiels.mep.apercu" as t_apercu %}
+  <aside class="apercu-mep" aria-label="{{ t_apercu }}">
+    <h2>{% libelle "referentiels.mep.apercu" %}</h2>
+    <p class="discret remonte">{% libelle "referentiels.mep.cadre.apercu_aide" %}</p>
+    {% block apercu %}{% endblock %}
+  </aside>
+  {% endblock %}
+</div>
+{% endblock %}

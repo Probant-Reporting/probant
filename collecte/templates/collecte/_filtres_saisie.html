@@ -1,0 +1,6 @@
+{% load collecte %}{% comment %}Champ de filtre « Personne » de la Saisie (les deux vues), dans la barre de filtres, en plus de
+la recherche et de la légende cliquable des statuts : la liste est remplie par _app/05_filtres.js à partir des lignes de la page, avec
+le nombre de KPI de chaque personne ; plusieurs personnes à la fois ; cachée quand il n'y a qu'une personne. Tous les filtres
+se cumulent.{% endcomment %}
+<div class="champ-filtre" data-bloc-filtre-spoc hidden><label for="filtre-spoc">{% libelle "saisie.filtre.spoc" %}</label>
+  <select id="filtre-spoc" data-panneau-filtre data-multiple><option value="">{% libelle "saisie.filtre.spoc_toutes" %}</option><option value="aucun">{% libelle "saisie.filtre.spoc_aucun" %}</option></select></div>

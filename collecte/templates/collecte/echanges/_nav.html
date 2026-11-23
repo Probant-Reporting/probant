@@ -1,0 +1,10 @@
+{% load collecte %}
+<div class="entete-page">
+  <div><h1>{% libelle "suivi.echanges.titre" %}</h1></div>
+</div>
+{% libelle "suivi.echanges.nav.aria" as t_nav %}<nav class="sous-onglets" aria-label="{{ t_nav }}">
+  {% url 'collecte:echanges' as u %}<a href="{{ u }}" class="{% if rubrique == 'exports' %}actif{% endif %}"{% if rubrique == 'exports' %} aria-current="page"{% endif %}>{% libelle "suivi.echanges.nav.exports" %}</a>
+  {% url 'collecte:echanges_listes_page' as u %}<a href="{{ u }}" class="{% if rubrique == 'listes' %}actif{% endif %}"{% if rubrique == 'listes' %} aria-current="page"{% endif %}>{% libelle "suivi.echanges.nav.listes" %}</a>
+  {% if user.est_admin %}{% url 'collecte:export_officiel' as u %}<a href="{{ u }}" class="{% if rubrique == 'officiel' %}actif{% endif %}"{% if rubrique == 'officiel' %} aria-current="page"{% endif %}>{% libelle "suivi.echanges.nav.officiel" %}</a>{% endif %}
+  {% if not user.lecture_seule %}{% url 'collecte:echanges_importer' as u %}<a href="{{ u }}" class="{% if rubrique == 'importer' %}actif{% endif %}"{% if rubrique == 'importer' %} aria-current="page"{% endif %}>{% libelle "suivi.echanges.nav.importer" %}</a>{% endif %}
+</nav>

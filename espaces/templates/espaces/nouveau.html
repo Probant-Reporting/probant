@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "espaces.nouveau.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<section class="bloc page-etroite">
+  <h1 class="texte-grand">{% libelle "espaces.nouveau.titre" %}</h1>
+  <p class="discret">{% libelle "espaces.nouveau.aide" %}</p>
+  {% if erreur %}{% encart "erreur" role="alert" %}{{ erreur }}{% endencart %}{% endif %}
+  <form method="post" id="form-espace" class="form-espace">{% csrf_token %}
+    <div class="champ"><label for="nom-espace">{% libelle "espaces.nouveau.nom" %}</label>
+      <input type="text" id="nom-espace" name="nom" value="{{ valeurs.nom }}" maxlength="80" required autocomplete="off" aria-describedby="aide-nom-espace">
+      <span class="aide-champ" id="aide-nom-espace">{% libelle "espaces.nouveau.nom_aide" %}</span></div>
+    <div class="champ"><label for="code-espace">{% libelle "espaces.nouveau.code" %}</label>
+      <input type="text" id="code-espace" name="code" value="{{ valeurs.code }}" maxlength="20" pattern="[a-z][a-z0-9]{1,19}" autocomplete="off" spellcheck="false" aria-describedby="aide-code-espace">
+      <span class="aide-champ" id="aide-code-espace">{% libelle "espaces.nouveau.code_aide" %}</span></div>
+    <label class="case-filtre"><input type="checkbox" name="identite"{% if valeurs.identite %} checked{% endif %}> {% libelle "espaces.nouveau.identite" %}</label>
+    <div class="barre-enregistrement"><button type="submit" id="creer-espace">{% libelle "espaces.nouveau.creer" %}</button>
+      <a class="bouton secondaire" href="{% url 'espaces:liste' %}">{% libelle "espaces.nouveau.annuler" %}</a></div>
+    <p class="discret" id="attente-espace" role="status" hidden>{% libelle "espaces.nouveau.attente" %}</p>
+  </form>
+</section>
+<style nonce="{% jeton_csp %}">
+  .form-espace { max-width: 640px; }
+  .form-espace .case-filtre { font-size: var(--taille-corps); margin: 4px 0 8px; }
+</style>
+<script nonce="{% jeton_csp %}">
+(function () {
+  var nom = document.getElementById("nom-espace"), code = document.getElementById("code-espace"), touche = code.value !== "";
+  function proposer(t) {
+    t = t.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "").replace(/^[0-9]+/, "");
+    return t.slice(0, 20);
+  }
+  nom.addEventListener("input", function () { if (!touche) code.value = proposer(nom.value); });
+  code.addEventListener("input", function () { touche = code.value !== ""; });
+  document.getElementById("form-espace").addEventListener("submit", function () {  // un seul envoi (double clic)
+    document.getElementById("creer-espace").disabled = true;
+    document.getElementById("attente-espace").hidden = false;
+  });
+})();
+</script>
+{% endblock %}

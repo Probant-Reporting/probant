@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.accueil.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Page Référentiels (option retenue sur maquettes) : vos référentiels en lignes
+compactes avec leur état, puis la bibliothèque visible sans clic, rangée par thématique, avec une recherche discrète,
+et enfin « Votre propre référentiel ».{% endcomment %}
+{% if referentiels %}
+<div class="tete-page-ref">
+  <h2 class="titre-rubrique">{% libelle "referentiels.accueil.vos" %} <span class="compte-titre">{{ referentiels|length }}</span></h2>
+  {% if nb_orphelins %}<p class="discret ligne-catalogue"><a href="{% url 'collecte:referentiel' %}?hors=1">{% libelle "referentiels.accueil.hors_referentiel" n=nb_orphelins %}</a></p>{% endif %}
+</div>
+<ul class="lignes-referentiels">
+  {% for r in referentiels %}
+  <li class="ligne-referentiel{% if not r.actif %} inactif{% endif %}" style="--c-ref:{{ r.couleur }}">
+    <a class="nom-ligne-ref" href="{% url 'parametres:referentiel_contenu' r.code %}"><span class="pastille-ref" aria-hidden="true"></span><b>{{ r }}</b></a>
+    <span class="chiffres-ligne-ref"><span><b>{{ r.nb_kpi }}</b> KPI</span> · <span>{% libelle_html "referentiels.entete.themes" n=r.nb_themes %}</span> · <span>{% libelle_html "referentiels.entete.campagnes" n=r.nb_campagnes %}</span> · {{ r|choix:"frequence" }}</span>
+    <span class="etat-ligne-ref">
+      {% if not r.actif %}<span class="etat etat-inactif">{% libelle "referentiels.entete.inactif" %}</span>
+      {% elif r.mise_a_jour %}<a class="etiquette maj-dispo" href="{% url 'parametres:referentiel_partage' r.code %}">{% libelle "referentiels.accueil.maj_courte" version=r.mise_a_jour.paquet.version %}</a>
+      {% elif r.campagne_ouverte %}<span class="etiquette etat-utilise">{% libelle "referentiels.accueil.campagne_ouverte" periode=r.campagne_ouverte.periode %}</span>
+      {% elif not r.nb_campagnes %}<span class="etiquette etat-attente">{% libelle "referentiels.accueil.pas_utilise" %}</span>{% endif %}
+    </span>
+    <span class="actions-ligne-ref">
+      <a href="{% url 'parametres:referentiel_reglages' r.code %}">{% libelle "referentiels.entete.onglet_reglages" %}</a>
+      <details class="menu-deroulant"><summary class="bouton-menu" aria-label="{% libelle "referentiels.accueil.autres_actions" referentiel=r %}">{% icone "plus-actions" %}</summary>
+        <div class="menu-liste">
+          <a href="{% url 'parametres:referentiel_partage' r.code %}">{% libelle "referentiels.entete.onglet_partage" %}</a>
+          <a href="{% url 'parametres:referentiel_copier' r.code %}">{% libelle "referentiels.copie.lien" %}</a>
+          <form method="post" action="{% url 'parametres:referentiels' %}">{% csrf_token %}<input type="hidden" name="code" value="{{ r.code }}">
+            {% if r.actif %}<button type="submit" name="action" value="desactiver" data-confirmer="{% libelle "referentiels.actif.confirmer_desactiver" referentiel=r %}">{% libelle "referentiels.actif.desactiver" %}</button>{% else %}<button type="submit" name="action" value="reactiver">{% libelle "referentiels.actif.reactiver" %}</button>{% endif %}</form>
+        </div>
+      </details>
+    </span>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}<p class="intro-page">{% libelle "referentiels.accueil.aucun" %}</p>{% endif %}
+
+<section class="bibliotheque" aria-labelledby="titre-bibliotheque" data-bibliotheque>
+  <div class="tete-bib">
+    <div><h2 id="titre-bibliotheque">{% libelle "referentiels.bibliotheque.titre" %}</h2>
+      <p>{% libelle "referentiels.bibliotheque.aide" %}</p></div>
+    <div class="recherche-bibliotheque" hidden data-recherche-bib><label for="recherche-bibliotheque" class="visually-hidden">{% libelle "referentiels.bibliotheque.rechercher" %}</label>
+      <input type="search" id="recherche-bibliotheque" {% libelle "referentiels.bibliotheque.rechercher" as t_rb %}placeholder="{{ t_rb }}" autocomplete="off"></div>
+  </div>
+  <div class="groupes-bibliotheque">
+  {% for thematique, modeles in bibliotheque %}
+  <div class="groupe-bibliotheque" data-groupe-bib>
+    <h3 class="titre-thematique">{{ thematique }}</h3>
+    <ul class="grille-modeles">
+      {% for f in modeles %}
+      <li class="carte carte-modele" style="--c-ref:{{ f.paquet.referentiel.couleur }}" data-modele-bib="{{ f.texte_recherche }}">
+        <h4><span class="pastille-ref grande" aria-hidden="true"></span> {{ f.paquet.nom }}</h4>
+        {% if f.description_courte %}<p class="description-modele">{{ f.description_courte }}</p>{% endif %}
+        <p class="chiffres-modele">{{ f.nb_kpi }} KPI · {% libelle "referentiels.installer.modeles.themes" n=f.nb_themes %} · {% libelle "referentiels.installer.modeles.dont_calcules" n=f.nb_calcules %}</p>
+        {% if f.paquet.date_version %}<p class="discret petit version-modele">{% libelle "referentiels.installer.modeles.version_du" version=f.paquet.version date=f.paquet.date_version|date_courte %}</p>{% endif %}
+        {% include "parametres/_installer_documents_source.html" with documents=f.paquet.documents_affiches %}
+        <div class="actions-carte-modele">
+          {% if f.installe %}
+            {% if f.etat == "mise_a_jour" %}<span class="etat-fourni maj">{% libelle "referentiels.bibliotheque.installe_maj" version=f.paquet.version %}</span>
+            <a class="action-modele" href="{% url 'parametres:referentiel_partage' f.installe.code %}">{% libelle "referentiels.bibliotheque.voir_maj" %}</a>
+            {% elif f.complet %}<span class="etat-fourni installe">{% libelle "referentiels.bibliotheque.installe" %}</span>
+            <a class="action-modele" href="{% url 'parametres:referentiel_contenu' f.installe.code %}">{% libelle "referentiels.bibliotheque.ouvrir" %}</a>
+            {% else %}<span class="etat-fourni installe">{% libelle "referentiels.bibliotheque.installe_partie" %}</span>
+            <a class="action-modele" href="{% url 'parametres:installer_kpi' f.code %}?version=0">{% libelle "referentiels.installer.modeles.ajouter_autres" %}</a>{% endif %}
+          {% else %}
+            {% if f.nb_deja %}<span class="etat-fourni deja">{% libelle "referentiels.bibliotheque.deja" n=f.nb_deja %}</span>{% endif %}
+            <a class="bouton secondaire action-modele" href="{% url 'parametres:installer_kpi' f.code %}" aria-label="{% libelle "referentiels.bibliotheque.voir_installer_aria" nom=f.paquet.nom %}">{% libelle "referentiels.bibliotheque.voir_installer" %}</a>
+          {% endif %}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+  </div>
+  <p class="discret" hidden data-aucun-bib>{% libelle "referentiels.bibliotheque.aucun" %}</p>
+  {% comment %}Votre propre référentiel : trois façons expliquées, dont le modèle Excel à
+  télécharger puis à importer.{% endcomment %}
+  <div class="votre-propre">
+    <h3>{% libelle "referentiels.bibliotheque.propre_titre" %}</h3><p class="discret">{% libelle "referentiels.bibliotheque.propre_aide" %}</p>
+    <ol class="voies-propre">
+      <li><span class="num-etape" aria-hidden="true">{% icone "coche" %}</span><div><strong>{% libelle "referentiels.bibliotheque.voie_cocher" %}</strong>
+        <p class="discret">{% libelle "referentiels.bibliotheque.voie_cocher_aide" %}</p>
+        <a class="bouton secondaire" href="{% url 'parametres:referentiel_nouveau' %}#porte-composer">{% icone "plus" %} {% libelle "referentiels.bibliotheque.voie_cocher" %}</a></div></li>
+      <li><span class="num-etape" aria-hidden="true">{% icone "table" %}</span><div><strong>{% libelle "referentiels.bibliotheque.voie_excel" %}</strong>
+        <p class="discret">{% libelle "referentiels.bibliotheque.voie_excel_aide" %}</p>
+        <span class="liens-propre"><a href="{% url 'parametres:paquet_modele' %}" data-telechargement>{% icone "telecharger" %} {% libelle "referentiels.bibliotheque.telecharger_modele" %}</a>
+          <a href="{% url 'parametres:referentiel_nouveau' %}#porte-importer">{% libelle "referentiels.bibliotheque.importer" %}</a></span></div></li>
+      <li><span class="num-etape" aria-hidden="true">{% icone "crayon" %}</span><div><strong>{% libelle "referentiels.bibliotheque.voie_vide" %}</strong>
+        <p class="discret">{% libelle "referentiels.bibliotheque.voie_vide_aide" %}</p>
+        <span class="liens-propre"><a href="{% url 'parametres:referentiel_nouveau' %}#porte-composer">{% libelle "referentiels.bibliotheque.creer_vide" %}</a></span></div></li>
+    </ol>
+  </div>
+</section>
+{% endblock %}

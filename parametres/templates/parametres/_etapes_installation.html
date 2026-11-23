@@ -1,0 +1,10 @@
+{% load collecte %}{% libelle "referentiels.installer.etapes_aria" as t_etapes %}<nav class="etapes-installation" aria-label="{{ t_etapes }}">
+  <ol class="etapes-numerotees">
+    {% for n, titre in etapes_installation_liste %}
+    <li class="{% if n == etape_installation %}actuelle{% elif n < etape_installation %}faite{% endif %}"{% if n == etape_installation %} aria-current="step"{% endif %}>
+      <span class="num" aria-hidden="true">{% if n < etape_installation %}{% icone "coche" %}{% else %}{{ n }}{% endif %}</span>
+      <span class="texte"><span class="visually-hidden">{% if n < etape_installation %}{% libelle "referentiels.installer.etape_faite" numero=n total=3 %}{% else %}{% libelle "referentiels.installer.etape_sur" numero=n total=3 %}{% endif %} </span>{{ titre }}</span>
+    </li>
+    {% endfor %}
+  </ol>
+</nav>

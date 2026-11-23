@@ -1,0 +1,18 @@
+{% load collecte %}<div class="panneau-haut"><span class="discret">{% libelle "admin.remplacer.panneau" %}</span>{% libelle "admin.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+<h2 class="texte-grand">{% libelle "admin.remplacer.titre" %}</h2>
+<p class="discret mt-0">{% libelle "admin.remplacer.aide" %}</p>
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+<form method="post" action="{% url 'collecte:admin_remplacer' %}">
+  {% csrf_token %}
+  <section class="bloc">
+    <div class="champ"><label for="de">{% libelle "admin.remplacer.de" %}</label>
+      <select name="de" id="de" required><option value="">{% libelle "admin.choisir" %}</option>
+        {% for p in sources %}{% if p.n %}<option value="{{ p.pk }}">{% libelle "admin.remplacer.option_de" nom=p n=p.n %}{% if not p.is_active %} {% libelle "admin.remplacer.desactive" %}{% endif %}</option>{% endif %}{% endfor %}</select></div>
+    <div class="champ"><label for="par">{% libelle "admin.remplacer.par" %}</label>
+      <select name="par" id="par" required><option value="">{% libelle "admin.choisir" %}</option>
+        {% for p in personnes %}{% if p.is_active %}<option value="{{ p.pk }}">{% libelle "admin.remplacer.option_par" nom=p role=p|choix_phrase:"role" %}</option>{% endif %}{% endfor %}</select></div>
+    <label class="case-option"><input type="checkbox" name="desactiver">
+      <span><strong>{% libelle "admin.remplacer.desactiver" %}</strong><br><span class="discret">{% libelle "admin.remplacer.desactiver_aide" %}</span></span></label>
+  </section>
+  <div class="barre-enregistrement"><button type="submit">{% libelle "admin.remplacer.transferer" %}</button></div>
+</form>

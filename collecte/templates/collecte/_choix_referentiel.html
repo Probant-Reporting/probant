@@ -1,0 +1,6 @@
+{% load collecte %}{% if referentiels_filtre|length > 1 %}{# champ de filtre « Référentiel » ; la page est rechargée par le serveur (_app.js, data-choix-referentiel) #}
+<div class="champ-filtre"><label for="filtre-referentiel">{% libelle "admin.choix_referentiel.libelle" %}</label>
+  <select id="filtre-referentiel" data-choix-referentiel data-panneau-filtre>
+    <option value="">{% libelle "commun.tous" %}</option>
+    {% for r in referentiels_filtre %}<option value="{{ r.code }}" {% if r.code == referentiel_code %}selected{% endif %}>{{ r }}</option>{% endfor %}
+  </select></div>{% endif %}

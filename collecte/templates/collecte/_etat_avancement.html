@@ -1,0 +1,5 @@
+{% load collecte %}{# Ce qui reste à faire dans une campagne (S.Reste « r »), en quelques mots : onglets de Pour moi, « Je réponds à ». « fermee » : saisie fermée pour la personne (ses alertes restent à traiter) #}
+<span class="etat-avancement">{% if fermee %}<span class="etat-ferme">{% icone "cadenas" %} {% libelle "saisie.etat.saisie_fermee" %}</span>{% if r.valeurs %}<span>{% libelle "saisie.etat.non_validees" n=r.valeurs %}</span>{% endif %}{% if r.alertes %}<span class="etat-a-justifier">{% icone "alerte" %} {% libelle "saisie.alertes.a_traiter" n=r.alertes %}</span>{% endif %}
+{% elif not r.a_montrer %}<span class="discret">{% libelle "saisie.etat.rien_a_saisir" %}</span>
+{% elif r.fini %}<span class="etat-fait">{% icone "coche" %} {% libelle "saisie.etat.tout_fait" %}</span>
+{% else %}{% if r.valeurs %}<span class="etat-a-faire">{% libelle "saisie.etat.a_faire" n=r.valeurs %}</span>{% endif %}{% if r.alertes %}<span class="etat-a-justifier">{% icone "alerte" %} {% libelle "saisie.alertes.a_traiter" n=r.alertes %}</span>{% endif %}{% endif %}</span>

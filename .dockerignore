@@ -1,0 +1,31 @@
+# Rien de local dans l'image : ni base, ni fichiers déposés, ni clé, ni données réelles
+.git
+.github
+.devcontainer
+.claude
+.impeccable
+**/__pycache__
+*.pyc
+*.sqlite3
+*.sqlite3-*
+media/
+staticfiles/
+sauvegardes/
+.cle_secrete
+.env
+.env.*
+!.env.example
+donnees-locales/
+resources/*
+data/
+local-data/
+**/*.sqlite3
+**/*.sqlite3-*
+.secret_key
+files/
+backups/
+*spaces-data/
+# archives et vidages posés dans le dossier de l'outil (copie des sauvegardes, archive téléchargée, pg_dump) : la base
+# complète, jamais dans l'image (test : parametres/test_dockerignore_copies.py)
+**/*.zip
+**/*.dump

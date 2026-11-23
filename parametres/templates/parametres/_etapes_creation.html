@@ -1,0 +1,10 @@
+{% load collecte %}{% comment %}Les quatre étapes de la création d'un référentiel à soi : nom, choisir les KPI, ranger en thèmes,
+attribuer et ouvrir une campagne. ``etape_creation`` : l'étape en cours ; ``ref`` : le référentiel (liens des étapes).{% endcomment %}
+{% libelle "referentiels.creation.etapes_aria" as t_etapes %}<nav class="etapes-installation etapes-creation" aria-label="{{ t_etapes }}">
+  <ol class="etapes-numerotees">
+    <li class="faite"><span class="num" aria-hidden="true">{% icone "coche" %}</span><span class="texte">{% libelle "referentiels.creation.etape_nom" %}</span></li>
+    <li class="{% if etape_creation == 2 %}actuelle{% elif etape_creation > 2 %}faite{% endif %}"{% if etape_creation == 2 %} aria-current="step"{% endif %}><a href="{% url 'parametres:referentiel_choisir' ref.code %}"><span class="num" aria-hidden="true">{% if etape_creation > 2 %}{% icone "coche" %}{% else %}2{% endif %}</span>{% libelle "referentiels.creation.etape_kpi" %}</a></li>
+    <li class="{% if etape_creation == 3 %}actuelle{% endif %}"{% if etape_creation == 3 %} aria-current="step"{% endif %}><a href="{% url 'parametres:referentiel_contenu' ref.code %}"><span class="num" aria-hidden="true">3</span>{% libelle "referentiels.creation.etape_ranger" %}</a></li>
+    <li><a href="{% url 'collecte:admin_attributions' %}"><span class="num" aria-hidden="true">4</span>{% libelle "referentiels.creation.etape_attribuer" %}</a></li>
+  </ol>
+</nav>

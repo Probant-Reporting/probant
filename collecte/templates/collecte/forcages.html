@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.forcage.page.titre" %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "saisie.forcage.page.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+  <noscript><form method="get">{% include "collecte/_choix_campagne.html" %}</form></noscript>{# avec JavaScript : « Je réponds à », barre du haut #}
+</div>
+<p class="intro-page">{% libelle "saisie.forcage.page.sous_titre" %}</p>
+
+{% if a_trancher %}
+<section class="carte">
+  <h2>{% libelle "saisie.forcage.page.a_trancher" n=a_trancher|length %}</h2>
+  <table class="tdb">
+    <thead><tr><th>{% libelle "saisie.forcage.page.col.kpi" %}</th><th>{% libelle "saisie.forcage.page.col.organisation" %}</th>
+      <th class="nombre">{% libelle "saisie.forcage.page.col.valeur" %}</th><th class="mq-s">{% libelle "saisie.forcage.page.col.demande_par" %}</th></tr></thead>
+    {% for d, v in a_trancher %}
+    <tr><td><a href="{% url 'collecte:cellule' campagne.pk d.kpi.code d.organisation.id %}" data-panneau><b>{{ d.kpi.code }}</b> {{ d.kpi.nom }}</a></td>
+      <td>{{ d.organisation.nom }}</td><td class="nombre">{{ v }}</td>
+      <td class="mq-s discret">{{ d.demandeur|default:"" }} · {{ d.date_demande|date_courte }}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+{% if responsable %}
+<section class="carte">
+  <h2>{% libelle "saisie.forcage.page.responsable" n=responsable|length %}</h2>
+  <p class="discret">{% libelle "saisie.forcage.page.responsable_aide" %}</p>
+  <table class="tdb">
+    <thead><tr><th>{% libelle "saisie.forcage.page.col.kpi" %}</th><th>{% libelle "saisie.forcage.page.col.organisation" %}</th>
+      <th class="nombre">{% libelle "saisie.forcage.page.col.resultat" %}</th></tr></thead>
+    {% for k, o, r, v in responsable %}
+    <tr><td><a href="{% url 'collecte:cellule' campagne.pk k.code o.id %}" data-panneau><b>{{ k.code }}</b> {{ k.nom }}</a></td>
+      <td>{{ o.nom }}</td><td class="nombre">{{ v }}{% if r.origine == "forcee" %} <span class="discret">({% libelle "saisie.forcage.page.forcee" %})</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+{% if miennes %}
+<section class="carte">
+  <h2>{% libelle "saisie.forcage.page.miennes" %}</h2>
+  <table class="tdb">
+    <thead><tr><th>{% libelle "saisie.forcage.page.col.kpi" %}</th><th>{% libelle "saisie.forcage.page.col.organisation" %}</th>
+      <th class="nombre">{% libelle "saisie.forcage.page.col.valeur" %}</th><th>{% libelle "saisie.forcage.page.col.etat" %}</th></tr></thead>
+    {% for d, v in miennes %}
+    <tr><td><a href="{% url 'collecte:cellule' campagne.pk d.kpi.code d.organisation.id %}" data-panneau><b>{{ d.kpi.code }}</b> {{ d.kpi.nom }}</a></td>
+      <td>{{ d.organisation.nom }}</td><td class="nombre">{{ v }}</td>
+      <td>{{ d|choix:"statut" }}{% if d.traite_par and d.statut != "retiree" %} <span class="discret">· {{ d.traite_par }}</span>{% endif %}{% if d.motif %}<br><span class="discret">{{ d.motif }}</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+{% if en_place %}
+<section class="carte">
+  <h2>{% libelle "saisie.forcage.page.en_place" n=en_place|length %}</h2>
+  <table class="tdb">
+    <thead><tr><th>{% libelle "saisie.forcage.page.col.kpi" %}</th><th>{% libelle "saisie.forcage.page.col.organisation" %}</th>
+      <th class="nombre">{% libelle "saisie.forcage.page.col.valeur" %}</th><th class="mq-s">{% libelle "saisie.forcage.page.col.accord" %}</th></tr></thead>
+    {% for r, v in en_place %}
+    <tr><td><a href="{% url 'collecte:cellule' campagne.pk r.kpi.code r.organisation.id %}" data-panneau><b>{{ r.kpi.code }}</b> {{ r.kpi.nom }}</a></td>
+      <td>{{ r.organisation.nom }}</td><td class="nombre">{{ v }}</td>
+      <td class="mq-s discret">{{ r.valide_par|default:"" }}{% if r.date_validation %} · {{ r.date_validation|date_courte }}{% endif %}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+{% if importees %}
+<section class="carte" id="importees">
+  <h2>{% libelle "saisie.forcage.page.importees" n=importees|length %}</h2>
+  <p class="discret">{% libelle "saisie.forcage.page.importees_aide" %}</p>
+  <table class="tdb">
+    <thead><tr><th>{% libelle "saisie.forcage.page.col.kpi" %}</th><th>{% libelle "saisie.forcage.page.col.organisation" %}</th>
+      <th class="nombre">{% libelle "saisie.forcage.page.col.importee" %}</th><th>{% libelle "saisie.forcage.page.col.action" %}</th></tr></thead>
+    {% for r, v in importees %}
+    <tr><td><a href="{% url 'collecte:cellule' campagne.pk r.kpi.code r.organisation.id %}" data-panneau><b>{{ r.kpi.code }}</b> {{ r.kpi.nom }}</a></td>
+      <td>{{ r.organisation.nom }}</td><td class="nombre">{{ v }}</td>
+      <td><form method="post" action="{% url 'collecte:forcage_importee' %}" class="actions-importee">{% csrf_token %}
+        <input type="hidden" name="campagne" value="{{ campagne.pk }}"><input type="hidden" name="kpi" value="{{ r.kpi.code }}"><input type="hidden" name="organisation" value="{{ r.organisation.id }}">
+        <button type="submit" name="action" value="forcer" class="secondaire" aria-label="{% libelle "saisie.forcage.page.importee_forcer_aria" kpi=r.kpi.code organisation=r.organisation.nom %}">{% libelle "saisie.forcage.page.importee_forcer" %}</button>
+        <button type="submit" name="action" value="retirer" class="secondaire" aria-label="{% libelle "saisie.forcage.page.importee_retirer_aria" kpi=r.kpi.code organisation=r.organisation.nom %}">{% libelle "saisie.forcage.page.importee_retirer" %}</button>
+      </form></td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+{% if not a_trancher and not responsable and not miennes and not en_place and not importees %}
+{% libelle "saisie.forcage.page.rien" as t_vide %}{% libelle "saisie.forcage.demander" as t_demander %}{% libelle "saisie.forcage.page.rien_aide" bouton=t_demander as t_vide_aide %}{% libelle "saisie.vide.ouvrir_saisie" as t_vide_action %}{% url 'collecte:saisie' as u_saisie %}
+{% if user.lecture_seule %}{% include "collecte/_vide.html" with titre=t_vide %}{% else %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_vide_aide url=u_saisie action=t_vide_action %}{% endif %}
+{% endif %}
+{% endblock %}

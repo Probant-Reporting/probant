@@ -1,0 +1,10 @@
+{% load collecte %}<ul class="arbre-agregat">{% for n in noeuds %}
+  <li>{% if n.sous %}<details><summary class="agregat-ligne">{% else %}<div class="agregat-ligne">{% endif %}
+    <span class="agregat-nom">{% if n.sous %}<span class="chevron" aria-hidden="true">›</span>{% endif %}<a href="{% url 'collecte:cellule' campagne.pk kpi.code n.org.id %}" data-panneau>{{ n.org.nom }}</a>
+      <span class="discret">{{ n.org.niveau }}</span>
+      <span class="statut statut-{% if n.r %}{{ n.r.statut }}{% else %}a_saisir{% endif %}">{% if n.r %}{{ n.r.statut|statut_libelle }}{% else %}{% libelle "saisie.agregat.a_saisir" %}{% endif %}</span>{% if n.saisi_ici %}<span class="type type-agrege">{% libelle "saisie.agregat.saisi_ici" %}</span>{% endif %}
+      {% if n.r.message_calcul and n.r.est_calculee %}<span class="discret agregat-message">{{ n.r.message_calcul }}</span>{% endif %}</span>
+    <strong class="agregat-valeur">{% valeur n.r kpi %}</strong>
+    {% if n.part is not None %}<span class="agregat-barre" title="{% libelle "saisie.agregat.part" part=n.part %}"><span style="width: {{ n.part }}%"></span></span><span class="agregat-part discret">{{ n.part }} %</span>{% endif %}
+  {% if n.sous %}</summary>{% include "collecte/_detail_agregat.html" with noeuds=n.sous %}</details>{% else %}</div>{% endif %}</li>{% endfor %}
+</ul>

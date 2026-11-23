@@ -1,0 +1,45 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.campagne.intro" %}</p>{% endblock %}
+{% block etape %}
+{% if terminee %}{% encart "succes" %}{% libelle "referentiels.mep.campagne.terminee" %} <a href="{% url 'collecte:tableau_de_bord' %}">{% libelle "referentiels.mep.campagne.vers_tableau" %}</a>{% endencart %}{% endif %}
+{% if sans_referentiel %}
+<form method="post" class="carte form-mep">{% csrf_token %}
+  {% encart "avertissement" %}{% libelle "referentiels.mep.campagne.aucun_referentiel" %}{% endencart %}
+  <div class="boutons-mep"><a class="bouton secondaire" href="{% url 'parametres:mise_en_place_etape' 5 %}">{% libelle "referentiels.mep.campagne.vers_referentiels" %}</a><span class="espace"></span>
+    <button type="submit" name="action" value="passer" formnovalidate>{% libelle "referentiels.mep.campagne.terminer_sans" %}</button></div>
+</form>
+{% else %}
+<form method="post" class="carte form-mep formulaire" data-form-campagne>
+  {% csrf_token %}
+  {% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+  <div class="grille-fiche">
+    {% include "collecte/administration/_champ.html" with champ=form.referentiel classe="large" %}
+    {% include "collecte/administration/_champ.html" with champ=form.exercice %}
+    <div class="champ" data-choix-rang><label for="id_rang">{% libelle "referentiels.mep.campagne.periode" %}</label>
+      <select name="rang" id="id_rang">{% for f, n, libelle in rangs %}<option value="{{ n }}" data-frequence="{{ f }}" {% if form.rang.value|stringformat:"s" == n|stringformat:"s" %}selected{% endif %}>{{ libelle }}</option>{% endfor %}</select>
+      {{ form.rang.errors }}</div>
+    {{ frequences|json_script:"frequences-referentiels" }}
+    {% include "collecte/administration/_champ.html" with champ=form.date_ouverture %}
+    {% include "collecte/administration/_champ.html" with champ=form.date_fin_saisie %}
+    {% include "collecte/administration/_champ.html" with champ=form.seuil_pct classe="large" %}
+    {% include "collecte/administration/_champ.html" with champ=form.seuil_historique classe="large" %}
+    <label class="champ large case-champ"><input type="checkbox" name="ouvrir" checked> {% libelle "referentiels.mep.campagne.ouvrir_maintenant" %}</label>
+  </div>
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% if campagnes_texte %}<p class="discret">{% libelle "referentiels.mep.campagne.existantes" liste=campagnes_texte %}</p>{% endif %}
+{% endif %}
+{% endblock %}
+{% block apercu %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.campagne.apercu_haut" %}</strong>
+  {% libelle "referentiels.mep.campagne.ref_defaut" as t_ref %}
+  <span class="badge-exercice">{% libelle "referentiels.mep.campagne.apercu_badge" referentiel=ref_propose|default:t_ref exercice=form.exercice.value|default:"" %}</span>
+</div>
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.apercu_pour_moi" %}</strong>
+  {% if form.date_fin_saisie.value %}<span class="discret">{% libelle "referentiels.mep.campagne.apercu_fin" date=form.date_fin_saisie.value|date_courte|default:form.date_fin_saisie.value %}</span>{% endif %}
+</div>
+<p class="discret">{% libelle "referentiels.mep.campagne.apercu_equipe" %}</p>
+{% endblock %}

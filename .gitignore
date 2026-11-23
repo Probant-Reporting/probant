@@ -1,0 +1,29 @@
+__pycache__/
+*.pyc
+.env
+staticfiles/
+
+# Data of a development installation (databases, uploaded files, backups, key): the data folder,
+# never versioned (layout: docs/file_layout.md)
+local-data/
+
+# Former locations (moved automatically into local-data/ at launch)
+donnees-locales/
+.secret_key
+files/
+backups/
+*spaces-data/
+*.sqlite3
+*.sqlite3-wal
+*.sqlite3-shm
+*.sqlite3-journal
+.cle_secrete
+media/
+sauvegardes/
+data/
+*espaces-donnees/
+
+# resources/: never versioned (a real working file never goes there)
+resources/
+
+.claude/worktrees/

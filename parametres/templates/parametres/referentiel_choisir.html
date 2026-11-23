@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.choisir.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Choisir les KPI d'un référentiel à soi (audit de la page) : des cases à cocher dans l'allure
+du catalogue, au lieu d'un « + » par KPI dans un panneau étroit. Les étapes de la création sont affichées en haut.{% endcomment %}
+<p class="retour-referentiels"><a href="{% url 'parametres:referentiel_contenu' ref.code %}">{% libelle "referentiels.choisir.retour" referentiel=ref %}</a></p>
+<div class="tete-installation">
+  <h2 class="titre-installation"><span class="pastille-ref grande" style="--c-ref:{{ ref.couleur }}" aria-hidden="true"></span> {{ ref }} <span class="compte-titre">{% libelle "referentiels.choisir.deja" n=nb_presents %}</span></h2>
+  {% include "parametres/_etapes_creation.html" with etape_creation=2 %}
+</div>
+{% encart "info" %}{% libelle_html "referentiels.choisir.principe" %}{% endencart %}
+{% if not sources %}
+<p class="intro-page">{% libelle "referentiels.choisir.aucune_source" %} <a href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.choisir.voir_bibliotheque" %}</a></p>
+{% else %}
+<form method="get" class="barre-filtres">
+  <div class="champ-filtre"><label for="source-kpi">{% libelle "referentiels.choisir.source" %}</label>
+    <select id="source-kpi" name="source" data-panneau-filtre data-envoyer data-defaut="{{ source_code }}">
+      {% for code, nom, n in sources %}<option value="{{ code }}" data-nb="{{ n }}"{% if code == source_code %} selected{% endif %}>{{ nom }}</option>{% endfor %}
+    </select></div>
+  <noscript><button type="submit" class="secondaire">{% libelle "commun.filtrer" %}</button></noscript>
+  <div class="filtres-droite"><a href="{% url 'parametres:referentiels' %}#titre-bibliotheque">{% libelle "referentiels.choisir.depuis_bibliotheque" %}</a></div>
+</form>
+<form method="post" class="form-cocher" data-cocher>
+  {% csrf_token %}<input type="hidden" name="source" value="{{ source_code }}">
+  <div class="outils-cocher">
+    <p class="compteur-coches" aria-live="polite"><b data-nb-coches>{{ nb_presents_source }}</b> {% libelle "referentiels.installer.kpi.coches_suite" n=nb_presents_source total=nb %}<span data-nb-existants-texte hidden></span></p>
+    {% libelle "referentiels.installer.kpi.rechercher" as t_rechercher %}{% libelle "referentiels.installer.kpi.rechercher_placeholder" as t_placeholder %}
+    <label class="recherche-cocher"><span class="visually-hidden">{{ t_rechercher }}</span><input type="search" placeholder="{{ t_placeholder }}" data-recherche-coche></label>
+    <div class="liens-cocher">
+      <button type="button" class="lien" data-tout-kpi="1">{% libelle "referentiels.installer.kpi.tout_cocher" %}</button>
+      <button type="button" class="lien" data-tout-kpi="0">{% libelle "referentiels.installer.kpi.tout_decocher" %}</button>
+    </div>
+  </div>
+  <p class="visually-hidden" role="status" data-annonce></p>
+  <p class="aucun-resultat discret" data-aucun-resultat hidden>{% libelle "referentiels.installer.kpi.aucun_resultat" %}</p>
+  {% libelle "referentiels.choisir.col_etat" as col_etat %}
+  <div class="arbre-coche">
+    {% if sans_theme %}<fieldset class="theme-coche" style="--prof:0"><legend><span class="nom-theme-coche">{% libelle "referentiels.contenu.lot.sans_theme" %}</span></legend>
+      <div class="corps-theme-coche"><div class="entete-coche" aria-hidden="true"><span></span><span>ID</span><span>{% libelle "referentiels.catalogue.col_indicateur" %}</span><span>{% libelle "referentiels.catalogue.type_aria" %}</span><span>{% libelle "referentiels.catalogue.col_unite" %}</span><span>{{ col_etat }}</span></div>
+      <ul class="liste-coche">{% for l in sans_theme %}{% include "parametres/_installer_ligne.html" %}{% endfor %}</ul></div></fieldset>{% endif %}
+    {% for n in racines %}{% include "parametres/_installer_theme.html" with replie=False %}{% endfor %}
+  </div>
+  <div class="barre-enregistrement collante">
+    {% if options_depuis|length > 1 %}<label class="champ-inline" title="{% libelle "referentiels.depuis.aide" %}">{% libelle "referentiels.choisir.depuis" %}
+      <select name="depuis">{% for v, l in options_depuis %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></label>{% endif %}
+    <button type="submit" name="action" value="ajouter" data-continuer>{% libelle "referentiels.choisir.ajouter" %}</button>
+    <a class="bouton secondaire" href="{% url 'parametres:referentiel_contenu' ref.code %}">{% libelle "referentiels.choisir.terminer" %}</a>
+    <span class="etat-barre" data-message-zero>{% libelle "referentiels.choisir.cocher_un" %}</span>
+  </div>
+</form>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+{% include "parametres/_script_cocher.html" %}
+{% endblock %}

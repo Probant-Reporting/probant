@@ -1,0 +1,13 @@
+{# Message à envoyer à une personne dont le compte vient d'être créé (u, mdp_donne, adresse). Sans mot de passe : #}
+{# la personne avait déjà un compte dans un autre espace, elle garde le sien. #}
+{% load collecte %}{% if not mdp_donne %}{% encart "succes" %}{% libelle "admin.message_acces.compte_existant" nom=u %}{% endencart %}{% else %}
+<section class="bloc message-acces" role="region" aria-labelledby="titre-message-{{ u.pk }}">
+  <h3 id="titre-message-{{ u.pk }}">{% icone "alerte" %} {% libelle "admin.message_acces.titre" nom=u.first_name|default:u.email %}</h3>
+  <p class="avertissement-message">{% libelle "admin.message_acces.aide" %}</p>
+  <pre id="message-acces-{{ u.pk }}">{% libelle "admin.message_acces.corps" prenom=u.first_name titre=instance.titre nom=instance.nom adresse=adresse email=u.email mdp=mdp_donne %}</pre>
+  <div class="flex gap-8 passe-ligne mb-12">
+    <button type="button" data-copier="#message-acces-{{ u.pk }}">{% libelle "admin.message_acces.copier" %}</button>
+    {% libelle "admin.message_acces.corps" prenom=u.first_name titre=instance.titre nom=instance.nom adresse=adresse email=u.email mdp=mdp_donne as t_corps %}{% libelle "admin.message_acces.objet" as t_objet %}<a class="bouton secondaire" href="mailto:{{ u.email }}?subject={{ t_objet|urlencode }}&body={{ t_corps|urlencode }}">{% libelle "admin.message_acces.ouvrir" %}</a>
+  </div>
+</section>
+{% endif %}

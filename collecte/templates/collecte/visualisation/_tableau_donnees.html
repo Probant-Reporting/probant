@@ -1,0 +1,6 @@
+{# Tableau de données d'un visuel (t = visuels.tableau) : en-têtes de colonnes, première cellule en-tête de ligne #}
+{% if t %}<div class="table-defile"><table class="table-donnees-visu">
+  <caption class="visuellement-cache">{{ titre }}</caption>
+  <thead><tr>{% for e in t.entetes %}<th scope="col">{{ e }}</th>{% endfor %}</tr></thead>
+  <tbody>{% for l in t.lignes %}<tr>{% for c in l.cellules %}{% if forloop.first %}<th scope="row">{{ c.t }}</th>{% else %}<td>{{ c.t }}</td>{% endif %}{% endfor %}</tr>{% endfor %}</tbody>
+</table></div>{% endif %}

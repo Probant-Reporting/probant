@@ -1,0 +1,249 @@
+{% load collecte %}
+<div class="panneau-haut"><span class="discret">{% if kpi.pk %}{% libelle "saisie.fiche.entete" %}{% else %}{% libelle "saisie.fiche.entete_nouveau" %}{% endif %}</span>
+  {% libelle "saisie.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+
+{% if kpi.pk %}
+<div class="tete-org">
+  <p class="chemin-org">{% for e in form.elements %}{% etiquette_referentiel e.referentiel %} {% empty %}{% libelle "saisie.fiche.hors_referentiel" %}{% endfor %}</p>
+  <h2 class="texte-grand m-0 mb-4">{% libelle "saisie.fiche.sans_nom" as t_sans_nom %}{{ kpi.nom|default:t_sans_nom }}</h2>
+  <div class="chiffres-org">
+    <span class="id-chip">{{ kpi.code }}</span>
+    {% etiquette_type kpi %}
+    {% etiquette_niveau kpi %}
+    {% if kpi.symbole %}<span class="type-site">{{ kpi.symbole }}</span>{% endif %}
+    {% if not kpi.est_numerique %}<span class="type-site">{{ kpi.type_reponse }}</span>{% endif %}
+    {% if kpi.actif %}<span class="etat etat-actif">{% libelle "saisie.fiche.actif" %}</span>{% else %}<span class="etat etat-inactif">{% libelle "saisie.fiche.inactif" %}</span>{% endif %}
+  </div>
+</div>
+{% else %}
+<h2 class="texte-grand mb-4">{% libelle "saisie.kpi.nouveau" %}</h2>
+{% endif %}
+
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if proposer_traduction %}
+<div class="proposer-traduction" data-proposer-traduction role="group" aria-labelledby="titre-traduire">
+  <p class="m-0"><strong id="titre-traduire">{% libelle "saisie.fiche.traduire_titre" %}</strong> {% libelle "saisie.fiche.traduire_aide" %}</p>
+  <div class="boutons-traduire">{% for lg in proposer_traduction %}<button type="button" class="secondaire" data-traduire-en="{{ lg.code }}">{% libelle "saisie.fiche.traduire_en" nom_langue=lg.libelle %}</button>{% endfor %}
+    <button type="button" class="lien" data-traduire-plus-tard>{% libelle "saisie.fiche.plus_tard" %}</button></div>
+</div>
+{% endif %}
+{% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+
+<form method="post" action="{% if kpi.pk %}{% url 'collecte:referentiel_kpi' kpi.pk %}{% else %}{% url 'collecte:referentiel_kpi_nouveau' %}{% endif %}" data-ajax data-form-kpi>
+  {% csrf_token %}<input type="hidden" name="version" value="{{ version_kpi }}">
+  {% if voisin %}<input type="hidden" name="voisin" value="{{ voisin.kpi.code }}"><input type="hidden" name="dans" value="{{ voisin.element.referentiel_id }}"><input type="hidden" name="position" value="{{ voisin.position }}">{% endif %}
+  {% with completude=form.completude %}{% if completude|length > 1 %}
+  <div class="langues-fiche" role="tablist" aria-label="{% libelle "saisie.fiche.langue_textes" %}" data-onglets-langue data-reference="{{ form.ref }}">
+    <span class="libelle">{% libelle "saisie.fiche.textes_en" %}</span>
+    {% for lg, faits, total in completude %}
+    <button type="button" role="tab" data-onglet-langue="{{ lg.code }}" aria-selected="{% if lg.code == form.ref %}true{% else %}false{% endif %}">{{ lg.libelle }}
+      {% if total %}<span class="completude{% if faits >= total %} complet{% endif %}" title="{% libelle "saisie.fiche.completude" n=faits total=total %}">{% if faits >= total %}{% icone "coche" %}{% else %}{{ faits }}/{{ total }}{% endif %}</span>{% endif %}</button>
+    {% endfor %}
+    <span class="aide-champ">{% libelle "saisie.fiche.textes_absents" %}</span>
+  </div>
+  {% endif %}{% endwith %}
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.identification" %}</h3>
+    {% for lg, champ in form.noms %}
+    <div class="champ" data-langue="{{ lg.code }}"><label for="{{ champ.id_for_label }}">{% libelle "saisie.fiche.nom" %} <span class="code-langue">{{ lg.code|upper }}</span>{% if lg.code == form.ref %} <span class="discret normal">{% libelle "saisie.fiche.langue_reference" %}</span>{% endif %}</label>{{ champ }}{{ champ.errors }}</div>
+    {% endfor %}
+    {% if form.code %}
+    <details class="option-code"{% if form.code.errors %} open{% endif %}>
+      <summary><span>{% libelle "saisie.fiche.code_propose" code=form.code_propose %}</span> <span class="lien-option">{% libelle "saisie.fiche.code_modifier" %}</span></summary>
+      <div class="champ"><label for="{{ form.code.id_for_label }}">{% libelle "saisie.fiche.code" %}</label>{{ form.code }}<span class="aide-champ">{{ form.code.help_text }}</span>{{ form.code.errors }}</div>
+    </details>
+    {% endif %}
+    <div class="champ"><span class="libelle">{% libelle "saisie.fiche.referentiels" %} <span class="discret normal">{% libelle "saisie.fiche.referentiels_aide_titre" %}</span></span>
+      <div class="places-fiche">
+        {% for e, theme, obligatoire, retirer in form.places %}
+        <div class="place-fiche">
+          <span class="place-ref">{% etiquette_referentiel e.referentiel %}{% if not e.referentiel.actif %} <span class="discret">{% libelle "saisie.fiche.inactif_min" %}</span>{% endif %}</span>
+          <span class="place-theme"><span class="discret">{% libelle "saisie.fiche.theme" %}</span>
+            <span class="chemin-place">{% for v, l in theme.field.choices %}{% if v == theme.value|stringformat:"s" %}{{ l }}{% endif %}{% endfor %}</span>
+            <input type="hidden" name="{{ theme.html_name }}" value="{{ theme.value|default:'' }}"></span>
+          <label class="case-filtre"><input type="checkbox" name="{{ obligatoire.html_name }}" {% if obligatoire.value %}checked{% endif %}> {% libelle "saisie.fiche.obligatoire_min" %}</label>
+          <span class="discret place-depuis">{% libelle "saisie.fiche.depuis_place" referentiel=e.referentiel_id depuis=e.depuis_texte %}</span>
+          <a class="place-ranger" href="{% url 'parametres:referentiel_contenu' e.referentiel_id %}" title="{% libelle "saisie.fiche.ranger_titre" %}">{% libelle "saisie.fiche.ranger" %}</a>
+        </div>
+        {% empty %}{% if kpi.pk or form.ajout_place.field.choices|length <= 1 %}<p class="discret m-0">{% libelle "saisie.fiche.aucun_referentiel" %}
+          {% if kpi.pk %}{% libelle "saisie.fiche.pour_ajouter" %}{% endif %}</p>{% endif %}{% endfor %}
+        {% if not kpi.pk and form.ajout_place.field.choices|length > 1 %}
+        <label class="place-ajout"><span class="discret">{% libelle "saisie.fiche.creer_dans" %}</span>{{ form.ajout_place }}</label>
+        <span class="aide-champ m-0">{% if voisin %}{% if voisin.position == "avant" %}{% libelle "saisie.fiche.place_avant" code=voisin.kpi.code nom=voisin.kpi.nom %}{% else %}{% libelle "saisie.fiche.place_apres" code=voisin.kpi.code nom=voisin.kpi.nom %}{% endif %}{% else %}{% libelle "saisie.fiche.creer_dans_aide" %}{% endif %}</span>
+        {% comment %}« L'ajouter aussi aux exercices précédents ? » : un choix par référentiel qui a des
+        périodes passées ; seul celui du référentiel choisi est visible (« ajout_place » le change).{% endcomment %}
+        {% for code, options, valeur, visible in choix_depuis %}
+        <label class="place-ajout" data-depuis-ref="{{ code }}"{% if not visible %} hidden{% endif %}><span class="discret">{% libelle "saisie.fiche.depuis_question" %}</span>
+          <select name="ajout_depuis__{{ code }}" id="ajout-depuis-{{ code }}"{% if not visible %} disabled{% endif %}>{% for v, l in options %}<option value="{{ v }}"{% if v == valeur %} selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+        {% endfor %}
+        {% if choix_depuis %}<span class="aide-champ m-0" data-depuis-aide>{% libelle "saisie.fiche.depuis_aide" %}</span>{% endif %}{% endif %}
+      </div>
+      {% if form.elements %}<span class="aide-champ">{% libelle "saisie.fiche.places_aide" %}</span>{% endif %}
+    </div>
+    <div class="champ"><label for="{{ form.equipe_responsable.id_for_label }}">{% libelle "saisie.fiche.equipe" %}</label>{{ form.equipe_responsable }}</div>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.definition" %}</h3>
+    <div class="deux-colonnes definition-fiche">
+      {% for c, champs in form.descriptions %}{% with premier=forloop.first %}{% for lg, champ in champs %}
+      <div class="champ{% if premier %} pleine-largeur{% endif %}" data-langue="{{ lg.code }}"><label for="{{ champ.id_for_label }}">{{ c }}{% if champs|length > 1 %} <span class="code-langue">{{ lg.code|upper }}</span>{% endif %}{% if c.obligatoire and lg.code == form.ref %} <span class="obligatoire" title="{% libelle "saisie.fiche.obligatoire_titre" %}">*</span>{% endif %}
+        {% if not c.affichee %}<span class="discret normal">{% libelle "saisie.fiche.interne" %}</span>{% endif %}</label>{{ champ }}{{ champ.errors }}</div>
+      {% endfor %}{% endwith %}
+      {% empty %}<p class="discret">{% libelle "saisie.fiche.aucune_categorie" %}</p>{% endfor %}
+    </div>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.saisie_calcul" %}</h3>
+    <div class="champ">
+      <div class="liste-choix" role="radiogroup" aria-label="{% libelle "saisie.fiche.saisie_calcul" %}">
+        {% with v=form.type_saisie.value %}
+        {% for t in types_saisie %}
+        <label class="choix-ligne"><input type="radio" name="type_saisie" value="{{ t.code }}" data-comportement="{{ t.comportement }}" {% if v == t.code %}checked{% endif %} required>
+          <span class="choix-nom">{{ t }}</span><span class="choix-aide">{{ t.aide }}</span></label>
+        {% endfor %}
+        {% endwith %}
+      </div>{{ form.type_saisie.errors }}
+      <a class="lien-reglage" href="{{ url_types }}" title="{% libelle "saisie.fiche.regler_types_titre" %}">{% libelle "saisie.fiche.regler_types" %}</a>
+    </div>
+
+    <div class="bloc-formule" data-si-calcule>
+      <span class="libelle-formule">{% libelle "saisie.fiche.formule" %}</span>
+      {% include "collecte/_constructeur.html" with champ=form.formule exemple=True %}
+
+      <label class="case-option"><input type="checkbox" name="na_compte_zero" {% if form.na_compte_zero.value %}checked{% endif %}{% if form.is_bound or kpi.pk %} data-touchee="1"{% endif %}>
+        <span><strong>{% libelle "saisie.fiche.na_zero" %}</strong><br><span class="discret">{% libelle "saisie.fiche.na_zero_aide" %}</span></span></label>
+
+      <div class="tester-formule">
+        <select name="campagne_test" aria-label="{% libelle "saisie.fiche.campagne_test" %}">{% for c in campagnes %}<option value="{{ c.pk }}" {% if campagne_test == c.pk|stringformat:"s" %}selected{% endif %}>{{ c.nom_complet_affiche }}</option>{% endfor %}</select>
+        <button type="submit" name="action" value="tester" class="secondaire">{% libelle "saisie.fiche.tester" %}</button>
+        <span class="aide-champ m-0">{% libelle "saisie.fiche.tester_aide" %}</span>
+      </div>
+      {% if erreur_test %}{% encart "erreur" %}{% libelle "saisie.fiche.formule_erreur" erreur=erreur_test %}{% endencart %}{% endif %}
+      {% if test %}
+      <div class="resultats-test">
+        <p class="titre-test">{% libelle "saisie.fiche.test_titre" titre=test.0.titre n=test.1|length %}</p>
+        {% for r in test.1 %}
+        <details class="carte-test" {% if forloop.first %}open{% endif %}>
+          <summary>{% etiquette_niveau r.org %} <strong>{{ r.org.nom }}</strong>
+            <span class="resultat-final{% if r.valeur is None %} manquant{% endif %}">{{ r.texte }}</span></summary>
+          <ol class="etapes-test">
+            {% for e in r.etapes %}
+            <li><span class="lien-kpi">{{ e.ref.kpi }}{% if e.ref.decalage != "N" %} · {{ e.periode }}{% endif %}</span>
+              <span class="nom-etape">{% libelle "saisie.fiche.kpi_inconnu" as t_inconnu %}{{ e.kpi.nom|default:t_inconnu }}</span>
+              <span class="val-etape{% if e.valeur is None %} manquant{% endif %}">{{ e.texte }}</span></li>
+            {% endfor %}
+            <li class="calcul-etape"><span>{% libelle "saisie.fiche.calcul" %}</span><span class="code">{{ r.expression }}</span><strong>= {{ r.texte }}</strong></li>
+          </ol>
+          {% if r.message %}<p class="aide-champ m-0 mt-4">{{ r.message }}</p>{% endif %}
+        </details>
+        {% empty %}<p class="discret">{% libelle "saisie.fiche.test_aucune_organisation" %}</p>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.reponse_attendue" %}</h3>
+    <div class="champ"><span class="libelle">{% libelle "saisie.fiche.niveau_saisie" %}</span>
+      <div class="choix-niveau" role="radiogroup" aria-label="{% libelle "saisie.fiche.niveau_saisie" %}">
+        {% for n in niveaux_arbre %}
+        <label class="niveau-radio niveau-{{ n.code }}"><input type="radio" name="granularite" value="{{ n.code }}" {% if form.granularite.value == n.code %}checked{% endif %} required> {{ n }}</label>
+        {% endfor %}
+      </div>{{ form.granularite.errors }}
+      <span class="aide-champ">{% libelle "saisie.fiche.niveau_saisie_aide" %}</span>
+    </div>
+
+    <div class="trois-colonnes">
+      <div class="champ"><label for="id_type_reponse">{% libelle "saisie.fiche.type_reponse" %}</label>
+        <select name="type_reponse" id="id_type_reponse" required>{% for t in form.fields.type_reponse.queryset %}
+          <option value="{{ t.code }}" data-format="{{ t.format }}" {% if form.type_reponse.value == t.code %}selected{% endif %}>{{ t }}{% if t.format == "liste" %} ({{ t.valeurs|join:", "|truncatechars:40 }}){% endif %}</option>{% endfor %}
+        </select>{{ form.type_reponse.errors }}
+        <span class="aide-champ" data-aide-redige{% if form.instance.type_reponse_id and form.instance.est_texte %}{% else %} hidden{% endif %}>{% libelle "saisie.fiche.texte_redige_aide" %}</span></div>
+      <div class="champ" data-si-nombre><label for="id_unite">{% libelle "saisie.fiche.unite" %}</label>
+        <select name="unite" id="id_unite"><option value="">{% libelle "saisie.fiche.sans_unite" %}</option>{% for u in form.fields.unite.queryset %}
+          <option value="{{ u.code }}" data-decimales="{{ u.decimales }}"{% if u.entier %} data-entier="1"{% endif %} {% if form.unite.value == u.code %}selected{% endif %}>{{ u }}{% with l=u|tr:"libelle" %}{% if l and l != u|tr:"symbole" %} · {{ l }}{% endif %}{% endwith %}</option>{% endfor %}
+        </select>{{ form.unite.errors }}</div>
+      <div class="champ" data-si-nombre><label for="{{ form.decimales.id_for_label }}">{% libelle "saisie.fiche.decimales" %}</label>{{ form.decimales }}
+        <span class="aide-champ" id="aide-decimales-entier"{% if not form.unite_entiere %} hidden{% endif %}>{% libelle "saisie.fiche.unite_entiere" %}</span></div>
+    </div>
+
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.consolidation" %}</h3>
+    <div class="champ"><span class="libelle" id="titre-agregation">{% libelle "saisie.fiche.niveaux_superieurs" %}</span>
+      <span class="aide-champ aide-groupe">{% libelle "saisie.fiche.niveaux_superieurs_aide" %}</span>
+      <div class="liste-choix" role="radiogroup" aria-labelledby="titre-agregation">
+        {% with v=form.methode_agregation.value %}
+        {% for code, libelle, aide, pour in agregations %}
+        <label class="choix-ligne" data-agregation="{{ code }}" data-pour="{{ pour }}"><input type="radio" name="methode_agregation" value="{{ code }}" {% if v == code %}checked{% endif %}>
+          <span class="choix-nom">{{ libelle }}</span><span class="choix-aide">{{ aide }}</span></label>
+        {% endfor %}
+        {% endwith %}
+      </div>{{ form.methode_agregation.errors }}
+    </div>
+    <label class="case-option" data-si-agregeable><input type="checkbox" name="saisie_au_dessus" {% if form.saisie_au_dessus.value %}checked{% endif %}>
+      <span><strong>{% libelle "saisie.fiche.au_dessus" %}</strong><br><span class="discret">{% libelle "saisie.fiche.au_dessus_aide" %}</span></span></label>
+
+    <div class="champ"><span class="libelle" id="titre-temps">{% libelle "saisie.fiche.dans_le_temps" %}</span>
+      <span class="aide-champ aide-groupe">{% libelle "saisie.fiche.dans_le_temps_aide" %}</span>
+      <div class="liste-choix" role="radiogroup" aria-labelledby="titre-temps">
+        {% with v=form.agregation_temps.value %}
+        {% for code, libelle, aide in agregations_temps %}
+        <label class="choix-ligne" data-agregation-temps="{{ code }}"><input type="radio" name="agregation_temps" value="{{ code }}" {% if v == code %}checked{% endif %}>
+          <span class="choix-nom">{{ libelle }}</span><span class="choix-aide">{{ aide }}</span></label>
+        {% endfor %}
+        {% endwith %}
+      </div>{{ form.agregation_temps.errors }}
+    </div>
+  </section>
+
+  {% if kpi.pk %}
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.liens" %}</h3>
+    <div class="liens-kpi">
+      <div><span class="libelle-liens">{% libelle "saisie.fiche.calcule_a_partir" %}</span>
+        {% for k, decalage in sources %}<a class="lien-kpi" href="{% url 'collecte:referentiel_kpi' k.code %}" data-panneau title="{{ k.nom }}"><b>{{ k.code }}{% if decalage != "N" %}@{{ decalage }}{% endif %}</b> {{ k.nom|truncatechars:40 }}</a>
+        {% empty %}<span class="discret">{% libelle "saisie.fiche.kpi_saisi" %}</span>{% endfor %}</div>
+      <div><span class="libelle-liens">{% libelle "saisie.fiche.utilise_dans" %}</span>
+        {% for k, decalage in utilisations %}<a class="lien-kpi utilise" href="{% url 'collecte:referentiel_kpi' k.code %}" data-panneau title="{{ k.nom }}"><b>{{ k.code }}</b> {{ k.nom|truncatechars:40 }}{% if decalage != "N" %} (@{{ decalage }}){% endif %}</a>
+        {% empty %}<span class="discret">{% libelle "saisie.fiche.aucune_formule" %}</span>{% endfor %}</div>
+    </div>
+  </section>
+  {% endif %}
+
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.controles" %}</h3>
+    <label class="case-option"><input type="checkbox" name="preuve_obligatoire" {% if form.preuve_obligatoire.value %}checked{% endif %}>
+      <span><strong>{% libelle "saisie.fiche.preuve_obligatoire" %}</strong><br><span class="discret">{% libelle "saisie.fiche.preuve_obligatoire_aide" %}</span></span></label>
+    <label class="case-option"><input type="checkbox" name="actif" {% if form.actif.value %}checked{% endif %}>
+      <span><strong>{% libelle "saisie.fiche.kpi_actif" %}</strong><br><span class="discret">{% libelle "saisie.fiche.kpi_actif_aide" %}</span></span></label>
+    <div class="champ"><label for="{{ form.confidentialite.id_for_label }}">{% libelle "saisie.fiche.confidentialite" %}</label>{{ form.confidentialite }}<p class="aide-champ">{% libelle "saisie.fiche.confidentialite_aide" %}</p></div>
+  </section>
+
+  {% with champs=form.champs_personnalises %}{% if champs %}
+  <section class="bloc">
+    <h3><span class="num"></span> {% libelle "saisie.fiche.champs_perso" %}</h3>
+    <div class="deux-colonnes champs-perso">
+      {% for c, champ in champs %}{% if c.type != "case" %}
+      <div class="champ"><label for="{{ champ.id_for_label }}">{{ c }}</label>{{ champ }}{{ champ.errors }}</div>
+      {% endif %}{% endfor %}
+    </div>
+    <div class="cases-perso" role="group" aria-label="{% libelle "saisie.fiche.cases_perso" %}">
+      {% for c, champ in champs %}{% if c.type == "case" %}
+      <label class="case-filtre"><input type="checkbox" name="{{ champ.html_name }}" {% if champ.value %}checked{% endif %}> {{ c }}</label>
+      {% endif %}{% endfor %}
+    </div>
+  </section>
+  {% endif %}{% endwith %}
+
+  {% if nb_reponses %}{% encart "avertissement" %}<label>{{ form.confirmer }} {% libelle_html "saisie.fiche.confirmer" n=nb_reponses %}</label>{% endencart %}{% endif %}
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% if kpi.pk %}{% libelle "saisie.fiche.enregistrer_modifs" %}{% else %}{% libelle "saisie.fiche.creer" %}{% endif %}</button>
+</div>
+</form>
+
+

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Administration › Comptes › Historique des connexions (collecte/vues_connexions.py) : date, compte (ou empreinte d'un
+identifiant inconnu, jamais l'identifiant tapé), résultat. Filtres appliqués par le serveur, liste
+coupée à 300 lignes. Lecture seule. Auditeur (page == "historique") : pas de menu
+Administration ni de lien vers le réglage de la durée ; retour à son Historique.{% endcomment %}
+{% block titre %}{% libelle "admin.connexions.titre" %}{% endblock %}
+{% block contenu %}
+{% if page == "historique" %}
+<p class="retour-page"><a href="{% url 'collecte:historique' %}">{% icone "chevron-gauche" %} {% libelle "cadre.menu.historique" %}</a></p>
+<div class="entete-page"><h1>{% libelle "admin.connexions.titre" %}</h1></div>
+<p class="aide-champ remonte">{% libelle "admin.connexions.aide" n=jours %}</p>
+{% else %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_comptes' %}">{% icone "chevron-gauche" %} {% libelle "admin.connexions.retour" %}</a></p>
+<h2>{% libelle "admin.connexions.titre" %}</h2>
+<p class="aide-champ remonte">{% libelle "admin.connexions.aide" n=jours %} <a href="{% url 'parametres:hebergement' %}#reglage-connexions">{% libelle "admin.connexions.regler" %}</a></p>
+{% endif %}
+
+{% if rien %}
+{% libelle "admin.connexions.vide" as t_vide %}{% libelle "admin.connexions.vide_phrase" as t_vp %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_vp %}
+{% else %}
+<form method="get" class="barre-filtres">
+  <div class="champ-filtre"><label for="recherche-connexions">{% libelle "commun.filtres.recherche" %}</label>
+    <input type="search" id="recherche-connexions" name="q" value="{{ q }}" maxlength="150" {% libelle "admin.connexions.recherche" as t_ph %}placeholder="{{ t_ph }}"></div>
+  <div class="champ-filtre"><label for="filtre-resultat-connexions">{% libelle "admin.connexions.col.resultat" %}</label>
+    <select id="filtre-resultat-connexions" name="resultat" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ resultats_choisis|join:"," }}"><option value="">{% libelle "commun.tous" %}</option>
+      {% for v, t, n in choix_resultats %}<option value="{{ v }}" data-nb="{{ n|stringformat:"d" }}"{% if v in resultats_choisis %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="champ-filtre"><label for="filtre-periode-connexions">{% libelle "admin.connexions.periode" %}</label>
+    <select id="filtre-periode-connexions" name="periode" data-panneau-filtre data-envoyer data-defaut=""><option value=""{% if not periode %} selected{% endif %}>{% libelle "admin.connexions.periode.tout" %}</option>
+      {% for v, t in choix_periodes %}<option value="{{ v }}"{% if v == periode %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <noscript><button type="submit" class="secondaire">{% libelle "commun.filtrer" %}</button></noscript>
+  <p class="etat-filtres" data-serveur>{% if filtre %}<span role="status">{{ compte }}</span>
+    <a class="lien-effacer" href="{{ url_page }}">{% icone "x" %} {% libelle "commun.filtres.effacer_tout" %}</a>{% endif %}</p>
+</form>
+
+{% if lignes %}
+<table class="carte-table table-connexions">
+  <thead><tr><th scope="col">{% libelle "admin.connexions.col.date" %}</th><th scope="col">{% libelle "admin.connexions.col.compte" %}</th><th scope="col">{% libelle "admin.connexions.col.resultat" %}</th></tr></thead>
+  <tbody>
+  {% for l in lignes %}
+  <tr>
+    <td class="quand">{{ l.date|date_courte }} <span class="discret">{{ l.date|date:"H:i" }}</span></td>
+    <td>{% if l.utilisateur %}<span class="personne">{% avatar l.utilisateur %}<span><span class="nom-personne">{{ l.utilisateur }}</span><span class="discret">{{ l.utilisateur.email }}</span></span></span>
+      {% elif l.empreinte %}{% libelle "admin.connexions.inconnu" %} <span class="discret">{% libelle "admin.connexions.empreinte" empreinte=l.empreinte %}</span>
+      {% else %}<span class="discret">{% libelle "admin.connexions.compte_supprime" %}</span>{% endif %}</td>
+    <td>{% if l.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "admin.connexions.resultat.reussie" %}</span>{% elif l.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "admin.connexions.resultat.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "admin.connexions.resultat.echec" %}</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% if limite %}<p class="discret">{% libelle "admin.connexions.limite" %}</p>{% endif %}
+{% else %}
+{% libelle "admin.connexions.aucune" as t_aucune %}{% include "collecte/_vide.html" with titre=t_aucune compact=True %}
+{% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% if modele %}{{ modele.nom_affiche }}{% else %}{% libelle "suivi.echanges.exports.nouveau" %}{% endif %}{% endblock %}
+{% block contenu %}
+{% include "collecte/echanges/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:echanges' %}">{% icone "chevron-gauche" %} {% libelle "suivi.echanges.nav.exports" %}</a></p>
+<form method="post" class="formulaire-export" data-suivi-modifs data-telechargement-action="telecharger">
+  {% csrf_token %}
+  {% if modele %}<input type="hidden" name="modele" value="{{ modele.pk }}">{% endif %}
+  <div class="tete-editeur">
+    {% if modele %}
+    <h2>{{ modele.nom_affiche }} <span class="badge-partage{% if not modele.partage %} perso{% endif %}">{% if modele.partage %}{% libelle "suivi.echanges.badge.partage" %}{% else %}{% libelle "suivi.echanges.badge.personnel" %}{% endif %}</span>
+      <span class="non-enregistre" hidden>{% libelle "suivi.echanges.export.non_enregistre" %}</span></h2>
+    {% if not modele.modifiable %}<p class="intro-page">{% libelle "suivi.echanges.export.intro_partage" %}</p>{% endif %}
+    {% else %}
+    <h2><span data-nom-brouillon>{% libelle "suivi.echanges.exports.nouveau" %}</span></h2>
+    {% endif %}
+  </div>
+
+  <section class="bloc" aria-labelledby="q-kpi">
+    <h3 id="q-kpi">{% libelle "suivi.echanges.export.q_kpi" %}</h3>
+      {% if referentiels|length > 1 %}
+      <span class="libelle-formule" id="l-referentiel">{% libelle "suivi.echanges.export.referentiel" %} <span class="discret normal">{% libelle "suivi.echanges.export.referentiel_aide" %}</span></span>
+      <div class="puces-choix" data-ref-export role="radiogroup" aria-labelledby="l-referentiel">
+        <label class="puce"><input type="radio" name="referentiel" value="" {% if not p.referentiel %}checked{% endif %}><span>{% libelle "commun.tous" %}</span></label>
+        {% for r in referentiels %}<label class="puce"><input type="radio" name="referentiel" value="{{ r.code }}" {% if p.referentiel == r.code %}checked{% endif %}><span>{{ r }}</span></label>{% endfor %}
+      </div>
+      {% endif %}
+      <span class="libelle-formule">KPI</span>
+      {% libelle "suivi.echanges.kpi.tous" as t_tous %}{% include "collecte/echanges/_choix_kpi.html" with ck=ck libelle_tous=t_tous id="export" %}
+  </section>
+
+  <section class="bloc" aria-labelledby="q-orgs">
+    <h3 id="q-orgs">{% libelle "suivi.echanges.export.q_orgs" %}</h3>
+      <div data-perimetre>
+        <span class="libelle-formule" id="l-niveaux">{% libelle "suivi.echanges.export.niveaux" %} <span class="discret normal">{% libelle "suivi.echanges.export.niveaux_aide" %}</span></span>
+        <div class="puces-choix" role="group" aria-labelledby="l-niveaux">
+          <button type="button" class="puce-action" data-tout="1">{% libelle "suivi.echanges.export.tout_cocher" %}</button>
+          <button type="button" class="puce-action" data-tout="0">{% libelle "suivi.echanges.export.tout_decocher" %}</button>
+          <span class="separateur-puces"></span>
+          {% for code, libelle in niveaux %}<label class="puce"><input type="checkbox" name="niveaux" value="{{ code }}" data-niveau="{{ code }}" {% if code in p.niveaux %}checked{% endif %}><span><span class="niveau niveau-{{ code }}">{{ libelle }}</span></span></label>{% endfor %}
+        </div>
+        <div class="arbre-perimetre">
+          <div class="tete-arbre"><strong id="l-orgs">{% libelle "suivi.echanges.export.orgs_exportees" %}</strong> <span class="compte-perimetre" data-compte></span></div>
+          <div class="liste-cases" role="group" aria-labelledby="l-orgs">
+            {% for o, retrait, ancetres in orgs %}<label style="padding-left:{{ retrait }}px" class="case-org"><input type="checkbox" name="organisations" value="{{ o.id }}" data-org="{{ o.id }}" data-org-niveau="{{ o.niveau_id }}" data-ancetres=" {{ ancetres }} " {% if orgs_choisies %}{% if o.id in orgs_choisies %}checked{% endif %}{% elif o.niveau_id in p.niveaux %}checked{% endif %}> {% etiquette_niveau o %} <span class="nom-org">{{ o.nom }}</span></label>{% endfor %}
+          </div>
+        </div>
+      </div>
+  </section>
+
+  <section class="bloc" aria-labelledby="q-periode">
+    <h3 id="q-periode">{% libelle "suivi.echanges.export.q_periode" %}</h3>
+      <div class="puces-choix" data-exercices role="group" aria-labelledby="q-periode">
+        <label class="puce puce-tous"><input type="checkbox" name="exercices" value="tous" {% if "tous" in exercices_choisis %}checked{% endif %}><span>{% libelle "commun.tous" %}</span></label>
+        {% for ex in exercices %}{% if ex in exercices_en_cours %}<label class="puce"><input type="checkbox" name="exercices" value="{% if forloop.first %}courant{% else %}{{ ex }}{% endif %}" {% if "tous" in exercices_choisis or "courant" in exercices_choisis or ex|stringformat:"s" in exercices_choisis %}checked{% endif %}><span>{{ ex }} <small class="en-cours">{% libelle "suivi.echanges.export.en_cours" %}</small></span></label>
+        {% else %}<label class="puce"><input type="checkbox" name="exercices" value="{{ ex }}" {% if "tous" in exercices_choisis or ex|stringformat:"s" in exercices_choisis %}checked{% endif %}><span>{{ ex }}</span></label>{% endif %}{% endfor %}
+      </div>
+      {% if types_periodes|length > 1 %}
+      <span class="libelle-formule" id="l-periodes">{% libelle "suivi.echanges.export.periodes" %} <span class="discret normal">{% libelle "suivi.echanges.export.periodes_aide" %}</span></span>
+      <div class="puces-choix" role="group" aria-labelledby="l-periodes">
+        {% for t, l in types_periodes %}<label class="puce"><input type="checkbox" name="periodes" value="{{ t }}" {% if t in periodes_choisies %}checked{% endif %}><span>{{ l }}</span></label>{% endfor %}
+      </div>
+      {% endif %}
+      <span class="libelle-formule" id="l-comparaison">{% libelle "suivi.echanges.export.comparaison" %}</span>
+      <div class="puces-choix" role="group" aria-labelledby="l-comparaison">
+        <label class="puce"><input type="checkbox" name="n1" {% if p.n1 %}checked{% endif %}><span>{% libelle "suivi.echanges.export.ajouter_n1" %}</span></label>
+      </div>
+      <span class="aide-champ">{% libelle "suivi.echanges.export.exercice_aide" %}</span>
+  </section>
+
+  <section class="bloc" aria-labelledby="q-fichier">
+    <h3 id="q-fichier">{% libelle "suivi.echanges.export.q_fichier" %}</h3>
+      <span class="libelle-formule" id="l-presentation">{% libelle "suivi.echanges.export.presentation" %}</span>
+      <div class="cartes-choix" role="radiogroup" aria-labelledby="l-presentation">
+        {% for code, libelle, aide in presentations %}
+        <label class="carte-choix">
+          <input type="radio" name="presentation" value="{{ code }}" {% if p.presentation == code %}checked{% endif %}>
+          {% if code == "base" %}<svg viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="3" width="60" height="6" rx="1" class="t"/><rect x="2" y="13" width="60" height="4" rx="1"/><rect x="2" y="20" width="60" height="4" rx="1"/><rect x="2" y="27" width="60" height="4" rx="1"/><rect x="2" y="34" width="60" height="4" rx="1"/></svg>
+          {% elif code == "tableau" %}<svg viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="3" width="60" height="6" rx="1" class="t"/><rect x="2" y="12" width="20" height="26" rx="1" class="v"/><rect x="25" y="12" width="10" height="7" rx="1"/><rect x="38" y="12" width="10" height="7" rx="1"/><rect x="51" y="12" width="11" height="7" rx="1"/><rect x="25" y="22" width="10" height="7" rx="1"/><rect x="38" y="22" width="10" height="7" rx="1"/><rect x="51" y="22" width="11" height="7" rx="1"/><rect x="25" y="31" width="10" height="7" rx="1"/><rect x="38" y="31" width="10" height="7" rx="1"/><rect x="51" y="31" width="11" height="7" rx="1"/></svg>
+          {% elif code == "audit" %}<svg viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="3" width="60" height="6" rx="1" class="t"/><rect x="2" y="12" width="40" height="4" rx="1"/><rect x="46" y="12" width="16" height="4" rx="1" class="ok"/><rect x="2" y="19" width="40" height="4" rx="1"/><rect x="46" y="19" width="16" height="4" rx="1" class="ok"/><rect x="2" y="26" width="40" height="4" rx="1"/><rect x="46" y="26" width="16" height="4" rx="1" class="t"/><rect x="2" y="33" width="60" height="4" rx="1" class="v"/></svg>
+          {% else %}<svg viewBox="0 0 64 40" aria-hidden="true"><rect x="2" y="3" width="60" height="6" rx="1" class="t"/><rect x="2" y="12" width="60" height="5" rx="1" class="v"/><rect x="6" y="20" width="30" height="3" rx="1"/><rect x="40" y="20" width="10" height="3" rx="1"/><rect x="53" y="20" width="9" height="3" rx="1" class="ok"/><rect x="6" y="26" width="30" height="3" rx="1"/><rect x="40" y="26" width="10" height="3" rx="1"/><rect x="53" y="26" width="9" height="3" rx="1" class="t"/><rect x="2" y="32" width="60" height="5" rx="1" class="v"/></svg>{% endif %}
+          <strong>{{ libelle }}</strong>
+          <span class="discret">{{ aide }}</span>
+        </label>
+        {% endfor %}
+      </div>
+      <span class="libelle-formule" id="l-format">{% libelle "suivi.echanges.export.format" %}</span>
+      <div class="puces-choix" role="radiogroup" aria-labelledby="l-format">
+        <label class="puce"><input type="radio" name="format" value="xlsx" {% if p.format == "xlsx" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.format_excel" %}</span></label>
+        <label class="puce"><input type="radio" name="format" value="csv" {% if p.format == "csv" %}checked{% endif %}><span>CSV</span></label>
+      </div>
+      <p class="discret petit">{% libelle "suivi.echanges.export.gros_export" seuil=seuil_gros_export %}</p>
+      <div class="si-csv">
+        <span class="libelle-formule" id="l-style-csv">{% libelle "suivi.echanges.export.style_csv" %}</span>
+        <div class="puces-choix" role="radiogroup" aria-labelledby="l-style-csv">
+          <label class="puce"><input type="radio" name="csv" value="fr" {% if p.csv == "fr" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.csv_fr" %}</span></label>
+          <label class="puce"><input type="radio" name="csv" value="intl" {% if p.csv == "intl" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.csv_intl" %}</span></label>
+        </div>
+      </div>
+      <fieldset class="si-formules" aria-describedby="aide-valeurs-calculees">
+        <legend class="libelle-formule">{% libelle "suivi.echanges.export.valeurs_calculees" %} <span class="discret normal">{% libelle "suivi.echanges.export.valeurs_ou" %}</span></legend>
+        <div class="puces-choix">
+          <label class="puce"><input type="radio" name="valeurs" value="chiffres" {% if p.valeurs != "formules" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.valeurs_chiffres" %}</span></label>
+          <label class="puce"><input type="radio" name="valeurs" value="formules" {% if p.valeurs == "formules" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.valeurs_formules" %}</span></label>
+        </div>
+        <span class="aide-champ" id="aide-valeurs-calculees">{% libelle "suivi.echanges.export.valeurs_aide" %}</span>
+        <label class="case si-sources"><input type="checkbox" name="sources" {% if p.sources %}checked{% endif %}> {% libelle "suivi.echanges.export.ajouter_sources" %}</label>
+      </fieldset>
+    <details class="options-repliables options-export"{% if options_modifiees %} open{% endif %}>
+      <summary>{% libelle "suivi.echanges.export.options" %} <span class="discret">{% libelle "suivi.echanges.export.options_detail" %}</span></summary>
+      <span class="libelle-formule" id="l-contenus">{% libelle "suivi.echanges.export.valeurs_exportees" %}</span>
+      <div class="puces-choix" role="group" aria-labelledby="l-contenus">
+        {% for code, libelle in contenus %}<label class="puce puce-{{ code }}"><input type="checkbox" name="contenus" value="{{ code }}" {% if code in p.contenus %}checked{% endif %}><span>{{ libelle }}</span></label>{% endfor %}
+      </div>
+      <span class="libelle-formule" id="l-types">{% libelle "suivi.echanges.export.types_kpi" %}</span>
+      <div class="puces-choix" role="group" aria-labelledby="l-types">
+        {% for code, libelle in types %}<label class="puce"><input type="checkbox" name="types" value="{{ code }}" {% if code in p.types %}checked{% endif %}><span>{{ libelle }}</span></label>{% endfor %}
+      </div>
+      <span class="aide-champ">{% if user.est_admin %}{% libelle "suivi.echanges.export.calcules_aide" %}{% else %}{% libelle "suivi.echanges.export.calcules_aide_perimetre" %}{% endif %}</span>
+      <span class="libelle-formule" id="l-langue">{% libelle "suivi.echanges.export.langue" %} <span class="discret normal">{% libelle "suivi.echanges.export.langue_aide" %}</span></span>
+      <div class="puces-choix" role="radiogroup" aria-labelledby="l-langue">
+        {% if interface_hors_contenus %}{% for code, nom in langues_interface %}{% if code == langue_interface %}<label class="puce"><input type="radio" name="langue" value="" {% if langue_export == "" %}checked{% endif %}><span>{% libelle "suivi.echanges.export.langue_interface" nom=nom %}</span></label>{% endif %}{% endfor %}{% endif %}
+        {% for lg in langues_export %}<label class="puce"><input type="radio" name="langue" value="{{ lg.code }}" {% if lg.code == langue_export %}checked{% endif %}><span>{{ lg.libelle }}</span></label>{% endfor %}
+      </div>
+      <span class="aide-champ">{% libelle "suivi.echanges.export.langue_note" %}</span>
+    </details>
+  </section>
+
+    <section class="bloc bloc-resume" data-resume="{% url 'collecte:echanges_resume' %}">
+      <h3>{% libelle "suivi.echanges.export.resume" %}</h3>
+      <p class="phrase-export" data-phrase aria-live="polite">{{ phrase }}</p>
+      <details class="apercu-export" data-apercu>
+        <summary>{% libelle "suivi.echanges.export.apercu" %}</summary>
+        <div class="contenu-apercu" data-contenu-apercu><p class="discret">{% libelle "suivi.echanges.export.apercu_preparation" %}</p></div>
+      </details>
+    </section>
+
+    <section class="bloc bloc-modele">
+      <h3>{% if modele and modele.modifiable %}{% libelle "suivi.echanges.export.nom_partage" %}{% else %}{% libelle "suivi.echanges.export.enregistrer_cet_export" %}{% endif %} <span class="discret normal">{% libelle "suivi.echanges.export.retrouver" %}</span></h3>
+      <div class="deux-colonnes">
+        <div class="champ"><label for="nom-modele">{% libelle "suivi.echanges.export.nom" %}</label>
+          {% libelle "suivi.echanges.export.nom_exemple" as t_exemple %}<input type="text" id="nom-modele" name="nom" value="{% if modele %}{{ modele.nom }}{% endif %}" maxlength="100" placeholder="{{ t_exemple }}">
+          <span class="message-champ" id="nom-modele-erreur">{% libelle "suivi.echanges.export.nom_requis" %}</span></div>
+        <div class="champ"><label for="desc-modele">{% libelle "suivi.echanges.description" %} <span class="discret">{% libelle "suivi.echanges.facultative" %}</span></label>
+          {% libelle "suivi.echanges.export.description_exemple" as t_desc %}<input type="text" id="desc-modele" name="description" value="{{ modele.description|default:'' }}" maxlength="200" placeholder="{{ t_desc }}"></div>
+      </div>
+      {% if user.est_admin %}<label class="case"><input type="checkbox" name="partage" {% if modele.partage %}checked{% endif %}> {% libelle "suivi.echanges.export.partage_avec_tous" %} <span class="discret">{% libelle "suivi.echanges.export.partage_aide" %}</span></label>{% endif %}
+    </section>
+    <p class="aide-champ">{% libelle "suivi.echanges.export.pied_aide" %}</p>
+    <div class="barre-enregistrement collante">
+      <button type="submit" name="action" value="telecharger">{% icone "telecharger" %} {% libelle "suivi.echanges.telecharger" %}</button>
+      {% if modele and modele.modifiable %}
+      <button type="submit" name="action" value="enregistrer" class="secondaire">{% libelle "suivi.echanges.export.enregistrer_modifs" %}</button>
+      <button type="submit" name="action" value="copier" class="lien">{% libelle "suivi.echanges.export.enregistrer_nouveau" %}</button>
+      {% elif modele %}
+      <button type="submit" name="action" value="copier" class="secondaire">{% libelle "suivi.echanges.export.enregistrer_copie" %}</button>
+      {% else %}
+      <button type="submit" name="action" value="copier" class="secondaire">{% libelle "suivi.echanges.export.enregistrer_cet_export" %}</button>
+      {% endif %}
+    </div>
+  </form>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends "base.html" %}{% load collecte %}
+{% block titre %}{% libelle "mcp.reglages.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{# Paramètres › Assistants (MCP) : permis ou non dans l'espace (éteint par défaut), écritures, limites ; jetons actifs (docs/mcp.md) #}
+<form method="post" class="page-seuils page-assistants" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}{% encart "erreur" role="alert" %}{{ form.non_field_errors|join:" " }}{% endencart %}{% endif %}
+  <section class="bloc">
+    <h2><span class="num">1</span> {% libelle "mcp.reglages.acces" %}</h2>
+    <div class="champ">
+      <label class="case-option">{{ form.actif }}<span>{% libelle "mcp.reglages.actif" %}</span></label>
+      <p class="aide-champ" id="aide-actif">{% libelle "mcp.reglages.actif_aide" %}</p>
+    </div>
+    <div class="champ">
+      <label class="case-option">{{ form.ecriture }}<span>{% libelle "mcp.reglages.ecriture" %}</span></label>
+      <p class="aide-champ" id="aide-ecriture">{% libelle "mcp.reglages.ecriture_aide" %} {% libelle "mcp.reglages.ecriture_risque" %}</p>
+    </div>
+    <div class="champ">
+      <span class="libelle" id="titre-adresse">{% libelle "mcp.reglages.adresse" %}</span>
+      <div class="ligne-copie"><code id="adresse-mcp" class="code-copie" aria-labelledby="titre-adresse">{{ adresse }}</code>
+        {% libelle "mcp.compte.copie" as t_copie %}<button type="button" class="secondaire" data-copier="#adresse-mcp" data-copier-annonce="{{ t_copie }}">{% icone "copy" %} {% libelle "mcp.compte.copier" %}</button></div>
+      <p class="aide-champ">{% libelle "mcp.reglages.adresse_aide" %}</p>
+    </div>
+  </section>
+  <section class="bloc">
+    <h2><span class="num">2</span> {% libelle "mcp.reglages.donnees" %}</h2>
+    <div class="champ">
+      <label class="case-option">{{ form.lecteur_lit }}<span>{% libelle "mcp.reglages.lecteur_lit" %}</span></label>
+      <p class="aide-champ" id="aide-lecteur-lit">{% libelle "mcp.reglages.lecteur_lit_aide" %}</p>
+    </div>
+    <div class="champ">
+      <label class="case-option">{{ form.kpi_sensibles }}<span>{% libelle "mcp.reglages.kpi_sensibles" %}</span></label>
+      <p class="aide-champ" id="aide-kpi-sensibles">{% libelle "mcp.reglages.kpi_sensibles_aide" %}</p>
+    </div>
+  </section>
+  <section class="bloc">
+    <h2><span class="num">3</span> {% libelle "mcp.reglages.limites" %}</h2>
+    <div class="champ champ-seuil{% if form.appels_minute.errors %} en-erreur{% endif %}">
+      <label for="{{ form.appels_minute.id_for_label }}">{% libelle "mcp.reglages.appels" %}</label>
+      {{ form.appels_minute }}
+      <p class="aide-champ" id="aide-appels">{% libelle "mcp.reglages.appels_aide" %}</p>
+      {% for e in form.appels_minute.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+    </div>
+    <div class="champ champ-seuil{% if form.duree_max_jours.errors %} en-erreur{% endif %}">
+      <label for="{{ form.duree_max_jours.id_for_label }}">{% libelle "mcp.reglages.duree" %}</label>
+      {{ form.duree_max_jours }}
+      <p class="aide-champ" id="aide-duree">{% libelle "mcp.reglages.duree_aide" %}</p>
+      {% for e in form.duree_max_jours.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+    </div>
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit">{% libelle "mcp.reglages.enregistrer" %}</button></div>
+</form>
+<section class="bloc carte" id="jetons" aria-labelledby="titre-jetons">
+  <h2 id="titre-jetons"><span class="num">4</span> {% libelle "mcp.reglages.jetons" %}</h2>
+  <p class="aide-champ remonte">{% libelle "mcp.reglages.jetons_aide" %}</p>
+  {% if jetons %}
+  <div class="defile-x"><table class="carte-table table-jetons">
+    <thead><tr><th>{% libelle "mcp.col.personne" %}</th><th>{% libelle "mcp.col.nom" %}</th><th class="mq-s">{% libelle "mcp.col.debut" %}</th><th class="mq-m">{% libelle "mcp.col.cree" %}</th><th>{% libelle "mcp.col.expire" %}</th><th class="mq-s">{% libelle "mcp.col.utilise" %}</th><th><span class="visuellement-cache">{% libelle "mcp.col.actions" %}</span></th></tr></thead>
+    <tbody>{% for j in jetons %}
+    <tr><td>{{ j.utilisateur }}</td><td>{{ j.nom }}</td><td class="mq-s"><code>{{ j.debut }}…</code></td><td class="mq-m">{{ j.cree_le|date_courte }}</td><td>{{ j.expire_le|date_courte }}</td>
+      <td class="mq-s">{% if j.derniere_utilisation %}{{ j.derniere_utilisation|date_heure_courte }}{% else %}<span class="discret">{% libelle "mcp.jamais" %}</span>{% endif %}</td>
+      <td class="action-ligne">{% libelle "mcp.revoquer_confirmer" nom=j.nom as t_conf %}{% libelle "mcp.revoquer_nom" nom=j.nom as t_rev %}
+        <form method="post" data-confirmer="{{ t_conf }}">{% csrf_token %}<input type="hidden" name="action" value="revoquer"><input type="hidden" name="jeton" value="{{ j.pk }}">
+          <button type="submit" class="lien lien-danger" aria-label="{{ t_rev }}">{% libelle "mcp.revoquer" %}</button></form></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}{% libelle "mcp.reglages.aucun" as t_aucun %}{% include "collecte/_vide.html" with titre=t_aucun compact=True %}{% endif %}
+</section>
+{% endblock %}

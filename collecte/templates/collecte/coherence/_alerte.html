@@ -1,0 +1,82 @@
+{% load collecte %}
+<div class="panneau-haut"><span class="discret">{% libelle "saisie.coherence.alerte.entete" campagne=a.campagne.titre %}</span>{% libelle "saisie.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+<div class="tete-org">
+  <p class="chemin-org"><span class="controle controle-{{ a.controle }}">{{ a|choix:"controle" }}</span> <span class="gravite gravite-{{ a.gravite }}"></span> {{ a|choix:"gravite" }}</p>
+  <h2 class="texte-grand m-0 mt-4 mb-4">{{ a.kpi.nom }}</h2>
+  <div class="chiffres-org">{% etiquette_niveau a.organisation a.organisation.nom %}<span class="id-chip">{{ a.kpi.code }}</span>
+    <span class="statut-alerte statut-alerte-{{ a.statut }}">{{ a|choix:"statut" }}</span></div>
+</div>
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+
+<section class="bloc constat">
+  <h3>{% libelle "saisie.coherence.alerte.constat" %}</h3>
+  {% if equation %}
+  <p class="constat-titre">{% libelle "saisie.coherence.alerte.regle_non_respectee" regle=a.regle.nom_affiche %}</p>
+  {% if a.regle.description %}<p class="aide-champ mt-0">{{ a.regle.description_affichee }}</p>{% endif %}
+  <div class="equation">
+    {% with g=equation.gauche d=equation.droite %}
+    <div class="eq-cote">
+      {% for l in g.lignes %}<a class="eq-ligne"{% if l.url %} href="{{ l.url }}" data-panneau{% endif %}><span><span class="id-chip">{{ l.id }}</span> {{ l.kpi.nom|default:l.id }}{% if l.annee %} ({{ l.annee }}){% endif %}</span><strong>{{ l.valeur }}</strong></a>{% endfor %}
+      {% if not g.simple %}<div class="eq-total"><span>{{ g.formule }}</span><strong>{{ g.total|default:"–" }}</strong></div>{% endif %}
+    </div>
+    <div class="eq-operateur"><span>{{ equation.operateur }}</span><small>{% if equation.tolerance %}{% libelle "saisie.coherence.alerte.doit_etre_tolerance" operateur=equation.operateur_texte tolerance=equation.tolerance %}{% else %}{% libelle "saisie.coherence.alerte.doit_etre" operateur=equation.operateur_texte %}{% endif %}</small></div>
+    <div class="eq-cote">
+      {% for l in d.lignes %}<a class="eq-ligne"{% if l.url %} href="{{ l.url }}" data-panneau{% endif %}><span><span class="id-chip">{{ l.id }}</span> {{ l.kpi.nom|default:l.id }}{% if l.annee %} ({{ l.annee }}){% endif %}</span><strong>{{ l.valeur }}</strong></a>{% endfor %}
+      {% if not d.simple %}<div class="eq-total"><span>{{ d.formule }}</span><strong>{{ d.total|default:"–" }}</strong></div>{% endif %}
+    </div>
+    {% endwith %}
+  </div>
+  {% if equation.ecart %}<p class="eq-ecart{% if not equation.ecart.ok %} ko{% endif %}">{% if equation.ecart.pct %}{% libelle_html "saisie.coherence.alerte.ecart_pct" diff=equation.ecart.diff pct=equation.ecart.pct %}{% else %}{% libelle_html "saisie.coherence.alerte.ecart" diff=equation.ecart.diff %}{% endif %}</p>{% endif %}
+  <p class="aide-champ">{% libelle "saisie.coherence.alerte.cliquer_kpi" %}</p>
+  {% else %}
+  <p class="m-0 mb-12 texte-corps">{{ a|constat }}</p>
+  <div class="comparaison"><div><span class="discret">{% libelle "saisie.coherence.alerte.valeur_periode" periode=a.campagne.periode %}</span><strong>{{ a|texte_alerte:"valeur"|default:"—" }}</strong></div>
+    {% if a.reference %}<div><span class="discret">{% libelle "saisie.coherence.alerte.reference" %}</span><strong>{{ a|texte_alerte:"reference" }}</strong></div>{% endif %}</div>
+  {% if a.controle == "ecart_n1" %}<p class="aide-champ mt-0 mb-8">{% libelle "saisie.coherence.alerte.ecart_n1_aide" %}</p>
+  <a class="bouton secondaire" href="{{ url_saisie }}" data-panneau>{% libelle "saisie.coherence.alerte.ouvrir_corriger_commenter" %}</a>
+  {% else %}<a class="bouton secondaire" href="{{ url_saisie }}" data-panneau>{% libelle "saisie.coherence.alerte.ouvrir_corriger" %}</a>{% endif %}
+  {% endif %}
+  {% if ia_explication %}<div class="ia-zone" data-ia-zone>
+    <button type="button" class="secondaire compact ia-bouton" data-ia-expliquer="{% url 'collecte:alerte_ia' a.pk %}"{% if not non_justifiable %}{% if a.a_traiter or a.statut == "justifiee" %} data-ia-cible="texte-just"{% endif %}{% endif %} hidden>{% icone "sparkles" %}<span>{% libelle "saisie.ia.expliquer" %}</span></button>
+    <div data-ia-resultat></div></div>{% endif %}
+</section>
+
+<section class="bloc">
+  <h3>{% libelle "saisie.coherence.alerte.historique" %}</h3>
+  <table class="resultat-test"><thead><tr><th>{% if a.campagne.periode.annuelle %}{% libelle "saisie.coherence.alerte.exercice" %}{% else %}{% libelle "saisie.coherence.alerte.periode" %}{% endif %}</th><th>{% libelle "saisie.coherence.alerte.valeur" %}</th><th>{% libelle "saisie.coherence.alerte.commentaire" %}</th></tr></thead>
+    {% for ex, v, com, courante in historique %}<tr{% if courante %} class="ligne-courante"{% endif %}><td>{{ ex }}</td><td><strong>{{ v }}</strong></td><td class="discret retour-ligne">{{ com|truncatechars:80 }}</td></tr>{% endfor %}
+  </table>
+</section>
+
+<section class="bloc">
+  <h3>{% libelle "saisie.coherence.alerte.explication" %}</h3>
+  {% if a.justification %}<div class="justification"><p class="m-0 pre-ligne">{{ a.justification }}</p>
+    <span class="discret">{% if a.justifie_par %}{% libelle "saisie.coherence.alerte.par_le" auteur=a.justifie_par date=a.date_justification|date_courte %}{% endif %}{% if a.traite_par %} · {% libelle "saisie.coherence.alerte.decision" auteur=a.traite_par date=a.date_traitement|date_courte %}{% endif %}</span></div>{% endif %}
+  {% if user.lecture_seule %}{% if not a.justification %}<p class="discret m-0">{% libelle "saisie.coherence.alerte.pas_explication" %}</p>{% endif %}
+  {% elif non_justifiable %}{% if a.a_traiter or a.statut == "justifiee" %}{# calcul impossible, campagne clôturée : coherence.motif_justification_refusee #}
+  <p class="discret m-0 mb-8">{{ non_justifiable }}</p>
+  {% if admin %}<form method="post" action="{% url 'collecte:alerte' a.pk %}" data-ajax>{% csrf_token %}
+    <div class="boutons-statut">{% libelle "saisie.coherence.alerte.ignorer_confirmer" as t_ignorer %}<button type="submit" name="action" value="ignorer" class="secondaire" data-confirmer="{{ t_ignorer }}">{% libelle "saisie.coherence.alerte.ignorer" %}</button></div>
+  </form>{% endif %}{% endif %}
+  {% elif a.a_traiter or a.statut == "justifiee" %}
+  <form method="post" action="{% url 'collecte:alerte' a.pk %}" data-ajax>{% csrf_token %}
+    <div class="champ"><label for="texte-just">{% if a.justification %}{% libelle "saisie.coherence.alerte.completer" %}{% elif a.controle == "ecart_n1" %}{% libelle "saisie.coherence.alerte.expliquer_ici" %}{% else %}{% libelle "saisie.pav.explique_pourquoi" %}{% endif %}</label>
+      <textarea id="texte-just" name="texte" rows="3" placeholder="{% libelle "saisie.pav.exemple_justification" %}"></textarea></div>
+    <div class="boutons-statut"><button type="submit" name="action" value="justifier">{% libelle "saisie.pav.enregistrer_explication" %}</button>
+      {% if admin %}{% libelle "saisie.coherence.alerte.ignorer_confirmer" as t_ignorer %}<button type="submit" name="action" value="ignorer" class="secondaire" data-confirmer="{{ t_ignorer }}">{% libelle "saisie.coherence.alerte.ignorer" %}</button>{% endif %}</div>
+  </form>
+  {% endif %}
+  {% if admin and a.statut == "justifiee" %}
+  <form method="post" action="{% url 'collecte:alerte' a.pk %}" data-ajax class="decision-admin">{% csrf_token %}
+    <p class="aide-champ m-0 mb-8">{% libelle "saisie.coherence.alerte.decision_equipe" %}</p>
+    <textarea name="texte" rows="2" placeholder="{% libelle "saisie.coherence.alerte.motif" %}"></textarea>
+    <div class="boutons-statut"><button type="submit" name="action" value="accepter">{% libelle "saisie.coherence.alerte.accepter" %}</button>
+      <button type="submit" name="action" value="rejeter" class="secondaire">{% libelle "saisie.coherence.alerte.rejeter" %}</button></div>
+  </form>
+  {% endif %}
+  {% if admin and a.statut in "acceptee ignoree rejetee" %}
+  <form method="post" action="{% url 'collecte:alerte' a.pk %}" data-ajax>{% csrf_token %}<button type="submit" name="action" value="rouvrir" class="secondaire">{% libelle "saisie.coherence.alerte.rouvrir" %}</button></form>
+  {% endif %}
+  {% if a.statut == "corrigee" %}{% encart "succes" classe="m-0" %}{% libelle "saisie.coherence.alerte.corrigee" %}{% endencart %}{% endif %}
+</section>

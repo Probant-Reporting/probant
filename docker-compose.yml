@@ -1,0 +1,77 @@
+# Probant – one-command installation: ./install.sh (or "docker compose up -d --build").
+# Settings in the .env file (template: .env.example). Full guide: docs/installation.md
+#
+#   default             : the tool alone, SQLite database, http://server:8000
+#   "https" profile     : + Caddy, automatic certificate for DOMAIN (COMPOSE_PROFILES=https in .env)
+#   "postgres" profile  : + PostgreSQL (DATABASE_URL=postgres://probant:...@db:5432/probant in .env)
+#
+# Variables: English names (.env.example); the former French names of older .env files
+# (PORT_HTTP, DOMAINE, POSTGRES_MOT_DE_PASSE…) are still read as a fallback. The whole .env is passed to the tool,
+# which accepts either name itself.
+# The volumes are named after the project: probant_donnees, probant_postgres, probant_caddy_data, probant_caddy_config.
+name: probant
+
+services:
+  web:
+    image: ${IMAGE:-probant:local}
+    build:
+      context: .
+      args:
+        VERSION_COMMIT: ${VERSION_COMMIT:-}
+    restart: unless-stopped
+    init: true
+    env_file:
+      - path: .env
+        required: false
+    ports:
+      - "${HTTP_PORT:-${PORT_HTTP:-8000}}:8000"
+    volumes:
+      # volume name kept as is ("donnees"): renaming it would leave existing installations with an empty volume
+      - donnees:/data
+    depends_on:
+      db:
+        condition: service_healthy
+        required: false
+
+  caddy:
+    profiles: ["https"]
+    image: caddy:2
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DOMAIN: ${DOMAIN:-${DOMAINE:-}}
+      CADDY_MAX_SIZE: ${CADDY_MAX_SIZE:-${CADDY_TAILLE_MAX:-50MB}}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+
+  db:
+    profiles: ["postgres"]
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: probant
+      POSTGRES_USER: probant
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-${POSTGRES_MOT_DE_PASSE:-change-me}}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U probant -d probant"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  donnees:
+  postgres:
+  caddy_data:
+  caddy_config:

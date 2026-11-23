@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.nav.attributions" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+
+{% libelle "admin.attributions.niveau_saisie" as t_ns %}<nav class="onglets-niveaux" aria-label="{{ t_ns }}" id="stats-attributions" data-rafraichir>
+  {% for o in onglets %}
+  <a href="?niveau={{ o.code }}{% if personne %}&personne={{ personne }}{% endif %}" class="onglet-niveau carte-{{ o.code }}{% if o.code == niveau %} actif{% endif %}">
+    <span class="haut-onglet"><span class="pastille-niveau"></span><strong>{{ o.libelle }}</strong>
+      {% if o.total and not o.sans %}<span class="badge-complet">{% libelle "admin.attributions.complet" %}</span>{% endif %}</span>
+    <span class="calcul-cases">{% libelle "admin.attributions.calcul_base" n=o.nb_kpi nb_orgs=o.nb_orgs niveau=o.orgs_libelle %}{% if o.nb_orphelins %} + {% libelle "admin.attributions.calcul_herites" n=o.nb_herites %} × {% libelle "admin.attributions.calcul_orphelines" n=o.nb_orphelins niveau=o.niveau_nom %}{% endif %} = {% libelle "admin.attributions.calcul_total" n=o.total %}</span>
+    <span class="barre-onglet"><span style="width:{{ o.pct }}%"></span></span>
+    <span class="resultat-onglet">{% if role_attr == "validateur" %}{% libelle_html "admin.attributions.valid.couvertes" n=o.faites total=o.total %}{% if o.sans %} · <span class="reste">{% libelle "admin.attributions.valid.sans" nombre=o.sans %}</span>{% endif %}{% else %}{% libelle_html "admin.attributions.attribuees" n=o.faites total=o.total %}{% if o.sans %} · <span class="reste">{% libelle "admin.attributions.a_attribuer" nombre=o.sans %}</span>{% endif %}{% endif %}</span>
+  </a>
+  {% endfor %}
+</nav>
+
+{# « Remplacer une personne » : action de la page, au bout de la barre de filtres #}
+<div class="tete-attributions">
+  {# explication longue, lue une fois : repliée (tri des textes), la grille remonte #}
+  {% if role_attr == "validateur" %}{# choix Validateurs : ce que vaut une case, dit une fois, visible #}
+  <p class="intro-page" id="intro-validateurs">{% libelle "admin.attributions.valid.intro" %}</p>
+  <details class="aide-repliable aide-page"><summary>{% libelle "admin.attributions.valid.aide_titre" %}</summary>
+    <p>{% libelle "admin.attributions.valid.legende" %}</p></details>
+  {% else %}
+  <details class="aide-repliable aide-page"><summary>{% libelle "admin.attributions.aide_titre" %}</summary>
+    <p>{% libelle "admin.attributions.legende" %} <a href="{% url 'collecte:saisie' %}">{% libelle "admin.attributions.legende_lien" %}</a> {% libelle "admin.attributions.legende_fin" %}</p></details>
+  {% endif %}
+</div>
+
+{% comment %}Barre de filtres : recherche, référentiel (rechargé par le serveur), thème (plusieurs à la
+fois) et personne (filtrés dans la page), « Seulement les lignes à compléter » ; à droite, le menu « Affichage » (KPI calculés)
+et l'action de la page. « Tout replier » est dans l'en-tête de la grille.{% endcomment %}
+<div class="barre-filtres barre-attributions">
+  {% libelle "admin.attributions.recherche" as t_ph %}{% include "_recherche.html" with placeholder=t_ph %}
+  {# qui la grille montre et donne : contributeurs (SPOC) ou validateurs ; rechargé par le serveur #}
+  <div class="champ-filtre"><label for="filtre-role">{% libelle "admin.attributions.role" %}</label>
+    <select id="filtre-role" data-panneau-filtre data-aller-option data-defaut="contributeur">
+      <option value="contributeur" data-url="?role=contributeur"{% if role_attr != "validateur" %} selected{% endif %}>{% libelle "admin.attributions.role_contributeurs" %}</option>
+      <option value="validateur" data-url="?role=validateur"{% if role_attr == "validateur" %} selected{% endif %}>{% libelle "admin.attributions.role_validateurs" %}</option>
+    </select></div>
+  {% include "collecte/_choix_referentiel.html" %}
+  {% if themes|length > 1 %}<div class="champ-filtre"><label for="filtre-theme">{% libelle "admin.attributions.theme" %}</label>
+    <select id="filtre-theme" data-panneau-filtre data-multiple>
+      <option value="">{% libelle "commun.tous" %}</option>
+      {% for theme, lignes in themes %}<option value="{{ forloop.counter }}" data-nb="{{ lignes|length }}">{{ theme }}</option>{% endfor %}
+    </select></div>{% endif %}{% if groupes_orgs %}{# grand groupe (échelle, P-A4) : un groupe d'organisations à la fois, rechargé par le serveur #}
+  <div class="champ-filtre"><label for="filtre-groupe">{% libelle "admin.attributions.groupe" %}</label>
+    <select id="filtre-groupe" data-panneau-filtre data-aller-option data-defaut="{{ groupe_defaut }}">
+      {% for g in groupes_orgs %}<option value="{{ g.cle }}" data-url="?niveau={{ niveau|urlencode }}&amp;groupe={{ g.cle }}{% if personne %}&amp;personne={{ personne|urlencode }}{% endif %}" data-nb="{{ g.nb }}"{% if g.cle == groupe %} selected{% endif %}>{{ g.libelle }}</option>{% endfor %}
+      <option value="{{ toutes_colonnes }}" data-url="?niveau={{ niveau|urlencode }}&amp;groupe={{ toutes_colonnes }}{% if personne %}&amp;personne={{ personne|urlencode }}{% endif %}" data-nb="{{ nb_colonnes }}"{% if groupe == toutes_colonnes %} selected{% endif %}>{% libelle "admin.attributions.groupe_toutes" %}</option>
+    </select></div>{% endif %}
+  <div class="champ-filtre"><label for="filtre-personne">{% libelle "admin.attributions.personne" %}</label>
+    <select id="filtre-personne" data-panneau-filtre>
+      <option value="">{% libelle "admin.attributions.toutes" %}</option>
+      {% for p in personnes %}<option value="{{ p.pk }}" {% if personne == p.pk|stringformat:"s" %}selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select></div>
+  <label class="case-barre"><input type="checkbox" id="filtre-sans-spoc" data-filtre-case> {% libelle "admin.attributions.seulement_a_completer" %}</label>
+  <div class="filtres-droite">
+    {% if role_attr != "validateur" %}{% include "_menu_affichage.html" with options="collecte/administration/_affichage_attributions.html" %}{% endif %}
+    <a class="bouton secondaire" href="{% url 'collecte:admin_remplacer' %}" data-panneau>{% libelle "admin.attributions.remplacer" %}</a>
+  </div>
+  {% include "_etat_filtres.html" %}
+</div>
+
+{% if not themes %}
+<div class="carte">{% if not orgs %}{% libelle "admin.attributions.aucun_kpi_sans_org" %}{% else %}{% libelle "admin.attributions.aucun_kpi" %}{% endif %}</div>
+{% else %}
+<div id="liste" class="grille-scroll">
+<table class="grille-attr" data-grille data-role-attr="{{ role_attr|default:'contributeur' }}">
+  <colgroup><col class="col-kpi">{% for o in orgs %}<col class="col-case">{% endfor %}</colgroup>
+  <thead>
+    {% if groupes_colonnes %}
+    <tr class="groupes-col"><th class="coin"><span class="visuellement-cache">{% libelle "admin.attributions.col.rattachement" %}</span></th>{% for parent, n in groupes_colonnes %}<th colspan="{{ n }}">{% etiquette_niveau parent %} {{ parent.nom }}</th>{% endfor %}</tr>
+    {% endif %}
+    <tr class="tetes-col">
+      <th class="coin coin-kpi">KPI <span class="discret">({{ onglet.nb_kpi }})</span>{% if themes|length > 1 %}
+        <button type="button" class="lien replier-tous" data-replier-themes aria-expanded="true">{% libelle "admin.attributions.tout_replier" %}</button>{% endif %}</th>
+      {% for o in orgs %}<th class="col-org">{% libelle "admin.attributions.colonne_toute" as t_col %}<label title="{{ t_col }}"><input type="checkbox" class="choix-colonne" data-org="{{ o.pk }}"> <span>{{ o.nom }}</span></label>
+        {% if o.hors_niveau %}{% libelle "admin.attributions.porte_herite" as t_ph2 %}<span class="porte-herite" title="{{ t_ph2 }}">{% etiquette_niveau o %} {% libelle "admin.attributions.parametres_herites" %}</span>{% endif %}
+        {% if role_attr == "validateur" %}{% libelle "admin.attributions.valid.avancement_col" faites=o.nb_faites total=o.nb_kpi as t_av %}{% else %}{% libelle "admin.attributions.avancement_col" faites=o.nb_faites total=o.nb_kpi as t_av %}{% endif %}<span class="avancement-col" title="{{ t_av }}"><span class="mini-barre"><span style="width:{{ o.pct }}%"></span></span>{{ o.nb_faites }} / {{ o.nb_kpi }}</span></th>{% endfor %}
+    </tr>
+  </thead>
+  {% for theme, lignes in themes %}
+  <tbody data-theme="{{ forloop.counter }}">
+    {# thème repliable : le bouton montre ou cache ses lignes #}
+    <tr class="theme-grille"><th colspan="{{ orgs|length|add:1 }}"><button type="button" class="replier-theme" aria-expanded="true">{{ theme }} <span class="discret">({{ lignes|length }})</span></button></th></tr>
+    {% for l in lignes %}
+    <tr class="ligne" data-texte="{{ l.kpi.code|lower }} {{ l.kpi.nom|lower }}" data-statut="">
+      <th class="kpi-ligne" scope="row">{% libelle "admin.attributions.ligne_toute" as t_li %}{% libelle "admin.attributions.ligne_kpi" kpi=l.kpi.code as t_lk %}<input type="checkbox" class="choix-rangee" title="{{ t_li }}" aria-label="{{ t_lk }}">
+        <span class="nom-kpi" title="{{ l.kpi.nom }}">{{ l.kpi.nom }}</span><span class="id-kpi">{{ l.kpi.code }}{% if l.kpi.est_herite or l.kpi.est_calcule %} · {% etiquette_type l.kpi %}{% endif %}</span></th>
+      {{ l.html_cellules }}
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% endfor %}
+</table>
+<p class="etat-vide" id="aucun-resultat" hidden>{% libelle "admin.attributions.aucun_resultat" %}</p>
+</div>
+{% include "collecte/_choix_spoc.html" with role_choix=role_attr %}
+{% endif %}
+{% endblock %}

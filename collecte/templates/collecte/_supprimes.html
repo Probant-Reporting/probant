@@ -1,0 +1,18 @@
+{% load collecte %}{% comment %}Récemment supprimés (collecte/corbeille.py, elements) : une ligne par objet encore restaurable ; « Restaurer »
+remet l'objet à sa place (endpoint de l'annulation, mêmes droits) et revient sur cette page (champ « rester »).
+Variables : supprimes, retour (adresse de la page), avec_auteur (page de l'administrateur : qui a supprimé).{% endcomment %}
+<ul class="liste-supprimes">
+  {% for s in supprimes %}
+  <li class="supprime">
+    <div class="quoi-supprime">
+      <strong>{{ s.nom }}</strong>
+      <span class="discret">{{ s.type }}{% if avec_auteur %} · {% if s.par %}{% libelle "cadre.supprimes.par" nom=s.par %}{% else %}{% libelle "cadre.supprimes.par_inconnu" %}{% endif %}{% endif %}</span>
+      <span class="discret">{% libelle "cadre.supprimes.le" date=s.supprime_le|date_courte heure=s.supprime_le|date:"H:i" %} · <span class="restant">{% libelle "cadre.supprimes.restant" n=s.jours_restants %}</span></span>
+    </div>
+    <form method="post" action="{{ s.url }}">{% csrf_token %}
+      <input type="hidden" name="suivant" value="{{ retour }}"><input type="hidden" name="rester" value="1">
+      {% libelle "cadre.supprimes.restaurer_aria" nom=s.nom as t_aria %}<button type="submit" class="secondaire" aria-label="{{ t_aria }}">{% libelle "cadre.supprimes.restaurer" %}</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>

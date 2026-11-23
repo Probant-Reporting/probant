@@ -1,0 +1,43 @@
+{% load collecte %}<div class="panneau-haut"><span class="discret">{% libelle "saisie.coherence.regle.entete" %}</span>{% libelle "saisie.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+<h2 class="texte-grand">{% libelle "saisie.coherence.regle.nouvelle" as t_nouvelle %}{{ r.nom_affiche|default:t_nouvelle }}</h2>
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+<form method="post" class="formulaire-regle" action="{% if r.pk %}{% url 'collecte:regle' r.pk %}{% else %}{% url 'collecte:regle_nouvelle' %}{% endif %}" data-ajax>
+  {% csrf_token %}
+  <section class="bloc">
+    <h3><span class="num">1</span> {% libelle "saisie.coherence.regle.etape1" %}</h3>
+    <div class="champ"><label for="{{ form.nom.id_for_label }}">{% libelle "saisie.coherence.regle.nom" %}</label>{{ form.nom }}{{ form.nom.errors }}</div>
+    <div class="champ"><label for="{{ form.description.id_for_label }}">{% libelle "saisie.coherence.regle.explication" %} <span class="discret">{% libelle "saisie.coherence.regle.facultatif" %}</span></label>{{ form.description }}</div>
+  </section>
+  <section class="bloc">
+    <h3><span class="num">2</span> {% libelle "saisie.coherence.regle.etape2" %}</h3>
+    <span class="libelle-formule">{% libelle "saisie.coherence.regle.ce_kpi" %}</span>
+    {% include "collecte/_constructeur.html" with champ=form.gauche %}
+    <div class="champ operateur-regle"><label for="{{ form.operateur.id_for_label }}">{% libelle "saisie.coherence.regle.doit_etre" %}</label>{{ form.operateur }}</div>
+    <span class="libelle-formule">{% libelle "saisie.coherence.regle.compare_a" %}</span>
+    {% include "collecte/_constructeur.html" with champ=form.droite %}
+    <div class="regle-reglages">{# tolérance et niveau côte à côte (panneau moins haut) #}
+    <div class="champ"><label for="{{ form.tolerance.id_for_label }}">{% libelle "saisie.coherence.regle.tolerance" %}</label>{{ form.tolerance }}<span class="aide-champ">{% libelle "saisie.coherence.regle.tolerance_aide" %}</span>{{ form.tolerance.errors }}</div>
+    {# niveau recommandé d'après la granularité des KPI de la règle (_app/09_grilles_formule.js, data-niveau-regle) #}
+    <div class="champ" data-niveau-regle{% if r.pk %} data-touche="1"{% endif %} data-modele-aide="{% libelle "saisie.coherence.regle.recommande_aide" niveau="{niveau}" %}" data-trop-fin="{% libelle "saisie.coherence.regle.trop_fin" %}"><span class="libelle">{% libelle "saisie.coherence.regle.niveau" %}</span>
+      <div class="choix-niveau">{% for n in niveaux %}<label class="niveau-radio niveau-{{ n.code }}" data-nom="{{ n }}"><input type="radio" name="niveau" value="{{ n.code }}" {% if form.niveau.value == n.code %}checked{% endif %} required> {{ n }}<span class="badge-recommande" hidden>{% libelle "saisie.coherence.regle.recommande" %}</span></label>{% endfor %}</div>
+      <span class="aide-champ" data-aide-niveau>{% libelle "saisie.coherence.regle.niveau_aide" %}</span></div>
+    </div>
+    <div class="tester-formule"><button type="submit" name="action" value="tester" class="secondaire">{% libelle "saisie.coherence.regle.tester" campagne=campagne.titre %}</button></div>
+    {% if test %}
+    <table class="resultat-test"><thead><tr><th>{% libelle "saisie.coherence.regle.test.organisation" %}</th><th>{% libelle "saisie.coherence.regle.test.gauche" %}</th><th>{% libelle "saisie.coherence.regle.test.droite" %}</th><th>{% libelle "saisie.coherence.regle.test.resultat" %}</th></tr></thead>
+      {% for t in test %}<tr><td>{{ t.org.nom }}</td><td>{{ t.gauche }}</td><td>{{ t.droite }}</td>
+        <td>{% if t.ok is None %}<span class="discret">{% libelle "saisie.coherence.regle.test.non_evaluable" %}</span>{% elif t.ok %}<span class="etat etat-actif">{% libelle "saisie.coherence.regle.test.respectee" %}</span>{% else %}<span class="etat etat-inactif">{% libelle "saisie.coherence.regle.test.non_respectee" %}</span>{% endif %}</td></tr>
+      {% empty %}<tr><td colspan="4" class="discret">{% libelle "saisie.coherence.regle.test.aucune_organisation" %}</td></tr>{% endfor %}
+    </table>
+    {% endif %}
+  </section>
+  <section class="bloc">
+    <h3><span class="num">3</span> {% libelle "saisie.coherence.regle.etape3" %}</h3>
+    <label class="case-option"><input type="checkbox" name="bloquante" {% if form.bloquante.value %}checked{% endif %}>
+      <span><strong>{% libelle "saisie.coherence.regle.bloquer" %}</strong><br><span class="discret">{% libelle "saisie.coherence.regle.bloquer_aide" %}</span></span></label>
+    <label class="case-option"><input type="checkbox" name="actif" {% if form.actif.value %}checked{% endif %}>
+      <span><strong>{% libelle "saisie.coherence.regle.active" %}</strong><br><span class="discret">{% libelle "saisie.coherence.regle.active_aide" %}</span></span></label>
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% if r.pk %}{% libelle "commun.enregistrer" %}{% else %}{% libelle "saisie.coherence.regle.creer" %}{% endif %}</button></div>
+</form>

@@ -1,0 +1,33 @@
+{% load collecte %}
+{# En-tête commun des pages d'un référentiel : retour, nom, repères, onglets Contenu / Réglages / Versions et partage. #}
+<p class="retour-referentiels"><a href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.entete.retour" %}</a></p>
+<header class="entete-referentiel" style="--c-ref:{{ ref.couleur }}">
+  <div class="titre-referentiel">
+    <span class="pastille-ref grande" aria-hidden="true"></span>
+    <h2>{{ ref }}</h2>
+    {% libelle "referentiels.entete.code_fixe" as t_code %}
+    <span class="id-chip" title="{{ t_code }}">{{ ref.code }}</span>
+    {% if not ref.actif %}<span class="etat etat-inactif">{% libelle "referentiels.entete.inactif" %}</span>{% endif %}
+  </div>
+  <p class="reperes-referentiel">
+    <span>{{ ref|choix:"frequence" }}{% if ref.mois_debut != 1 %} · {% libelle "referentiels.entete.exercice_des" mois=ref.mois_libelle %}{% endif %}</span>
+    {# comme sur la liste : campagnes, thèmes, KPI ; sans l'origine #}
+    <span>{% if ref.nb_campagnes %}<a href="{% url 'collecte:admin_campagnes' %}">{% libelle_html "referentiels.entete.campagnes" n=ref.nb_campagnes %}</a>{% else %}{% libelle "referentiels.entete.aucune_campagne" %}{% endif %}</span>
+    <span>{% libelle_html "referentiels.entete.themes" n=ref.nb_themes %}</span><span><b>{{ ref.nb_kpi }}</b> KPI</span>
+    <span>{% if ref.date_version %}{% libelle "referentiels.entete.version_date" version=ref.version date=ref.date_version|date_courte %}{% else %}{% libelle "referentiels.entete.version" version=ref.version %}{% endif %}</span>
+  </p>
+  {% if ref.description %}<p class="discret description-referentiel">{{ ref.description }}</p>{% endif %}
+  {% include "parametres/_installer_documents_source.html" with documents=documents_source detaille=True %}
+  <div class="actions-referentiel">
+    <a href="{% url 'parametres:referentiel_copier' ref.code %}" class="bouton secondaire compact">{% libelle "referentiels.copie.lien" %}</a>
+    <a href="{% url 'parametres:referentiel_liste' ref.code %}" class="bouton secondaire compact">{% libelle "referentiels.liste.lien" %}</a>
+    <form method="post" action="{% url 'parametres:referentiels' %}" class="form-en-ligne">{% csrf_token %}<input type="hidden" name="code" value="{{ ref.code }}"><input type="hidden" name="retour" value="{{ request.path }}">
+      {% if ref.actif %}<button type="submit" name="action" value="desactiver" class="secondaire compact" data-confirmer="{% libelle "referentiels.actif.confirmer_desactiver" referentiel=ref %}">{% libelle "referentiels.actif.desactiver" %}</button>{% else %}<button type="submit" name="action" value="reactiver" class="secondaire compact">{% libelle "referentiels.actif.reactiver" %}</button>{% endif %}</form>
+  </div>
+  {% libelle "referentiels.entete.pages_aria" as t_pages %}
+  <nav class="sous-onglets petits" aria-label="{{ t_pages }}">
+    <a href="{% url 'parametres:referentiel_contenu' ref.code %}" {% if onglet_ref == 'contenu' %} class="actif" aria-current="page"{% endif %}>{% libelle "referentiels.entete.onglet_contenu" %}</a>
+    <a href="{% url 'parametres:referentiel_reglages' ref.code %}" {% if onglet_ref == 'reglages' %} class="actif" aria-current="page"{% endif %}>{% libelle "referentiels.entete.onglet_reglages" %}</a>
+    <a href="{% url 'parametres:referentiel_partage' ref.code %}" {% if onglet_ref == 'partage' %} class="actif" aria-current="page"{% endif %}>{% libelle "referentiels.entete.onglet_partage" %}</a>
+  </nav>
+</header>

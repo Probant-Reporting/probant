@@ -1,0 +1,84 @@
+{% load collecte %}
+<div class="panneau-haut"><span class="discret">{% libelle "admin.campagne.panneau" %}</span>{% libelle "admin.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+<h2 class="texte-grand">{% if c.pk %}{{ c.nom_affiche }}{% else %}{% libelle "admin.campagne.preparer" %}{% endif %}
+  {% if c.pk %}{% include "collecte/administration/_statut_campagne.html" %}{% endif %}</h2>
+{% if c.pk %}<p class="discret remonte">{% etiquette_referentiel c.referentiel %} {{ c.referentiel|choix_phrase:"frequence" }} · {% libelle "admin.campagne.du_au" debut=c.periode.debut|date_courte fin=c.periode.fin|date_courte %}</p>{% endif %}
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+{% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+
+{% if c.pk %}
+<h3>{% libelle "admin.campagne.statut" %}</h3>
+{# étapes numérotées : les ronds de l'installation d'un référentiel #}
+<ol class="etapes-numerotees" aria-label="{% libelle "admin.campagne.etapes_aria" %}">
+  {% with st=c.statut %}
+  <li class="{% if st == 'preparation' %}actuelle{% elif st != 'preparation' %}faite{% endif %}"{% if st == 'preparation' %} aria-current="step"{% endif %}><span class="num" aria-hidden="true">{% if st != 'preparation' %}{% icone "coche" %}{% else %}1{% endif %}</span><span class="texte"><span class="visually-hidden">{% if st != 'preparation' %}{% libelle "admin.campagne.etape_faite" numero=1 total=4 %}{% else %}{% libelle "admin.campagne.etape_sur" numero=1 total=4 %}{% endif %} </span>{% libelle "admin.campagne.etape1" %}</span></li>
+  <li class="{% if st == 'ouverte' %}actuelle{% elif st == 'revue' or st == 'cloturee' %}faite{% endif %}"{% if st == 'ouverte' %} aria-current="step"{% endif %}><span class="num" aria-hidden="true">{% if st == 'revue' or st == 'cloturee' %}{% icone "coche" %}{% else %}2{% endif %}</span><span class="texte"><span class="visually-hidden">{% if st == 'revue' or st == 'cloturee' %}{% libelle "admin.campagne.etape_faite" numero=2 total=4 %}{% else %}{% libelle "admin.campagne.etape_sur" numero=2 total=4 %}{% endif %} </span>{% libelle "admin.campagne.etape2" %}</span></li>
+  <li class="{% if st == 'revue' %}actuelle{% elif st == 'cloturee' %}faite{% endif %}"{% if st == 'revue' %} aria-current="step"{% endif %}><span class="num" aria-hidden="true">{% if st == 'cloturee' %}{% icone "coche" %}{% else %}3{% endif %}</span><span class="texte"><span class="visually-hidden">{% if st == 'cloturee' %}{% libelle "admin.campagne.etape_faite" numero=3 total=4 %}{% else %}{% libelle "admin.campagne.etape_sur" numero=3 total=4 %}{% endif %} </span>{% libelle "admin.campagne.etape3" %}</span></li>
+  <li class="{% if st == 'cloturee' %}actuelle{% endif %}"{% if st == 'cloturee' %} aria-current="step"{% endif %}><span class="num" aria-hidden="true">4</span><span class="texte"><span class="visually-hidden">{% libelle "admin.campagne.etape_sur" numero=4 total=4 %} </span>{% libelle "admin.campagne.etape4" %}</span></li>
+  {% endwith %}
+</ol>
+{% if c.statut != "ouverte" %}{# saisie ouverte : pas de phrase, les dates sont juste en dessous #}<p class="discret m-0 mt-8 mb-4">
+  {% if c.statut == "preparation" %}{% libelle_html "admin.campagne.aide_preparation" %}
+  {% elif c.statut == "revue" %}{% libelle_html "admin.campagne.aide_revue" %}
+  {% else %}{% libelle_html "admin.campagne.aide_cloturee" %}{% endif %}
+</p>{% endif %}
+{% if periode_gardee and c.statut != "cloturee" %}<p class="discret m-0 mb-4">{% libelle "admin.campagne.reouverture.gardes_note" %}</p>{% endif %}
+<form method="post" action="{% url 'collecte:admin_campagne' c.pk %}" data-ajax class="boutons-statut">
+  {% csrf_token %}
+  {% if c.statut == "preparation" %}
+    <button type="submit" name="action" value="ouvrir">{% libelle "admin.campagne.ouvrir_saisie" %}</button>
+  {% elif c.statut == "ouverte" %}
+    <button type="submit" name="action" value="revue" {% libelle "admin.campagne.revue_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.campagne.revue_bouton" %}</button>
+    <button type="submit" name="action" value="cloturer" class="secondaire danger" {% libelle "admin.campagne.cloturer_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.campagne.cloturer_bouton" %}</button>
+  {% elif c.statut == "revue" %}
+    <button type="submit" name="action" value="cloturer" class="bouton-danger" {% libelle "admin.campagne.cloturer_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.campagne.cloturer_bouton" %}</button>
+    <button type="submit" name="action" value="rouvrir_contributeurs" class="secondaire" {% libelle "admin.campagne.rouvrir_contrib_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.campagne.rouvrir_contrib_bouton" %}</button>
+  {% else %}
+    {% if choix_reouverture %}{# garder les chiffres de l'époque (par défaut) ou recalculer #}
+    <fieldset class="choix-reouverture">
+      <legend>{% libelle "admin.campagne.reouverture.titre" %}</legend>
+      <label class="case-option"><input type="radio" name="reouverture" value="garder" checked>
+        <span><strong>{% libelle "admin.campagne.reouverture.garder" %}</strong><br><span class="discret">{% libelle "admin.campagne.reouverture.garder_aide" %}</span></span></label>
+      <label class="case-option"><input type="radio" name="reouverture" value="recalculer">
+        <span><strong>{% libelle "admin.campagne.reouverture.recalculer" %}</strong><br><span class="discret">{% libelle "admin.campagne.reouverture.recalculer_aide" %}</span></span></label>
+      <p class="discret m-0">{% libelle "admin.campagne.reouverture.arbre_note" %}</p>
+    </fieldset>
+    {% endif %}
+    <button type="submit" name="action" value="rouvrir" class="secondaire" {% libelle "admin.campagne.rouvrir_revue_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}"{% if choix_reouverture %} {% libelle "admin.campagne.reouverture.rappel_garder" as t_g %}{% libelle "admin.campagne.reouverture.rappel_recalculer" as t_r %}data-confirmer-garder="{{ t_c }} {{ t_g }}" data-confirmer-recalculer="{{ t_c }} {{ t_r }}"{% endif %}>{% libelle "admin.campagne.rouvrir_revue_bouton" %}</button>
+    <button type="submit" name="action" value="rouvrir_contributeurs" class="secondaire" {% libelle "admin.campagne.rouvrir_contrib_tracee_confirmer" nom=c.nom_complet_affiche as t_c %}data-confirmer="{{ t_c }}"{% if choix_reouverture %} {% libelle "admin.campagne.reouverture.rappel_garder" as t_g %}{% libelle "admin.campagne.reouverture.rappel_recalculer" as t_r %}data-confirmer-garder="{{ t_c }} {{ t_g }}" data-confirmer-recalculer="{{ t_c }} {{ t_r }}"{% endif %}>{% libelle "admin.campagne.rouvrir_contrib_bouton" %}</button>
+  {% endif %}
+</form>
+{% if c.statut == "cloturee" %}<p class="m-0 mt-8"><a class="bouton secondaire" href="{% url 'collecte:certificat_cloture' c.pk %}">{% icone "printer" %} {% libelle "admin.campagne.certificat" %}</a></p>{% endif %}
+{% endif %}
+
+<h3>{% libelle "admin.campagne.reglages" %}</h3>
+<form method="post" action="{% if c.pk %}{% url 'collecte:admin_campagne' c.pk %}{% else %}{% url 'collecte:admin_campagne_nouvelle' %}{% endif %}" data-ajax class="formulaire" data-form-campagne>
+  {% csrf_token %}
+  <div class="grille-fiche">
+    {% if form.referentiel %}
+    {% include "collecte/administration/_champ.html" with champ=form.referentiel classe="large" %}
+    {% include "collecte/administration/_champ.html" with champ=form.exercice %}
+    <div class="champ" data-choix-rang><label for="id_rang">{% libelle "admin.campagne.periode_exercice" %}</label>
+      <select name="rang" id="id_rang">{% for f, n, libelle in rangs %}<option value="{{ n }}" data-frequence="{{ f }}" {% if form.rang.value|stringformat:"s" == n|stringformat:"s" %}selected{% endif %}>{{ libelle }}</option>{% endfor %}</select>
+      {{ form.rang.errors }}</div>
+    <div class="champ large case-champ" data-choix-rang><label><input type="checkbox" name="toutes" aria-describedby="aide-toutes" {% if form.toutes.value %}checked{% endif %}> {{ form.toutes.label }}</label>
+      <p class="aide-champ m-0" id="aide-toutes">{% libelle "admin.campagne.form.toutes_aide" %}</p></div>
+    {{ frequences|json_script:"frequences-referentiels" }}
+    {% endif %}
+    {% include "collecte/administration/_champ.html" with champ=form.date_ouverture %}
+    {% include "collecte/administration/_champ.html" with champ=form.date_fin_saisie %}
+    {% include "collecte/administration/_champ.html" with champ=form.seuil_pct classe="large" %}
+    {% include "collecte/administration/_champ.html" with champ=form.seuil_historique classe="large" %}
+  </div>
+  {% if not c.pk %}<p class="discret">{% libelle "admin.campagne.reprise_auto" %}</p>{% endif %}
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% if c.pk %}{% libelle "commun.enregistrer" %}{% else %}{% libelle "admin.campagne.creer" %}{% endif %}</button></div>
+</form>
+{% if c.pk and c.statut != "cloturee" and not periode_gardee %}{# calculs automatiques : le bouton, rarement utile, reste replié #}
+<details class="pli-calculs"><summary>{% libelle "admin.campagne.calculs" %}</summary>
+<form method="post" action="{% url 'collecte:admin_campagne' c.pk %}" data-ajax>{% csrf_token %}
+  <p class="discret m-0 mb-8">{% libelle "admin.campagne.recalculer_aide" %}</p>
+  <button type="submit" name="action" value="recalculer" class="secondaire">{% libelle "admin.campagne.recalculer" %}</button>
+</form>
+</details>
+{% endif %}

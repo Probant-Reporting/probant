@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.installer.modeles.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour-referentiels">{% if depuis_mep %}<a href="{% url 'parametres:mise_en_place_etape' 5 %}">{% libelle "referentiels.installer.modeles.retour_mep" %}</a>{% else %}<a href="{% url 'parametres:referentiel_nouveau' %}">{% libelle "referentiels.installer.modeles.retour_ajouter" %}</a>{% endif %}</p>
+<div class="tete-installation">
+  <h2 class="titre-installation">{% libelle "referentiels.installer.modeles.titre" %}</h2>
+  {% include "parametres/_etapes_installation.html" %}
+</div>
+<p class="intro-page">{% libelle "referentiels.installer.modeles.chapeau" %}</p>
+<ul class="grille-modeles">
+  {% for f in fournis %}
+  <li class="carte carte-modele" style="--c-ref:{{ f.paquet.referentiel.couleur }}">
+    <h3><span class="pastille-ref grande" aria-hidden="true"></span> {{ f.paquet.nom }}</h3>
+    {% if f.description_courte %}<p class="description-modele">{{ f.description_courte }}</p>{% endif %}
+    <p class="chiffres-modele">{{ f.nb_kpi }} KPI · {% libelle "referentiels.installer.modeles.themes" n=f.nb_themes %} · {% libelle "referentiels.installer.modeles.dont_calcules" n=f.nb_calcules %}</p>
+    {% if f.paquet.date_version %}<p class="discret petit version-modele">{% libelle "referentiels.installer.modeles.version_du" version=f.paquet.version date=f.paquet.date_version|date_courte %}</p>{% endif %}
+    {% include "parametres/_installer_documents_source.html" with documents=f.paquet.documents_affiches %}
+    {% if f.installe %}<p class="etat-modele"><span class="etat-fourni installe">{% libelle "referentiels.portes.installe" %}</span>{% if f.etat == "mise_a_jour" %} <span class="etat-fourni maj">{% libelle "referentiels.installer.modeles.version_dispo" version=f.paquet.version %}</span>{% endif %}</p>{% endif %}
+    <div class="actions-carte-modele">
+      {% if f.installe %}
+      {% if f.complet %}<a class="bouton" href="{% url 'parametres:referentiel_contenu' f.installe.code %}">{% libelle "referentiels.installer.voir_referentiel" %}</a>
+      <span class="discret">{% libelle "referentiels.installer.modeles.tous_installes" %}</span>
+      {% else %}<a class="bouton" href="{% url 'parametres:installer_kpi' f.code %}?version=0">{% libelle "referentiels.installer.modeles.ajouter_autres" %}</a>
+      <a href="{% url 'parametres:referentiel_contenu' f.installe.code %}">{% libelle "referentiels.installer.voir_referentiel" %}</a>{% endif %}
+      {% else %}
+      <a class="bouton" href="{% url 'parametres:installer_kpi' f.code %}" aria-label="{% libelle "referentiels.installer.modeles.choisir_aria" nom=f.paquet.nom %}">{% libelle "referentiels.installer.modeles.choisir" %}</a>
+      {% endif %}
+      <a class="lien-excel" href="{% url 'parametres:paquet_fourni' f.nom_fichier %}" data-telechargement title="{% libelle "referentiels.installer.modeles.excel_titre" %}">{% libelle "referentiels.installer.modeles.excel" %}</a>
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

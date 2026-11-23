@@ -1,0 +1,35 @@
+{% load collecte %}{# Modèle d'une carte de visuel, recopié par le script pour chaque visuel (textes : fichiers de langue) #}
+<template id="modele-visuel">
+  <section class="carte visuel" data-visuel>
+    <header class="tete-visuel">
+      <div class="titres-visuel">
+        <h2 class="titre-visuel" data-titre></h2>
+        <p class="sous-titre-visuel" data-sous-titre></p>
+      </div>
+      <details class="menu-deroulant menu-visuel">
+        <summary class="bouton-menu-visuel" data-resume-menu>{% icone "plus-actions" %}</summary>
+        <div class="menu-liste">
+          <button type="button" data-action="donnees">{% icone "table" %} {% libelle "visu.visuel.donnees" %}</button>
+          <button type="button" data-action="plein-ecran">{% icone "plein-ecran" %} {% libelle "visu.visuel.plein_ecran" %}</button>
+          <button type="button" data-action="png">{% icone "image" %} {% libelle "visu.visuel.export_png" %}</button>
+          <button type="button" data-action="excel">{% icone "telecharger" %} {% libelle "visu.visuel.export_excel" %}</button>
+          <a data-action="definition" href="#">{% icone "info" %} {% libelle "visu.visuel.definition" %}</a>
+        </div>
+      </details>
+    </header>
+    <ul class="avertissements-visuel" data-avertissements hidden></ul>
+    <div class="corps-visuel" data-corps></div>
+    <div class="donnees-visuel" data-donnees></div>
+    <button type="button" class="lien-donnees" data-action="donnees" aria-expanded="false">{% libelle "visu.visuel.donnees" %}</button>
+  </section>
+</template>
+{# Mode modification : barre de chaque carte (poignée « Déplacer », réglages), zone de dépôt d'un KPI, autres formes #}
+<template id="modele-edition">
+  <div class="barre-edition-visuel">
+    <button type="button" class="poignee-visuel" aria-describedby="consigne-deplacer">{% icone "poignee" %}<span aria-hidden="true">{% libelle "visu.visuel.deplacer" %}</span></button>
+    <button type="button" class="secondaire selection-visuel">{% libelle "visu.reglages.ouvrir" %}</button>
+  </div>
+  <ul class="depot-visuel"><li class="aide-depot" aria-hidden="true">{% libelle "visu.kpi.ajouter_visuel" %}</li></ul>
+  <div class="suggestions-visuel" hidden><span class="titre-suggestions">{% libelle "visu.visuel.suggestions" %}</span></div>
+</template>
+<p id="consigne-deplacer" class="visuellement-cache">{% libelle "visu.visuel.deplacer_consigne" %}</p>

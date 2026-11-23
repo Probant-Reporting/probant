@@ -1,0 +1,2517 @@
+{
+ "referentiel": {
+  "code": "ESRS_S2",
+  "identifiant": "05520a27-1655-5b16-83d6-6163f3f6707a",
+  "nom": {
+   "fr": "ESRS S2 – Travailleurs de la chaîne de valeur",
+   "en": "ESRS S2 – Workers in the value chain",
+   "es": "ESRS S2 – Trabajadores de la cadena de valor",
+   "de": "ESRS S2 – Arbeitskräfte in der Wertschöpfungskette",
+   "it": "ESRS S2 – Lavoratori nella catena del valore",
+   "nl": "ESRS S2 – Werknemers in de waardeketen",
+   "pt": "ESRS S2 – Trabalhadores na cadeia de valor"
+  },
+  "description": {
+   "fr": "Norme ESRS S2 révisée : politiques, dialogue, mécanismes de plainte, actions, incidents et cibles sur les travailleurs de la chaîne de valeur. À installer si le sujet est important, avec le modèle ESRS 2. Construit d'après le règlement délégué (UE) 2026/1563 du 3 juillet 2026.",
+   "en": "Revised ESRS S2: policies, engagement, grievance mechanisms, actions, incidents and targets on workers in the value chain. Install it if the topic is material, with the ESRS 2 template. Built from Delegated Regulation (EU) 2026/1563 of 3 July 2026.",
+   "es": "Norma ESRS S2 revisada: políticas, diálogo, mecanismos de reclamación, acciones, incidentes y metas sobre los trabajadores de la cadena de valor. Instálelo si el tema es material, con el modelo ESRS 2. Reglamento Delegado (UE) 2026/1563 de 3 de julio de 2026; inventario hecho con la lista de puntos de datos del EFRAG (borrador de 28 de agosto de 2026).",
+   "de": "Überarbeiteter ESRS S2: Konzepte, Dialog, Beschwerdemechanismen, Maßnahmen, Vorfälle und Ziele zu den Arbeitskräften in der Wertschöpfungskette. Installieren, wenn das Thema wesentlich ist, zusammen mit der Vorlage ESRS 2. Delegierte Verordnung (EU) 2026/1563 vom 3. Juli 2026; Bestandsaufnahme mit der Liste der Datenpunkte der EFRAG (Entwurf vom 28. August 2026).",
+   "it": "ESRS S2 rivisto: politiche, dialogo, meccanismi di reclamo, azioni, incidenti e obiettivi sui lavoratori nella catena del valore. Da installare se il tema è rilevante, con il modello ESRS 2. Regolamento delegato (UE) 2026/1563 del 3 luglio 2026; inventario fatto con l'elenco dei punti dati dell'EFRAG (bozza del 28 agosto 2026).",
+   "nl": "Herziene ESRS S2: beleid, dialoog, klachtenmechanismen, acties, incidenten en streefdoelen voor werknemers in de waardeketen. Installeer het als het onderwerp materieel is, samen met het model ESRS 2. Gedelegeerde Verordening (EU) 2026/1563 van 3 juli 2026; inventaris gemaakt met de lijst van datapunten van EFRAG (ontwerp van 28 augustus 2026).",
+   "pt": "ESRS S2 revista: políticas, diálogo, mecanismos de reclamação, ações, incidentes e metas sobre os trabalhadores na cadeia de valor. Instale-o se o tema for material, com o modelo ESRS 2. Regulamento Delegado (UE) 2026/1563 de 3 de julho de 2026; inventário feito com a lista de pontos de dados do EFRAG (projeto de 28 de agosto de 2026)."
+  },
+  "thematique": {
+   "fr": "Normes de reporting",
+   "en": "Reporting standards",
+   "es": "Normas de reporting",
+   "de": "Berichtsstandards",
+   "it": "Norme di rendicontazione",
+   "nl": "Rapportagestandaarden",
+   "pt": "Normas de reporte"
+  },
+  "couleur": "#8E3F75",
+  "frequence": "annee",
+  "mois_debut": 1,
+  "comparaison": "N-1",
+  "version": "1.1",
+  "date_version": "2026-11-19",
+  "origine": "fourni"
+ },
+ "langue_reference": "fr",
+ "langues": [
+  {
+   "code": "fr",
+   "libelle": "Français"
+  },
+  {
+   "code": "en",
+   "libelle": "English"
+  },
+  {
+   "code": "es",
+   "libelle": "Español"
+  },
+  {
+   "code": "de",
+   "libelle": "Deutsch"
+  },
+  {
+   "code": "it",
+   "libelle": "Italiano"
+  },
+  {
+   "code": "nl",
+   "libelle": "Nederlands"
+  },
+  {
+   "code": "pt",
+   "libelle": "Português"
+  }
+ ],
+ "niveaux": [],
+ "unites": [],
+ "types_saisie": [
+  {
+   "code": "Saisi",
+   "libelle": {
+    "fr": "Saisi",
+    "en": "Input"
+   },
+   "abrege": {
+    "fr": "Saisie",
+    "en": "Input"
+   },
+   "couleur": "#5A6B85",
+   "comportement": "saisie"
+  }
+ ],
+ "types_reponse": [
+  {
+   "code": "OuiNon",
+   "libelle": {
+    "fr": "Oui / non",
+    "en": "Yes / no",
+    "es": "Sí / no",
+    "de": "Ja / Nein",
+    "it": "Sì / no",
+    "nl": "Ja / nee",
+    "pt": "Sim / não"
+   },
+   "format": "oui_non",
+   "valeurs": {
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "Texte",
+   "libelle": {
+    "fr": "Texte rédigé",
+    "en": "Written text",
+    "es": "Texto redactado",
+    "de": "Ausformulierter Text",
+    "it": "Testo redatto",
+    "nl": "Uitgeschreven tekst",
+    "pt": "Texto redigido"
+   },
+   "format": "texte",
+   "valeurs": {}
+  },
+  {
+   "code": "ESRS-OUI-NON",
+   "libelle": {
+    "fr": "Oui / non (tableau)",
+    "en": "Yes / no (table)",
+    "es": "Sí / no (tabla)",
+    "de": "Ja / Nein (Tabelle)",
+    "it": "Sì / no (tabella)",
+    "nl": "Ja / nee (tabel)",
+    "pt": "Sim / não (tabela)"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non"
+    ],
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-OUI-NON-SO",
+   "libelle": {
+    "fr": "Oui / non / sans objet",
+    "en": "Yes / no / not applicable",
+    "es": "Sí / no / no aplica",
+    "de": "Ja / Nein / nicht zutreffend",
+    "it": "Sì / no / non applicabile",
+    "nl": "Ja / nee / niet van toepassing",
+    "pt": "Sim / não / não aplicável"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non",
+     "Sans objet"
+    ],
+    "en": [
+     "Yes",
+     "No",
+     "Not applicable"
+    ],
+    "es": [
+     "Sí",
+     "No",
+     "No aplica"
+    ],
+    "de": [
+     "Ja",
+     "Nein",
+     "Nicht zutreffend"
+    ],
+    "it": [
+     "Sì",
+     "No",
+     "Non applicabile"
+    ],
+    "nl": [
+     "Ja",
+     "Nee",
+     "Niet van toepassing"
+    ],
+    "pt": [
+     "Sim",
+     "Não",
+     "Não aplicável"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-HORIZON",
+   "libelle": {
+    "fr": "Horizon de temps",
+    "en": "Time horizon",
+    "es": "Horizonte temporal",
+    "de": "Zeithorizont",
+    "it": "Orizzonte temporale",
+    "nl": "Tijdshorizon",
+    "pt": "Horizonte temporal"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Court terme (période de reporting)",
+     "Moyen terme (jusqu'à 5 ans)",
+     "Long terme (plus de 5 ans)"
+    ],
+    "en": [
+     "Short term (reporting period)",
+     "Medium term (up to 5 years)",
+     "Long term (more than 5 years)"
+    ],
+    "es": [
+     "Corto plazo (periodo de referencia)",
+     "Medio plazo (hasta 5 años)",
+     "Largo plazo (más de 5 años)"
+    ],
+    "de": [
+     "Kurzfristig (Berichtszeitraum)",
+     "Mittelfristig (bis zu 5 Jahre)",
+     "Langfristig (mehr als 5 Jahre)"
+    ],
+    "it": [
+     "Breve termine (periodo di rendicontazione)",
+     "Medio termine (fino a 5 anni)",
+     "Lungo termine (oltre 5 anni)"
+    ],
+    "nl": [
+     "Korte termijn (verslagperiode)",
+     "Middellange termijn (tot 5 jaar)",
+     "Lange termijn (meer dan 5 jaar)"
+    ],
+    "pt": [
+     "Curto prazo (período de reporte)",
+     "Médio prazo (até 5 anos)",
+     "Longo prazo (mais de 5 anos)"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-STATUT-ACTION",
+   "libelle": {
+    "fr": "État d'une action",
+    "en": "Status of an action",
+    "es": "Estado de una acción",
+    "de": "Status einer Maßnahme",
+    "it": "Stato di un'azione",
+    "nl": "Status van een actie",
+    "pt": "Estado de uma ação"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Réalisée dans la période",
+     "En cours",
+     "Prévue"
+    ],
+    "en": [
+     "Taken in the period",
+     "Under way",
+     "Planned"
+    ],
+    "es": [
+     "Realizada en el periodo",
+     "En curso",
+     "Prevista"
+    ],
+    "de": [
+     "Im Zeitraum durchgeführt",
+     "Laufend",
+     "Geplant"
+    ],
+    "it": [
+     "Realizzata nel periodo",
+     "In corso",
+     "Pianificata"
+    ],
+    "nl": [
+     "In de periode uitgevoerd",
+     "Lopend",
+     "Gepland"
+    ],
+    "pt": [
+     "Realizada no período",
+     "Em curso",
+     "Planeada"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-NATURE-CIBLE",
+   "libelle": {
+    "fr": "Cible absolue ou relative",
+    "en": "Absolute or relative target",
+    "es": "Meta absoluta o relativa",
+    "de": "Absolutes oder relatives Ziel",
+    "it": "Obiettivo assoluto o relativo",
+    "nl": "Absoluut of relatief streefdoel",
+    "pt": "Meta absoluta ou relativa"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Absolue",
+     "Relative"
+    ],
+    "en": [
+     "Absolute",
+     "Relative"
+    ],
+    "es": [
+     "Absoluta",
+     "Relativa"
+    ],
+    "de": [
+     "Absolut",
+     "Relativ"
+    ],
+    "it": [
+     "Assoluto",
+     "Relativo"
+    ],
+    "nl": [
+     "Absoluut",
+     "Relatief"
+    ],
+    "pt": [
+     "Absoluta",
+     "Relativa"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-TAB-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés",
+    "en": "Key actions",
+    "es": "Acciones principales",
+    "de": "Wichtigste Maßnahmen",
+    "it": "Azioni principali",
+    "nl": "Belangrijkste acties",
+    "pt": "Ações principais"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "action",
+     "libelle": {
+      "fr": "Action clé",
+      "en": "Key action",
+      "es": "Acción principal",
+      "de": "Wichtigste Maßnahme",
+      "it": "Azione principale",
+      "nl": "Belangrijkste actie",
+      "pt": "Ação principal"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "statut",
+     "libelle": {
+      "fr": "État",
+      "en": "Status",
+      "es": "Estado",
+      "de": "Status",
+      "it": "Stato",
+      "nl": "Status",
+      "pt": "Estado"
+     },
+     "type": "liste",
+     "liste": "ESRS-STATUT-ACTION"
+    },
+    {
+     "code": "horizon",
+     "libelle": {
+      "fr": "Horizon",
+      "en": "Timeframe",
+      "es": "Plazo",
+      "de": "Zeitrahmen",
+      "it": "Tempi",
+      "nl": "Tijdsbestek",
+      "pt": "Prazo"
+     },
+     "type": "liste",
+     "liste": "ESRS-HORIZON"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "capex",
+     "libelle": {
+      "fr": "Dépenses d'investissement de la période",
+      "en": "Capital expenditure of the period",
+      "es": "Gastos de capital del periodo",
+      "de": "Investitionsausgaben des Zeitraums",
+      "it": "Spese in conto capitale del periodo",
+      "nl": "Kapitaaluitgaven van de periode",
+      "pt": "Despesas de capital do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "opex",
+     "libelle": {
+      "fr": "Dépenses d'exploitation de la période",
+      "en": "Operating expenditure of the period",
+      "es": "Gastos operativos del periodo",
+      "de": "Betriebsausgaben des Zeitraums",
+      "it": "Spese operative del periodo",
+      "nl": "Operationele uitgaven van de periode",
+      "pt": "Despesas operacionais do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_bas",
+     "libelle": {
+      "fr": "Ressources futures, estimation basse",
+      "en": "Future resources, low estimate",
+      "es": "Recursos futuros, estimación baja",
+      "de": "Künftige Ressourcen, untere Schätzung",
+      "it": "Risorse future, stima minima",
+      "nl": "Toekomstige middelen, lage schatting",
+      "pt": "Recursos futuros, estimativa baixa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_haut",
+     "libelle": {
+      "fr": "Ressources futures, estimation haute",
+      "en": "Future resources, high estimate",
+      "es": "Recursos futuros, estimación alta",
+      "de": "Künftige Ressourcen, obere Schätzung",
+      "it": "Risorse future, stima massima",
+      "nl": "Toekomstige middelen, hoge schatting",
+      "pt": "Recursos futuros, estimativa alta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "conditions",
+     "libelle": {
+      "fr": "Dépend de conditions préalables",
+      "en": "Depends on preconditions",
+      "es": "Depende de condiciones previas",
+      "de": "Hängt von Voraussetzungen ab",
+      "it": "Dipende da condizioni preliminari",
+      "nl": "Afhankelijk van voorwaarden",
+      "pt": "Depende de condições prévias"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    }
+   ]
+  },
+  {
+   "code": "ESRS-TAB-CIBLES",
+   "libelle": {
+    "fr": "Cibles",
+    "en": "Targets",
+    "es": "Metas",
+    "de": "Ziele",
+    "it": "Obiettivi",
+    "nl": "Streefdoelen",
+    "pt": "Metas"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "cible",
+     "libelle": {
+      "fr": "Cible",
+      "en": "Target",
+      "es": "Meta",
+      "de": "Ziel",
+      "it": "Obiettivo",
+      "nl": "Streefdoel",
+      "pt": "Meta"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "indicateur",
+     "libelle": {
+      "fr": "Indicateur",
+      "en": "Metric",
+      "es": "Parámetro",
+      "de": "Kennzahl",
+      "it": "Metrica",
+      "nl": "Metriek",
+      "pt": "Métrica"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "nature",
+     "libelle": {
+      "fr": "Absolue ou relative",
+      "en": "Absolute or relative",
+      "es": "Absoluta o relativa",
+      "de": "Absolut oder relativ",
+      "it": "Assoluto o relativo",
+      "nl": "Absoluut of relatief",
+      "pt": "Absoluta ou relativa"
+     },
+     "type": "liste",
+     "liste": "ESRS-NATURE-CIBLE"
+    },
+    {
+     "code": "unite",
+     "libelle": {
+      "fr": "Unité",
+      "en": "Unit",
+      "es": "Unidad",
+      "de": "Einheit",
+      "it": "Unità",
+      "nl": "Eenheid",
+      "pt": "Unidade"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "annee_ref",
+     "libelle": {
+      "fr": "Année de référence",
+      "en": "Base year",
+      "es": "Año de referencia",
+      "de": "Basisjahr",
+      "it": "Anno di base",
+      "nl": "Basisjaar",
+      "pt": "Ano de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_ref",
+     "libelle": {
+      "fr": "Valeur de référence",
+      "en": "Baseline value",
+      "es": "Valor de referencia",
+      "de": "Basiswert",
+      "it": "Valore di base",
+      "nl": "Basiswaarde",
+      "pt": "Valor de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_etape",
+     "libelle": {
+      "fr": "Année d'étape",
+      "en": "Milestone year",
+      "es": "Año del hito",
+      "de": "Jahr des Meilensteins",
+      "it": "Anno della tappa",
+      "nl": "Jaar van de mijlpaal",
+      "pt": "Ano da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_etape",
+     "libelle": {
+      "fr": "Valeur d'étape",
+      "en": "Milestone value",
+      "es": "Valor del hito",
+      "de": "Wert des Meilensteins",
+      "it": "Valore della tappa",
+      "nl": "Waarde van de mijlpaal",
+      "pt": "Valor da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_cible",
+     "libelle": {
+      "fr": "Année cible",
+      "en": "Target year",
+      "es": "Año objetivo",
+      "de": "Zieljahr",
+      "it": "Anno obiettivo",
+      "nl": "Doeljaar",
+      "pt": "Ano-alvo"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_cible",
+     "libelle": {
+      "fr": "Valeur cible",
+      "en": "Target value",
+      "es": "Valor de la meta",
+      "de": "Zielwert",
+      "it": "Valore obiettivo",
+      "nl": "Streefwaarde",
+      "pt": "Valor da meta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "loi",
+     "libelle": {
+      "fr": "Imposée par la loi",
+      "en": "Required by law",
+      "es": "Exigida por ley",
+      "de": "Gesetzlich vorgeschrieben",
+      "it": "Richiesto dalla legge",
+      "nl": "Wettelijk vereist",
+      "pt": "Exigida por lei"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    },
+    {
+     "code": "science",
+     "libelle": {
+      "fr": "Fondée sur des preuves scientifiques concluantes",
+      "en": "Based on conclusive scientific evidence",
+      "es": "Basada en pruebas científicas concluyentes",
+      "de": "Auf eindeutigen wissenschaftlichen Belegen beruhend",
+      "it": "Basato su prove scientifiche conclusive",
+      "nl": "Gebaseerd op overtuigend wetenschappelijk bewijs",
+      "pt": "Baseada em provas científicas conclusivas"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON-SO"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    }
+   ]
+  },
+  {
+   "code": "ESRS-TAB-INDICATEURS",
+   "libelle": {
+    "fr": "Indicateurs propres à l'entreprise",
+    "en": "Entity-specific metrics",
+    "es": "Parámetros propios de la entidad",
+    "de": "Unternehmensspezifische Kennzahlen",
+    "it": "Metriche specifiche dell'entità",
+    "nl": "Entiteitsspecifieke metrieken",
+    "pt": "Métricas específicas da entidade"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "indicateur",
+     "libelle": {
+      "fr": "Indicateur",
+      "en": "Metric",
+      "es": "Parámetro",
+      "de": "Kennzahl",
+      "it": "Metrica",
+      "nl": "Metriek",
+      "pt": "Métrica"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "valeur",
+     "libelle": {
+      "fr": "Valeur",
+      "en": "Value",
+      "es": "Valor",
+      "de": "Wert",
+      "it": "Valore",
+      "nl": "Waarde",
+      "pt": "Valor"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "unite",
+     "libelle": {
+      "fr": "Unité",
+      "en": "Unit",
+      "es": "Unidad",
+      "de": "Einheit",
+      "it": "Unità",
+      "nl": "Eenheid",
+      "pt": "Unidade"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    }
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "code": "description",
+   "libelle": {
+    "fr": "Description",
+    "en": "Description"
+   },
+   "ordre": 1,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_inclure",
+   "libelle": {
+    "fr": "À inclure",
+    "en": "Include"
+   },
+   "ordre": 2,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_exclure",
+   "libelle": {
+    "fr": "À exclure",
+    "en": "Exclude"
+   },
+   "ordre": 3,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "source",
+   "libelle": {
+    "fr": "Source des données",
+    "en": "Data source"
+   },
+   "ordre": 4,
+   "affichee": true,
+   "obligatoire": false
+  }
+ ],
+ "champs": [],
+ "themes": [
+  {
+   "code": "S2_1",
+   "parent": "",
+   "nom": {
+    "fr": "S2-1 – Politiques relatives aux travailleurs de la chaîne de valeur",
+    "en": "S2-1 – Policies related to workers in the value chain",
+    "es": "S2-1 – Políticas relacionadas con los trabajadores de la cadena de valor",
+    "de": "S2-1 – Konzepte im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette",
+    "it": "S2-1 – Politiche relative ai lavoratori nella catena del valore",
+    "nl": "S2-1 – Beleid met betrekking tot werknemers in de waardeketen",
+    "pt": "S2-1 – Políticas relacionadas com os trabalhadores na cadeia de valor"
+   },
+   "ordre": 1
+  },
+  {
+   "code": "S2_2",
+   "parent": "",
+   "nom": {
+    "fr": "S2-2 – Dialogue, canaux pour faire part de préoccupations et réparation",
+    "en": "S2-2 – Engagement, channels to raise concerns and remediation",
+    "es": "S2-2 – Diálogo, canales para plantear inquietudes y reparación",
+    "de": "S2-2 – Dialog, Kanäle für Anliegen und Abhilfe",
+    "it": "S2-2 – Dialogo, canali per sollevare preoccupazioni e rimedi",
+    "nl": "S2-2 – Dialoog, kanalen om zorgen te uiten en herstel",
+    "pt": "S2-2 – Diálogo, canais para manifestar preocupações e reparação"
+   },
+   "ordre": 2
+  },
+  {
+   "code": "S2_3",
+   "parent": "",
+   "nom": {
+    "fr": "S2-3 – Actions et ressources relatives aux travailleurs de la chaîne de valeur",
+    "en": "S2-3 – Actions and resources related to workers in the value chain",
+    "es": "S2-3 – Acciones y recursos relacionados con los trabajadores de la cadena de valor",
+    "de": "S2-3 – Maßnahmen und Ressourcen im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette",
+    "it": "S2-3 – Azioni e risorse relative ai lavoratori nella catena del valore",
+    "nl": "S2-3 – Acties en middelen met betrekking tot werknemers in de waardeketen",
+    "pt": "S2-3 – Ações e recursos relacionados com os trabalhadores na cadeia de valor"
+   },
+   "ordre": 3
+  },
+  {
+   "code": "S2_4",
+   "parent": "",
+   "nom": {
+    "fr": "S2-4 – Cibles relatives aux travailleurs de la chaîne de valeur",
+    "en": "S2-4 – Targets related to workers in the value chain",
+    "es": "S2-4 – Metas relacionadas con los trabajadores de la cadena de valor",
+    "de": "S2-4 – Ziele im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette",
+    "it": "S2-4 – Obiettivi relativi ai lavoratori nella catena del valore",
+    "nl": "S2-4 – Streefdoelen met betrekking tot werknemers in de waardeketen",
+    "pt": "S2-4 – Metas relacionadas com os trabalhadores na cadeia de valor"
+   },
+   "ordre": 4
+  }
+ ],
+ "kpis": [
+  {
+   "code": "SOC-CHAINE-POLITIQUES",
+   "libelle": {
+    "fr": "Politiques adoptées sur les travailleurs de la chaîne de valeur",
+    "en": "Policies adopted on workers in the value chain",
+    "es": "Políticas adoptadas sobre los trabajadores de la cadena de valor",
+    "de": "Verabschiedete Konzepte zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Politiche adottate sui lavoratori nella catena del valore",
+    "nl": "Vastgesteld beleid voor werknemers in de waardeketen",
+    "pt": "Políticas adotadas sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle adopté des politiques pour gérer ses impacts, risques et opportunités importants liés aux travailleurs de la chaîne de valeur ? Sinon, répondre Non : la norme demande de le dire (ESRS 2 §39). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Has the company adopted policies to manage its material impacts, risks and opportunities on workers in the value chain? If not, answer No: the standard asks to say so (ESRS 2 §39). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Ha adoptado la empresa políticas para gestionar sus impactos, riesgos y oportunidades materiales relacionados con los trabajadores de la cadena de valor? Si no, responda No: la norma exige indicarlo (ESRS 2 §39). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen Konzepte verabschiedet, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette zu steuern? Wenn nicht, mit Nein antworten: Der Standard verlangt diese Angabe (ESRS 2 §39). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha adottato politiche per gestire i suoi impatti, rischi e opportunità rilevanti relativi ai lavoratori nella catena del valore? In caso contrario, rispondere No: la norma richiede di indicarlo (ESRS 2 §39). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming beleid vastgesteld om haar materiële effecten, risico's en kansen met betrekking tot werknemers in de waardeketen te beheren? Zo niet, antwoord dan Nee: de standaard vraagt dit te vermelden (ESRS 2 §39). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "A empresa adotou políticas para gerir os seus impactos, riscos e oportunidades materiais relacionados com os trabalhadores na cadeia de valor? Se não, responda Não: a norma exige que seja indicado (ESRS 2 §39). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-POLIT-CONTENU",
+   "libelle": {
+    "fr": "Politiques sur les travailleurs de la chaîne de valeur : contenu et changements",
+    "en": "Policies on workers in the value chain: contents and changes",
+    "es": "Políticas sobre los trabajadores de la cadena de valor: contenido y cambios",
+    "de": "Konzepte zu Arbeitskräften in der Wertschöpfungskette: Inhalte und Änderungen",
+    "it": "Politiche sui lavoratori nella catena del valore: contenuto e modifiche",
+    "nl": "Beleid voor werknemers in de waardeketen: inhoud en wijzigingen",
+    "pt": "Políticas sobre os trabalhadores na cadeia de valor: conteúdo e alterações"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son contenu principal, ses objectifs généraux et les impacts, risques ou opportunités importants qu'elle traite ; décrire les changements faits pendant la période (ESRS 2 §42(a)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "For each policy: its key contents, its general objectives and the material impacts, risks or opportunities it addresses; describe the changes made during the period (ESRS 2 §42(a)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Para cada política: su contenido principal, sus objetivos generales y los impactos, riesgos u oportunidades materiales que aborda; describa los cambios realizados durante el periodo (ESRS 2 §42(a)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: seine wesentlichen Inhalte, seine allgemeinen Ziele und die wesentlichen Auswirkungen, Risiken oder Chancen, die es adressiert; die im Zeitraum vorgenommenen Änderungen beschreiben (ESRS 2 §42(a)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: i suoi contenuti principali, i suoi obiettivi generali e gli impatti, rischi od opportunità rilevanti che affronta; descrivere le modifiche apportate nel periodo (ESRS 2 §42(a)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de belangrijkste inhoud, de algemene doelstellingen en de materiële effecten, risico's of kansen waarop het ingaat; beschrijf de wijzigingen tijdens de periode (ESRS 2 §42(a)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu conteúdo principal, os seus objetivos gerais e os impactos, riscos ou oportunidades materiais que aborda; descreva as alterações feitas durante o período (ESRS 2 §42(a)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-POLIT-PERIMETRE",
+   "libelle": {
+    "fr": "Politiques sur les travailleurs de la chaîne de valeur : périmètre et exclusions",
+    "en": "Policies on workers in the value chain: scope and exclusions",
+    "es": "Políticas sobre los trabajadores de la cadena de valor: alcance y exclusiones",
+    "de": "Konzepte zu Arbeitskräften in der Wertschöpfungskette: Geltungsbereich und Ausnahmen",
+    "it": "Politiche sui lavoratori nella catena del valore: ambito ed esclusioni",
+    "nl": "Beleid voor werknemers in de waardeketen: reikwijdte en uitsluitingen",
+    "pt": "Políticas sobre os trabalhadores na cadeia de valor: âmbito e exclusões"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son périmètre ou ses exclusions (activités propres, chaîne de valeur amont et aval, zones géographiques et, s'ils sont définis, groupes de parties prenantes concernés) (ESRS 2 §42(b)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "For each policy: its scope or exclusions (own operations, upstream and downstream value chain, geographies and, if defined, the affected stakeholder groups) (ESRS 2 §42(b)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Para cada política: su alcance o exclusiones (operaciones propias, cadena de valor ascendente y descendente, zonas geográficas y, si se han definido, los grupos de partes interesadas afectadas) (ESRS 2 §42(b)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: sein Geltungsbereich oder seine Ausnahmen (eigene Geschäftstätigkeit, vor- und nachgelagerte Wertschöpfungskette, Regionen und, falls festgelegt, die betroffenen Gruppen von Interessenträgern) (ESRS 2 §42(b)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: il suo ambito o le sue esclusioni (attività proprie, catena del valore a monte e a valle, aree geografiche e, se definiti, i gruppi di portatori di interessi interessati) (ESRS 2 §42(b)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de reikwijdte of uitsluitingen (eigen activiteiten, upstream- en downstream-waardeketen, geografische gebieden en, indien vastgesteld, de getroffen groepen belanghebbenden) (ESRS 2 §42(b)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu âmbito ou exclusões (operações próprias, cadeia de valor a montante e a jusante, zonas geográficas e, se definidos, os grupos de partes interessadas afetadas) (ESRS 2 §42(b)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-POLIT-REFERENCES",
+   "libelle": {
+    "fr": "Politiques sur les travailleurs de la chaîne de valeur : normes ou initiatives de tiers",
+    "en": "Policies on workers in the value chain: third-party standards or initiatives",
+    "es": "Políticas sobre los trabajadores de la cadena de valor: normas o iniciativas de terceros",
+    "de": "Konzepte zu Arbeitskräften in der Wertschöpfungskette: Standards oder Initiativen Dritter",
+    "it": "Politiche sui lavoratori nella catena del valore: norme o iniziative di terzi",
+    "nl": "Beleid voor werknemers in de waardeketen: standaarden of initiatieven van derden",
+    "pt": "Políticas sobre os trabalhadores na cadeia de valor: normas ou iniciativas de terceiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Normes ou initiatives de tiers que l'entreprise s'engage à respecter par ses politiques (ESRS 2 §42(c)). Répondre N/A si aucune politique n'y renvoie. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Third-party standards or initiatives that the company commits to respect through its policies (ESRS 2 §42(c)). Answer N/A if no policy refers to one. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Normas o iniciativas de terceros que la empresa se compromete a respetar mediante sus políticas (ESRS 2 §42(c)). Responda N/A si ninguna política hace referencia a ellas. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Standards oder Initiativen Dritter, zu deren Einhaltung sich das Unternehmen mit seinen Konzepten verpflichtet (ESRS 2 §42(c)). Mit N/A antworten, wenn kein Konzept darauf verweist. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Norme o iniziative di terzi che l'impresa si impegna a rispettare attraverso le sue politiche (ESRS 2 §42(c)). Rispondere N/A se nessuna politica vi fa riferimento. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Standaarden of initiatieven van derden die de onderneming met haar beleid zegt na te leven (ESRS 2 §42(c)). Antwoord N/A als geen enkel beleid ernaar verwijst. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Normas ou iniciativas de terceiros que a empresa se compromete a respeitar através das suas políticas (ESRS 2 §42(c)). Responda N/A se nenhuma política fizer referência a elas. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-POLIT-PARTIES",
+   "libelle": {
+    "fr": "Politiques sur les travailleurs de la chaîne de valeur : intérêts des parties prenantes concernées",
+    "en": "Policies on workers in the value chain: interests of affected stakeholders",
+    "es": "Políticas sobre los trabajadores de la cadena de valor: intereses de las partes interesadas afectadas",
+    "de": "Konzepte zu Arbeitskräften in der Wertschöpfungskette: Interessen der betroffenen Interessenträger",
+    "it": "Politiche sui lavoratori nella catena del valore: interessi dei portatori di interessi interessati",
+    "nl": "Beleid voor werknemers in de waardeketen: belangen van de getroffen belanghebbenden",
+    "pt": "Políticas sobre os trabalhadores na cadeia de valor: interesses das partes interessadas afetadas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Comment les intérêts des parties prenantes concernées ont été pris en compte pour fixer chaque politique, s'ils l'ont été (ESRS 2 §42(d)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "How the interests of affected stakeholders were considered in setting each policy, if they were (ESRS 2 §42(d)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Cómo se tuvieron en cuenta los intereses de las partes interesadas afectadas al fijar cada política, si se tuvieron en cuenta (ESRS 2 §42(d)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Wie die Interessen der betroffenen Interessenträger bei der Festlegung jedes Konzepts berücksichtigt wurden, falls sie berücksichtigt wurden (ESRS 2 §42(d)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Come sono stati considerati gli interessi dei portatori di interessi interessati nel definire ciascuna politica, se lo sono stati (ESRS 2 §42(d)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Hoe rekening is gehouden met de belangen van de getroffen belanghebbenden bij het vaststellen van elk beleid, indien dat is gebeurd (ESRS 2 §42(d)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Como foram tidos em conta os interesses das partes interessadas afetadas na definição de cada política, se o foram (ESRS 2 §42(d)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-POLIT-COUVERTURE",
+   "libelle": {
+    "fr": "Politiques : tous les travailleurs de la chaîne de valeur ou des groupes précis",
+    "en": "Policies: all workers in the value chain or specific groups",
+    "es": "Políticas: todos los trabajadores de la cadena de valor o grupos específicos",
+    "de": "Konzepte: alle Arbeitskräfte in der Wertschöpfungskette oder bestimmte Gruppen",
+    "it": "Politiche: tutti i lavoratori nella catena del valore o gruppi specifici",
+    "nl": "Beleid: alle werknemers in de waardeketen of specifieke groepen",
+    "pt": "Políticas: todos os trabalhadores na cadeia de valor ou grupos específicos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : couvre-t-elle tous les travailleurs de la chaîne de valeur ou seulement des groupes précis (par exemple une tranche d'âge, ou les travailleurs d'une usine ou d'un pays) ? Nommer les groupes concernés (ESRS S2-1 §10). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "For each policy: does it cover all workers in the value chain or only specific groups (for example an age group, or the workers of one factory or country)? Name the groups concerned (ESRS S2-1 §10). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Para cada política: ¿cubre a todos los trabajadores de la cadena de valor o solo a grupos específicos (por ejemplo, un grupo de edad, o los trabajadores de una fábrica o de un país)? Indique los grupos afectados (ESRS S2-1 §10). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: Erfasst es alle Arbeitskräfte in der Wertschöpfungskette oder nur bestimmte Gruppen (zum Beispiel eine Altersgruppe oder die Arbeitskräfte einer Fabrik oder eines Landes)? Die betroffenen Gruppen nennen (ESRS S2-1 §10). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: riguarda tutti i lavoratori nella catena del valore o solo gruppi specifici (ad esempio una fascia di età, o i lavoratori di una fabbrica o di un paese)? Indicare i gruppi interessati (ESRS S2-1 §10). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: geldt het voor alle werknemers in de waardeketen of alleen voor specifieke groepen (bijvoorbeeld een leeftijdsgroep, of de werknemers van één fabriek of één land)? Noem de betrokken groepen (ESRS S2-1 §10). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Para cada política: abrange todos os trabalhadores na cadeia de valor ou apenas grupos específicos (por exemplo, um grupo etário, ou os trabalhadores de uma fábrica ou de um país)? Indique os grupos em causa (ESRS S2-1 §10). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-TRAITE",
+   "libelle": {
+    "fr": "Les politiques de la chaîne de valeur couvrent la traite des êtres humains",
+    "en": "Value chain policies address trafficking in human beings",
+    "es": "Las políticas de la cadena de valor abordan la trata de seres humanos",
+    "de": "Die Konzepte der Wertschöpfungskette behandeln Menschenhandel",
+    "it": "Le politiche della catena del valore affrontano la tratta di esseri umani",
+    "nl": "Het beleid voor de waardeketen pakt mensenhandel aan",
+    "pt": "As políticas da cadeia de valor abordam o tráfico de seres humanos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Les politiques de l'entreprise sur les travailleurs de la chaîne de valeur traitent-elles de la traite des êtres humains ? (ESRS S2-1 §11). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Do the company's policies on workers in the value chain address trafficking in human beings? (ESRS S2-1 §11). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Abordan las políticas de la empresa sobre los trabajadores de la cadena de valor la trata de seres humanos? (ESRS S2-1 §11). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Behandeln die Konzepte des Unternehmens zu Arbeitskräften in der Wertschöpfungskette Menschenhandel? (ESRS S2-1 §11). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Le politiche dell'impresa sui lavoratori nella catena del valore affrontano la tratta di esseri umani? (ESRS S2-1 §11). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Pakt het beleid van de onderneming voor werknemers in de waardeketen mensenhandel aan? (ESRS S2-1 §11). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "As políticas da empresa sobre os trabalhadores na cadeia de valor abordam o tráfico de seres humanos? (ESRS S2-1 §11). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-TRAVAIL-FORCE",
+   "libelle": {
+    "fr": "Les politiques de la chaîne de valeur couvrent le travail forcé ou obligatoire",
+    "en": "Value chain policies address forced or compulsory labour",
+    "es": "Las políticas de la cadena de valor abordan el trabajo forzoso u obligatorio",
+    "de": "Die Konzepte der Wertschöpfungskette behandeln Zwangs- oder Pflichtarbeit",
+    "it": "Le politiche della catena del valore affrontano il lavoro forzato o obbligatorio",
+    "nl": "Het beleid voor de waardeketen pakt dwangarbeid of verplichte arbeid aan",
+    "pt": "As políticas da cadeia de valor abordam o trabalho forçado ou obrigatório"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Les politiques de l'entreprise sur les travailleurs de la chaîne de valeur traitent-elles du travail forcé ou obligatoire ? (ESRS S2-1 §11). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Do the company's policies on workers in the value chain address forced or compulsory labour? (ESRS S2-1 §11). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Abordan las políticas de la empresa sobre los trabajadores de la cadena de valor el trabajo forzoso u obligatorio? (ESRS S2-1 §11). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Behandeln die Konzepte des Unternehmens zu Arbeitskräften in der Wertschöpfungskette Zwangs- oder Pflichtarbeit? (ESRS S2-1 §11). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Le politiche dell'impresa sui lavoratori nella catena del valore affrontano il lavoro forzato o obbligatorio? (ESRS S2-1 §11). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Pakt het beleid van de onderneming voor werknemers in de waardeketen dwangarbeid of verplichte arbeid aan? (ESRS S2-1 §11). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "As políticas da empresa sobre os trabalhadores na cadeia de valor abordam o trabalho forçado ou obrigatório? (ESRS S2-1 §11). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-TRAVAIL-ENFANTS",
+   "libelle": {
+    "fr": "Les politiques de la chaîne de valeur couvrent le travail des enfants",
+    "en": "Value chain policies address child labour",
+    "es": "Las políticas de la cadena de valor abordan el trabajo infantil",
+    "de": "Die Konzepte der Wertschöpfungskette behandeln Kinderarbeit",
+    "it": "Le politiche della catena del valore affrontano il lavoro minorile",
+    "nl": "Het beleid voor de waardeketen pakt kinderarbeid aan",
+    "pt": "As políticas da cadeia de valor abordam o trabalho infantil"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Les politiques de l'entreprise sur les travailleurs de la chaîne de valeur traitent-elles du travail des enfants ? (ESRS S2-1 §11). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Do the company's policies on workers in the value chain address child labour? (ESRS S2-1 §11). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Abordan las políticas de la empresa sobre los trabajadores de la cadena de valor el trabajo infantil? (ESRS S2-1 §11). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Behandeln die Konzepte des Unternehmens zu Arbeitskräften in der Wertschöpfungskette Kinderarbeit? (ESRS S2-1 §11). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Le politiche dell'impresa sui lavoratori nella catena del valore affrontano il lavoro minorile? (ESRS S2-1 §11). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Pakt het beleid van de onderneming voor werknemers in de waardeketen kinderarbeid aan? (ESRS S2-1 §11). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "As políticas da empresa sobre os trabalhadores na cadeia de valor abordam o trabalho infantil? (ESRS S2-1 §11). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-CODE-FOURNIS",
+   "libelle": {
+    "fr": "Code de conduite des fournisseurs",
+    "en": "Supplier code of conduct",
+    "es": "Código de conducta para proveedores",
+    "de": "Verhaltenskodex für Lieferanten",
+    "it": "Codice di condotta per i fornitori",
+    "nl": "Gedragscode voor leveranciers",
+    "pt": "Código de conduta para fornecedores"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle un code de conduite pour ses fournisseurs ? (ESRS S2-1 §12). Les informations sur les relations avec les fournisseurs (ESRS G1-2) peuvent y renvoyer. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Does the company have a supplier code of conduct? (ESRS S2-1 §12). The information on supplier relationships (ESRS G1-2) can refer to it. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Tiene la empresa un código de conducta para proveedores? (ESRS S2-1 §12). La información sobre las relaciones con los proveedores (ESRS G1-2) puede remitirse a él. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen einen Verhaltenskodex für Lieferanten? (ESRS S2-1 §12). Die Angaben zu den Lieferantenbeziehungen (ESRS G1-2) können darauf verweisen. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha un codice di condotta per i fornitori? (ESRS S2-1 §12). Le informazioni sui rapporti con i fornitori (ESRS G1-2) possono rinviare ad esso. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming een gedragscode voor leveranciers? (ESRS S2-1 §12). De informatie over de relaties met leveranciers (ESRS G1-2) kan ernaar verwijzen. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "A empresa tem um código de conduta para fornecedores? (ESRS S2-1 §12). A informação sobre as relações com os fornecedores (ESRS G1-2) pode remeter para ele. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_1",
+    "ordre": 10,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-DIALOGUE",
+   "libelle": {
+    "fr": "Dialogue avec les travailleurs de la chaîne de valeur",
+    "en": "Engagement with workers in the value chain",
+    "es": "Diálogo con los trabajadores de la cadena de valor",
+    "de": "Dialog mit Arbeitskräften in der Wertschöpfungskette",
+    "it": "Dialogo con i lavoratori nella catena del valore",
+    "nl": "Dialoog met werknemers in de waardeketen",
+    "pt": "Diálogo com os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Comment l'entreprise dialogue directement avec les travailleurs de la chaîne de valeur, leurs représentants légitimes ou des intermédiaires crédibles, et comment leurs points de vue éclairent ses décisions et ses actions pour gérer les impacts réels et potentiels pendant l'année (ESRS S2-2 §14). Le dialogue peut prendre des formes variées : séances d'information, consultation, participation (ESRS S2 AR 2). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "How the company engages directly with workers in the value chain, their legitimate representatives or credible proxies, and how their perspectives inform its decisions and activities to manage actual and potential impacts during the year (ESRS S2-2 §14). Engagement can take different forms, such as information sessions, consultation or participation (ESRS S2 AR 2). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Cómo dialoga la empresa directamente con los trabajadores de la cadena de valor, sus representantes legítimos o sus representantes fiables, y cómo sus perspectivas inspiran sus decisiones y actividades para gestionar los impactos reales y potenciales durante el año (ESRS S2-2 §14). El diálogo puede adoptar diferentes formas, como sesiones informativas, consulta o participación (ESRS S2 AR 2). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Wie das Unternehmen direkt mit Arbeitskräften in der Wertschöpfungskette, ihren legitimen Vertretern oder glaubwürdigen Stellvertretern in Dialog tritt und wie deren Sichtweisen seine Entscheidungen und Tätigkeiten zur Steuerung tatsächlicher und potenzieller Auswirkungen im Jahr beeinflussen (ESRS S2-2 §14). Der Dialog kann verschiedene Formen annehmen, etwa Informationsveranstaltungen, Konsultation oder Beteiligung (ESRS S2 AR 2). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Come l'impresa dialoga direttamente con i lavoratori nella catena del valore, i loro rappresentanti legittimi o rappresentanti attendibili, e come le loro prospettive orientano le decisioni e le attività dell'impresa per gestire gli impatti effettivi e potenziali nel corso dell'anno (ESRS S2-2 §14). Il dialogo può assumere forme diverse, come sessioni informative, consultazione o partecipazione (ESRS S2 AR 2). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Hoe de onderneming rechtstreeks in dialoog gaat met werknemers in de waardeketen, hun legitieme vertegenwoordigers of geloofwaardige vertegenwoordigers, en hoe hun perspectieven haar beslissingen en activiteiten ter beheersing van feitelijke en potentiële effecten in het jaar beïnvloeden (ESRS S2-2 §14). Dialoog kan verschillende vormen aannemen, zoals informatiesessies, raadpleging of participatie (ESRS S2 AR 2). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Como a empresa dialoga diretamente com os trabalhadores na cadeia de valor, os seus representantes legítimos ou representantes credíveis, e como as suas perspetivas inspiram as decisões e atividades da empresa para gerir os impactos reais e potenciais durante o ano (ESRS S2-2 §14). O diálogo pode assumir diferentes formas, como sessões de informação, consulta ou participação (ESRS S2 AR 2). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-VULNERABLES",
+   "libelle": {
+    "fr": "Points de vue des travailleurs vulnérables de la chaîne de valeur",
+    "en": "Perspectives of vulnerable workers in the value chain",
+    "es": "Perspectivas de los trabajadores vulnerables de la cadena de valor",
+    "de": "Sichtweisen schutzbedürftiger Arbeitskräfte in der Wertschöpfungskette",
+    "it": "Prospettive dei lavoratori vulnerabili nella catena del valore",
+    "nl": "Perspectieven van kwetsbare werknemers in de waardeketen",
+    "pt": "Perspetivas dos trabalhadores vulneráveis na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si l'entreprise agit pour comprendre les points de vue des travailleurs de la chaîne de valeur qui peuvent être particulièrement vulnérables ou marginalisés (par exemple les travailleuses, les travailleurs migrants, les travailleurs en situation de handicap) : comment elle les recueille (ESRS S2-2 §14(a)). Répondre N/A si elle ne le fait pas. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Only if the company takes action to understand the perspectives of workers in the value chain who may be particularly vulnerable or marginalised (for example women workers, migrant workers, workers with disabilities): how it gains insight into them (ESRS S2-2 §14(a)). Answer N/A if it takes no such action. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Solo si la empresa toma medidas para conocer las perspectivas de los trabajadores de la cadena de valor que puedan ser especialmente vulnerables o marginados (por ejemplo, trabajadoras, trabajadores migrantes, trabajadores con discapacidad): cómo obtiene información sobre ellos (ESRS S2-2 §14(a)). Responda N/A si no toma ninguna medida de este tipo. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn das Unternehmen Maßnahmen ergreift, um die Sichtweisen von Arbeitskräften in der Wertschöpfungskette zu verstehen, die besonders schutzbedürftig oder marginalisiert sein können (zum Beispiel Arbeiterinnen, Wanderarbeitnehmer, Arbeitskräfte mit Behinderungen): wie es Einblick in diese gewinnt (ESRS S2-2 §14(a)). Mit N/A antworten, wenn es keine solchen Maßnahmen ergreift. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Solo se l'impresa intraprende azioni per comprendere le prospettive dei lavoratori nella catena del valore che possono essere particolarmente vulnerabili o emarginati (ad esempio lavoratrici, lavoratori migranti, lavoratori con disabilità): come ne ottiene conoscenza (ESRS S2-2 §14(a)). Rispondere N/A se non intraprende tali azioni. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als de onderneming stappen zet om de perspectieven te begrijpen van werknemers in de waardeketen die bijzonder kwetsbaar of gemarginaliseerd kunnen zijn (bijvoorbeeld vrouwelijke werknemers, migrerende werknemers, werknemers met een handicap): hoe zij daarin inzicht krijgt (ESRS S2-2 §14(a)). Antwoord N/A als zij geen dergelijke stappen zet. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se a empresa tomar medidas para compreender as perspetivas dos trabalhadores na cadeia de valor que possam ser particularmente vulneráveis ou marginalizados (por exemplo, trabalhadoras, trabalhadores migrantes, trabalhadores com deficiência): como obtém conhecimento sobre eles (ESRS S2-2 §14(a)). Responda N/A se não tomar tais medidas. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACCORDS-CADRES",
+   "libelle": {
+    "fr": "Accords-cadres mondiaux sur les droits humains des travailleurs de la chaîne de valeur",
+    "en": "Global framework agreements on human rights of value chain workers",
+    "es": "Acuerdos marco mundiales sobre los derechos humanos de los trabajadores de la cadena de valor",
+    "de": "Globale Rahmenvereinbarungen zu den Menschenrechten von Arbeitskräften in der Wertschöpfungskette",
+    "it": "Accordi quadro globali sui diritti umani dei lavoratori nella catena del valore",
+    "nl": "Wereldwijde raamovereenkomsten over de mensenrechten van werknemers in de waardeketen",
+    "pt": "Acordos-quadro globais sobre os direitos humanos dos trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Accords-cadres mondiaux ou autres résultats obtenus avec des représentants des travailleurs de la chaîne de valeur sur le respect des droits humains (ESRS S2-2 §14(b)). Répondre N/A s'il n'y en a pas. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Global framework agreements or other outcomes reached with representatives of workers in the value chain on respecting human rights (ESRS S2-2 §14(b)). Answer N/A if there are none. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Acuerdos marco mundiales u otros resultados alcanzados con los representantes de los trabajadores de la cadena de valor sobre el respeto de los derechos humanos (ESRS S2-2 §14(b)). Responda N/A si no hay ninguno. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Globale Rahmenvereinbarungen oder andere mit Vertretern von Arbeitskräften in der Wertschöpfungskette erzielte Ergebnisse zur Achtung der Menschenrechte (ESRS S2-2 §14(b)). Mit N/A antworten, wenn es keine gibt. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Accordi quadro globali o altri risultati raggiunti con i rappresentanti dei lavoratori nella catena del valore sul rispetto dei diritti umani (ESRS S2-2 §14(b)). Rispondere N/A se non ve ne sono. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Wereldwijde raamovereenkomsten of andere resultaten die met vertegenwoordigers van werknemers in de waardeketen zijn bereikt over de naleving van mensenrechten (ESRS S2-2 §14(b)). Antwoord N/A als er geen zijn. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Acordos-quadro globais ou outros resultados alcançados com os representantes dos trabalhadores na cadeia de valor sobre o respeito dos direitos humanos (ESRS S2-2 §14(b)). Responda N/A se não houver nenhum. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-CANAUX",
+   "libelle": {
+    "fr": "Canaux ouverts aux travailleurs de la chaîne de valeur pour faire part de leurs préoccupations",
+    "en": "Channels for workers in the value chain to raise concerns",
+    "es": "Canales para que los trabajadores de la cadena de valor planteen inquietudes",
+    "de": "Kanäle, über die Arbeitskräfte in der Wertschöpfungskette Anliegen vorbringen können",
+    "it": "Canali per i lavoratori nella catena del valore per sollevare preoccupazioni",
+    "nl": "Kanalen waarmee werknemers in de waardeketen zorgen kunnen uiten",
+    "pt": "Canais para os trabalhadores na cadeia de valor manifestarem preocupações"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Canaux dont disposent les travailleurs de la chaîne de valeur pour porter leurs préoccupations ou leurs besoins directement à l'attention de l'entreprise et les faire traiter, et comment l'entreprise évalue leur efficacité (ESRS S2-2 §15). Les critères d'efficacité des mécanismes de plainte non judiciaires du principe 31 des principes directeurs de l'ONU peuvent servir (ESRS S2 AR 3). Si l'entreprise protège contre les représailles les personnes qui utilisent ces canaux et l'a déclaré dans la conduite des affaires (ESRS G1-1), elle peut y renvoyer. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Channels available to workers in the value chain to bring their concerns or needs directly to the company and have them addressed, and how the company assesses their effectiveness (ESRS S2-2 §15). The effectiveness criteria for non-judicial grievance mechanisms of principle 31 of the UN Guiding Principles can be used (ESRS S2 AR 3). If the company protects the people who use these channels against retaliation and has disclosed it under business conduct (ESRS G1-1), it can refer to that disclosure. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Canales de que disponen los trabajadores de la cadena de valor para plantear directamente a la empresa sus inquietudes o necesidades y que se atiendan, y cómo evalúa la empresa su eficacia (ESRS S2-2 §15). Pueden utilizarse los criterios de eficacia de los mecanismos de reclamación extrajudiciales del principio 31 de los Principios Rectores de las Naciones Unidas (ESRS S2 AR 3). Si la empresa protege contra represalias a las personas que utilizan estos canales y lo ha indicado en el apartado de conducta empresarial (ESRS G1-1), puede remitirse a esa información. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Kanäle, über die Arbeitskräfte in der Wertschöpfungskette ihre Anliegen oder Bedürfnisse direkt an das Unternehmen richten und bearbeiten lassen können, und wie das Unternehmen deren Wirksamkeit bewertet (ESRS S2-2 §15). Die Wirksamkeitskriterien für außergerichtliche Beschwerdemechanismen aus Leitprinzip 31 der Leitprinzipien der Vereinten Nationen können herangezogen werden (ESRS S2 AR 3). Wenn das Unternehmen die Nutzer dieser Kanäle vor Vergeltungsmaßnahmen schützt und dies unter Unternehmensführung (ESRS G1-1) angegeben hat, kann es auf diese Angabe verweisen. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Canali a disposizione dei lavoratori nella catena del valore per portare direttamente all'impresa le proprie preoccupazioni o esigenze e vederle affrontate, e come l'impresa ne valuta l'efficacia (ESRS S2-2 §15). Si possono utilizzare i criteri di efficacia dei meccanismi di reclamo non giudiziari del principio 31 dei Principi guida delle Nazioni Unite (ESRS S2 AR 3). Se l'impresa protegge dalle ritorsioni le persone che usano questi canali e lo ha indicato alla voce condotta delle imprese (ESRS G1-1), può rinviare a tale informazione. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Kanalen waarmee werknemers in de waardeketen hun zorgen of behoeften rechtstreeks bij de onderneming kunnen aankaarten en laten behandelen, en hoe de onderneming hun doeltreffendheid beoordeelt (ESRS S2-2 §15). De doeltreffendheidscriteria voor niet-gerechtelijke klachtenmechanismen van beginsel 31 van de VN-richtsnoeren kunnen worden gebruikt (ESRS S2 AR 3). Als de onderneming de gebruikers van deze kanalen beschermt tegen vergelding en dit heeft vermeld onder zakelijk gedrag (ESRS G1-1), kan zij naar die vermelding verwijzen. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Canais de que dispõem os trabalhadores na cadeia de valor para apresentar diretamente à empresa as suas preocupações ou necessidades e vê-las tratadas, e como a empresa avalia a sua eficácia (ESRS S2-2 §15). Podem ser utilizados os critérios de eficácia dos mecanismos de reclamação extrajudiciais do princípio 31 dos Princípios Orientadores das Nações Unidas (ESRS S2 AR 3). Se a empresa protege contra retaliações as pessoas que utilizam estes canais e o indicou em conduta empresarial (ESRS G1-1), pode remeter para essa informação. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-PLAINTES",
+   "libelle": {
+    "fr": "Mécanisme de traitement des plaintes pour les travailleurs de la chaîne de valeur",
+    "en": "Grievance mechanism for workers in the value chain",
+    "es": "Mecanismo de reclamación para los trabajadores de la cadena de valor",
+    "de": "Beschwerdemechanismus für Arbeitskräfte in der Wertschöpfungskette",
+    "it": "Meccanismo di reclamo per i lavoratori nella catena del valore",
+    "nl": "Klachtenmechanisme voor werknemers in de waardeketen",
+    "pt": "Mecanismo de reclamação para os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle mis en place un mécanisme de traitement des plaintes que les travailleurs de la chaîne de valeur peuvent utiliser ? (ESRS S2-2 §15). Décrire les canaux dans le texte « Canaux ouverts aux travailleurs de la chaîne de valeur pour faire part de leurs préoccupations ». Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Has the company put in place a grievance mechanism that workers in the value chain can use? (ESRS S2-2 §15). Describe the channels in the text « Channels for workers in the value chain to raise concerns ». Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Ha establecido la empresa un mecanismo de reclamación que puedan utilizar los trabajadores de la cadena de valor? (ESRS S2-2 §15). Describa los canales en el texto «Canales para que los trabajadores de la cadena de valor planteen inquietudes». Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen einen Beschwerdemechanismus eingerichtet, den Arbeitskräfte in der Wertschöpfungskette nutzen können? (ESRS S2-2 §15). Die Kanäle im Text „Kanäle, über die Arbeitskräfte in der Wertschöpfungskette Anliegen vorbringen können“ beschreiben. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha istituito un meccanismo di reclamo che i lavoratori nella catena del valore possono utilizzare? (ESRS S2-2 §15). Descrivere i canali nel testo «Canali per i lavoratori nella catena del valore per sollevare preoccupazioni». Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming een klachtenmechanisme ingesteld dat werknemers in de waardeketen kunnen gebruiken? (ESRS S2-2 §15). Beschrijf de kanalen in de tekst “Kanalen waarmee werknemers in de waardeketen zorgen kunnen uiten”. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "A empresa instituiu um mecanismo de reclamação que os trabalhadores na cadeia de valor possam utilizar? (ESRS S2-2 §15). Descreva os canais no texto «Canais para os trabalhadores na cadeia de valor manifestarem preocupações». Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-REPARATION",
+   "libelle": {
+    "fr": "Approche de la réparation pour les travailleurs de la chaîne de valeur",
+    "en": "Approach to remediation for workers in the value chain",
+    "es": "Enfoque de la reparación para los trabajadores de la cadena de valor",
+    "de": "Ansatz zur Abhilfe für Arbeitskräfte in der Wertschöpfungskette",
+    "it": "Approccio al rimedio per i lavoratori nella catena del valore",
+    "nl": "Aanpak van herstel voor werknemers in de waardeketen",
+    "pt": "Abordagem da reparação para os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Approche générale et processus pour réparer, ou coopérer à la réparation, quand l'entreprise a causé un impact négatif important sur les travailleurs de la chaîne de valeur ou y a contribué (ESRS S2-2 §16). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "General approach and processes to provide or cooperate in remediation where the company has caused or contributed to a material negative impact on workers in the value chain (ESRS S2-2 §16). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Enfoque general y procesos para proporcionar reparación o cooperar en ella cuando la empresa ha causado un impacto negativo material sobre los trabajadores de la cadena de valor o ha contribuido a él (ESRS S2-2 §16). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Allgemeiner Ansatz und Verfahren, um Abhilfe zu schaffen oder daran mitzuwirken, wenn das Unternehmen eine wesentliche negative Auswirkung auf Arbeitskräfte in der Wertschöpfungskette verursacht oder dazu beigetragen hat (ESRS S2-2 §16). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Approccio generale e processi per fornire rimedio o cooperare al rimedio quando l'impresa ha causato un impatto negativo rilevante sui lavoratori nella catena del valore o vi ha contribuito (ESRS S2-2 §16). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Algemene aanpak en processen om herstel te bieden of eraan mee te werken wanneer de onderneming een materieel negatief effect op werknemers in de waardeketen heeft veroorzaakt of daaraan heeft bijgedragen (ESRS S2-2 §16). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Abordagem geral e processos para proporcionar reparação ou cooperar nela quando a empresa causou um impacto negativo material nos trabalhadores na cadeia de valor ou contribuiu para ele (ESRS S2-2 §16). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_2",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés sur les travailleurs de la chaîne de valeur",
+    "en": "Key actions on workers in the value chain",
+    "es": "Acciones principales sobre los trabajadores de la cadena de valor",
+    "de": "Wichtigste Maßnahmen zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Azioni principali sui lavoratori nella catena del valore",
+    "nl": "Belangrijkste acties voor werknemers in de waardeketen",
+    "pt": "Ações principais sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle mené ou prévu des actions clés pour gérer ses impacts, risques et opportunités importants liés aux travailleurs de la chaîne de valeur ? Sinon, répondre Non (ESRS 2 §39). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Has the company taken or planned key actions to manage its material impacts, risks and opportunities on workers in the value chain? If not, answer No (ESRS 2 §39). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Ha realizado o planificado la empresa acciones principales para gestionar sus impactos, riesgos y oportunidades materiales relacionados con los trabajadores de la cadena de valor? Si no, responda No (ESRS 2 §39). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen wichtigste Maßnahmen ergriffen oder geplant, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette zu steuern? Wenn nicht, mit Nein antworten (ESRS 2 §39). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha realizzato o pianificato azioni principali per gestire i suoi impatti, rischi e opportunità rilevanti relativi ai lavoratori nella catena del valore? In caso contrario, rispondere No (ESRS 2 §39). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming belangrijkste acties ondernomen of gepland om haar materiële effecten, risico's en kansen met betrekking tot werknemers in de waardeketen te beheren? Zo niet, antwoord dan Nee (ESRS 2 §39). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "A empresa realizou ou planeou ações principais para gerir os seus impactos, riscos e oportunidades materiais relacionados com os trabalhadores na cadeia de valor? Se não, responda Não (ESRS 2 §39). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACT-DESC",
+   "libelle": {
+    "fr": "Actions clés sur les travailleurs de la chaîne de valeur : description, périmètre et résultats attendus",
+    "en": "Key actions on workers in the value chain: description, scope and expected outcomes",
+    "es": "Acciones principales sobre los trabajadores de la cadena de valor: descripción, alcance y resultados esperados",
+    "de": "Wichtigste Maßnahmen zu Arbeitskräften in der Wertschöpfungskette: Beschreibung, Geltungsbereich und erwartete Ergebnisse",
+    "it": "Azioni principali sui lavoratori nella catena del valore: descrizione, ambito e risultati attesi",
+    "nl": "Belangrijkste acties voor werknemers in de waardeketen: beschrijving, reikwijdte en verwachte resultaten",
+    "pt": "Ações principais sobre os trabalhadores na cadeia de valor: descrição, âmbito e resultados esperados"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Actions clés menées pendant la période et prévues, avec leur calendrier, leur périmètre (activités propres, chaîne de valeur, filiales, zones géographiques, parties prenantes) et leurs résultats attendus, et comment elles servent les objectifs des politiques (ESRS 2 §45). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Key actions taken during the period and planned, with their timeframe, their scope (own operations, value chain, subsidiaries, geographies, stakeholders) and their expected outcomes, and how they serve the policy objectives (ESRS 2 §45). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Acciones principales realizadas durante el periodo y previstas, con su calendario, su alcance (operaciones propias, cadena de valor, filiales, zonas geográficas, partes interesadas) y sus resultados esperados, y cómo contribuyen a los objetivos de las políticas (ESRS 2 §45). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Im Zeitraum durchgeführte und geplante wichtigste Maßnahmen mit ihrem Zeitrahmen, ihrem Geltungsbereich (eigene Geschäftstätigkeit, Wertschöpfungskette, Tochterunternehmen, Regionen, Interessenträger) und ihren erwarteten Ergebnissen sowie dazu, wie sie den Zielen der Konzepte dienen (ESRS 2 §45). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Azioni principali realizzate nel periodo e previste, con i loro tempi, il loro ambito (attività proprie, catena del valore, controllate, aree geografiche, portatori di interessi) e i risultati attesi, e il modo in cui servono gli obiettivi delle politiche (ESRS 2 §45). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Tijdens de periode uitgevoerde en geplande belangrijkste acties, met hun tijdsbestek, hun reikwijdte (eigen activiteiten, waardeketen, dochterondernemingen, geografische gebieden, belanghebbenden) en hun verwachte resultaten, en hoe zij de doelstellingen van het beleid dienen (ESRS 2 §45). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Ações principais realizadas durante o período e previstas, com o seu calendário, o seu âmbito (operações próprias, cadeia de valor, filiais, zonas geográficas, partes interessadas) e os seus resultados esperados, e a forma como servem os objetivos das políticas (ESRS 2 §45). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACT-TAB",
+   "libelle": {
+    "fr": "Actions clés sur les travailleurs de la chaîne de valeur : calendrier et ressources financières",
+    "en": "Key actions on workers in the value chain: timeframe and financial resources",
+    "es": "Acciones principales sobre los trabajadores de la cadena de valor: calendario y recursos financieros",
+    "de": "Wichtigste Maßnahmen zu Arbeitskräften in der Wertschöpfungskette: Zeitrahmen und finanzielle Ressourcen",
+    "it": "Azioni principali sui lavoratori nella catena del valore: tempi e risorse finanziarie",
+    "nl": "Belangrijkste acties voor werknemers in de waardeketen: tijdschema en financiële middelen",
+    "pt": "Ações principais sobre os trabalhadores na cadeia de valor: calendário e recursos financeiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-ACTIONS",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par action clé : état, horizon, périmètre, dépenses d'investissement et d'exploitation de la période, fourchette des ressources futures, et si l'action dépend de conditions préalables (ESRS 2 §45-46). Les montants seulement quand des ressources importantes y sont consacrées. Montants dans la monnaie des états financiers (ESRS 1 AR 50). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a)).",
+     "source": "Plans d'action, budget, comptabilité (dépenses d'investissement et d'exploitation)."
+    },
+    "en": {
+     "description": "One row per key action: status, timeframe, scope, capital and operating expenditure of the period, range of future resources, and whether the action depends on preconditions (ESRS 2 §45-46). Amounts only when significant resources are allocated. Amounts in the currency of the financial statements (ESRS 1 AR 50). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a)).",
+     "source": "Action plans, budget, accounting (capital and operating expenditure)."
+    },
+    "es": {
+     "description": "Una fila por acción principal: estado, calendario, alcance, gastos de capital y operativos del periodo, intervalo de recursos futuros y si la acción depende de condiciones previas (ESRS 2 §45-46). Importes solo cuando se asignan recursos significativos. Importes en la moneda de los estados financieros (ESRS 1 AR 50). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a)).",
+     "source": "Planes de acción, presupuesto, contabilidad (gastos de capital y operativos)."
+    },
+    "de": {
+     "description": "Eine Zeile je wichtigster Maßnahme: Status, Zeitrahmen, Geltungsbereich, Investitions- und Betriebsausgaben des Zeitraums, Spanne der künftigen Ressourcen und ob die Maßnahme von Voraussetzungen abhängt (ESRS 2 §45-46). Beträge nur, wenn erhebliche Ressourcen zugewiesen werden. Beträge in der Währung des Abschlusses (ESRS 1 AR 50). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a)).",
+     "source": "Aktionspläne, Budget, Buchhaltung (Investitions- und Betriebsausgaben)."
+    },
+    "it": {
+     "description": "Una riga per azione principale: stato, tempi, ambito, spese in conto capitale e operative del periodo, intervallo delle risorse future e se l'azione dipende da condizioni preliminari (ESRS 2 §45-46). Importi solo quando sono assegnate risorse significative. Importi nella valuta del bilancio (ESRS 1 AR 50). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Piani d'azione, budget, contabilità (spese in conto capitale e operative)."
+    },
+    "nl": {
+     "description": "Eén rij per belangrijkste actie: status, tijdsbestek, reikwijdte, kapitaal- en operationele uitgaven van de periode, bandbreedte van de toekomstige middelen en of de actie van voorwaarden afhangt (ESRS 2 §45-46). Bedragen alleen als er aanzienlijke middelen worden toegewezen. Bedragen in de valuta van de jaarrekening (ESRS 1 AR 50). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a)).",
+     "source": "Actieplannen, budget, boekhouding (kapitaal- en operationele uitgaven)."
+    },
+    "pt": {
+     "description": "Uma linha por ação principal: estado, calendário, âmbito, despesas de capital e operacionais do período, intervalo de recursos futuros e se a ação depende de condições prévias (ESRS 2 §45-46). Montantes apenas quando são afetados recursos significativos. Montantes na moeda das demonstrações financeiras (ESRS 1 AR 50). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Planos de ação, orçamento, contabilidade (despesas de capital e operacionais)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACT-MOYENS",
+   "libelle": {
+    "fr": "Actions clés sur les travailleurs de la chaîne de valeur : nature des ressources, conditions et postes comptables",
+    "en": "Key actions on workers in the value chain: type of resources, preconditions and line items",
+    "es": "Acciones principales sobre los trabajadores de la cadena de valor: tipo de recursos, condiciones previas y partidas",
+    "de": "Wichtigste Maßnahmen zu Arbeitskräften in der Wertschöpfungskette: Art der Ressourcen, Voraussetzungen und Posten",
+    "it": "Azioni principali sui lavoratori nella catena del valore: tipo di risorse, condizioni preliminari e voci di bilancio",
+    "nl": "Belangrijkste acties voor werknemers in de waardeketen: soort middelen, voorwaarden en posten",
+    "pt": "Ações principais sobre os trabalhadores na cadeia de valor: tipo de recursos, condições prévias e rubricas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Quand des ressources financières importantes sont consacrées aux actions : leur nature (actuelles et futures), les conditions préalables dont les actions dépendent (aide financière, politiques publiques, marché) et les postes ou notes des états financiers qui contiennent les montants (ESRS 2 §46). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "When significant financial resources are allocated to the actions: their type (current and future), the preconditions the actions depend on (financial support, public policy, market) and the line items or notes of the financial statements that contain the amounts (ESRS 2 §46). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Cuando se asignan recursos financieros significativos a las acciones: su tipo (actuales y futuros), las condiciones previas de las que dependen las acciones (apoyo financiero, política pública, mercado) y las partidas o notas de los estados financieros que contienen los importes (ESRS 2 §46). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Wenn den Maßnahmen erhebliche finanzielle Ressourcen zugewiesen werden: ihre Art (laufend und künftig), die Voraussetzungen, von denen die Maßnahmen abhängen (finanzielle Unterstützung, öffentliche Politik, Markt), und die Posten oder Anhangangaben des Abschlusses, die die Beträge enthalten (ESRS 2 §46). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Quando alle azioni sono assegnate risorse finanziarie significative: il loro tipo (correnti e future), le condizioni preliminari da cui dipendono le azioni (sostegno finanziario, politica pubblica, mercato) e le voci o note del bilancio che contengono gli importi (ESRS 2 §46). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Wanneer aan de acties aanzienlijke financiële middelen worden toegewezen: hun soort (huidige en toekomstige), de voorwaarden waarvan de acties afhangen (financiële steun, overheidsbeleid, markt) en de posten of toelichtingen van de jaarrekening waarin de bedragen staan (ESRS 2 §46). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Quando são afetados recursos financeiros significativos às ações: o seu tipo (atuais e futuros), as condições prévias de que as ações dependem (apoio financeiro, política pública, mercado) e as rubricas ou notas das demonstrações financeiras que contêm os montantes (ESRS 2 §46). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACTIONS-IMPACTS",
+   "libelle": {
+    "fr": "Actions contre les impacts négatifs importants sur les travailleurs de la chaîne de valeur",
+    "en": "Actions on material negative impacts on workers in the value chain",
+    "es": "Acciones sobre impactos negativos materiales en los trabajadores de la cadena de valor",
+    "de": "Maßnahmen zu wesentlichen negativen Auswirkungen auf Arbeitskräfte in der Wertschöpfungskette",
+    "it": "Azioni sugli impatti negativi rilevanti sui lavoratori nella catena del valore",
+    "nl": "Acties voor materiële negatieve effecten op werknemers in de waardeketen",
+    "pt": "Ações sobre impactos negativos materiais nos trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Actions clés menées, prévues ou en cours pour prévenir, atténuer, faire cesser, limiter et réparer les impacts négatifs importants sur les travailleurs de la chaîne de valeur, y compris la façon d'agir quand ces actions entrent en tension avec d'autres contraintes de l'activité (par exemple dans les achats ou les ventes) (ESRS S2-3 §18(a)). Les leviers d'influence et les actions collectives (initiatives de plusieurs parties prenantes ou d'un secteur) en font partie (ESRS S2 AR 4). Présenter les mesures contre les effets de la transition vers une économie bas carbone de façon à montrer le lien entre les sujets (ESRS S2 AR 5). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Key actions taken, planned or under way to prevent, mitigate, bring to an end, minimise and remediate material negative impacts on workers in the value chain, including the approach when these actions are in tension with other business pressures (for example in procurement or sales) (ESRS S2-3 §18(a)). Leverage and collective actions (multi-stakeholder or industry initiatives) are included (ESRS S2 AR 4). Present the measures against the effects of the transition to a low-carbon economy in a way that shows the link between topics (ESRS S2 AR 5). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Acciones principales realizadas, previstas o en curso para prevenir, mitigar, poner fin, minimizar y reparar los impactos negativos materiales sobre los trabajadores de la cadena de valor, incluido el enfoque cuando estas acciones entran en tensión con otras presiones empresariales (por ejemplo, en las compras o las ventas) (ESRS S2-3 §18(a)). Se incluyen la capacidad de influencia y las acciones colectivas (iniciativas de varias partes interesadas o sectoriales) (ESRS S2 AR 4). Presente las medidas frente a los efectos de la transición a una economía baja en carbono de modo que se vea el vínculo entre los temas (ESRS S2 AR 5). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Ergriffene, geplante oder laufende wichtigste Maßnahmen, um wesentliche negative Auswirkungen auf Arbeitskräfte in der Wertschöpfungskette zu verhindern, abzuschwächen, zu beenden, zu minimieren und abzuhelfen, einschließlich des Vorgehens, wenn diese Maßnahmen im Spannungsverhältnis zu anderen geschäftlichen Zwängen stehen (zum Beispiel im Einkauf oder Vertrieb) (ESRS S2-3 §18(a)). Einflussnahme und gemeinsame Maßnahmen (Initiativen mehrerer Interessenträger oder der Branche) sind eingeschlossen (ESRS S2 AR 4). Die Maßnahmen gegen die Auswirkungen des Übergangs zu einer emissionsarmen Wirtschaft so darstellen, dass der Zusammenhang zwischen den Themen erkennbar wird (ESRS S2 AR 5). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Azioni principali realizzate, pianificate o in corso per prevenire, mitigare, far cessare, minimizzare e rimediare agli impatti negativi rilevanti sui lavoratori nella catena del valore, compreso l'approccio quando tali azioni sono in tensione con altre pressioni aziendali (ad esempio negli acquisti o nelle vendite) (ESRS S2-3 §18(a)). Sono comprese la capacità di influenza e le azioni collettive (iniziative di più portatori di interessi o di settore) (ESRS S2 AR 4). Presentare le misure contro gli effetti della transizione verso un'economia a basse emissioni di carbonio in modo da mostrare il legame tra i temi (ESRS S2 AR 5). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Ondernomen, geplande of lopende belangrijkste acties om materiële negatieve effecten op werknemers in de waardeketen te voorkomen, te mitigeren, te beëindigen, te minimaliseren en te herstellen, inclusief de aanpak wanneer deze acties spanning opleveren met andere bedrijfsbelangen (bijvoorbeeld bij inkoop of verkoop) (ESRS S2-3 §18(a)). Invloed en collectieve acties (initiatieven van meerdere belanghebbenden of van de sector) zijn inbegrepen (ESRS S2 AR 4). Presenteer de maatregelen tegen de gevolgen van de transitie naar een koolstofarme economie zo dat het verband tussen de onderwerpen zichtbaar is (ESRS S2 AR 5). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Ações principais realizadas, planeadas ou em curso para prevenir, mitigar, pôr termo, minimizar e reparar os impactos negativos materiais nos trabalhadores na cadeia de valor, incluindo a abordagem quando estas ações entram em tensão com outras pressões empresariais (por exemplo, nas compras ou nas vendas) (ESRS S2-3 §18(a)). Estão incluídas a capacidade de influência e as ações coletivas (iniciativas de várias partes interessadas ou setoriais) (ESRS S2 AR 4). Apresente as medidas contra os efeitos da transição para uma economia de baixo carbono de forma que mostre a ligação entre os temas (ESRS S2 AR 5). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-ACTIONS-SUIVI",
+   "libelle": {
+    "fr": "Suivi de l'efficacité des actions sur les travailleurs de la chaîne de valeur",
+    "en": "Effectiveness tracking of actions on workers in the value chain",
+    "es": "Seguimiento de la eficacia de las acciones sobre los trabajadores de la cadena de valor",
+    "de": "Überwachung der Wirksamkeit der Maßnahmen zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Monitoraggio dell'efficacia delle azioni sui lavoratori nella catena del valore",
+    "nl": "Monitoring van de doeltreffendheid van acties voor werknemers in de waardeketen",
+    "pt": "Acompanhamento da eficácia das ações sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si des actions sur les impacts négatifs importants sont déclarées : comment l'entreprise suit et évalue l'efficacité de ces actions pour les personnes concernées (ESRS S2-3 §18(b)). Si elle l'explique dans les cibles (ESRS 2 GDR-T) ou dans un indicateur propre à l'entreprise (ESRS 2 GDR-M), un renvoi suffit. Répondre N/A si aucune action sur les impacts négatifs n'est déclarée. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Only if actions on material negative impacts are reported: how the company tracks and assesses the effectiveness of these actions in delivering outcomes for the people concerned (ESRS S2-3 §18(b)). If it explains this in the targets (ESRS 2 GDR-T) or in an entity-specific metric (ESRS 2 GDR-M), a reference is enough. Answer N/A if no action on negative impacts is reported. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Solo si se comunican acciones sobre impactos negativos materiales: cómo realiza la empresa el seguimiento y la evaluación de la eficacia de estas acciones para lograr resultados para las personas afectadas (ESRS S2-3 §18(b)). Si lo explica en las metas (ESRS 2 GDR-T) o en un parámetro propio de la entidad (ESRS 2 GDR-M), basta con una remisión. Responda N/A si no se comunica ninguna acción sobre impactos negativos. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn Maßnahmen zu wesentlichen negativen Auswirkungen berichtet werden: wie das Unternehmen die Wirksamkeit dieser Maßnahmen bei der Erzielung von Ergebnissen für die betroffenen Personen überwacht und bewertet (ESRS S2-3 §18(b)). Wenn es dies bei den Zielen (ESRS 2 GDR-T) oder in einer unternehmensspezifischen Kennzahl (ESRS 2 GDR-M) erläutert, genügt ein Verweis. Mit N/A antworten, wenn keine Maßnahme zu negativen Auswirkungen berichtet wird. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Solo se sono riportate azioni sugli impatti negativi rilevanti: come l'impresa monitora e valuta l'efficacia di tali azioni nel produrre risultati per le persone interessate (ESRS S2-3 §18(b)). Se lo spiega negli obiettivi (ESRS 2 GDR-T) o in una metrica specifica dell'entità (ESRS 2 GDR-M), basta un rinvio. Rispondere N/A se non è riportata alcuna azione sugli impatti negativi. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als acties op materiële negatieve effecten worden gerapporteerd: hoe de onderneming de doeltreffendheid van deze acties bij het behalen van resultaten voor de betrokken personen monitort en beoordeelt (ESRS S2-3 §18(b)). Als zij dit toelicht bij de streefdoelen (ESRS 2 GDR-T) of in een entiteitsspecifieke metriek (ESRS 2 GDR-M), volstaat een verwijzing. Antwoord N/A als geen actie op negatieve effecten wordt gerapporteerd. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se forem comunicadas ações sobre impactos negativos materiais: como a empresa acompanha e avalia a eficácia dessas ações na obtenção de resultados para as pessoas em causa (ESRS S2-3 §18(b)). Se o explicar nas metas (ESRS 2 GDR-T) ou numa métrica específica da entidade (ESRS 2 GDR-M), basta uma remissão. Responda N/A se não for comunicada nenhuma ação sobre impactos negativos. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-INCIDENTS-DH",
+   "libelle": {
+    "fr": "Incidents liés aux droits humains concernant les travailleurs de la chaîne de valeur",
+    "en": "Human rights incidents connected to workers in the value chain",
+    "es": "Incidentes de derechos humanos relacionados con los trabajadores de la cadena de valor",
+    "de": "Menschenrechtsvorfälle im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette",
+    "it": "Incidenti relativi ai diritti umani legati ai lavoratori nella catena del valore",
+    "nl": "Mensenrechtenincidenten met betrekking tot werknemers in de waardeketen",
+    "pt": "Incidentes de direitos humanos relacionados com os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Incidents liés aux droits humains concernant les travailleurs de la chaîne de valeur relevés pendant la période (ESRS S2-3 §19), dans le respect de la réglementation sur la vie privée. Ne déclarer que les cas établis et vérifiés : étayés par des faits objectifs, et constatés par un tribunal, l'OCDE ou une autorité administrative (ESRS S2 AR 6). Cela couvre les procédures judiciaires et non judiciaires et les autres incidents que l'entreprise a enregistrés. Il est permis de regrouper les cas par type d'incident ou par personnes concernées (ESRS S2 AR 8). Écrire qu'il n'y en a pas, le cas échéant. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Human rights incidents connected to workers in the value chain identified during the period (ESRS S2-3 §19), subject to the relevant privacy rules. Report only substantiated and verified instances: backed by objective, factual information, and found by a court, the OECD or an administrative authority (ESRS S2 AR 6). This covers judicial and non-judicial proceedings and other incidents the company registered. You may group the cases by type of incident or by people concerned (ESRS S2 AR 8). Write that there were none, if that is the case. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Incidentes de derechos humanos relacionados con los trabajadores de la cadena de valor identificados durante el periodo (ESRS S2-3 §19), con sujeción a las normas de privacidad aplicables. Comunique únicamente los casos confirmados y verificados: respaldados por información objetiva y fáctica, y constatados por un tribunal, la OCDE o una autoridad administrativa (ESRS S2 AR 6). Esto abarca los procedimientos judiciales y extrajudiciales y otros incidentes que la empresa haya registrado. Puede agrupar los casos por tipo de incidente o por personas afectadas (ESRS S2 AR 8). Escriba que no hubo ninguno, si es el caso. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Im Zeitraum festgestellte Menschenrechtsvorfälle im Zusammenhang mit Arbeitskräften in der Wertschöpfungskette (ESRS S2-3 §19), vorbehaltlich der geltenden Datenschutzvorschriften. Nur bestätigte und überprüfte Fälle melden: durch objektive, sachliche Informationen belegt und von einem Gericht, der OECD oder einer Verwaltungsbehörde festgestellt (ESRS S2 AR 6). Das umfasst gerichtliche und außergerichtliche Verfahren und andere Vorfälle, die das Unternehmen erfasst hat. Die Fälle können nach Art des Vorfalls oder nach betroffenen Personen gruppiert werden (ESRS S2 AR 8). Angeben, dass es keine gab, falls dies zutrifft. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Incidenti relativi ai diritti umani legati ai lavoratori nella catena del valore individuati nel periodo (ESRS S2-3 §19), fatte salve le norme applicabili sulla riservatezza. Riportare solo i casi accertati e verificati: supportati da informazioni oggettive e fattuali e riscontrati da un tribunale, dall'OCSE o da un'autorità amministrativa (ESRS S2 AR 6). Sono compresi i procedimenti giudiziari e non giudiziari e gli altri incidenti registrati dall'impresa. I casi possono essere raggruppati per tipo di incidente o per persone interessate (ESRS S2 AR 8). Scrivere che non ve ne sono stati, se è il caso. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Tijdens de periode vastgestelde mensenrechtenincidenten met betrekking tot werknemers in de waardeketen (ESRS S2-3 §19), onder voorbehoud van de toepasselijke privacyregels. Rapporteer alleen vastgestelde en geverifieerde gevallen: onderbouwd met objectieve, feitelijke informatie en vastgesteld door een rechter, de OESO of een bestuursrechtelijke autoriteit (ESRS S2 AR 6). Dit omvat gerechtelijke en niet-gerechtelijke procedures en andere incidenten die de onderneming heeft geregistreerd. U kunt de gevallen groeperen naar soort incident of naar betrokken personen (ESRS S2 AR 8). Schrijf dat er geen waren, als dat het geval is. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Incidentes de direitos humanos relacionados com os trabalhadores na cadeia de valor identificados durante o período (ESRS S2-3 §19), sob reserva das regras de privacidade aplicáveis. Comunique apenas os casos comprovados e verificados: apoiados em informação objetiva e factual e apurados por um tribunal, pela OCDE ou por uma autoridade administrativa (ESRS S2 AR 6). Abrange os processos judiciais e extrajudiciais e outros incidentes que a empresa tenha registado. Pode agrupar os casos por tipo de incidente ou por pessoas em causa (ESRS S2 AR 8). Escreva que não houve nenhum, se for o caso. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_3",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-CIBLES",
+   "libelle": {
+    "fr": "Cibles mesurables sur les travailleurs de la chaîne de valeur",
+    "en": "Measurable targets on workers in the value chain",
+    "es": "Metas medibles sobre los trabajadores de la cadena de valor",
+    "de": "Messbare Ziele zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Obiettivi misurabili sui lavoratori nella catena del valore",
+    "nl": "Meetbare streefdoelen voor werknemers in de waardeketen",
+    "pt": "Metas mensuráveis sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle fixé des cibles mesurables, datées et axées sur les résultats pour les travailleurs de la chaîne de valeur ? Sinon, répondre Non et décrire ci-dessous comment elle suit l'efficacité de ses politiques et actions (ESRS 2 §52). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Has the company set measurable, time-bound and outcome-oriented targets on workers in the value chain? If not, answer No and describe below how it tracks the effectiveness of its policies and actions (ESRS 2 §52). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "¿Ha fijado la empresa metas medibles, con plazo y orientadas a resultados sobre los trabajadores de la cadena de valor? Si no, responda No y describa a continuación cómo realiza el seguimiento de la eficacia de sus políticas y acciones (ESRS 2 §52). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen messbare, terminierte und ergebnisorientierte Ziele zu Arbeitskräften in der Wertschöpfungskette gesetzt? Wenn nicht, mit Nein antworten und unten beschreiben, wie die Wirksamkeit der Konzepte und Maßnahmen überwacht wird (ESRS 2 §52). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha fissato obiettivi misurabili, con scadenza e orientati ai risultati sui lavoratori nella catena del valore? In caso contrario, rispondere No e descrivere di seguito come si monitora l'efficacia delle politiche e delle azioni (ESRS 2 §52). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming meetbare, tijdgebonden en resultaatgerichte streefdoelen voor werknemers in de waardeketen vastgesteld? Zo niet, antwoord dan Nee en beschrijf hieronder hoe de doeltreffendheid van het beleid en de acties wordt gemonitord (ESRS 2 §52). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "A empresa fixou metas mensuráveis, com prazo e orientadas para resultados sobre os trabalhadores na cadeia de valor? Se não, responda Não e descreva abaixo como acompanha a eficácia das suas políticas e ações (ESRS 2 §52). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-CIB-TAB",
+   "libelle": {
+    "fr": "Cibles sur les travailleurs de la chaîne de valeur : valeurs, années et périmètre",
+    "en": "Targets on workers in the value chain: values, years and scope",
+    "es": "Metas sobre los trabajadores de la cadena de valor: valores, años y alcance",
+    "de": "Ziele zu Arbeitskräften in der Wertschöpfungskette: Werte, Jahre und Geltungsbereich",
+    "it": "Obiettivi sui lavoratori nella catena del valore: valori, anni e ambito",
+    "nl": "Streefdoelen voor werknemers in de waardeketen: waarden, jaren en reikwijdte",
+    "pt": "Metas sobre os trabalhadores na cadeia de valor: valores, anos e âmbito"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-CIBLES",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par cible : indicateur et unité, cible absolue ou relative, valeur et année de référence, étape, valeur et année cibles, imposée par la loi ou non, fondée ou non sur des preuves scientifiques concluantes (sujets environnementaux), périmètre (ESRS 2 §51). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a)).",
+     "source": "Stratégie, feuilles de route et tableaux de bord de l'entreprise."
+    },
+    "en": {
+     "description": "One row per target: metric and unit, absolute or relative target, baseline value and year, milestone, target value and year, whether it is required by law, whether it is based on conclusive scientific evidence (environmental topics), scope (ESRS 2 §51). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a)).",
+     "source": "Company strategy, roadmaps and dashboards."
+    },
+    "es": {
+     "description": "Una fila por meta: parámetro y unidad, meta absoluta o relativa, valor y año de referencia, hito, valor y año de la meta, si es exigida por ley, si se basa en pruebas científicas concluyentes (temas medioambientales), alcance (ESRS 2 §51). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a)).",
+     "source": "Estrategia de la empresa, hojas de ruta y cuadros de mando."
+    },
+    "de": {
+     "description": "Eine Zeile je Ziel: Kennzahl und Einheit, absolutes oder relatives Ziel, Basiswert und Basisjahr, Meilenstein, Zielwert und Zieljahr, ob gesetzlich vorgeschrieben, ob auf eindeutigen wissenschaftlichen Belegen beruhend (Umweltthemen), Geltungsbereich (ESRS 2 §51). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a)).",
+     "source": "Unternehmensstrategie, Fahrpläne und Dashboards."
+    },
+    "it": {
+     "description": "Una riga per obiettivo: metrica e unità, obiettivo assoluto o relativo, valore e anno di base, tappa, valore e anno dell'obiettivo, se richiesto dalla legge, se basato su prove scientifiche conclusive (temi ambientali), ambito (ESRS 2 §51). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Strategia dell'impresa, piani e cruscotti."
+    },
+    "nl": {
+     "description": "Eén rij per streefdoel: metriek en eenheid, absoluut of relatief streefdoel, basiswaarde en basisjaar, mijlpaal, streefwaarde en streefjaar, of het wettelijk vereist is, of het op overtuigend wetenschappelijk bewijs is gebaseerd (milieuonderwerpen), reikwijdte (ESRS 2 §51). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a)).",
+     "source": "Strategie van de onderneming, stappenplannen en dashboards."
+    },
+    "pt": {
+     "description": "Uma linha por meta: métrica e unidade, meta absoluta ou relativa, valor e ano de base, etapa, valor e ano da meta, se é exigida por lei, se se baseia em provas científicas conclusivas (temas ambientais), âmbito (ESRS 2 §51). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Estratégia da empresa, roteiros e painéis de controlo."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-CIB-DESC",
+   "libelle": {
+    "fr": "Cibles sur les travailleurs de la chaîne de valeur : lien avec les politiques, étapes, méthodes et scénarios",
+    "en": "Targets on workers in the value chain: link to policies, milestones, methods and scenarios",
+    "es": "Metas sobre los trabajadores de la cadena de valor: vínculo con las políticas, hitos, métodos y escenarios",
+    "de": "Ziele zu Arbeitskräften in der Wertschöpfungskette: Bezug zu Konzepten, Meilensteine, Methoden und Szenarien",
+    "it": "Obiettivi sui lavoratori nella catena del valore: collegamento con le politiche, tappe, metodi e scenari",
+    "nl": "Streefdoelen voor werknemers in de waardeketen: verband met beleid, mijlpalen, methoden en scenario's",
+    "pt": "Metas sobre os trabalhadores na cadeia de valor: ligação às políticas, etapas, métodos e cenários"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque cible : son lien avec les objectifs des politiques et les actions, les étapes ou cibles intermédiaires, les méthodes et hypothèses importantes et, le cas échéant, les scénarios, les principales sources de données et la compatibilité avec les objectifs nationaux, européens ou internationaux (ESRS 2 §51(a), (e), (f), (h)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "For each target: its link to the policy objectives and actions, the milestones or interim targets, the methods and significant assumptions and, where applicable, the scenarios, the key data sources and the compatibility with national, EU or international policy goals (ESRS 2 §51(a), (e), (f), (h)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Para cada meta: su vínculo con los objetivos y las acciones de las políticas, los hitos o metas intermedias, los métodos y las hipótesis significativas y, en su caso, los escenarios, las principales fuentes de datos y la compatibilidad con los objetivos de las políticas nacionales, de la UE o internacionales (ESRS 2 §51(a), (e), (f), (h)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Ziel: sein Bezug zu den Zielen und Maßnahmen der Konzepte, die Meilensteine oder Zwischenziele, die Methoden und wesentlichen Annahmen und gegebenenfalls die Szenarien, die wichtigsten Datenquellen und die Vereinbarkeit mit nationalen, EU-weiten oder internationalen politischen Zielen (ESRS 2 §51(a), (e), (f), (h)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Per ogni obiettivo: il suo collegamento con gli obiettivi e le azioni delle politiche, le tappe o gli obiettivi intermedi, i metodi e le ipotesi significative e, se del caso, gli scenari, le principali fonti di dati e la compatibilità con gli obiettivi delle politiche nazionali, dell'UE o internazionali (ESRS 2 §51(a), (e), (f), (h)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk streefdoel: het verband met de doelstellingen en acties van het beleid, de mijlpalen of tussentijdse streefdoelen, de methoden en belangrijke aannames en, indien van toepassing, de scenario's, de belangrijkste gegevensbronnen en de verenigbaarheid met nationale, EU- of internationale beleidsdoelen (ESRS 2 §51(a), (e), (f), (h)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Para cada meta: a sua ligação aos objetivos e às ações das políticas, as etapas ou metas intermédias, os métodos e pressupostos significativos e, se aplicável, os cenários, as principais fontes de dados e a compatibilidade com os objetivos das políticas nacionais, da UE ou internacionais (ESRS 2 §51(a), (e), (f), (h)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-SUIVI-SS-CIBLE",
+   "libelle": {
+    "fr": "Suivi de l'efficacité sans cible sur les travailleurs de la chaîne de valeur",
+    "en": "Tracking of effectiveness without targets on workers in the value chain",
+    "es": "Seguimiento de la eficacia sin metas sobre los trabajadores de la cadena de valor",
+    "de": "Wirksamkeitsüberwachung ohne Ziele zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Monitoraggio dell'efficacia in assenza di obiettivi sui lavoratori nella catena del valore",
+    "nl": "Monitoring van de doeltreffendheid zonder streefdoelen voor werknemers in de waardeketen",
+    "pt": "Acompanhamento da eficácia sem metas sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si aucune cible mesurable n'est fixée : si et comment l'entreprise suit malgré tout l'efficacité de ses politiques et actions (ESRS 2 §52). Répondre N/A si des cibles sont fixées. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Only if no measurable target is set: whether and how the company still tracks the effectiveness of its policies and actions (ESRS 2 §52). Answer N/A if targets are set. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Solo si no se fija ninguna meta medible: si la empresa sigue, y cómo, la eficacia de sus políticas y acciones (ESRS 2 §52). Responda N/A si se han fijado metas. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn kein messbares Ziel gesetzt ist: ob und wie das Unternehmen die Wirksamkeit seiner Konzepte und Maßnahmen dennoch überwacht (ESRS 2 §52). Mit N/A antworten, wenn Ziele gesetzt sind. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Solo se non è fissato alcun obiettivo misurabile: se e come l'impresa monitora comunque l'efficacia delle sue politiche e azioni (ESRS 2 §52). Rispondere N/A se sono fissati obiettivi. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als er geen meetbaar streefdoel is vastgesteld: of en hoe de onderneming de doeltreffendheid van haar beleid en acties toch monitort (ESRS 2 §52). Antwoord N/A als er streefdoelen zijn vastgesteld. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se não for fixada nenhuma meta mensurável: se a empresa acompanha, e como, a eficácia das suas políticas e ações (ESRS 2 §52). Responda N/A se forem fixadas metas. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-INDICATEURS",
+   "libelle": {
+    "fr": "Indicateurs propres à l'entreprise sur les travailleurs de la chaîne de valeur",
+    "en": "Entity-specific metrics on workers in the value chain",
+    "es": "Parámetros propios de la entidad sobre los trabajadores de la cadena de valor",
+    "de": "Unternehmensspezifische Kennzahlen zu Arbeitskräften in der Wertschöpfungskette",
+    "it": "Metriche specifiche dell'entità sui lavoratori nella catena del valore",
+    "nl": "Entiteitsspecifieke metrieken voor werknemers in de waardeketen",
+    "pt": "Métricas específicas da entidade sobre os trabalhadores na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-INDICATEURS",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si l'entreprise suit ce sujet avec ses propres indicateurs (la norme n'en prescrit pas) : une ligne par indicateur, avec sa valeur, son unité et son périmètre (ESRS 2 §48, AR 42). Laisser vide sinon. Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a)).",
+     "source": "Stratégie, feuilles de route et tableaux de bord de l'entreprise."
+    },
+    "en": {
+     "description": "Only if the company tracks this topic with its own metrics (the standard prescribes none): one row per metric, with its value, unit and scope (ESRS 2 §48, AR 42). Leave empty otherwise. Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a)).",
+     "source": "Company strategy, roadmaps and dashboards."
+    },
+    "es": {
+     "description": "Solo si la empresa hace el seguimiento de este tema con parámetros propios (la norma no prescribe ninguno): una fila por parámetro, con su valor, unidad y alcance (ESRS 2 §48, AR 42). Déjelo vacío en caso contrario. Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a)).",
+     "source": "Estrategia de la empresa, hojas de ruta y cuadros de mando."
+    },
+    "de": {
+     "description": "Nur wenn das Unternehmen dieses Thema mit eigenen Kennzahlen überwacht (der Standard schreibt keine vor): eine Zeile je Kennzahl, mit Wert, Einheit und Geltungsbereich (ESRS 2 §48, AR 42). Sonst leer lassen. Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a)).",
+     "source": "Unternehmensstrategie, Fahrpläne und Dashboards."
+    },
+    "it": {
+     "description": "Solo se l'impresa monitora questo tema con metriche proprie (la norma non ne prescrive): una riga per metrica, con valore, unità e ambito (ESRS 2 §48, AR 42). In caso contrario, lasciare vuoto. Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Strategia dell'impresa, piani e cruscotti."
+    },
+    "nl": {
+     "description": "Alleen als de onderneming dit onderwerp met eigen metrieken monitort (de standaard schrijft er geen voor): één rij per metriek, met waarde, eenheid en reikwijdte (ESRS 2 §48, AR 42). Laat anders leeg. Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a)).",
+     "source": "Strategie van de onderneming, stappenplannen en dashboards."
+    },
+    "pt": {
+     "description": "Apenas se a empresa acompanhar este tema com métricas próprias (a norma não prescreve nenhuma): uma linha por métrica, com o seu valor, unidade e âmbito (ESRS 2 §48, AR 42). Deixe vazio caso contrário. Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a)).",
+     "source": "Estratégia da empresa, roteiros e painéis de controlo."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-METHODES",
+   "libelle": {
+    "fr": "Indicateurs sur les travailleurs de la chaîne de valeur : méthodes, sources, chaîne de valeur et contexte",
+    "en": "Metrics on workers in the value chain: methods, sources, value chain data and context",
+    "es": "Parámetros sobre los trabajadores de la cadena de valor: métodos, fuentes, datos de la cadena de valor y contexto",
+    "de": "Kennzahlen zu Arbeitskräften in der Wertschöpfungskette: Methoden, Quellen, Daten der Wertschöpfungskette und Kontext",
+    "it": "Metriche sui lavoratori nella catena del valore: metodi, fonti, dati della catena del valore e contesto",
+    "nl": "Metrieken voor werknemers in de waardeketen: methoden, bronnen, gegevens uit de waardeketen en context",
+    "pt": "Métricas sobre os trabalhadores na cadeia de valor: métodos, fontes, dados da cadeia de valor e contexto"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque indicateur : unité, méthode de calcul et sources, méthode d'estimation avec ses hypothèses et limites importantes ; pour un indicateur de la chaîne de valeur, part des données indirectes ou approchées et améliorations prévues ; informations de contexte (ESRS 2 §49(a) à (c)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "For each metric: unit, calculation method and sources, estimation method with its significant assumptions and limitations; for a value chain metric, reliance on indirect sources or proxies and the planned improvements; contextual information (ESRS 2 §49(a) to (c)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Para cada parámetro: unidad, método de cálculo y fuentes, método de estimación con sus hipótesis y limitaciones significativas; para un parámetro de la cadena de valor, el recurso a fuentes indirectas o aproximaciones y las mejoras previstas; información de contexto (ESRS 2 §49(a) a (c)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Für jede Kennzahl: Einheit, Berechnungsmethode und Quellen, Schätzmethode mit ihren wesentlichen Annahmen und Einschränkungen; bei einer Kennzahl der Wertschöpfungskette die Nutzung indirekter Quellen oder Näherungswerte und die geplanten Verbesserungen; Kontextinformationen (ESRS 2 §49(a) bis (c)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Per ogni metrica: unità, metodo di calcolo e fonti, metodo di stima con le sue ipotesi e limiti significativi; per una metrica della catena del valore, il ricorso a fonti indirette o a stime di approssimazione e i miglioramenti previsti; informazioni di contesto (ESRS 2 §49(a)-(c)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Voor elke metriek: eenheid, berekeningsmethode en bronnen, schattingsmethode met de belangrijke aannames en beperkingen; voor een metriek van de waardeketen het gebruik van indirecte bronnen of benaderingen en de geplande verbeteringen; contextinformatie (ESRS 2 §49(a) tot en met (c)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Para cada métrica: unidade, método de cálculo e fontes, método de estimativa com os seus pressupostos e limitações significativos; para uma métrica da cadeia de valor, o recurso a fontes indiretas ou aproximações e as melhorias previstas; informação de contexto (ESRS 2 §49(a) a (c)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CHAINE-EVOLUTION",
+   "libelle": {
+    "fr": "Indicateurs sur les travailleurs de la chaîne de valeur : évolutions importantes et progrès",
+    "en": "Metrics on workers in the value chain: significant changes and progress",
+    "es": "Parámetros sobre los trabajadores de la cadena de valor: cambios significativos y avances",
+    "de": "Kennzahlen zu Arbeitskräften in der Wertschöpfungskette: wesentliche Änderungen und Fortschritte",
+    "it": "Metriche sui lavoratori nella catena del valore: cambiamenti significativi e progressi",
+    "nl": "Metrieken voor werknemers in de waardeketen: belangrijke wijzigingen en voortgang",
+    "pt": "Métricas sobre os trabalhadores na cadeia de valor: alterações significativas e progressos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Évolutions importantes des résultats par rapport aux périodes précédentes, progrès vers les cibles et effet des acquisitions ou cessions importantes (ESRS 2 §49(d)). Entrée progressive : les entreprises de la première vague peuvent l'omettre pour les exercices avant 2027, en donnant les informations de l'ESRS 2 §7 à 10 (BP-2), les autres entreprises pour leurs deux premiers exercices de reporting (ESRS 1 §125(a), §126(a) et §127(a))."
+    },
+    "en": {
+     "description": "Significant changes in performance compared with the previous periods, progress towards the targets and effect of major acquisitions or disposals (ESRS 2 §49(d)). Phase-in: wave-one companies may omit it for financial years before 2027, subject to the disclosures of ESRS 2 §7 to 10 (BP-2), other companies for their first two financial years of reporting (ESRS 1 §125(a), §126(a) and §127(a))."
+    },
+    "es": {
+     "description": "Cambios significativos del desempeño respecto a los periodos anteriores, avances hacia las metas y efecto de las adquisiciones o enajenaciones importantes (ESRS 2 §49(d)). Disposición transitoria: las empresas de la primera oleada pueden omitirla en los ejercicios anteriores a 2027, con sujeción a la información de ESRS 2 §7 a 10 (BP-2), y las demás empresas durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a) y §127(a))."
+    },
+    "de": {
+     "description": "Wesentliche Veränderungen der Leistung gegenüber den Vorperioden, Fortschritte bei den Zielen und Auswirkung größerer Übernahmen oder Veräußerungen (ESRS 2 §49(d)). Übergangsbestimmung: Unternehmen der ersten Welle dürfen sie für Geschäftsjahre vor 2027 auslassen, vorbehaltlich der Angaben nach ESRS 2 §7 bis 10 (BP-2), andere Unternehmen für ihre ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a) und §127(a))."
+    },
+    "it": {
+     "description": "Cambiamenti significativi della performance rispetto ai periodi precedenti, progressi verso gli obiettivi ed effetto di acquisizioni o cessioni rilevanti (ESRS 2 §49(d)). Disposizione transitoria: le imprese della prima ondata possono ometterla per gli esercizi anteriori al 2027, fatte salve le informative di ESRS 2 §7-10 (BP-2), le altre imprese per i loro primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a) e §127(a))."
+    },
+    "nl": {
+     "description": "Belangrijke veranderingen in de prestaties ten opzichte van eerdere perioden, voortgang richting de streefdoelen en effect van grote overnames of afstotingen (ESRS 2 §49(d)). Overgangsbepaling: ondernemingen van de eerste golf mogen deze weglaten voor boekjaren vóór 2027, onder voorbehoud van de informatieverschaffing van ESRS 2 §7 tot en met 10 (BP-2), andere ondernemingen voor hun eerste twee verslagjaren (ESRS 1 §125(a), §126(a) en §127(a))."
+    },
+    "pt": {
+     "description": "Alterações significativas do desempenho face aos períodos anteriores, progressos em direção às metas e efeito de aquisições ou alienações importantes (ESRS 2 §49(d)). Disposição transitória: as empresas da primeira vaga podem omiti-la nos exercícios anteriores a 2027, sob reserva da divulgação de ESRS 2 §7 a 10 (BP-2), e as outras empresas nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a) e §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "S2_4",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  }
+ ],
+ "regles": [],
+ "exporte_le": "",
+ "exporte_de": "Bibliothèque de l'outil",
+ "documents": [
+  {
+   "titre": "Commission Delegated Regulation (EU) 2026/1563 of 3 July 2026 amending Delegated Regulation (EU) 2023/2772 (revised ESRS: ESRS 1, ESRS 2, E1 to E5, S1 to S4, G1, glossary)",
+   "editeur": "European Commission",
+   "version": "OJ L, 21 September 2026",
+   "date": "2026-07-03",
+   "url": "http://data.europa.eu/eli/reg_del/2026/1563/oj",
+   "consulte_le": "2026-11-18",
+   "licence": "EU law: reuse allowed with acknowledgement of the source (Commission Decision 2011/833/EU)"
+  },
+  {
+   "titre": "Draft List of Datapoints effective from 2026, Revised ESRS Delegated Act of 3 July 2026, clean version (workbook)",
+   "editeur": "EFRAG",
+   "version": "Draft, version of 28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; non-authoritative draft, reproduction and use rights restricted; consulted only to check that the inventory is complete, nothing of it is reproduced in the templates"
+  },
+  {
+   "titre": "Explanatory Note: Revised ESRS, Draft List of Datapoints and Draft XBRL Taxonomy 2026",
+   "editeur": "EFRAG",
+   "version": "28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; read for reference only, nothing of it is reproduced in the templates"
+  }
+ ]
+}

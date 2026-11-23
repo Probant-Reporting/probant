@@ -1,0 +1,29 @@
+# Configuration of the code checker (ruff). It only reports mechanical defects: no style rule, no reformatting.
+[tool.ruff]
+line-length = 120  # not checked (no E501); only used if someone runs the formatter by mistake
+extend-exclude = [
+    "*/migrations/*",
+    "static/vendor/",
+    ".claude/",
+    ".impeccable/",
+    "docs/",
+    "local-data/",
+    "staticfiles/",
+]
+
+[tool.ruff.lint]
+# F    pyflakes: unused import / variable, undefined name, function defined twice, empty f-string...
+# E9   syntax errors
+# E7   statement problems (== None, bare except, type comparison...), except E741 (ambiguous name "l": 485 hits, style)
+#      and E731 (lambda assigned to a name: style)
+# B    bugbear, only the rules that find real defects; left out on purpose: B023 (69 hits, nearly all closures called
+#      at once inside the loop, checked by hand), B904 / B905 / B007 (style), B017 (assertRaises(Exception) in tests)
+select = ["F", "E9", "E7", "B"]
+ignore = ["E741", "E731", "B023", "B904", "B905", "B007", "B017"]
+
+[tool.ruff.lint.per-file-ignores]
+# These two packages were split from one big module: the __init__.py gathers the names of the sub-modules and the
+# whole old module namespace (imports included) stays reachable as ``collecte.paquets.X`` / ``collecte.visuels.X``
+# (callers, tests, mock.patch). The imports are re-exports on purpose.
+"collecte/paquets/__init__.py" = ["F401"]
+"collecte/visuels/__init__.py" = ["F401"]

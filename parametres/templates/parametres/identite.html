@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.identite.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<form method="post" enctype="multipart/form-data" class="page-identite sans-cote" data-identite data-apercu-url="{% url 'parametres:apercu' %}">
+  {% csrf_token %}
+  {% include "parametres/_identite.html" %}
+</form>
+{% endblock %}

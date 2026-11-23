@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.partage.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% include "parametres/_entete_referentiel.html" %}
+<div class="departs-referentiel">
+  {% if fourni %}
+  <section class="carte depart">
+    <h3>{% libelle "referentiels.partage.modele" %}</h3>
+    {% if fourni.etat == "mise_a_jour" %}
+    <p><span class="maj-dispo">{% libelle "referentiels.partage.maj_dispo" %}</span> {% libelle "referentiels.partage.maj_version" version=fourni.paquet.version installee=ref.version %}</p>
+    <p class="discret">{% libelle "referentiels.partage.maj_aide" %}</p>
+    <p><a class="bouton" href="{% url 'parametres:installer_kpi' fourni.paquet.code %}?version=1">{% libelle "referentiels.partage.passer_version" version=fourni.paquet.version %}</a></p>
+    {% else %}
+    <p class="discret">{% libelle "referentiels.partage.a_jour" nom=fourni.paquet.nom version=fourni.paquet.version %}</p>
+    <p><a class="bouton secondaire" href="{% url 'parametres:installer_kpi' fourni.paquet.code %}?version=0">{% libelle "referentiels.partage.ajouter_autres" %}</a></p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section class="carte depart">
+    <h3>{% libelle "referentiels.partage.exporter" %}</h3>
+    <p class="discret">{% libelle_html "referentiels.partage.exporter_aide" version=ref.version %}</p>
+    <div class="boutons-depart"><a class="bouton" href="{% url 'parametres:paquet_exporter' ref.code %}" data-telechargement>{% libelle "referentiels.partage.fichier_excel" %}</a>
+      <a class="bouton secondaire" href="{% url 'parametres:paquet_exporter' ref.code %}?format=json" data-telechargement>{% libelle "referentiels.partage.json" %}</a></div>
+  </section>
+
+  <section class="carte depart">
+    <h3>{% libelle "referentiels.partage.importer" %}</h3>
+    <p class="discret">{% libelle "referentiels.partage.importer_aide" %}</p>
+    <form method="post" action="{% url 'parametres:paquet_importer' %}" enctype="multipart/form-data" class="form-depart depot-preuve" data-chargement>
+      {% csrf_token %}
+      {% libelle "referentiels.portes.importer.fichier_aria" as t_fichier %}
+      <label class="zone-depot"><input type="file" name="fichier" accept=".xlsx,.xlsm,.json" required aria-label="{{ t_fichier }}" data-depot>
+        <span class="zone-depot-texte">{% libelle_html "referentiels.portes.importer.choisir" %}<span class="discret">{% libelle "referentiels.portes.importer.formats" %}</span></span></label>
+      <button type="submit" name="action" value="verifier">{% libelle "referentiels.portes.importer.verifier" %}</button>
+    </form>
+  </section>
+
+  <section class="carte depart">
+    <h3>{% libelle "referentiels.partage.historique" %}</h3>
+    <p class="discret petit">{% if ref.provenance %}{% libelle "referentiels.partage.origine_provenance" origine=ref.origine_texte provenance=ref.provenance %}{% else %}{% libelle "referentiels.partage.origine" origine=ref.origine_texte %}{% endif %}</p>
+    {% if ref.mis_a_jour_le %}<p class="discret petit">{% libelle "referentiels.partage.mis_a_jour_le" date=ref.mis_a_jour_le|date_heure_courte %}</p>{% endif %}
+    {% if historique %}
+    <ul class="historique-ref">{% for j in historique %}<li><span class="discret">{{ j.date|date_heure_courte }}</span> {{ j.champ|default:j.action }}{% if j.avant or j.apres %} : {% if j.avant %}{{ j.avant|truncatechars:40 }} → {% endif %}{{ j.apres|truncatechars:60 }}{% endif %}{% if j.utilisateur %} <span class="discret">· {{ j.utilisateur }}</span>{% endif %}</li>{% endfor %}</ul>
+    <p class="petit"><a href="{% url 'collecte:admin_journal' %}">{% libelle "referentiels.partage.tout_journal" %}</a></p>
+    {% else %}<p class="discret">{% libelle "referentiels.partage.aucune_modification" %}</p>{% endif %}
+  </section>
+</div>
+{% endblock %}

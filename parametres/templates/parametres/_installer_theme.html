@@ -1,0 +1,14 @@
+{% load collecte %}
+{% libelle "referentiels.installer.col_etat" as t_col_etat %}<fieldset class="theme-coche" data-theme style="--prof:{{ n.prof }}">
+  <legend>
+    <input type="checkbox" id="t-{{ n.code }}" data-case-theme aria-controls="c-{{ n.code }}">
+    <label for="t-{{ n.code }}" class="nom-theme-coche">{{ n.nom }}</label>
+    <span class="compte-theme" data-compte-theme>{{ n.nb_coches }} / {{ n.nb }}</span>
+    <button type="button" class="lien replier-theme" data-replier aria-expanded="{% if replie %}false{% else %}true{% endif %}" aria-controls="c-{{ n.code }}"><span class="visually-hidden">{% libelle "referentiels.installer.theme_prefixe" theme=n.nom %} </span><span data-replier-texte>{% if replie %}{% libelle "referentiels.installer.deplier" %}{% else %}{% libelle "referentiels.installer.replier" %}{% endif %}</span></button>
+  </legend>
+  <div class="corps-theme-coche" id="c-{{ n.code }}"{% if replie %} hidden{% endif %}>
+    {% if n.prof == 0 %}<div class="entete-coche" aria-hidden="true"><span></span><span>ID</span><span>{% libelle "referentiels.catalogue.col_indicateur" %}</span><span>{% libelle "referentiels.catalogue.type_aria" %}</span><span>{% libelle "referentiels.catalogue.col_unite" %}</span><span>{{ col_etat|default:t_col_etat }}</span></div>{% endif %}
+    {% if n.kpis %}<ul class="liste-coche">{% for l in n.kpis %}{% include "parametres/_installer_ligne.html" %}{% endfor %}</ul>{% endif %}
+    {% for n in n.enfants %}{% include "parametres/_installer_theme.html" with replie=False %}{% endfor %}
+  </div>
+</fieldset>

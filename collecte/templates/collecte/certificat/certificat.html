@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Certificat de clôture (collecte/certificat_cloture.py, collecte/vues_certificat.py) : une page de l'outil à imprimer
+(feuille de style « Closing certificate » de static/css/outil.css, pas de PDF fait par le serveur). Lecture seule. L'en-tête et le
+pied de page imprimés (nom de l'installation, date d'édition) sont les groupes d'en-tête et de pied d'un tableau de mise en page : ils se répètent sur chaque feuille et y réservent
+leur place (un bloc fixe hors de la zone de page se retrouve sur la feuille voisine). Chaque section est une rangée de ce tableau.{% endcomment %}
+{% block titre %}{% libelle "suivi.certificat.titre" %} · {{ campagne.nom_complet_affiche }}{% endblock %}
+{% block contenu %}
+<div class="barre-certificat">
+  <p class="retour-page"><a href="{% if auditeur %}{% url 'collecte:historique' %}{% else %}{% url 'collecte:admin_campagne' campagne.pk %}{% endif %}">{% icone "chevron-gauche" %} {% if auditeur %}{% libelle "cadre.menu.historique" %}{% else %}{% libelle "suivi.certificat.retour_campagne" %}{% endif %}</a></p>
+  <span class="espace"></span>
+  <button type="button" data-imprimer>{% icone "printer" %} {% libelle "suivi.certificat.imprimer" %}</button>
+</div>
+<p class="aide-champ barre-certificat-aide">{% libelle "suivi.certificat.imprimer_aide" %}</p>
+
+<article class="certificat" aria-labelledby="titre-certificat">
+  <table class="certificat-mise-en-page" role="presentation">
+  <thead class="certificat-page-entete" aria-hidden="true"><tr><td><div class="certificat-page-ligne"><span>{{ instance.nom }}</span><span>{% libelle "suivi.certificat.titre" %} · {{ campagne.nom_complet_affiche }}</span></div>{% if partiel %}<p class="certificat-page-partiel" data-partiel-entete>{% libelle "suivi.certificat.partiel.titre" n=nb_ouvertes|entier m=nb_campagne|entier %}</p>{% endif %}</td></tr></thead>
+  <tfoot class="certificat-page-pied" aria-hidden="true"><tr><td><div class="certificat-page-ligne"><span>{% libelle "suivi.certificat.edite_le" date=edite_le %}</span><span>{{ instance.titre }} {{ version_outil }}</span></div></td></tr></tfoot>
+  <tbody>
+  <tr><td>
+  <header class="certificat-tete">
+    {% if instance.logo_disponible %}<img class="certificat-logo" src="{% url 'parametres:logo' %}?v={{ instance.date_maj|date:'U' }}" alt="">{% endif %}
+    <div>
+      <p class="certificat-installation">{{ instance.nom }}</p>
+      <h1 id="titre-certificat">{% libelle "suivi.certificat.titre" %}</h1>
+      <p class="certificat-campagne">{{ campagne.nom_complet_affiche }}</p>
+    </div>
+  </header>
+  <p class="certificat-edition">{% libelle "suivi.certificat.edite_le" date=edite_le %}</p>
+  {% if partiel %}<div class="certificat-partiel" data-partiel>
+    <p class="certificat-partiel-titre">{% libelle "suivi.certificat.partiel.titre" n=nb_ouvertes|entier m=nb_campagne|entier %}</p>
+    <p>{% if sommets %}{% libelle "suivi.certificat.partiel.couvre" organisations=sommets|liste %}{% else %}{% libelle "suivi.certificat.partiel.couvre_aucune" %}{% endif %}</p>
+    <p>{% libelle "suivi.certificat.partiel.explication" %}</p>
+  </div>{% endif %}
+  </td></tr>
+
+  <tr><td><section aria-labelledby="c-campagne">
+    <h2 id="c-campagne">{% libelle "suivi.certificat.campagne.titre" %}</h2>
+    <dl class="certificat-faits">
+      <div><dt>{% libelle "suivi.certificat.campagne.campagne" %}</dt><dd>{{ campagne.nom_affiche }}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.campagne.referentiel" %}</dt><dd>{{ campagne.referentiel }}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.campagne.periode" %}</dt><dd>{% libelle "suivi.certificat.campagne.du_au" debut=debut fin=fin %}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.campagne.kpi" %}</dt><dd>{{ nb_kpi|entier }}</dd></div>
+      {% if autres %}<div><dt>{% libelle "suivi.certificat.campagne.autres" %}</dt><dd>{% for r, s in autres %}{{ r }} ({{ s }}){% if not forloop.last %}, {% endif %}{% endfor %}</dd></div>{% endif %}
+    </dl>
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-cloture">
+    <h2 id="c-cloture">{% libelle "suivi.certificat.cloture.titre" %}</h2>
+    {% if cloture_connue %}
+    <dl class="certificat-faits">
+      <div><dt>{% libelle "suivi.certificat.cloture.le" %}</dt><dd>{{ cloture_le }}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.cloture.par" %}</dt><dd>{% if cloture_par %}{{ cloture_par }}{% else %}{% libelle "suivi.certificat.cloture.par_inconnu" %}{% endif %}</dd></div>
+    </dl>
+    {% else %}<p>{% libelle "suivi.certificat.cloture.inconnue" %}</p>{% endif %}
+    {% if reouvertures %}
+    <p>{% libelle "suivi.certificat.reouverture.oui" n=reouvertures date=derniere_reouverture %}{% if mode == "gardes" %} {% libelle "suivi.certificat.reouverture.mode_gardes" %}{% elif mode == "recalcules" %} {% libelle "suivi.certificat.reouverture.mode_recalcules" %}{% endif %}</p>
+    {% else %}<p>{% libelle "suivi.certificat.reouverture.non" %}</p>{% endif %}
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-perimetre">
+    <h2 id="c-perimetre">{% libelle "suivi.certificat.perimetre.titre" %}</h2>
+    <table class="certificat-table">
+      <thead><tr><th scope="col">{% libelle "suivi.certificat.perimetre.niveau" %}</th><th scope="col" class="num">{% libelle "suivi.certificat.perimetre.arbre" %}</th><th scope="col" class="num">{% libelle "suivi.certificat.perimetre.ouvertes" %}</th></tr></thead>
+      <tbody>{% for nom, total, ouvertes in par_niveau %}<tr><th scope="row">{{ nom }}</th><td class="num">{{ total|entier }}</td><td class="num">{{ ouvertes|entier }}</td></tr>{% endfor %}</tbody>
+      <tfoot><tr><th scope="row">{% libelle "suivi.certificat.perimetre.total" %}</th><td class="num">{{ nb_orgs|entier }}</td><td class="num">{{ nb_ouvertes|entier }}</td></tr></tfoot>
+    </table>
+    <p class="aide-champ">{% libelle "suivi.certificat.perimetre.note" %}</p>
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-remplissage">
+    <h2 id="c-remplissage">{% libelle "suivi.certificat.remplissage.titre" %}</h2>
+    <p class="certificat-grand">{{ remplissage.taux|pct }}</p>
+    <p>{% libelle "suivi.certificat.remplissage.phrase" valides=remplissage.valide|entier attendues=remplissage.total|entier %}</p>
+    <table class="certificat-table">
+      <thead><tr><th scope="col">{% libelle "suivi.certificat.remplissage.etat" %}</th><th scope="col" class="num">{% libelle "suivi.certificat.remplissage.cases" %}</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">{% libelle "suivi.certificat.remplissage.validees" %}</th><td class="num">{{ remplissage.valide|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.remplissage.brouillons" %}</th><td class="num">{{ remplissage.brouillon|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.remplissage.a_saisir" %}</th><td class="num">{{ remplissage.a_saisir|entier }}</td></tr>
+      </tbody>
+    </table>
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-valeurs">
+    <h2 id="c-valeurs">{% libelle "suivi.certificat.valeurs.titre" %}</h2>
+    <table class="certificat-table">
+      <thead><tr><th scope="col">{% libelle "suivi.certificat.valeurs.genre" %}</th><th scope="col" class="num">{% libelle "suivi.certificat.valeurs.nombre" %}</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">{% libelle "suivi.certificat.valeurs.saisies" %}</th><td class="num">{{ valeurs.saisies|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.valeurs.calculees" %}</th><td class="num">{{ valeurs.calculees|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.valeurs.forcees" %}</th><td class="num">{{ valeurs.forcees|entier }}</td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">{% libelle "suivi.certificat.valeurs.total" %}</th><td class="num">{{ valeurs.total|entier }}</td></tr></tfoot>
+    </table>
+    <dl class="certificat-faits">
+      <div><dt>{% libelle "suivi.certificat.valeurs.validees" %}</dt><dd>{{ valeurs.validees|entier }}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.valeurs.na" %}</dt><dd>{{ valeurs.na|entier }}</dd></div>
+      <div><dt>{% libelle "suivi.certificat.valeurs.preuves" %}</dt><dd>{{ preuves|entier }}</dd></div>
+    </dl>
+    <p class="aide-champ">{% libelle "suivi.certificat.valeurs.note" %}</p>
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-alertes">
+    <h2 id="c-alertes">{% libelle "suivi.certificat.alertes.titre" %}</h2>
+    <table class="certificat-table">
+      <thead><tr><th scope="col">{% libelle "suivi.certificat.alertes.etat" %}</th><th scope="col" class="num">{% libelle "suivi.certificat.alertes.nombre" %}</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">{% libelle "suivi.certificat.alertes.traitees" %}</th><td class="num">{{ alertes.traitees|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.alertes.justifiees" %}</th><td class="num">{{ alertes.justifiees|entier }}</td></tr>
+        <tr><th scope="row">{% libelle "suivi.certificat.alertes.ouvertes" %}</th><td class="num">{{ alertes.ouvertes|entier }}</td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">{% libelle "suivi.certificat.alertes.total" %}</th><td class="num">{{ alertes.total|entier }}</td></tr></tfoot>
+    </table>
+    {% if alertes_ouvertes %}
+    <h3>{% libelle "suivi.certificat.alertes.liste" %}</h3>
+    <table class="certificat-table">
+      <thead><tr><th scope="col">{% libelle "suivi.certificat.alertes.kpi" %}</th><th scope="col">{% libelle "suivi.certificat.alertes.organisation" %}</th><th scope="col">{% libelle "suivi.certificat.alertes.message" %}</th></tr></thead>
+      <tbody>{% for a in alertes_ouvertes %}<tr><td>{% if a.kpi %}{{ a.kpi.nom }}{% else %}{{ a.code }}{% endif %}</td><td>{{ a.organisation.nom }}</td><td>{{ a.gravite }} : {{ a.message }}</td></tr>{% endfor %}</tbody>
+    </table>
+    {% if alertes_en_plus %}<p class="aide-champ">{% libelle "suivi.certificat.alertes.en_plus" n=alertes_en_plus %}</p>{% endif %}
+    {% else %}<p>{% libelle "suivi.certificat.alertes.aucune" %}</p>{% endif %}
+  </section></td></tr>
+
+  <tr><td><section aria-labelledby="c-empreinte" class="certificat-empreinte">
+    <h2 id="c-empreinte">{% libelle "suivi.certificat.empreinte.titre" %}</h2>
+    <p class="certificat-condense" aria-label="{% libelle "suivi.certificat.empreinte.aria" %}"><code>{% for b in empreinte_blocs %}<span>{{ b }}</span>{% endfor %}</code></p>
+    <p class="aide-champ">{% libelle "suivi.certificat.empreinte.nombre" n=nb_hachees %}</p>
+    {% if partiel %}<p><strong>{% libelle "suivi.certificat.partiel.empreinte" %}</strong></p>{% else %}<p>{% libelle "suivi.certificat.empreinte.prouve" %}</p>{% endif %}
+    <p>{% libelle "suivi.certificat.empreinte.verifier" %}</p>
+  </section></td></tr>
+  </tbody>
+  </table>
+</article>
+{% endblock %}
+{% block scripts %}<script nonce="{% jeton_csp %}">
+(function () {
+  var b = document.querySelector("[data-imprimer]");
+  if (b) b.addEventListener("click", function () { window.print(); });
+})();
+</script>{% endblock %}

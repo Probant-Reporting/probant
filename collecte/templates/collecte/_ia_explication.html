@@ -1,0 +1,17 @@
+{% load collecte %}{% comment %}Réponse de « Expliquer avec l'IA » (collecte/vues_ia.alerte_ia) : une proposition marquée comme venant de
+l'IA, échappée (jamais rendue en HTML ni en Markdown), que la personne reprend ou non ; ou le motif d'un refus, qui reste
+à l'écran (Error-Stays).{% endcomment %}
+{% if erreur %}{% encart "erreur" compact=True role="alert" classe="ia-erreur" tabindex="-1" data_ia_proposition=True %}{{ erreur }}{% endencart %}
+{% else %}
+<div class="ia-proposition" tabindex="-1" data-ia-proposition>
+  <p class="ia-marque">{% icone "sparkles" %}<span>{% libelle "saisie.ia.propose_par" fournisseur=fournisseur %}</span></p>
+  <p class="ia-texte pre-ligne" data-ia-texte>{{ proposition.explication }}</p>
+  {% if proposition.verifications %}<p class="ia-sous-titre">{% libelle "saisie.ia.a_verifier" %}</p>
+  <ul class="ia-liste">{% for v in proposition.verifications %}<li>{{ v }}</li>{% endfor %}</ul>{% endif %}
+  <p class="ia-note">{% libelle "saisie.ia.avertissement" %}</p>
+  <div class="ia-actions">
+    {% if justifiable and cible %}<button type="button" class="secondaire compact" data-ia-utiliser="{{ cible }}">{% libelle "saisie.ia.utiliser_explication" %}</button>{% endif %}
+    <button type="button" class="secondaire compact" data-ia-fermer>{% libelle "saisie.ia.fermer" %}</button>
+  </div>
+</div>
+{% endif %}

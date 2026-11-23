@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% if page == "historique" %}{% libelle "admin.journal.titre_historique" %}{% else %}{% libelle "admin.nav.journal" %}{% endif %}{% endblock %}
+{% block contenu %}
+{% if page == "historique" %}<div class="entete-page"><h1>{% libelle "admin.journal.historique_titre" %}</h1></div>
+<p class="intro-page">{% if deux_vues %}{% libelle "admin.journal.intro_reglages" %}{% else %}{% libelle "admin.journal.intro" %}{% endif %}</p>
+{% else %}{% include "collecte/administration/_nav.html" %}{% endif %}
+{% comment %}Barre de filtres. Le journal affiché (saisie des données, modifications d'administration)
+n'est plus une rangée d'onglets : c'est le premier champ de filtre (deux niveaux d'onglets au plus), avec le nombre de lignes de
+chaque journal. Type, exercice, organisation et personne : plusieurs valeurs à la fois, appliquées par le serveur à la
+fermeture du panneau. « Exporter » (l'historique filtré) et, pour l'administrateur, « Récemment supprimés » : au bout de la
+barre. La recherche part avec Entrée ; sans JavaScript, un bouton « Filtrer ».{% endcomment %}
+<form method="get" class="barre-filtres">
+  <div class="champ-filtre"><label for="recherche-journal">{% libelle "commun.filtres.recherche" %}</label>
+    <input type="search" id="recherche-journal" name="q" value="{{ q }}" {% libelle "admin.journal.recherche" as t_ph %}placeholder="{{ t_ph }}"></div>
+  {% if deux_vues %}<div class="champ-filtre"><label for="filtre-journal">{% libelle "admin.journal.type_journal" %}</label>
+    <select id="filtre-journal" name="vue" data-panneau-filtre data-aller-option data-defaut="{{ vue }}">
+      <option value="saisies" data-url="?vue=saisies" data-nb="{{ nb.saisies|stringformat:"d" }}"{% if vue == "saisies" %} selected{% endif %}>{% libelle "admin.journal.onglet_saisies" %}</option>
+      <option value="admin" data-url="?vue=admin" data-nb="{{ nb.admin|stringformat:"d" }}"{% if vue == "admin" %} selected{% endif %}>{% libelle "admin.journal.onglet_admin" %}</option>
+    </select></div>{% else %}<input type="hidden" name="vue" value="{{ vue }}">{% endif %}
+  <div class="champ-filtre"><label for="filtre-famille">{% libelle "admin.journal.type_modification" %}</label>
+    <select id="filtre-famille" name="famille" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ familles_choisies|join:"," }}">
+      <option value="">{% libelle "commun.tous" %}</option>
+      {% for f, libelle, n in familles %}<option value="{{ f }}" data-nb="{{ n|stringformat:"d" }}"{% if f in familles_choisies %} selected{% endif %}>{{ libelle }}</option>{% endfor %}
+    </select></div>
+  {% if vue == "saisies" %}
+  <div class="champ-filtre"><label for="filtre-exercice">{% libelle "admin.journal.exercice" %}</label>
+    <select id="filtre-exercice" name="exercice" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ exercices_choisis|join:"," }}">
+      <option value="">{% libelle "commun.tous" %}</option>
+      {% for ex in exercices %}<option value="{{ ex|stringformat:"d" }}"{% if ex|stringformat:"d" in exercices_choisis %} selected{% endif %}>{{ ex|stringformat:"d" }}</option>{% endfor %}
+    </select></div>
+  <div class="champ-filtre"><label for="filtre-org-journal">{% libelle "admin.journal.organisation" %}</label>
+    <select id="filtre-org-journal" name="org" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ orgs_choisies|join:"," }}">
+      <option value="">{% libelle "admin.journal.toutes" %}</option>
+      {% for o in organisations %}<option value="{{ o.id }}"{% if o.id|stringformat:"d" in orgs_choisies %} selected{% endif %}>{{ o.nom }}</option>{% endfor %}
+    </select></div>
+  {% endif %}
+  <div class="champ-filtre"><label for="filtre-personne-journal">{% libelle "admin.journal.personne" %}</label>
+    <select id="filtre-personne-journal" name="personne" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ personnes_choisies|join:"," }}">
+      <option value="">{% libelle "admin.journal.toutes" %}</option>
+      {% for p, n in personnes %}<option value="{{ p.pk }}" data-nb="{{ n|stringformat:"d" }}"{% if p.pk|stringformat:"d" in personnes_choisies %} selected{% endif %}>{{ p }}</option>{% endfor %}
+    </select></div>
+  <noscript><button type="submit" class="secondaire">{% libelle "commun.filtrer" %}</button></noscript>
+  <div class="filtres-droite actions-journal">{# export de l'historique filtré ; administrateur : « Récemment supprimés » #}
+    {% if url_connexions %}<a class="lien-supprimes" href="{{ url_connexions }}">{% icone "menu-historique" %} {% libelle "admin.connexions.lien" %}</a>{% endif %}
+    {% if nb_preuves is not None %}<a class="lien-supprimes" href="{% url 'collecte:admin_preuves' %}">{% icone "supprimer" %} {% libelle "admin.preuves.lien" n=nb_preuves %}</a>{% endif %}
+    {% if nb_supprimes is not None %}<a class="lien-supprimes" href="{% url 'collecte:admin_supprimes' %}">{% icone "supprimer" %} {% libelle "admin.supprimes.lien" n=nb_supprimes %}</a>{% endif %}
+    {% libelle "admin.journal.exporter_aide" as t_exp %}<a class="bouton secondaire export-journal" href="{{ url_export }}" title="{{ t_exp }}" download>{% icone "telecharger" %} {% libelle "admin.journal.exporter" %}</a>
+  </div>
+  {# compteur écrit par le serveur (la liste est coupée à 300 lignes) ; « Effacer les filtres » recharge le journal sans filtre #}
+  <p class="etat-filtres" data-serveur>{% if filtre %}<span role="status">{{ compte }}</span>
+    <a class="lien-effacer" href="?vue={{ vue }}">{% icone "x" %} {% libelle "commun.filtres.effacer_tout" %}</a>{% endif %}</p>
+</form>
+{% if certificats %}<p class="liens-certificats"><span class="discret">{% libelle "admin.journal.certificats" %}</span> {% for nom, url in certificats %}<a href="{{ url }}">{% icone "printer" %} {{ nom }}</a>{% endfor %}</p>{% endif %}
+{% libelle "admin.journal.systeme" as t_systeme %}{% libelle "admin.journal.tableau_aria" as t_tableau %}<div class="carte carte-journal"{% if entrees %} role="table" aria-label="{{ t_tableau }}"{% endif %}>
+{% if entrees %}{# en-têtes qui trient (par le serveur : la liste est coupée à 300 entrées) ; aria-sort sur la colonne triée #}
+  <div class="entree-journal entete-journal" role="row">
+    <div role="columnheader"{% if tri.date.sens %} aria-sort="{{ tri.date.sens }}"{% endif %}><a class="tri-entete{% if tri.date.sens %} trie{% endif %}" href="{{ tri.date.url }}">{% libelle "admin.journal.col.date" %}{% if tri.date.sens == "ascending" %}{% icone "arrow-up" "icone-tri" %}{% elif tri.date.sens %}{% icone "arrow-down" "icone-tri" %}{% else %}{% icone "arrow-up-down" "icone-tri" %}{% endif %}</a></div>
+    <div aria-hidden="true"></div>
+    <div role="columnheader"{% if tri.auteur.sens %} aria-sort="{{ tri.auteur.sens }}"{% endif %}><a class="tri-entete{% if tri.auteur.sens %} trie{% endif %}" href="{{ tri.auteur.url }}">{% libelle "admin.journal.col.auteur" %}{% if tri.auteur.sens == "ascending" %}{% icone "arrow-up" "icone-tri" %}{% elif tri.auteur.sens %}{% icone "arrow-down" "icone-tri" %}{% else %}{% icone "arrow-up-down" "icone-tri" %}{% endif %}</a></div>
+  </div>
+{% endif %}
+{% for e in entrees %}
+  <div class="entree-journal" role="row">
+    <div class="quand" role="cell">{{ e.date|date_courte }}<br><span class="discret">{{ e.date|date:"H:i" }}</span></div>
+    <div aria-hidden="true">{% if e.utilisateur %}{% avatar e.utilisateur %}{% endif %}</div>
+    <div class="quoi" role="cell">
+      <strong>{{ e.utilisateur|default:t_systeme }}</strong> {{ e.libelle_action }}
+      <span class="discret">·</span> {{ e.libelle_objet }}
+      {% for d in e.details %}<div class="discret">{% if d.action == "purge_preuve" %}{% libelle "admin.journal.fichier_deux_points" %} <span class="avant">{{ d.avant }}</span> <span class="discret">·</span> <span class="apres">{{ d.apres_lisible }}</span>{% elif d.libelle_champ == "preuve" %}{% libelle "admin.journal.fichier_deux_points" %} <span class="apres">{{ d.apres|default:d.avant }}</span>{% else %}{% libelle "admin.journal.champ_ligne" champ=d.libelle_champ|capfirst %}
+        {% if d.avant and d.avant != "None" %}<span class="avant">{{ d.avant_court|default:d.avant_lisible|truncatechars:80 }}</span> → {% endif %}<span class="apres">{{ d.apres_court|default:d.apres_lisible|truncatechars:80 }}</span>
+        {% if d.avant_lisible|length > 80 or d.apres_lisible|length > 80 %}{# texte long (réponse rédigée, commentaire) : en entier à la demande #}
+        <details class="journal-complet"><summary>{% libelle "admin.journal.texte_complet" %}</summary>
+          {% if d.avant and d.avant != "None" %}<p class="journal-texte"><strong>{% libelle "admin.journal.avant" %}</strong><br>{{ d.avant_lisible|linebreaksbr }}</p>{% endif %}
+          <p class="journal-texte"><strong>{% libelle "admin.journal.apres" %}</strong><br>{{ d.apres_lisible|linebreaksbr }}</p></details>{% endif %}{% endif %}</div>{% endfor %}
+    </div>
+  </div>
+{% empty %}<p class="discret p-carte">{% libelle "admin.journal.aucune" %}</p>{% endfor %}
+</div>
+{% if limite %}<p class="discret">{% libelle "admin.journal.limite" %}</p>{% endif %}
+{% endblock %}

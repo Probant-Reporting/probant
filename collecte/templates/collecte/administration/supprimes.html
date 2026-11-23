@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Administration › Historique › Récemment supprimés (collecte/corbeille.py, tous_supprimes) : tout ce que chacun a
+supprimé dans cet espace et qui est encore restaurable ; qui l'a supprimé, quand, combien de jours il reste.{% endcomment %}
+{% block titre %}{% libelle "admin.supprimes.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_journal' %}?vue=admin&amp;famille=corbeille">{% icone "chevron-gauche" %} {% libelle "admin.supprimes.retour" %}</a></p>
+<section class="carte page-supprimes" aria-labelledby="titre-supprimes">
+  <h2 id="titre-supprimes">{% libelle "admin.supprimes.titre" %}{% if supprimes %} <span class="discret normal texte-mini">{{ supprimes|length }}</span>{% endif %}</h2>
+  <p class="aide-champ remonte">{% libelle "admin.supprimes.aide" n=jours %} <a href="{% url 'parametres:hebergement' %}#reglage-corbeille">{% libelle "admin.supprimes.regler" %}</a></p>
+  {% if supprimes %}
+  {% url 'collecte:admin_supprimes' as url_page %}{% include "collecte/_supprimes.html" with retour=url_page avec_auteur=True %}
+  {% else %}
+  {% libelle "admin.supprimes.vide" n=jours as t_vide %}{% include "collecte/_vide.html" with titre=t_vide compact=True %}
+  {% endif %}
+</section>
+{% endblock %}

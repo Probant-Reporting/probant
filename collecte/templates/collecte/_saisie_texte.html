@@ -1,0 +1,30 @@
+{% load collecte %}{# Réponse rédigée (format « texte rédigé », Markdown) : zone de texte, barre d'outils, aperçu ; la réponse de la période de comparaison en repère #}
+<div class="saisie-redigee" data-editeur-md>
+  <div class="entete-redigee">
+    {% if droits.modifier %}<label class="titre" for="valeur">{% else %}<span class="titre" id="titre-redigee">{% endif %}{% libelle "saisie.panneau.reponse" %} <span class="annee-courante">{{ campagne.periode }}</span>{% if droits.modifier %}</label>{% else %}</span>{% endif %}
+    {% if droits.modifier %}<button type="button" class="secondaire petit bouton-apercu-md" data-md-apercu aria-pressed="false" aria-controls="apercu-md" data-url="{% url 'collecte:apercu_texte' %}" hidden
+      data-texte-apercu="{% libelle "saisie.md.apercu" %}" data-texte-modifier="{% libelle "saisie.md.modifier" %}">{% libelle "saisie.md.apercu" %}</button>{% endif %}
+  </div>
+  {% if droits.modifier %}
+  {% libelle "saisie.md.barre" as t_barre %}<div class="barre-md" role="toolbar" aria-label="{{ t_barre }}" aria-controls="valeur" data-barre-md hidden>
+    <button type="button" data-md="gras" aria-label="{% libelle "saisie.md.gras" %}" title="{% libelle "saisie.md.gras_titre" %}" aria-keyshortcuts="Control+B Meta+B">{% icone "bold" %}</button>
+    <button type="button" data-md="italique" aria-label="{% libelle "saisie.md.italique" %}" title="{% libelle "saisie.md.italique_titre" %}" aria-keyshortcuts="Control+I Meta+I" tabindex="-1">{% icone "italic" %}</button>
+    <span class="sep-md" aria-hidden="true"></span>
+    <button type="button" data-md="titre" aria-label="{% libelle "saisie.md.titre" %}" title="{% libelle "saisie.md.titre_titre" %}" tabindex="-1">{% icone "heading" %}</button>
+    <button type="button" data-md="puces" aria-label="{% libelle "saisie.md.puces" %}" title="{% libelle "saisie.md.puces_titre" %}" tabindex="-1">{% icone "liste-puces" %}</button>
+    <button type="button" data-md="numeros" aria-label="{% libelle "saisie.md.numeros" %}" title="{% libelle "saisie.md.numeros_titre" %}" tabindex="-1">{% icone "liste-numeros" %}</button>
+    <span class="sep-md" aria-hidden="true"></span>
+    <button type="button" data-md="lien" aria-label="{% libelle "saisie.md.lien" %}" title="{% libelle "saisie.md.lien_titre" %}" tabindex="-1">{% icone "lien" %}</button>
+  </div>
+  <textarea id="valeur" name="valeur" rows="9" class="zone-md" maxlength="{{ texte_max }}" spellcheck="true" {% if saisi.non_applicable %}disabled{% endif %}{% if valeur_refusee %} aria-invalid="true"{% endif %}
+    aria-describedby="aide-md{% if erreurs_saisie %} erreurs-saisie{% endif %}">{{ saisi.valeur }}</textarea>
+  <div id="apercu-md" class="md-rendu apercu-md" data-md-rendu tabindex="-1" role="region" aria-label="{% libelle "saisie.md.apercu_region" %}" aria-live="polite" hidden></div>
+  <p class="aide-champ aide-md" id="aide-md">{% libelle "saisie.md.aide" %} <span class="compteur-md" data-md-compteur data-max="{{ texte_max }}">{% libelle "saisie.md.max" max=texte_max_affiche %}</span></p>
+  {% else %}
+  <div class="md-rendu reponse-redigee" role="region" aria-labelledby="titre-redigee">{% if reponse.non_applicable %}<p>N/A</p>{% elif saisi.valeur %}{{ saisi.valeur|markdown }}{% else %}<p class="discret">{% libelle "saisie.md.vide" %}</p>{% endif %}</div>
+  {% endif %}
+  <details class="n1-redigee"{% if not n1 or not n1.texte and not n1.non_applicable %} hidden{% endif %}>
+    <summary>{% if comparaison == "N-1" %}{% libelle "saisie.panneau.n1_exercice" exercice=campagne.exercice|add:"-1" %}{% else %}{{ comparaison }}{% endif %} <span class="discret">· {% valeur n1 kpi %}</span></summary>
+    <div class="md-rendu">{% if n1.non_applicable %}<p>N/A</p>{% else %}{{ n1.texte|markdown:5 }}{% endif %}</div>
+  </details>
+</div>

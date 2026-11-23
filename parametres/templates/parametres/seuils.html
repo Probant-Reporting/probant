@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.seuils.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<form method="post" class="page-seuils" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}{% encart "erreur" %}{{ form.non_field_errors|join:" " }}{% endencart %}{% endif %}
+  <section class="bloc">
+    <h2><span class="num">1</span> {% libelle "admin.seuils.retard" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.seuils.retard_aide" %}</p>
+    <p class="aide-champ exemple-seuil">{% libelle "admin.seuils.retard_exemple" %}</p>
+    {% include "parametres/_champ_seuil.html" with champ=form.tolerance_retard %}
+  </section>
+  <section class="bloc">
+    <h2><span class="num">2</span> {% libelle "admin.seuils.coherence" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.seuils.coherence_aide" %}</p>
+    {% comment %}Un sous-titre par contrôle : il dit ce que l'outil vérifie, le champ ne porte plus
+    que le réglage.{% endcomment %}
+    <div class="groupe-seuil" role="group" aria-labelledby="seuil-historique">
+      <h3 id="seuil-historique">{% libelle "admin.seuils.groupe.historique" %}</h3>
+      <p class="aide-champ">{% libelle "admin.seuils.groupe.historique_aide" %}</p>
+      {% include "parametres/_champ_seuil.html" with champ=form.historique_annees %}
+      {% include "parametres/_champ_seuil.html" with champ=form.historique_minimum %}
+    </div>
+    <div class="groupe-seuil" role="group" aria-labelledby="seuil-herite">
+      <h3 id="seuil-herite">{% libelle "admin.seuils.groupe.herite" %}</h3>
+      <p class="aide-champ">{% libelle "admin.seuils.groupe.herite_aide" %}</p>
+      {% include "parametres/_champ_seuil.html" with champ=form.tolerance_fe_pct %}
+    </div>
+    <div class="groupe-seuil" role="group" aria-labelledby="seuil-detail">
+      <h3 id="seuil-detail">{% libelle "admin.seuils.groupe.detail" %}</h3>
+      <p class="aide-champ">{% libelle "admin.seuils.groupe.detail_aide" %}</p>
+      {% include "parametres/_champ_seuil.html" with champ=form.tolerance_detail_pct %}
+    </div>
+  </section>
+  <section class="bloc">{# rôles qui peuvent répondre N/A #}
+    <h2><span class="num">3</span> {% libelle "admin.seuils.na" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.seuils.na_aide" %}</p>
+    <fieldset class="choix-roles-na"><legend class="visuellement-cache">{% libelle "admin.seuils.form.na_roles" %}</legend>
+      <label><input type="checkbox" checked disabled> {% libelle "choix.utilisateur.role.admin" %}</label>
+      {% for c in form.na_roles_choix %}<label>{{ c.tag }} {{ c.choice_label }}</label>{% endfor %}
+    </fieldset>
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit">{% libelle "commun.enregistrer" %}</button></div>
+</form>
+{% endblock %}

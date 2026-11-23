@@ -1,0 +1,18 @@
+{% load collecte %}{# Onglets des vues (bureau) ; sur téléphone, un bouton « Vue : … » ouvre la même liste #}
+<div class="barre-vues">
+  <nav class="onglets-vues" aria-label="{% libelle 'visu.vues' %}" data-onglets-vues>
+    <ul>
+      {% if not contexte_visu.vue.id %}<li><a href="{{ request.get_full_path }}" aria-current="page" class="onglet-vue automatique">{{ contexte_visu.vue.nom }}</a></li>{% endif %}
+      {% for v in vues %}<li data-vue-id="{{ v.id }}"><a href="{{ v.url }}" class="onglet-vue"{% if v.id == contexte_visu.vue.id %} aria-current="page"{% if contexte_visu.vue.description %} title="{{ contexte_visu.vue.description }}"{% endif %}{% endif %}>{{ v.nom }}{% if v.partage %}<span class="badge-partage">{% libelle "visu.vue.partagee" %}</span>{% endif %}</a></li>{% endfor %}
+    </ul>
+  </nav>
+  {# une seule action principale dans la zone (« Modifier la vue ») : créer une vue est un bouton secondaire, à la suite des onglets #}
+  <a class="bouton secondaire compact nouvelle-vue" href="{{ contexte_visu.urls.nouvelle }}">{% icone "plus" %} {% libelle "visu.vue.ajouter" %}</a>
+  <details class="menu-deroulant choix-vue-tel">
+    <summary class="bouton secondaire">{% libelle "visu.vue.actuelle" nom=contexte_visu.vue.nom %} {% icone "chevron-bas" %}</summary>
+    <div class="menu-liste">
+      {% for v in vues %}<a href="{{ v.url }}"{% if v.id == contexte_visu.vue.id %} aria-current="page"{% endif %}><strong>{{ v.nom }}</strong>{% if v.partage %}<span>{% libelle "visu.vue.partagee" %}</span>{% endif %}</a>{% endfor %}
+      <a href="{{ contexte_visu.urls.nouvelle }}">{% icone "plus" %}<strong>{% libelle "visu.vue.ajouter" %}</strong></a>
+    </div>
+  </details>
+</div>

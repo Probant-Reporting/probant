@@ -1,0 +1,8 @@
+{% load collecte %}{% comment %}Page ou bloc vide : icône, titre, une phrase qui explique, un bouton pour continuer.
+Paramètres : titre ; phrase, url et action (facultatifs) ; compact=True pour un bloc vide dans une page qui a autre chose à
+montrer (une ligne), sinon l'état centré d'une page entière vide. Les filtres sans objet ne sont pas affichés au-dessus.{% endcomment %}
+<div class="page-vide{% if compact %} compact{% endif %}">
+  {% icone "inbox" %}
+  <div class="page-vide-texte"><p class="page-vide-titre">{{ titre }}</p>{% if phrase %}<p>{{ phrase }}</p>{% endif %}</div>
+  {% if url %}<a class="bouton secondaire" href="{{ url }}">{{ action }}</a>{% endif %}
+</div>

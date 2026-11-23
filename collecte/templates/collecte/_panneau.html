@@ -1,0 +1,236 @@
+{% load collecte %}
+<div class="panneau-haut" data-cellule>
+  <span class="statut-panneau">{% if not sans_statut %}<span class="statut statut-{{ statut }}">{{ statut|statut_libelle }}</span>{% endif %}
+    {% if reponse.statut == "valide" and reponse.valide_par %}<span class="discret">{% libelle_html "saisie.panneau.valide_par" auteur=reponse.valide_par date=reponse.date_validation|date_courte heure=reponse.date_validation|date:"H:i" %}</span>{% endif %}</span>
+  <span>
+    <a class="discret lien-pleine-page" href="{{ ici }}" target="_blank" rel="noopener">{% libelle "saisie.panneau.pleine_page" %} {% icone "externe" %}</a>
+    {% libelle "saisie.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button>
+  </span>
+</div>
+{% if droits.modifier and not calculee %}
+{% comment %}question posée avant de fermer le panneau ou d'en suivre un lien quand la saisie n'est pas enregistrée ;
+   conflit de version : enregistrer remplacerait la saisie de l'autre personne, « Fermer sans enregistrer » passe en
+   premier (focus, bouton principal) et l'enregistrement dit ce qu'il fait{% endcomment %}
+<div class="question-fermeture" role="alertdialog" aria-modal="true" aria-labelledby="question-fermeture-titre"{% if conflit %} aria-describedby="question-fermeture-conflit"{% elif reponse.statut == "valide" %} aria-describedby="question-fermeture-detail"{% endif %} data-question hidden>
+  <p class="question-titre" id="question-fermeture-titre">{% icone "alerte" %}{% libelle "saisie.panneau.question.titre" %}</p>
+  {% if conflit %}<p class="question-detail" id="question-fermeture-conflit">{% libelle "saisie.panneau.question.conflit" %}</p>
+  {% elif reponse.statut == "valide" %}<p class="question-detail" id="question-fermeture-detail">{% libelle "saisie.panneau.question.detail_valide" %}</p>{% endif %}
+  <p class="question-detail" id="question-fermeture-garde" data-brouillon-garde hidden></p>
+  {% if justifiables %}<p class="question-detail" id="question-fermeture-explication" data-explication-perdue hidden>{% libelle "saisie.panneau.question.explication_perdue" %}</p>{% endif %}
+  <div class="question-actions">
+    {% comment %}libellés quand la question vient d'un lien du panneau (data-texte-lien) : la suite ouvre ce lien au lieu de
+       fermer ; data-toast : message montré une fois enregistré et fermé{% endcomment %}
+    {% libelle "saisie.panneau.question.ouvrir_sans_enregistrer" as t_ouvrir_sans %}{% libelle "saisie.panneau.question.fermer_sans_enregistrer" as t_fermer_sans %}
+    {% if conflit %}
+    <button type="button" data-question-choix="abandonner" data-texte-lien="{{ t_ouvrir_sans }}">{{ t_fermer_sans }}</button>
+    <button type="button" class="secondaire" data-question-choix="enregistrer" data-texte-lien="{% libelle "saisie.panneau.question.remplacer_ouvrir" %}" data-toast="{% libelle "saisie.panneau.question.toast_remplacee" %}">{% libelle "saisie.panneau.question.remplacer_fermer" %}</button>
+    {% else %}
+    <button type="button" data-question-choix="enregistrer" data-texte-lien="{% if reponse.statut == "valide" %}{% libelle "saisie.panneau.question.modif_ouvrir" %}{% else %}{% libelle "saisie.panneau.question.brouillon_ouvrir" %}{% endif %}" data-toast="{% if reponse.statut == "valide" %}{% libelle "saisie.panneau.question.toast_modif" %}{% else %}{% libelle "saisie.panneau.question.toast_brouillon" %}{% endif %}">{% if reponse.statut == "valide" %}{% libelle "saisie.panneau.question.modif_fermer" %}{% else %}{% libelle "saisie.panneau.question.brouillon_fermer" %}{% endif %}</button>
+    <button type="button" class="secondaire" data-question-choix="abandonner" data-texte-lien="{{ t_ouvrir_sans }}">{{ t_fermer_sans }}</button>
+    {% endif %}
+    <button type="button" class="secondaire" data-question-choix="continuer">{% libelle "saisie.panneau.question.continuer_saisie" %}</button>
+  </div>
+</div>
+{% endif %}
+{% if justifiables %}
+{% comment %}même question quand seule une explication (« Expliquer pourquoi la valeur est juste ») est tapée et pas
+   enregistrée{% endcomment %}
+<div class="question-fermeture" role="alertdialog" aria-modal="true" aria-labelledby="question-explication-titre" data-question data-question-explication hidden>
+  <p class="question-titre" id="question-explication-titre">{% icone "alerte" %}{% libelle "saisie.panneau.question.explication_titre" %}</p>
+  <div class="question-actions">
+    <button type="button" data-question-choix="explication" data-texte-lien="{% libelle "saisie.panneau.question.explication_ouvrir" %}" data-toast="{% libelle "saisie.panneau.question.toast_explication" %}">{% libelle "saisie.panneau.question.explication_fermer" %}</button>
+    <button type="button" class="secondaire" data-question-choix="abandonner" data-texte-lien="{% libelle "saisie.panneau.question.ouvrir_sans_explication" %}">{% libelle "saisie.panneau.question.fermer_sans_explication" %}</button>
+    <button type="button" class="secondaire" data-question-choix="continuer">{% libelle "saisie.panneau.question.continuer" %}</button>
+  </div>
+</div>
+{% endif %}
+<h2 class="titre-cellule">{{ kpi.nom }}</h2>
+<div class="puces-cellule"><span class="id-chip">{{ kpi.code }}</span>{% etiquette_niveau org org.nom %}</div>
+{% if places %}<ul class="places-kpi">{% for r, chemin, e in places %}
+  <li>{% etiquette_referentiel r %} <span class="discret">{% for t in chemin %}{{ t }}{% if not forloop.last %} › {% endif %}{% empty %}{% libelle "saisie.panneau.sans_theme" %}{% endfor %}{% if not e.obligatoire %} · {% libelle "saisie.ligne.facultatif" %}{% endif %}</span>
+    {% with l=e|tr:"libelle" %}{% if l %}<br><span class="discret">{% libelle "saisie.guillemets" texte=l %}</span>{% endif %}{% endwith %}</li>{% endfor %}</ul>{% endif %}
+
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if info_justif %}{% encart "info" role="status" tabindex="-1" data_message_justif=True %}{{ info_justif }}{% endencart %}{% endif %}
+{% if hors_periode %}
+{% comment %}la case ne compte pas dans cette période : la raison, et pour un administrateur où la changer (ni « À saisir », ni
+   point « À vérifier » : ce n'est pas une alerte sur la saisie){% endcomment %}
+{% encart "info" classe="hors-periode" %}<p>{{ hors_periode.motif }}</p>{% if hors_periode.lien %}<p class="m-0 mt-8"><a class="lien-action" href="{{ hors_periode.lien }}">{% libelle hors_periode.lien_cle %}</a></p>{% endif %}{% endencart %}
+{% endif %}
+{% if points %}
+{% comment %}« À vérifier » : d'abord les motifs (refus, blocage de la validation, lecture seule), lus avec la valeur
+   refusée (#erreurs-saisie : leur texte seul, sans les boutons ni les liens), puis les alertes de cohérence, chacune
+   avec ce que la personne peut faire : « Expliquer pourquoi la valeur est juste » (justification enregistrée sans quitter
+   la saisie), renvoi au commentaire pour un écart avec N-1, lien vers la fiche de l'alerte quand elle la voit{% endcomment %}
+<section class="points-attention" aria-labelledby="pa-titre" data-points>
+  <h3 class="pa-titre" id="pa-titre" tabindex="-1">{% libelle "saisie.panneau.a_verifier" %} <span class="discret">{{ points|length }}</span></h3>
+  <div class="pa-motifs">
+  {% if erreurs_saisie %}<span id="erreurs-saisie" hidden>{% for p in points %}{% if p.motif %}{% if p.titre %}{{ p.titre }} ({{ p.etiquette }}) : {% endif %}{{ p.detail }} {% endif %}{% endfor %}</span>{% endif %}
+  {% for p in points %}{% if p.motif %}{% include "collecte/_point_a_verifier.html" %}{% endif %}{% endfor %}
+  </div>
+  {% for p in points %}{% if not p.motif %}{% include "collecte/_point_a_verifier.html" %}{% endif %}{% endfor %}
+</section>
+{% endif %}
+{% if definition %}
+<details class="definition" open>
+  <summary>{% libelle "saisie.panneau.definition" %}</summary>
+  {% for c, texte in definition %}<p>{% if c.code != categorie_principale %}<strong>{{ c }}.</strong> {% endif %}{{ texte|linebreaksbr }}</p>{% endfor %}
+</details>
+{% endif %}
+
+{% if calculee %}
+  <h3>{% libelle "saisie.panneau.resultat" %}</h3>
+  <p class="texte-grand m-0 mt-4 mb-4">{% valeur reponse kpi %}</p>
+  <p class="discret"><span class="n1-libelle">{% if comparaison == "N-1" %}{% libelle "saisie.panneau.n1_exercice" exercice=campagne.exercice|add:"-1" %}{% else %}{{ comparaison }}{% endif %}</span> {% valeur n1 kpi %}{% if ecart is not None %} · {% libelle "saisie.panneau.ecart_valeur" ecart=ecart|ecart %}{% endif %}</p>
+  {% if not forcage.forcee %}<p class="discret">{% if reponse.origine == "import" %}{% libelle "saisie.panneau.calcul.importe" %}{% elif cumul %}{% libelle "saisie.panneau.calcul.cumul" %}{% elif kpi.est_calcule and org.niveau_id == kpi.granularite_id %}{% libelle "saisie.panneau.calcul.formule" %}{% else %}{% libelle "saisie.panneau.calcul.agrege" %}{% endif %}</p>{% endif %}
+  {% if reponse.message_calcul %}<p class="discret">{{ reponse.message_calcul }}</p>{% endif %}
+  {% if forcage %}{% include "collecte/_forcage.html" %}{% endif %}
+  {% if sources %}
+  <h3>{% libelle "saisie.panneau.composantes" %}</h3>
+  {% for k, decalage, r, o in sources %}
+  <div class="composante">
+    <span>{% if decalage == "N" %}<a href="{% url 'collecte:cellule' campagne.pk k.code o.id %}" data-panneau>{{ k.nom }}</a>{% else %}{{ k.nom }}{% endif %}
+      <span class="discret"><br>{{ k.code }}{% if decalage != "N" %} @ {{ decalage }}{% endif %}{% if o.id != org.id %} · {% libelle "saisie.panneau.repris_de" organisation=o.nom %}{% endif %}{% if r %} · {{ r.statut|statut_libelle }}{% endif %}</span></span>
+    <strong class="insecable">{% if r.non_applicable and kpi.na_compte_zero and reponse and not reponse.non_applicable %}{% libelle "saisie.panneau.na_compte_zero" %}{% else %}{% valeur r k %}{% endif %}</strong>
+  </div>
+  {% endfor %}
+  {% elif cumul %}
+  <h3>{% libelle "saisie.panneau.composantes_temps" %}</h3>
+  <p class="discret remonte">{% libelle "saisie.panneau.temps_phrase" agregation=kpi|choix:"agregation_temps" periode=campagne.periode %}</p>
+  {% for libelle, r in cumul_detail %}
+  <div class="composante"><span>{{ libelle }}{% if r %}<span class="discret"> · {{ r.statut|statut_libelle }}</span>{% endif %}</span><strong class="insecable">{% valeur r kpi %}</strong></div>
+  {% endfor %}
+  {% endif %}
+  {% if detail_agregat %}
+  <details class="bloc-agregat" open>
+    <summary><h3>{% libelle "saisie.panneau.detail_agregation" %} <span class="discret">{% libelle "saisie.n.organisations" n=detail_agregat|length %}</span></h3></summary>
+    <p class="discret">{% if kpi.methode_agregation == "Décompte" %}{% libelle "saisie.panneau.agregat_decompte" %}{% else %}{% libelle "saisie.panneau.agregat_somme" organisation=org.nom %}{% endif %}</p>
+    {% include "collecte/_detail_agregat.html" with noeuds=detail_agregat %}
+  </details>
+  {% endif %}
+  {% if admin and kpi.est_calcule %}<p class="discret">{% libelle "saisie.panneau.formule" %} <span class="code">{{ kpi.formule }}</span></p>{% endif %}
+{% else %}
+{% if au_dessus %}
+{% encart "info" %}
+  <p>{% libelle_html "saisie.panneau.au_dessus.total" %} {% if total_detail %}{{ total_detail }}{% else %}{% libelle "saisie.panneau.au_dessus.incomplet" %}{% if total_message %} <span class="discret">({{ total_message }})</span>{% endif %}{% endif %}</p>
+  {% if saisie_ici %}
+  <p>{% libelle_html "saisie.panneau.au_dessus.remplace" organisation=org.nom %}</p>
+  {% if droits.modifier %}<form method="post" action="{{ ici }}" data-ajax>{% csrf_token %}<button type="submit" name="action" value="revenir_total" class="lien">{% libelle "saisie.panneau.au_dessus.revenir" %}</button></form>{% endif %}
+  {% else %}
+  <p>{% libelle "saisie.panneau.au_dessus.indisponible" organisation=org.nom %}</p>
+  {% endif %}
+  {% if detail_agregat %}<details class="detail-dans-encart"><summary>{% libelle "saisie.panneau.detail_agregation" %}</summary>
+    {% include "collecte/_detail_agregat.html" with noeuds=detail_agregat %}</details>{% endif %}
+{% endencart %}
+{% endif %}
+<form method="post" action="{{ ici }}" class="formulaire carte-saisie" data-ajax data-garde{% if non_enregistre %} data-non-enregistre{% endif %}{% if droits.modifier %} data-auto data-statut-enregistre="{{ statut }}"{% if conflit %} data-conflit{% endif %}{% endif %}>
+  {% csrf_token %}<input type="hidden" name="version" value="{{ version }}"><input type="hidden" name="langue_saisie" value="{{ langue_interface }}">
+  {% if kpi.est_tableau %}{% include "collecte/_saisie_tableau.html" %}{% elif kpi.est_texte %}{% include "collecte/_saisie_texte.html" %}{% else %}
+  <div class="saisie-duo">
+    <div class="saisie-valeur">
+      {% comment %}oui / non : le titre nomme le groupe de boutons (aria-labelledby) ; une étiquette « for=valeur » cocherait
+         « Oui » au clic sur le titre{% endcomment %}
+      {% if kpi.format == "oui_non" %}<span class="titre" id="valeur-titre">{% else %}<label class="titre" for="valeur">{% endif %}{% if kpi.est_numerique %}{% libelle "saisie.panneau.valeur" %}{% else %}{% libelle "saisie.panneau.reponse" %}{% endif %} <span class="annee-courante">{{ campagne.periode }}</span>{% if est_pourcentage %} <span class="discret">{% libelle "saisie.panneau.zero_cent" %}</span>{% endif %}{% if kpi.format == "oui_non" %}</span>{% else %}</label>{% endif %}
+      {% if kpi.est_numerique %}
+      <span class="champ-valeur"><input type="text" id="valeur" name="valeur" value="{{ saisi.valeur }}" inputmode="decimal" autocomplete="off" {% if not droits.modifier or saisi.non_applicable %}disabled{% endif %}{% if valeur_refusee %} aria-invalid="true"{% endif %}{% if erreurs_saisie %} aria-describedby="erreurs-saisie"{% endif %}
+        data-n1="{{ n1_saisie }}" data-seuil="{% if campagne.seuil_ecart is not None %}{{ campagne.seuil_ecart|stringformat:'s' }}{% endif %}"><span class="u">{% unite kpi %}</span></span>
+      {% elif kpi.format == "oui_non" %}
+      <div class="choix-reponse" role="radiogroup" aria-labelledby="valeur-titre"{% if valeur_refusee %} aria-invalid="true"{% endif %}>{% for c, t in kpi.choix_traduits %}
+        <label class="puce-reponse"><input type="radio" name="valeur" value="{{ c }}" {% if forloop.first %}id="valeur"{% endif %} {% if saisi.valeur == c %}checked{% endif %} {% if not droits.modifier or saisi.non_applicable %}disabled{% endif %}{% if erreurs_saisie %} aria-describedby="erreurs-saisie"{% endif %}><span>{{ t }}</span></label>{% endfor %}</div>
+      {% else %}
+      <select id="valeur" name="valeur" class="champ-liste" {% if not droits.modifier or saisi.non_applicable %}disabled{% endif %}{% if valeur_refusee %} aria-invalid="true"{% endif %}{% if erreurs_saisie %} aria-describedby="erreurs-saisie"{% endif %}>
+        <option value="">{% libelle "saisie.panneau.choisir" %}</option>{% for c, t in kpi.choix_traduits %}<option value="{{ c }}" {% if saisi.valeur == c %}selected{% endif %}>{{ t }}</option>{% endfor %}
+      </select>
+      {% endif %}
+    </div>
+    <div class="saisie-n1">
+      <span class="n1-libelle">{% if comparaison == "N-1" %}{% libelle "saisie.panneau.n1_exercice" exercice=campagne.exercice|add:"-1" %}{% else %}{{ comparaison }}{% endif %}</span>
+      <strong>{% valeur n1 kpi %}</strong>
+      <span class="ecart-direct" data-ecart>{% if ecart is not None %}{% ecart_fleche ecart campagne.seuil_ecart %}{% endif %}</span>
+    </div>
+  </div>{% endif %}
+  {% if peut_na %}
+  <label class="interrupteur na-interrupteur"><input type="checkbox" name="non_applicable" data-na {% if saisi.non_applicable %}checked{% endif %} {% if not droits.modifier %}disabled{% endif %}><span class="glissiere"></span>
+    <span>{% libelle "saisie.panneau.na" %} <span class="discret na-commentaire">{% libelle "saisie.panneau.na_commentaire" %}</span></span></label>
+  {% elif saisi.non_applicable %}{# rôle sans droit au N/A (Paramètres › Seuils de suivi) : un N/A posé par un autre reste, sans pouvoir être retiré ici #}
+  <input type="hidden" name="non_applicable" value="on">
+  <label class="interrupteur na-interrupteur"><input type="checkbox" checked disabled data-na><span class="glissiere"></span>
+    <span>{% libelle "saisie.panneau.na" %} <span class="discret">{% libelle "saisie.panneau.na_reserve" %}</span></span></label>
+  {% endif %}
+  <label class="titre" for="commentaire">{% libelle "saisie.panneau.commentaire" %}</label>
+  <textarea id="commentaire" name="commentaire" rows="3"{% if droits.modifier %} placeholder="{% libelle "saisie.panneau.commentaire_exemple" %}"{% else %} disabled{% endif %}{% if erreurs_saisie %} aria-describedby="erreurs-saisie"{% endif %}>{{ saisi.commentaire }}</textarea>
+  {% if droits.modifier and campagne.seuil_ecart is not None and kpi.est_numerique %}<span class="aide-champ">{% libelle "saisie.panneau.commentaire_seuil" seuil=campagne.seuil_ecart|pourcent comparaison=comparaison %}</span>{% endif %}
+  {% if droits.modifier %}
+  {% comment %}repère de la saisie (brouillon enregistré automatiquement) : la région annoncée
+     (role=status) ne change que pour un état durable (« Brouillon enregistré à 14:32 », « Non enregistré : … », « Pas
+     encore enregistré » d'une valeur validée) ; « Enregistrement… » et l'attente des deux secondes sont seulement
+     affichés (data-repere-passager, aria-hidden). « Annuler mes modifications » remet ce qui était enregistré à
+     l'ouverture.{% endcomment %}
+  <div class="repere-ligne">
+    <span class="repere-saisie" role="status" data-repere><span aria-hidden="true" data-repere-passager></span><span data-repere-annonce>{% if non_enregistre %}{% libelle "saisie.panneau.pas_enregistre" %}{% endif %}</span></span>
+    <button type="button" class="lien" data-annuler-auto title="{% libelle "saisie.panneau.annuler_auto_titre" %}" hidden>{% libelle "saisie.panneau.annuler_auto" %}</button>
+  </div>
+  <div class="actions">
+    {% if reponse.statut == "valide" %}
+    <button type="submit" name="action" value="enregistrer" class="secondaire" title="{% libelle "saisie.panneau.enregistrer_modif_titre" %}">{% libelle "saisie.panneau.enregistrer_modif" %}</button>
+    {% else %}
+    <button type="submit" name="action" value="enregistrer" class="secondaire">{% libelle "saisie.panneau.enregistrer_brouillon" %}</button>
+    {% endif %}
+    <button type="submit" name="action" value="valider" aria-describedby="aide-valider">{% libelle "commun.valider" %}</button>
+    {% comment %}ce qu'engage « Valider », visible (lisible au toucher, sans info-bulle) et lu avec le bouton ; sous la rangée de
+       boutons, sur téléphone entre « Valider » et « Enregistrer » (ordre flex, outil.css){% endcomment %}
+    {# phrase lue avec le bouton par le lecteur d'écran, plus affichée (jugée inutile à l'écran) #}
+    <p class="aide-valider visuellement-cache" id="aide-valider">{% libelle "saisie.panneau.aide_valider" %}</p>
+  </div>
+  {% comment %}revenir en arrière, à part des actions principales : repasser en brouillon (la valeur reste) ou effacer la
+     valeur (la case redevient « à saisir » ; commentaire et preuves gardés, après confirmation){% endcomment %}
+  {% if reponse.statut == "valide" or reponse.statut == "brouillon" %}
+  <div class="retour-saisie" role="group" aria-label="{% libelle "saisie.panneau.retour" %}">
+    {% if reponse.statut == "valide" and droits.repasser_brouillon %}<button type="submit" name="action" value="brouillon" class="bouton-retour" title="{% libelle "saisie.panneau.retour_aide_brouillon" %}">{% icone "chevron-gauche" %} {% libelle "saisie.panneau.rouvrir" %}</button>{% endif %}
+    <button type="submit" name="action" value="a_saisir" class="bouton-retour effacer" title="{% libelle "saisie.panneau.retour_aide_effacer" %}" {% libelle "saisie.panneau.a_saisir_confirmer" as t_conf %}data-confirmer="{{ t_conf }}">{% icone "fermer" %} {% libelle "saisie.panneau.a_saisir" %}</button>
+  </div>
+  {% endif %}
+  {% elif reponse.statut == "valide" and droits.repasser_brouillon %}
+  <div class="actions"><button type="submit" name="action" value="brouillon" class="secondaire">{% libelle "saisie.panneau.rouvrir_brouillon" %}</button></div>
+  {% endif %}
+</form>
+
+<section class="bloc-cellule">
+<h3>{% libelle "saisie.panneau.preuves" %} {% if kpi.preuve_obligatoire %}<span class="pastille-obligatoire">{% libelle "saisie.panneau.preuve_obligatoire" %}</span>{% endif %}</h3>
+{% for p in preuves %}
+<div class="preuve-ligne"><span class="preuve-icone">{% if p.nom_fichier|lower|slice:"-4:" == ".pdf" %}{% icone "file-text" %}{% else %}{% icone "image" %}{% endif %}</span>
+  <span class="preuve-nom"><a href="{% url 'collecte:preuve' p.pk %}" target="_blank" rel="noopener">{{ p.nom_fichier }}</a>
+  <span class="discret">{{ p.taille|filesizeformat }} · {{ p.depose_par|default:"" }} · {{ p.date_depot|date_courte }}</span></span>
+  {% if droits.modifier %}<form method="post" action="{{ ici }}" data-ajax>{% csrf_token %}<input type="hidden" name="preuve" value="{{ p.pk }}"><button type="submit" name="action" value="retirer_preuve" class="icone bouton-corbeille" title="{% libelle "saisie.panneau.retirer" %}" aria-label="{% libelle "saisie.panneau.supprimer_preuve_aria" nom=p.nom_fichier %}" data-confirmer="{% libelle "saisie.panneau.supprimer_preuve_confirmer" nom=p.nom_fichier %}">{% icone "supprimer" %}</button></form>{% endif %}
+</div>
+{% empty %}{% if not droits.modifier %}<p class="discret">{% libelle "saisie.panneau.aucune_preuve" %}</p>{% endif %}{% endfor %}
+{% if droits.modifier %}
+<form method="post" action="{{ ici }}" enctype="multipart/form-data" data-ajax class="depot-preuve">
+  {% csrf_token %}
+  <label class="zone-depot"><input type="file" name="fichier" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" aria-label="{% libelle "saisie.panneau.fichier_preuve" %}" data-depot
+    data-taille-max="{{ taille_max_preuve_octets }}" data-refus-format="{% libelle "messages.preuve.formats" %}" data-refus-taille="{% libelle "messages.preuve.trop_gros" taille=taille_max_preuve %}"{% if erreur_preuve %} aria-invalid="true" aria-describedby="erreur-preuve"{% endif %}>
+    <span class="zone-depot-texte">{% libelle_html "saisie.panneau.choisir_fichier" %}<br><span class="discret">{% libelle "saisie.panneau.formats_preuve" taille=taille_max_preuve %}</span></span></label>
+  <p class="erreur-champ" id="erreur-preuve" role="alert"{% if not erreur_preuve %} hidden{% endif %}>{{ erreur_preuve|join:" " }}</p>
+  <button type="submit" name="action" value="preuve" class="secondaire" hidden>{% libelle "saisie.panneau.deposer" %}</button>
+</form>
+{% if not preuves %}<p class="discret m-0 mt-8">{% libelle "saisie.panneau.aucune_preuve" %}</p>{% endif %}
+{% endif %}
+</section>
+{% endif %}
+
+<section class="bloc-cellule">
+<h3>{% if campagne.periode.annuelle %}{% libelle "saisie.panneau.historique_exercice" %}{% else %}{% libelle "saisie.panneau.historique_periode" %}{% endif %}</h3>
+{% if historique %}
+<div class="histo">
+  {% for r, pct in historique_barres %}
+  <div class="histo-ligne{% if kpi.est_texte %} histo-texte{% endif %}"><span class="histo-annee">{{ r.periode }}</span>
+    {% if not kpi.est_texte %}<span class="histo-barre"><span style="width:{{ pct }}%"></span></span>{% endif %}
+    <span class="histo-valeur">{% valeur r kpi %}</span>
+    <span class="histo-origine">{{ r|choix:"origine" }}</span>
+    {% if r.commentaire %}<span class="histo-commentaire">{{ r.commentaire|linebreaksbr }}</span>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}<p class="discret">{% libelle "saisie.panneau.aucune_valeur_periodes" %}</p>{% endif %}
+</section>
+{% if admin %}<p class="discret mt-16"><a href="{% url 'collecte:referentiel' %}?kpi={{ kpi.code|urlencode }}">{% libelle "saisie.panneau.regler_kpi" %}</a> {% libelle "saisie.panneau.regler_kpi_suite" %}</p>{% endif %}

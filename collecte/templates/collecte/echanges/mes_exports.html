@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.echanges.nav.exports" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/echanges/_nav.html" %}
+{% if taches_export %}
+{# gros exports fabriqués en arrière-plan (collecte/exports_arriere_plan.py) : état relu toutes les 3 s (_app/10_fichiers.js) #}
+<section class="exports-fond" id="exports-fond" aria-labelledby="titre-exports-fond">
+  <h2 id="titre-exports-fond">{% libelle "suivi.echanges.exports.fond.titre" %}</h2>
+  <ul class="liste-exports">
+    {% for t in taches_export %}{% include "collecte/echanges/_export_fond.html" %}{% endfor %}
+  </ul>
+  <p class="aide-champ">{% libelle "suivi.echanges.exports.fond.aide" n=jours_export %}</p>
+  <p class="visuellement-cache" role="status" data-annonce-exports></p>
+</section>
+{% endif %}
+<div class="tete-exports">
+  <a class="bouton" href="{% url 'collecte:echanges_exporter' %}?nouveau=1">{% icone "plus" %} {% libelle "suivi.echanges.exports.nouveau" %}</a>
+</div>
+{% if modeles %}
+{% libelle "suivi.echanges.nav.exports" as t_mes_exports %}<ul class="liste-exports{% if user.est_admin %} avec-poignee{% endif %}"{% if user.est_admin %} data-ordre-modeles="{% url 'collecte:echanges_ordre_modeles' %}"{% endif %} aria-label="{{ t_mes_exports }}">
+  {% for m in modeles %}
+  <li class="ligne-export" data-id="{{ m.pk }}"{% if user.est_admin %} draggable="true"{% endif %}>
+    {% if user.est_admin %}<span class="poignee-export" title="{% libelle "suivi.echanges.exports.glisser" %}" aria-hidden="true">{% icone "poignee" %}</span>{% endif %}
+    <div class="texte-export">
+      <h2 class="nom-export">{{ m.nom_affiche }} <span class="badge-partage{% if not m.partage %} perso{% endif %}">{% if m.partage %}{% libelle "suivi.echanges.badge.partage" %}{% else %}{% libelle "suivi.echanges.badge.personnel" %}{% endif %}</span></h2>
+      {% if m.description_affichee %}<p class="desc-export">{{ m.description_affichee }}</p>{% endif %}
+      <p class="resume-export">{{ m.resume }}</p>
+    </div>
+    <div class="actions-export">
+      <a class="bouton secondaire" href="{% url 'collecte:echanges_exporter' %}?modele={{ m.pk }}&amp;telecharger=1" data-telechargement aria-label="{% libelle "suivi.echanges.exports.telecharger_aria" nom=m.nom_affiche %}">{% icone "telecharger" %} {% libelle "suivi.echanges.telecharger" %}</a>
+      <a class="lien-action" href="{% url 'collecte:echanges_exporter' %}?modele={{ m.pk }}" aria-label="{% if m.modifiable %}{% libelle "suivi.echanges.exports.modifier_aria" nom=m.nom_affiche %}{% else %}{% libelle "suivi.echanges.exports.reglages_aria" nom=m.nom_affiche %}{% endif %}">{% if m.modifiable %}{% libelle "commun.modifier" %}{% else %}{% libelle "suivi.echanges.exports.reglages" %}{% endif %}</a>
+      {% if user.est_admin %}<span class="ordre-export"><button type="button" class="icone-export" data-monter title="{% libelle "suivi.echanges.exports.monter" %}" aria-label="{% libelle "suivi.echanges.exports.monter_aria" nom=m.nom_affiche %}">{% icone "chevron-haut" %}</button><button type="button" class="icone-export" data-descendre title="{% libelle "suivi.echanges.exports.descendre" %}" aria-label="{% libelle "suivi.echanges.exports.descendre_aria" nom=m.nom_affiche %}">{% icone "chevron-bas" %}</button></span>{% endif %}
+      {% if m.modifiable %}<form method="post" action="{% url 'collecte:echanges_supprimer_reglage' m.pk %}">{# sans question : « Supprimé : X. Annuler » #}{% csrf_token %}
+        <button type="submit" class="icone-export" title="{% libelle "suivi.echanges.exports.supprimer" %}" aria-label="{% libelle "suivi.echanges.exports.supprimer_aria" nom=m.nom_affiche %}">{% icone "supprimer" %}</button></form>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% if user.est_admin %}<p class="aide-champ">{% libelle "suivi.echanges.exports.ordre_aide" %}</p>{% endif %}
+{% else %}
+<div class="etat-vide vide-exports">
+  <p>{% libelle_html "suivi.echanges.exports.vide" %}</p>
+</div>
+{% endif %}
+{% if manquants %}<form method="post" action="{% url 'collecte:echanges_restaurer_modeles' %}" class="restaurer">{% csrf_token %}
+  <button type="submit" class="lien">{% libelle "suivi.echanges.exports.recreer" n=manquants|length %}</button></form>{% endif %}
+{% endblock %}

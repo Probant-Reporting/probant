@@ -1,0 +1,36 @@
+{% load collecte %}{% comment %}Tiroir « Ajouter depuis… » : autres référentiels, modèles de la bibliothèque, catalogue hors référentiel. Chaque thème et
+   chaque KPI se glisse dans le contenu, ou s'ajoute avec « + » dans le thème choisi en haut du tiroir.{% endcomment %}
+{% libelle "referentiels.sources.sans_theme" as t_sans %}
+<h3 class="titre-groupe">{% libelle "referentiels.sources.autres_referentiels" %}</h3>
+{% for r, themes, sans in sources %}
+<details class="source-compo" style="--c-ref:{{ r.couleur }}">
+  <summary><span class="pastille-ref"></span>{{ r }}</summary>
+  {% for t, prof, elements in themes %}
+  <div class="bloc-source" draggable="true" data-glisser="theme" data-ref="{{ r.code }}" data-id="{{ t.pk }}" style="--prof:{{ prof }}" data-texte="{{ t|lower }}" title="{% libelle "referentiels.sources.glisser_theme" theme=t %}">
+    <span class="poignee" aria-hidden="true">⠿</span><span class="nom-source">{{ t }}</span> <span class="nb">{{ elements|length }}</span>
+    <button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_theme" theme=t %}">+</button></div>
+  <div class="puces-source" style="--prof:{{ prof }}">{% for e in elements %}<span class="puce-kpi" draggable="true" data-glisser="kpi" data-code="{{ e.kpi_id }}" data-texte="{{ e.kpi_id|lower }} {{ e.kpi.nom|lower }}" title="{{ e.kpi.nom }}"><b>{{ e.kpi_id }}</b> {{ e.kpi.nom|truncatechars:38 }}<button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_kpi" code=e.kpi_id %}">+</button></span>{% endfor %}</div>
+  {% endfor %}
+  {% if sans %}<div class="bloc-source sans" style="--prof:0">{{ t_sans }}</div><div class="puces-source">{% for e in sans %}<span class="puce-kpi" draggable="true" data-glisser="kpi" data-code="{{ e.kpi_id }}" data-texte="{{ e.kpi_id|lower }} {{ e.kpi.nom|lower }}" title="{{ e.kpi.nom }}"><b>{{ e.kpi_id }}</b> {{ e.kpi.nom|truncatechars:38 }}<button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_kpi" code=e.kpi_id %}">+</button></span>{% endfor %}</div>{% endif %}
+  {% if not themes and not sans %}<p class="discret petit">{% libelle "referentiels.sources.vide" %}</p>{% endif %}
+</details>
+{% empty %}<p class="discret petit">{% libelle "referentiels.sources.aucun_autre" %}</p>
+{% endfor %}
+<h3 class="titre-groupe">{% libelle "referentiels.sources.modeles" %}</h3>
+{% for f, themes in fournis %}
+<details class="source-compo fourni" style="--c-ref:{{ f.paquet.referentiel.couleur }}">
+  <summary><span class="pastille-ref"></span>{{ f.paquet.nom }}{% if f.installe %} <span class="facultatif">{% libelle "referentiels.sources.installe" %}</span>{% endif %}</summary>
+  {% for t, prof, kpis in themes %}
+  <div class="bloc-source" draggable="true" data-glisser="theme" data-bib="{{ f.nom_fichier }}" data-id="{{ t.code }}" style="--prof:{{ prof }}" data-texte="{{ t.nom|lower }}" title="{% libelle "referentiels.sources.glisser_theme" theme=t.nom %}">
+    <span class="poignee" aria-hidden="true">⠿</span><span class="nom-source">{{ t.nom }}</span> <span class="nb">{{ kpis|length }}</span>
+    <button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_theme" theme=t.nom %}">+</button></div>
+  <div class="puces-source" style="--prof:{{ prof }}">{% for k in kpis %}<span class="puce-kpi{% if k.calcule %} calcule{% endif %}" draggable="true" data-glisser="kpi" data-bib="{{ f.nom_fichier }}" data-code="{{ k.code }}" data-texte="{{ k.code|lower }} {{ k.nom|lower }}" title="{{ k.nom }}"><b>{{ k.code }}</b> {{ k.nom|truncatechars:38 }}<button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_kpi" code=k.code %}">+</button></span>{% endfor %}</div>
+  {% endfor %}
+</details>
+{% endfor %}
+<h3 class="titre-groupe">{% libelle "referentiels.sources.catalogue" %}</h3>
+{% if hors %}
+<details class="source-compo"><summary>{% libelle "referentiels.sources.hors_referentiel" n=hors|length %}</summary>
+  <div class="puces-source">{% for k in hors %}<span class="puce-kpi" draggable="true" data-glisser="kpi" data-code="{{ k.code }}" data-texte="{{ k.code|lower }} {{ k.nom|lower }}" title="{{ k.nom }}"><b>{{ k.code }}</b> {{ k.nom|truncatechars:38 }}<button type="button" class="plus-source" data-ajouter aria-label="{% libelle "referentiels.sources.ajouter_kpi" code=k.code %}">+</button></span>{% endfor %}</div>
+</details>
+{% else %}<p class="discret petit">{% libelle "referentiels.sources.tous_classes" %}</p>{% endif %}

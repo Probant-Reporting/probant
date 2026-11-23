@@ -1,0 +1,6 @@
+{% load collecte %}<!doctype html>
+<html lang="{% langue_page %}">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{% libelle "cadre.erreur.400.titre" %} – {% libelle "cadre.erreur.code" code=400 %}</title>
+{% include "_style_erreur.html" %}</head>
+<body><main><p class="code-erreur">{% libelle "cadre.erreur.code" code=400 %}</p><h1>{% libelle "cadre.erreur.400.titre" %}</h1><p>{% libelle "cadre.erreur.400.texte" %}</p><p><a href="/">{% libelle "cadre.erreur.accueil" %}</a></p></main></body>
+</html>

@@ -1,0 +1,17 @@
+{% load collecte %}{# Mode modification : liste des KPI à gauche (glisser dans la vue, ou « Ajouter à la vue » au clavier) #}
+<aside class="panneau-visu panneau-kpi" aria-labelledby="titre-panneau-kpi" data-panneau-kpi hidden>
+  <div class="tete-panneau">
+    <h2 id="titre-panneau-kpi" tabindex="-1">{% libelle "visu.kpi.panneau" %}</h2>
+    <button type="button" class="icone fermer-panneau" data-fermer-panneau aria-label="{% libelle 'visu.kpi.fermer' %}">{% icone "fermer" %}</button>
+  </div>
+  <div class="recherche-icone recherche-kpi">
+    <label for="chercher-kpi" class="visuellement-cache">{% libelle "visu.kpi.chercher" %}</label>
+    <input type="search" id="chercher-kpi" data-chercher-kpi placeholder="{% libelle 'visu.kpi.chercher' %}" aria-describedby="aide-chercher-kpi" autocomplete="off">
+  </div>
+  <p class="aide-filtre" id="aide-chercher-kpi">{% libelle "visu.kpi.chercher_aide" %}</p>
+  <div class="champ-filtre"><label for="ref-kpi">{% libelle "visu.filtres.referentiel" %}</label><select id="ref-kpi" data-ref-kpi></select></div>
+  <p class="aide-filtre" data-kpi-rediges hidden>{% libelle "visu.kpi.rediges_exclus" %}</p>
+  <div class="liste-kpi" data-liste-kpi><p class="discret">{% libelle "visu.visuel.chargement" %}</p></div>
+  {# listes de KPI et autres visuels : dans la même liste que les thèmes, avec la même présentation (visualisation.js) #}
+  <template data-modele-remplissage>{% icone "forme-remplissage" %}</template>
+</aside>

@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block contenu %}
+<h1>{% libelle "saisie.vide.aucune_campagne_titre" %}</h1>
+<p>{% if user.est_admin %}{% libelle "saisie.vide.aucune_campagne_admin" %} <a href="{% url 'collecte:admin_campagnes' %}">{% libelle "saisie.vide.lien_campagnes" %}</a>.{% else %}{% libelle "saisie.vide.aucune_campagne" %}{% endif %}</p>
+{% endblock %}

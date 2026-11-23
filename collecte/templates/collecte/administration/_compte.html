@@ -1,0 +1,105 @@
+{% load collecte %}
+<div class="panneau-haut"><span class="discret">{% libelle "admin.compte.panneau" %}</span>{% libelle "admin.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+
+{% if u.pk %}
+<div class="tete-org tete-compte">
+  <div class="personne grande">{% avatar u %}<div>
+    <h2>{{ u }}{% if moi %} <span class="discret">{% libelle "admin.compte.vous" %}</span>{% endif %}</h2>
+    <p class="discret m-0">{{ u.email }}</p></div></div>
+  <div class="chiffres-org">
+    <span><span class="role role-{{ u.role }}">{{ u|choix:"role" }}</span></span>
+    <span>{% if not u.is_active %}<b>{% libelle "admin.compte.desactive" %}</b>{% elif u.doit_changer_mdp %}{% libelle_html "admin.compte.mdp_attente" %}{% elif u.last_login %}{% libelle_html "admin.compte.derniere_connexion" date=u.last_login|date_courte %}{% else %}<b>{% libelle "admin.compte.jamais_connecte" %}</b>{% endif %}</span>
+    <span>{% libelle_html "admin.compte.cases_spoc" n=nb_spoc %}{% if nb_valid %} · {% libelle_html "admin.compte.en_validation" n=nb_valid %}{% endif %}</span>
+  </div>
+</div>
+{% else %}
+<h2 class="texte-grand mb-4">{% libelle "admin.compte.nouveau" %}</h2>
+<p class="discret mt-0">{% libelle "admin.compte.nouveau_aide" %}</p>
+{% endif %}
+
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+{% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+
+{% if mdp_donne %}{% include "collecte/administration/_message_acces.html" %}{% endif %}
+
+<form method="post" action="{% if u.pk %}{% url 'collecte:admin_compte' u.pk %}{% else %}{% url 'collecte:admin_compte_nouveau' %}{% endif %}" data-ajax novalidate autocomplete="off">
+  {% csrf_token %}
+  <section class="bloc">
+    <h3><span class="num">1</span> {% libelle "admin.compte.identite" %}</h3>
+    {% if identite_verrouillee %}{% encart "avertissement" classe="mt-0" %}{{ identite_verrouillee }}{% endencart %}{% endif %}
+    <div class="deux-colonnes">
+      <div class="champ"><label for="{{ form.first_name.id_for_label }}">{% libelle "admin.compte.prenom" %}</label>{{ form.first_name }}{{ form.first_name.errors }}</div>
+      <div class="champ"><label for="{{ form.last_name.id_for_label }}">{% libelle "admin.compte.nom" %}</label>{{ form.last_name }}{{ form.last_name.errors }}</div>
+    </div>
+    <div class="champ"><label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>{{ form.email }}{{ form.email.errors }}</div>
+    <div class="champ"><label for="{{ form.equipe.id_for_label }}">{% libelle "admin.compte.equipe" %} <span class="discret">{% libelle "admin.facultatif" %}</span></label>{{ form.equipe }}{{ form.equipe.errors }}</div>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num">2</span> {% libelle "admin.compte.role" %}</h3>
+    {% if moi and u.est_admin %}{% encart "avertissement" classe="mt-0" %}{% libelle "admin.compte.vous_admin" %}{% endencart %}{% endif %}
+    <div class="cartes-role">
+      {% for code, libelle, aide in roles %}
+      {# son propre compte administrateur : seul « Administrateur » reste possible (jamais d'installation sans administrateur) #}
+      <label class="carte-role role-{{ code }}"><input type="radio" name="role" value="{{ code }}" {% if role_choisi == code %}checked{% endif %}{% if moi and u.est_admin and code != "admin" %} disabled{% endif %} required>
+        <span><strong>{{ libelle }}</strong>{% if code == "lecteur" or code == "auditeur" %} <span class="badge-partage perso">{% libelle "admin.compte.lecture_seule" %}</span>{% endif %}<span class="aide-champ">{{ aide }}</span></span></label>
+      {% endfor %}
+    </div>{{ form.role.errors }}
+    {% if form.retrait_a_confirmer %}{# passage en lecture seule : confirmation du retrait des attributions #}
+    <label class="case-option"><input type="checkbox" name="confirmer_retrait"{% if form.confirmer_retrait.value %} checked{% endif %}>
+      <span><strong>{% libelle "admin.compte.retrait.case" n=form.retrait_a_confirmer %}</strong><br><span class="discret">{% libelle "admin.compte.retrait.case_aide" %}</span></span></label>
+    {% endif %}
+    {% comment %}Organisations consultées : niveaux et arbre à cocher, comme le périmètre d'un export.
+    Tout coché = toutes (rien n'est enregistré : les nouvelles organisations suivent).{% endcomment %}
+    <div class="champ si-lecture-seule" data-perimetre>
+      <span class="libelle-formule" id="l-perimetre">{% libelle "admin.compte.perimetre" %}</span>
+      <div class="puces-choix" role="group" aria-labelledby="l-perimetre">
+        <button type="button" class="puce-action" data-tout="1">{% libelle "suivi.echanges.export.tout_cocher" %}</button>
+        <button type="button" class="puce-action" data-tout="0">{% libelle "suivi.echanges.export.tout_decocher" %}</button>
+        <span class="separateur-puces"></span>
+        {% for code, nom in perimetre.niveaux %}<label class="puce"><input type="checkbox" value="{{ code }}" data-niveau="{{ code }}"><span><span class="niveau niveau-{{ code }}">{{ nom }}</span></span></label>{% endfor %}
+      </div>
+      <div class="arbre-perimetre">
+        <div class="tete-arbre"><strong id="l-orgs-perimetre">{% libelle "admin.compte.perimetre_orgs" %}</strong> <span class="compte-perimetre" data-compte></span></div>
+        <div class="liste-cases" role="group" aria-labelledby="l-orgs-perimetre">
+          {% for o, retrait, ancetres, cochee in perimetre.orgs %}<label style="padding-left:{{ retrait }}px" class="case-org"><input type="checkbox" name="perimetre_lecture" value="{{ o.id }}" data-org="{{ o.id }}" data-org-niveau="{{ o.niveau_id }}" data-ancetres=" {{ ancetres }} "{% if cochee %} checked{% endif %}> {% etiquette_niveau o %} <span class="nom-org">{{ o.nom }}</span></label>{% endfor %}
+        </div>
+      </div>
+      <p class="aide-champ m-0">{% libelle "admin.compte.perimetre_aide" %}</p>
+      {{ form.perimetre_lecture.errors }}
+    </div>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num">3</span> {% libelle "admin.compte.acces" %}</h3>
+    {% if form.mot_de_passe %}
+    <div class="champ"><label for="{{ form.mot_de_passe.id_for_label }}">{% libelle "admin.compte.mdp_provisoire" %} <span class="discret">{% libelle "admin.facultatif" %}</span></label>{{ form.mot_de_passe }}
+      <span class="aide-champ">{{ form.mot_de_passe.help_text }}</span>{{ form.mot_de_passe.errors }}</div>
+    <input type="hidden" name="is_active" value="on">
+    {% else %}
+    {% if moi %}<input type="hidden" name="is_active" value="on">{% endif %}
+    <label class="case-option"><input type="checkbox" name="is_active" {% if form.is_active.value %}checked{% endif %}{% if moi %} disabled{% endif %}>
+      <span><strong>{% libelle "admin.compte.actif" %}</strong><br><span class="discret">{% libelle "admin.compte.actif_aide" %}</span></span></label>
+    {% endif %}
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% if u.pk %}{% libelle "admin.compte.enregistrer_modifs" %}{% else %}{% libelle "admin.compte.creer" %}{% endif %}</button></div>
+</form>
+
+{% if u.pk %}
+<section class="bloc">
+  <h3>{% libelle "admin.compte.mdp" %}</h3>
+  {% if u.doit_changer_mdp and not mdp_donne %}
+  {% encart "avertissement" classe="mt-0" %}{% libelle "admin.compte.la_personne" as t_la %}{% if identite_verrouillee %}{% libelle_html "admin.compte.mdp_attente_aide_verrouille" prenom=u.first_name|default:t_la %}{% else %}{% libelle_html "admin.compte.mdp_attente_aide" prenom=u.first_name|default:t_la %}{% endif %}{% endencart %}
+  {% endif %}
+  <p class="aide-champ mt-0">{% if identite_verrouillee %}{% libelle "admin.compte.mdp_aide_verrouille" %}{% else %}{% libelle "admin.compte.mdp_aide" %}{% endif %}</p>
+  {% if not identite_verrouillee %}<form class="mb-12" method="post" action="{% url 'collecte:admin_compte' u.pk %}" data-ajax>{% csrf_token %}
+    <button type="submit" name="action" value="reinitialiser" class="secondaire" {% libelle "admin.compte.reinit_confirmer" nom=u as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.compte.reinit" %}</button></form>{% endif %}
+</section>
+{% if nb_spoc %}<p class="discret">{% libelle "admin.compte.attributions_voir" %} <a href="{% url 'collecte:admin_attributions' %}?role=contributeur&amp;personne={{ u.pk }}">{% libelle "admin.compte.attributions_grille" %}</a>.</p>{% endif %}
+{% if supprimable %}
+<form method="post" action="{% url 'collecte:admin_compte' u.pk %}" data-ajax class="zone-suppression">{% csrf_token %}
+  <span class="discret">{% libelle "admin.compte.erreur_creation" %}</span>
+  <button type="submit" name="action" value="supprimer" class="lien lien-danger" {% libelle "admin.compte.supprimer_confirmer" nom=u as t_c %}data-confirmer="{{ t_c }}">{% libelle "admin.compte.supprimer" %}</button></form>
+{% endif %}
+{% endif %}

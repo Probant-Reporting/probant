@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.apercu.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour-referentiels"><a href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.entete.retour" %}</a></p>
+{% libelle "referentiels.vide" as t_vide %}
+
+{% if resultat %}
+<section class="carte resultat-import">
+  <h2>{% if analyse.fourni %}{% libelle "referentiels.apercu.resultat.installe" referentiel=resultat.referentiel %}{% else %}{% libelle "referentiels.apercu.resultat.importe" referentiel=resultat.referentiel %}{% endif %}</h2>
+  {% encart "succes" %}{% if analyse.mode == "nouveau" %}{% libelle "referentiels.apercu.resultat.nouveau" referentiel=resultat.referentiel code=resultat.referentiel.code %}{% else %}{% libelle "referentiels.apercu.resultat.mis_a_jour" referentiel=resultat.referentiel version=resultat.referentiel.version %}{% endif %}{% endencart %}
+  <div class="tuiles-import petites">
+    <div class="tuile tuile-creer{% if not resultat.kpis_crees %} zero{% endif %}"><b>{{ resultat.kpis_crees }}</b><span>{% libelle "referentiels.apercu.resultat.kpis_crees" n=resultat.kpis_crees %}</span></div>
+    <div class="tuile tuile-modifier{% if not resultat.kpis_modifies %} zero{% endif %}"><b>{{ resultat.kpis_modifies }}</b><span>{% libelle "referentiels.apercu.resultat.kpis_modifies" n=resultat.kpis_modifies %}</span></div>
+    <div class="tuile tuile-creer{% if not resultat.elements %} zero{% endif %}"><b>{{ resultat.elements }}</b><span>{% libelle "referentiels.apercu.resultat.places" n=resultat.elements %}</span></div>
+    <div class="tuile tuile-creer{% if not resultat.themes %} zero{% endif %}"><b>{{ resultat.themes }}</b><span>{% libelle "referentiels.apercu.resultat.themes" n=resultat.themes %}</span></div>
+    <div class="tuile tuile-creer{% if not resultat.reglages %} zero{% endif %}"><b>{{ resultat.reglages }}</b><span>{% libelle "referentiels.apercu.resultat.reglages" n=resultat.reglages %}</span></div>
+    <div class="tuile tuile-creer{% if not resultat.regles %} zero{% endif %}"><b>{{ resultat.regles }}</b><span>{% libelle "referentiels.apercu.resultat.regles" n=resultat.regles %}</span></div>
+    {% if resultat.retires %}<div class="tuile tuile-desactiver"><b>{{ resultat.retires }}</b><span>{% libelle "referentiels.apercu.resultat.retires" n=resultat.retires %}</span></div>{% endif %}
+  </div>
+  {% if resultat.langues %}<p class="discret">{% libelle "referentiels.apercu.resultat.langues" n=resultat.langues %}</p>{% endif %}
+  {% if resultat.campagnes %}<p class="discret">{% libelle "referentiels.apercu.resultat.campagnes" liste=resultat.campagnes|liste %}</p>{% endif %}
+  <p>{% if mise_en_place %}<a class="bouton" href="{{ mise_en_place.url }}">{% libelle "referentiels.apercu.resultat.revenir_mep" %}</a>{% endif %}
+    <a class="bouton{% if mise_en_place %} secondaire{% endif %}" href="{% url 'parametres:referentiel_contenu' resultat.referentiel.code %}">{% libelle "referentiels.apercu.resultat.voir_contenu" %}</a>
+    <a class="bouton secondaire" href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.apercu.resultat.tous" %}</a></p>
+</section>
+
+{% else %}
+{% with p=analyse.paquet c=analyse.compteurs %}
+{% libelle "referentiels.apercu.maj_apercu" as t_maj_apercu %}
+<form method="post" action="{% url 'parametres:paquet_importer' %}" class="carte apercu-import apercu-paquet" data-chargement>
+  {% csrf_token %}
+  <h2>{% libelle "referentiels.apercu.titre_apercu" nom=p.nom %} <span class="discret normal">{% if p.date_version %}{% libelle "referentiels.entete.version_date" version=p.version date=p.date_version|date_courte %}{% else %}{% libelle "referentiels.entete.version" version=p.version %}{% endif %}</span></h2>
+  <p class="discret">{% if analyse.fourni %}{% libelle "referentiels.apercu.fourni_outil" %}{% else %}{{ info.nom }}{% if p.exporte_de %} · {% libelle "referentiels.apercu.exporte_de" origine=p.exporte_de %}{% if p.exporte_le %} {% libelle "referentiels.apercu.exporte_le" date=p.exporte_le %}{% endif %}{% endif %}{% endif %} · {% libelle "referentiels.apercu.rien_enregistre" %}</p>
+  {% if analyse.erreur %}
+  {% encart "erreur" %}{{ analyse.erreur }}{% endencart %}
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="apercu">{{ t_maj_apercu }}</button>
+    <button type="submit" name="action" value="annuler" class="secondaire" formnovalidate>{% libelle "commun.annuler" %}</button></div>
+  {% else %}
+
+  <div class="onglet-apercu">
+    <h3>{% libelle "referentiels.apercu.referentiel" %}</h3>
+    {% if analyse.candidat %}
+    <div class="choix-mode">
+      <label class="case"><input type="radio" name="mode" value="mise_a_jour" {% if analyse.mode == "mise_a_jour" %}checked{% endif %}>
+        {% libelle "referentiels.apercu.mode_maj" candidat=analyse.candidat %} <span class="id-chip">{{ analyse.candidat.code }}</span> {% libelle "referentiels.apercu.mode_maj_version" avant=analyse.candidat.version apres=p.version %}
+        {% if analyse.reconnu %}<span class="etiquette-action etiquette-inchange">{% libelle "referentiels.apercu.meme_referentiel" %}</span>{% else %}<span class="etiquette-action etiquette-rejet">{% libelle "referentiels.apercu.meme_code" %}</span>{% endif %}</label>
+      {% libelle "referentiels.apercu.code_nouveau_aria" as t_code_aria %}
+      <label class="case"><input type="radio" name="mode" value="nouveau" {% if analyse.mode == "nouveau" %}checked{% endif %}>
+        {% libelle "referentiels.apercu.mode_nouveau" %} <input type="text" name="code" value="{% if analyse.mode == 'nouveau' %}{{ analyse.code }}{% else %}{{ analyse.code_propose }}{% endif %}" maxlength="30" pattern="[A-Za-z0-9_\-]{1,30}" class="code-court" aria-label="{{ t_code_aria }}"></label>
+    </div>
+    {% else %}
+    <p>{% libelle "referentiels.apercu.nouveau_referentiel" nom=p.nom %} <span class="id-chip">{{ analyse.code }}</span> · {{ p.frequence_phrase }} · {% libelle "referentiels.apercu.kpi_dans_themes" nombre=c.ajoute n=analyse.themes|length %}</p>
+    {% endif %}
+    {% if analyse.mode == "mise_a_jour" %}
+      {% if analyse.comparaison_version > 0 %}{% encart "succes" %}{% libelle "referentiels.apercu.version_recente" avant=analyse.existant.version apres=p.version %}{% endencart %}
+      {% elif analyse.comparaison_version < 0 %}{% encart "avertissement" %}{% libelle "referentiels.apercu.version_ancienne" installee=analyse.existant.version %}{% endencart %}
+      {% else %}<p class="discret">{% libelle "referentiels.apercu.meme_version" version=p.version %}</p>{% endif %}
+      {% if analyse.aucune_difference %}{% encart "succes" %}{% libelle "referentiels.apercu.aucune_difference" %}{% endencart %}{% endif %}
+      {% for lib, avant, apres in analyse.referentiel_differences %}<div class="diff"><span class="diff-champ">{{ lib }}</span> <span class="diff-avant">{{ avant|default:t_vide }}</span> → <strong>{{ apres|default:t_vide }}</strong></div>{% endfor %}
+    {% endif %}
+    {% for a in analyse.avertissements %}{% encart "avertissement" %}{{ a }}{% endencart %}{% endfor %}
+  </div>
+
+  <div class="tuiles-import petites">
+    <div class="tuile tuile-creer{% if not c.nouveau %} zero{% endif %}"><b>{{ c.nouveau }}</b><span>{% libelle "referentiels.apercu.tuile.nouveaux" %}</span></div>
+    {% if analyse.mode == "mise_a_jour" %}<div class="tuile tuile-creer{% if not c.ajoute %} zero{% endif %}"><b>{{ c.ajoute }}</b><span>{% libelle "referentiels.apercu.tuile.ajoutes" %}</span></div>{% endif %}
+    <div class="tuile tuile-modifier{% if not c.modifie %} zero{% endif %}"><b>{{ c.modifie }}</b><span>{% libelle "referentiels.apercu.tuile.modifies" %}</span></div>
+    <div class="tuile tuile-rejet{% if not c.conflit %} zero{% endif %}"><b>{{ c.conflit }}</b><span>{% libelle "referentiels.apercu.tuile.conflits" %}</span></div>
+    {% if analyse.mode == "mise_a_jour" %}<div class="tuile tuile-desactiver{% if not c.retire %} zero{% endif %}"><b>{{ c.retire }}</b><span>{% libelle "referentiels.apercu.tuile.absents" %}</span></div>{% endif %}
+    <div class="tuile tuile-inchange{% if not c.inchange %} zero{% endif %}"><b>{{ c.inchange }}</b><span>{% libelle "referentiels.apercu.tuile.inchanges" %}</span></div>
+    <div class="tuile tuile-rejet{% if not c.rejet %} zero{% endif %}"><b>{{ c.rejet }}</b><span>{% libelle "referentiels.apercu.tuile.rejetes" %}</span></div>
+  </div>
+  {% if c.rejet %}{% encart "avertissement" %}{% libelle "referentiels.apercu.rejets_non_importes" n=c.rejet %}{% endencart %}{% endif %}
+
+  {% if niveaux_utilises and not analyse.fourni %}
+  <div class="onglet-apercu">
+    {% if niveaux_auto %}
+    <p>{% libelle "referentiels.apercu.niveaux_autres" liste=niveaux_auto|liste %}</p>
+    {% else %}
+    <p>{% libelle "referentiels.apercu.niveaux_repris" liste=niveaux_repris %}</p>
+    {% endif %}
+    <details class="niveaux-paquet"{% if niveaux_choisis %} open{% endif %}><summary>{% libelle "referentiels.apercu.relier" %}</summary>
+    <table class="carte-table table-apercu table-niveaux-paquet">
+      <thead><tr><th>{% libelle "referentiels.apercu.col_fichier" %}</th><th>{% libelle "referentiels.apercu.col_arbre" %}</th><th>{% libelle "referentiels.apercu.col_relie" %}</th></tr></thead>
+      {% for n, local, motif, nom in niveaux_utilises %}
+      <tr><td>{{ nom }} <span class="discret">{% libelle "referentiels.apercu.niveau_rang" code=n.code rang=n.rang %}</span></td>
+        <td><select name="niveau:{{ n.code }}" aria-label="{% libelle "referentiels.apercu.niveau_relie_a" nom=nom %}"><option value="auto" {% if not local %}selected{% endif %}>{% libelle "referentiels.apercu.automatique" %}</option>{% for code, nom_local in analyse.options_niveaux %}<option value="{{ code }}" {% if code == local %}selected{% endif %}>{{ nom_local }}</option>{% endfor %}</select></td>
+        <td class="discret">{{ motif }}</td></tr>
+      {% endfor %}
+    </table>
+    <p class="aide-champ">{% libelle "referentiels.apercu.relier_aide" %}</p>
+    </details>
+  </div>
+  {% endif %}
+
+  {% if reglages %}
+  <div class="onglet-apercu">
+    <h3>{% libelle "referentiels.apercu.reglages_titre" %}</h3>
+    <div class="liste-reglages-paquet">
+      {% for lib, rs in reglages %}
+      <div><strong>{{ lib }}</strong>
+        {% for r in rs %}<span class="puce-reglage {% if r.action == 'cree' %}cree{% endif %}" title="{% if r.action == 'cree' %}{% libelle "referentiels.apercu.cree_titre" %}{% else %}{% libelle "referentiels.apercu.repris_titre" local=r.libelle_local %}{% endif %}">{{ r.libelle }}{% if r.action == "cree" %} <em>{% libelle "referentiels.apercu.cree" %}</em>{% elif r.libelle_local != r.libelle %} → {{ r.libelle_local }}{% endif %}</span>{% endfor %}</div>
+      {% endfor %}
+    </div>
+    {% if analyse.langues_creees %}<p class="discret">{% libelle "referentiels.apercu.langues_ajoutees" liste=langues_creees_texte %}</p>{% endif %}
+  </div>
+  {% endif %}
+
+  <div class="onglet-apercu">
+    <h3>KPI <span class="discret normal">{% libelle "referentiels.apercu.kpi_compte" fichier=analyse.kpis|length referentiel=analyse.nb_dans_referentiel %}</span></h3>
+    {% if lignes_a_voir %}<table class="carte-table table-apercu table-kpi-paquet">
+      <colgroup><col class="l-130"><col class="l-30p"><col class="l-130"><col><col class="l-220"></colgroup>
+      <thead><tr><th>{% libelle "referentiels.apercu.col_code" %}</th><th>KPI</th><th>{% libelle "referentiels.apercu.col_etat" %}</th><th>{% libelle "referentiels.apercu.col_differences" %}</th><th>{% libelle "referentiels.apercu.col_choix" %}</th></tr></thead>
+      {% for l in lignes %}{% if l.statut != "inchange" and l.statut != "nouveau" %}
+      <tr class="statut-{{ l.statut }}">
+        <td><span class="id-chip">{{ l.code }}</span>{% if l.code_final and l.code_final != l.code %} <span class="discret">→ {{ l.code_final }}</span>{% endif %}</td>
+        <td class="retour-ligne">{{ l.nom }}<div class="discret petit">{% if l.dans_referentiel %}{{ l.theme }}{% else %}{% libelle "referentiels.apercu.source_formule" %}{% endif %}{% if l.aussi_dans %} · {% libelle "referentiels.apercu.aussi_dans" liste=l.aussi_dans|liste %}{% endif %}</div></td>
+        <td><span class="etiquette-action etiquette-{% if l.statut == 'nouveau' %}creer{% elif l.statut == 'modifie' %}modifier{% elif l.statut == 'conflit' or l.statut == 'rejet' %}rejet{% else %}inchange{% endif %}">{% if l.statut == "nouveau" %}{% libelle "referentiels.apercu.etat.nouveau" %}{% elif l.statut == "modifie" %}{% libelle "referentiels.apercu.etat.modifie" %}{% elif l.statut == "conflit" %}{% libelle "referentiels.apercu.etat.conflit" %}{% else %}{% libelle "referentiels.apercu.etat.rejete" %}{% endif %}</span>
+          {% if l.ajoute and analyse.mode == "mise_a_jour" and l.statut != "nouveau" %}<div class="discret petit">{% libelle "referentiels.apercu.ajoute_au_referentiel" %}</div>{% endif %}</td>
+        <td class="retour-ligne">{% if l.motif %}<span class="{% if l.statut == 'rejet' %}motif-rejet{% else %}discret{% endif %}">{{ l.motif }}</span>{% endif %}
+          {% for lib, avant, apres in l.differences|slice:":8" %}<div class="diff"><span class="diff-champ">{{ lib }}</span> <span class="diff-avant">{{ avant|default:t_vide|truncatechars:50 }}</span> → <strong>{{ apres|default:t_vide|truncatechars:50 }}</strong></div>{% endfor %}
+          {% if l.differences|length > 8 %}<div class="discret">{% libelle "referentiels.apercu.et_autres" n=l.differences|length|add:"-8" %}</div>{% endif %}</td>
+        <td>{% if l.options %}<select name="kpi:{{ l.code }}" aria-label="{% libelle "referentiels.installer.resume.choix_pour" code=l.code %}" data-choix-kpi>{% for v, lib in l.options %}<option value="{{ v }}" {% if v == l.choix %}selected{% endif %}>{{ lib }}</option>{% endfor %}</select>
+          {% if l.statut == "conflit" or l.choix == "renommer" %}<label class="nouveau-code" {% if l.choix != "renommer" %}hidden{% endif %}>{% libelle "referentiels.installer.resume.nouveau_code" %} <input type="text" name="code:{{ l.code }}" value="{{ l.nouveau_code }}" maxlength="30" class="code-court"></label>{% endif %}
+          {% elif l.statut == "rejet" and l.choix == "renommer" %}<input type="hidden" name="kpi:{{ l.code }}" value="renommer"><label class="nouveau-code">{% libelle "referentiels.installer.resume.nouveau_code" %} <input type="text" name="code:{{ l.code }}" value="{{ l.nouveau_code }}" maxlength="30" class="code-court"></label>
+          {% elif l.statut == "nouveau" %}<span class="discret">{% libelle "referentiels.apercu.cree" %}</span>{% else %}<span class="discret">—</span>{% endif %}</td>
+      </tr>
+      {% endif %}{% endfor %}
+    </table>{% endif %}
+    {% if nouveaux %}<details class="inchanges" {% if nouveaux|length <= 12 %}open{% endif %}><summary>{% libelle "referentiels.apercu.nouveaux_catalogue" n=nouveaux|length %}</summary>
+      <div class="liste-nouveaux">{% for l in nouveaux %}<div><span class="id-chip">{{ l.code }}</span> {{ l.nom }} <span class="discret">{% if l.dans_referentiel %}{{ l.theme }}{% else %}{% libelle "referentiels.apercu.source_formule" %}{% endif %}</span></div>{% endfor %}</div></details>{% endif %}
+    {% if inchanges %}<details class="inchanges"><summary>{% libelle "referentiels.apercu.inchanges_catalogue" n=inchanges|length %}</summary>
+      <p class="discret">{% for l in inchanges %}<span class="id-chip">{{ l.code_final|default:l.code }}</span> {% endfor %}</p></details>{% endif %}
+  </div>
+
+  {% if analyse.retires %}
+  <div class="onglet-apercu">
+    <h3>{% libelle "referentiels.apercu.absents_titre" %} <span class="discret normal">{{ analyse.retires|length }}</span></h3>
+    <p class="discret">{% libelle "referentiels.apercu.absents_aide" existant=analyse.existant %}</p>
+    <p>{% for e in analyse.retires %}<span class="id-chip">{{ e.kpi_id }}</span> {{ e.kpi.nom|truncatechars:40 }}{% if not forloop.last %} · {% endif %}{% endfor %}</p>
+    <label class="case"><input type="checkbox" name="retirer_absents" {% if analyse.retirer_absents %}checked{% endif %}> {% libelle "referentiels.apercu.retirer" %}
+      <span class="discret">{% libelle "referentiels.apercu.retirer_aide" %}</span></label>
+  </div>
+  {% endif %}
+
+  {% if analyse.themes_a_ecrire or analyse.themes_absents %}
+  <div class="onglet-apercu">
+    <h3>{% libelle "referentiels.apercu.themes" %}</h3>
+    <table class="carte-table table-apercu">
+      {% for t in analyse.themes_a_ecrire %}
+      <tr><td class="l-120"><span class="etiquette-action etiquette-{% if t.statut == 'nouveau' %}creer{% else %}modifier{% endif %}">{% if t.statut == "nouveau" %}{% libelle "referentiels.apercu.etat.nouveau" %}{% else %}{% libelle "referentiels.apercu.etat.modifie" %}{% endif %}</span></td>
+        <td>{{ t.nom }} <span class="discret">({{ t.code }})</span></td>
+        <td class="retour-ligne">{% for lib, avant, apres in t.differences %}<div class="diff"><span class="diff-champ">{{ lib }}</span> <span class="diff-avant">{{ avant }}</span> → <strong>{{ apres }}</strong></div>{% endfor %}</td></tr>
+      {% endfor %}
+    </table>
+    {% if analyse.themes_absents %}<p class="discret">{% libelle "referentiels.apercu.themes_absents" liste=themes_absents_texte %}</p>{% endif %}
+  </div>
+  {% endif %}
+
+  {% if analyse.regles %}
+  <div class="onglet-apercu">
+    <h3>{% libelle "referentiels.apercu.regles" %}</h3>
+    <ul class="liste-regles-paquet">
+      {% for r in analyse.regles %}<li><span class="etiquette-action etiquette-{% if r.statut == 'nouveau' or r.statut == 'renomme' %}creer{% elif r.statut == 'modifie' %}modifier{% elif r.statut == 'rejet' %}rejet{% else %}inchange{% endif %}">{% if r.statut == "nouveau" %}{% libelle "referentiels.apercu.regle.nouvelle" %}{% elif r.statut == "renomme" %}{% libelle "referentiels.apercu.regle.renommee" %}{% elif r.statut == "modifie" %}{% libelle "referentiels.apercu.regle.modifiee" %}{% elif r.statut == "rejet" %}{% libelle "referentiels.apercu.regle.rejetee" %}{% elif r.statut == "ignore" %}{% libelle "referentiels.apercu.regle.gardee" %}{% else %}{% libelle "referentiels.apercu.regle.inchangee" %}{% endif %}</span>
+        {{ r.nom_final }}{% if r.motif %} <span class="{% if r.statut == 'rejet' %}motif-rejet{% else %}discret{% endif %}">{{ r.motif }}</span>{% endif %}</li>{% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {% if options_depuis|length > 1 %}{# « Demandé depuis » des KPI nouveaux dans un référentiel qui a des campagnes #}
+  <div class="champ"><label for="depuis-import">{% libelle "referentiels.apercu.depuis" %}</label>
+    <select name="depuis" id="depuis-import" aria-describedby="depuis-import-aide">{% for v, l in options_depuis %}<option value="{{ v }}"{% if v == depuis_choisi %} selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <span class="aide-champ" id="depuis-import-aide">{% libelle "referentiels.depuis.aide" %}</span></div>
+  {% endif %}
+  <div class="barre-enregistrement collante">
+    <button type="submit" name="action" value="confirmer">{% if analyse.fourni and analyse.mode == "nouveau" %}{% libelle "referentiels.installer.resume.installer" %}{% else %}{% libelle "commun.importer" %}{% endif %}</button>
+    <button type="submit" name="action" value="apercu" class="secondaire">{{ t_maj_apercu }}</button>
+    <button type="submit" name="action" value="annuler" class="secondaire" formnovalidate>{% libelle "commun.annuler" %}</button>
+    <span class="etat-barre">{% libelle "referentiels.apercu.pied_aide" %}</span>
+  </div>
+  {% endif %}
+</form>
+{% endwith %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.traductions.titre" nom_langue=langue.libelle %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour"><a href="{% url 'parametres:langues' %}">{% libelle "admin.traductions.retour" %}</a></p>
+<div class="entete-langues">
+  <div class="titre-traductions">
+    <h1>{% libelle "admin.traductions.titre_h1" nom_langue=langue.libelle %} <span class="code-langue">{{ langue.code|upper }}</span></h1>
+    {% if langues_traduction|length > 1 %}
+    {% libelle "admin.traductions.langue_a_traduire" as t_lt %}<nav class="segments choix-langue-traduction" aria-label="{{ t_lt }}">
+      {% for x in langues_traduction %}<a href="{% url 'parametres:traductions' x.code %}?section={{ section }}{% if tout %}&tout=1{% endif %}"
+        class="{% if x.code == langue.code %}actif{% endif %}"{% if x.code == langue.code %} aria-current="page"{% endif %}>{{ x.libelle }}</a>{% endfor %}
+    </nav>
+    {% endif %}
+    <div class="avancement-langue large">
+      <span class="pourcentage">{% widthratio faits total 100 %} %</span>
+      <span class="barre-completude"><span style="width:{% widthratio faits total 100 %}%"></span></span>
+      <span class="discret petit">{% libelle "admin.langues.avancement" faits=faits total=total %} · {% if reste %}<strong>{% libelle "admin.langues.a_traduire" nombre=reste %}</strong>{% else %}{% libelle "admin.langues.tout_traduit" %}{% endif %} · {% libelle "admin.traductions.texte_depart" nom_langue=reference %}</span>
+    </div>
+  </div>
+  <div class="outils-entete">
+    <span class="discret petit">{% libelle "admin.traductions.hors_outil" %}</span>
+    {% include "parametres/_menu_fichier_traductions.html" with cible=langue.code %}
+  </div>
+</div>
+
+{% libelle "admin.traductions.sections" as t_se %}<nav class="sous-onglets petits onglets-traduction" aria-label="{{ t_se }}">
+  {% for s, titre, compte in sections %}
+  <a href="?section={{ s }}{% if tout %}&tout=1{% endif %}"{% if s == section %} class="actif" aria-current="page"{% endif %}>{{ titre }}
+    <span class="nb-onglet">{% if compte.1 %}{{ compte.0|entier }} / {{ compte.1|entier }}{% else %}{% libelle "admin.traductions.rien" %}{% endif %}</span></a>{% endfor %}
+</nav>
+
+<form method="post" class="bloc liste-traductions" data-traductions>
+  {% csrf_token %}
+  <div class="barre-traductions">
+    {% libelle "admin.traductions.textes_affiches" as t_ta %}<div class="segments" role="group" aria-label="{{ t_ta }}">
+      <a href="?section={{ section }}"{% if not tout %} class="actif" aria-current="true"{% endif %}>{% libelle "admin.traductions.onglet_a_traduire" %}</a>
+      <a href="?section={{ section }}&tout=1"{% if tout %} class="actif" aria-current="true"{% endif %}>{% libelle "admin.traductions.onglet_tous" %}</a>
+    </div>
+    <span class="discret petit">{% libelle "admin.traductions.nb_textes" n=nb %}{% if nb > limite %} · {% libelle "admin.traductions.limite" limite=limite %}{% endif %}</span>
+    {% if ia_traductions %}<button type="button" class="secondaire compact ia-bouton" data-ia-traductions="{% url 'parametres:traductions_ia' langue.code %}" data-section="{{ section }}" aria-controls="ia-traductions-etat" hidden>{% icone "sparkles" %}<span>{% libelle "admin.ia.traductions.bouton" %}</span></button>{% endif %}
+  </div>
+  {% if ia_traductions %}<div id="ia-traductions-etat" class="ia-etat-zone"></div>{% endif %}
+  {% if elements %}
+  <div class="tete-traductions"><span>{% libelle "admin.traductions.depart" nom_langue=reference %}</span><span>{{ langue.libelle }}</span></div>
+  {% for e in elements %}
+  {% libelle "admin.traductions.traduction_de" quoi=e.quoi as t_td %}{% libelle "admin.traductions.traduction_en" nom_langue=langue.libelle as t_te %}<div class="ligne-traduction{% if not e.actuel %} manquante{% endif %}">
+    <div class="source-traduction"><span class="repere">{{ e.quoi }}</span><p>{{ e.source|linebreaksbr }}</p></div>
+    <div>{% if e.long %}<textarea name="{{ e.cle }}" rows="2" data-auto-hauteur aria-label="{{ t_td }}" placeholder="{{ t_te }}">{{ e.actuel }}</textarea>
+      {% else %}<input type="text" name="{{ e.cle }}" value="{{ e.actuel }}" aria-label="{{ t_td }}" placeholder="{{ t_te }}">{% endif %}</div>
+  </div>
+  {% endfor %}
+  <div class="barre-enregistrement collante"><button type="submit">{% libelle "admin.traductions.enregistrer" %}</button>
+    <span class="etat-barre" data-compte-modifs>{% libelle "admin.traductions.vide_aide" %}</span></div>
+  {% else %}
+  {% encart "succes" %}{% libelle "admin.traductions.tout_section" %}{% if not tout %} <a href="?section={{ section }}&tout=1">{% libelle "admin.traductions.voir_tous" %}</a>{% endif %}{% endencart %}
+  {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,4 @@
+{% load collecte %}{# options propres à la Saisie du menu « Affichage » (_menu_affichage.html) #}
+{% if voit_calc %}<input type="hidden" name="calc" value="0">
+<label class="case-menu"><input type="checkbox" name="calc" value="1" {% if calculees %}checked{% endif %} data-envoi-changement> {% libelle "saisie.afficher_calcules" %}</label>{% endif %}
+<label class="case-menu" data-option-autres-refs hidden><input type="checkbox" data-voir-autres-refs> {% libelle "saisie.afficher_autres_refs" %}</label>

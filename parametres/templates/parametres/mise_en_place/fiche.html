@@ -1,0 +1,35 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.fiche.intro" %}</p>{% endblock %}
+{% block etape %}
+<form method="post" class="carte form-mep">
+  {% csrf_token %}
+  <h3>{% libelle "referentiels.mep.fiche.categories" %}</h3>
+  <table class="table-mep">
+    <thead><tr><th>{% libelle "referentiels.mep.fiche.col_categorie" %}</th><th class="centre">{% libelle "referentiels.mep.fiche.col_affichee" %}</th><th class="centre">{% libelle "referentiels.mep.fiche.col_obligatoire" %}</th></tr></thead>
+    {% for c in categories %}
+    <tr><td>{{ c.libelle }} <span class="discret">{{ c.code }}</span></td>
+      <td class="centre"><input type="checkbox" name="affichee__{{ c.code }}" {% if c.affichee %}checked{% endif %} aria-label="{% libelle "referentiels.mep.fiche.aria_affichee" categorie=c.libelle %}"></td>
+      <td class="centre"><input type="checkbox" name="obligatoire__{{ c.code }}" {% if c.obligatoire %}checked{% endif %} aria-label="{% libelle "referentiels.mep.fiche.aria_obligatoire" categorie=c.libelle %}"></td></tr>
+    {% endfor %}
+  </table>
+  <div class="resume-reglages">
+    <div><strong>{% libelle "referentiels.mep.fiche.unites" %}</strong> <span class="discret">{{ unites|length }}</span><div class="puces-mep">{% for u in unites|slice:":24" %}<span class="puce-reglage">{{ u.symbole }}</span>{% endfor %}{% if unites|length > 24 %}<span class="discret">…</span>{% endif %}</div></div>
+    <div><strong>{% libelle "referentiels.mep.fiche.types_saisie" %}</strong><div class="puces-mep">{% for t in types_saisie %}{% etiquette_type t %}{% endfor %}</div></div>
+    <div><strong>{% libelle "referentiels.mep.fiche.types_reponse" %}</strong><div class="puces-mep">{% for t in types_reponse %}<span class="puce-reglage">{{ t.libelle }}</span>{% endfor %}</div></div>
+    <div><strong>{% libelle "referentiels.mep.fiche.champs" %}</strong><div class="puces-mep">{% for c in champs %}<span class="puce-reglage">{{ c.libelle }}</span>{% empty %}<span class="discret">{% libelle "referentiels.mep.fiche.aucun" %}</span>{% endfor %}</div></div>
+  </div>
+  <p class="aide-champ">{% libelle "referentiels.mep.fiche.ajouter_aide" %}
+    <a href="{% url 'parametres:referentiel' %}">{% libelle "referentiels.mep.fiche.ajouter_lien" %}</a>{% libelle "referentiels.mep.fiche.ajouter_suite" %}</p>
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% endblock %}
+{% block apercu %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.fiche.apercu_titre" %}</strong>
+  {% libelle "referentiels.mep.fiche.apercu_texte" as t_texte %}
+  {% for c in categories %}{% if c.affichee %}<p class="ap-def"><b>{{ c.libelle }}.</b> <span class="discret">{{ t_texte }}</span></p>{% endif %}{% endfor %}
+  <div class="ap-ligne"><span class="ap-badge">{% libelle "referentiels.mep.fiche.apercu_saisie" %}</span> <span class="discret">{% libelle "referentiels.mep.fiche.apercu_ligne" %}</span></div>
+</div>
+<p class="discret">{% libelle "referentiels.mep.fiche.apercu_aide" %}</p>
+{% endblock %}

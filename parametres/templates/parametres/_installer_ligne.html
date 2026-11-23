@@ -1,0 +1,15 @@
+{% load collecte %}{% comment %}Ligne d'un KPI d'un ensemble de la bibliothèque : mêmes colonnes que le catalogue des KPI
+(case, ID, indicateur, type, unité, état). Sous le nom : le calcul en clair, la note « ajouté quand même », la définition.{% endcomment %}
+{% libelle "referentiels.installer.deja_installe" as t_deja %}<li class="ligne-coche{% if l.present %} present{% endif %}" data-ligne data-texte="{{ l.code|lower }} {{ l.nom|lower }}">
+  <input type="checkbox" name="kpi" value="{{ l.code }}" id="k-{{ l.code }}" data-kpi="{{ l.code }}" data-sources="{{ l.sources|join:' ' }}"{% if l.coche %} checked{% endif %}{% if l.present %} disabled data-present{% endif %}{% if l.existant %} data-existant{% endif %} aria-describedby="n-{{ l.code }}">
+  <span class="code-coche"><span class="id-chip">{{ l.code }}</span></span>
+  <div class="indicateur-coche">
+    <label for="k-{{ l.code }}" class="nom-coche">{{ l.nom }}</label>
+    {% if l.calcul %}<div class="calcul-clair" title="{{ l.calcul }}"><span aria-hidden="true">=</span> <span class="visually-hidden">{% libelle "referentiels.calcul.mot" %}</span>{{ l.calcul }}</div>{% endif %}
+    <div class="notes-coche" id="n-{{ l.code }}"><span class="note-ajout" data-note-ajout hidden></span></div>
+    {% if l.definition %}<details class="aide-repliable definition-coche"><summary>{% libelle "referentiels.installer.definition" %}</summary><p>{{ l.definition }}</p></details>{% endif %}
+  </div>
+  <span class="type-coche"><span class="type {{ l.classe_type }}"{% if l.type_titre %} title="{{ l.type_titre }}"{% endif %}>{{ l.type }}</span></span>
+  <span class="unite-coche">{{ l.unite|default:"—" }}</span>
+  <span class="etat-coche">{% if l.present %}<span class="puce-coche present">{{ l.texte_present|default:t_deja }}</span>{% elif l.existant %}<span class="puce-coche existant">{% libelle "referentiels.installer.deja_outil" %}</span>{% elif l.autres_refs %}<span class="discret">{{ l.autres_refs }}</span>{% elif not l.sans_etat %}<span class="puce-coche nouveau">{% libelle "referentiels.installer.nouveau" %}</span>{% endif %}</span>
+</li>

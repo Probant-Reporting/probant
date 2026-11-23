@@ -1,0 +1,33 @@
+{% load collecte %}{# Contenu du panneau « Je réponds à » (barre du haut), chargé à l'ouverture #}
+{% if page_complete %}<div class="choix-tete"><h1 id="titre-choix-reponse">{% libelle "saisie.choix.titre" %}</h1></div>
+{% else %}<div class="choix-tete"><h2 id="titre-choix-reponse">{% libelle "saisie.choix.titre" %}</h2>
+  <button type="button" class="fermer-choix" data-fermer-choix aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>{% endif %}
+<p class="discret choix-aide">{% libelle "saisie.choix.aide" %}</p>
+{% if not blocs %}{% if page_complete %}{% libelle "saisie.choix.aucun_referentiel" as t_aucun %}{% include "collecte/_vide.html" with titre=t_aucun compact=True %}{% else %}<p class="discret">{% libelle "saisie.choix.aucun_referentiel" %}</p>{% endif %}{% endif %}
+{% if recherche %}{% libelle "saisie.choix.rechercher" as t_rech_choix %}<input type="search" class="recherche-choix" data-filtre-choix placeholder="{{ t_rech_choix }}" aria-label="{{ t_rech_choix }}">
+<p class="discret" data-choix-vide hidden>{% libelle "saisie.choix.aucun_resultat" %}</p>{% endif %}
+<div class="choix-blocs">
+{% for b in blocs %}
+<section class="choix-bloc" aria-label="{{ b.ref }}" data-texte-ref="{{ b.ref|lower }}">
+  <h3>{% etiquette_referentiel b.ref %} <span class="discret">{{ b.ref|choix_phrase:"frequence" }}</span></h3>
+  <ul>
+    {% for c, r, fermee in b.en_cours %}
+    <li><a href="{% url 'collecte:choisir_campagne' c.pk %}?suivant={{ suivant|urlencode }}" class="choix-campagne en-cours{% if c.pk == actuelle %} actuelle{% endif %}"{% if c.pk == actuelle %} aria-current="true"{% endif %}>
+      <span class="choix-periode"><strong>{{ c.periode }}</strong> <span class="statut-choix statut-{{ c.statut }}">{% if fermee and c.statut == "ouverte" %}{% libelle "saisie.choix.fin_saisie_passee" %}{% else %}{{ c|choix_phrase:"statut" }}{% endif %}</span></span>
+      <span class="choix-avancement">{% if r.total %}<span class="mini-barre" aria-hidden="true"><span style="width:{{ r.taux|stringformat:'s' }}%"></span></span>{% endif %}
+        {% include "collecte/_etat_avancement.html" %}</span>
+      {% if c.pk == actuelle %}<span class="choix-coche">{% icone "coche" %}</span>{% endif %}</a></li>
+    {% endfor %}
+    {% for c in b.recentes %}
+    <li><a href="{% url 'collecte:choisir_campagne' c.pk %}?suivant={{ suivant|urlencode }}" class="choix-campagne{% if c.pk == actuelle %} actuelle{% endif %}"{% if c.pk == actuelle %} aria-current="true"{% endif %}>
+      <span class="choix-periode">{{ c.periode }} <span class="statut-choix statut-{{ c.statut }}">{{ c|choix_phrase:"statut" }}</span></span>
+      {% if c.pk == actuelle %}<span class="choix-coche">{% icone "coche" %}</span>{% endif %}</a></li>
+    {% endfor %}
+  </ul>
+  {% if b.anciennes %}<details class="choix-anciennes"><summary>{% libelle "saisie.choix.anciennes" nombre=b.anciennes|length %}</summary><ul>
+    {% for c in b.anciennes %}<li><a href="{% url 'collecte:choisir_campagne' c.pk %}?suivant={{ suivant|urlencode }}" class="choix-campagne{% if c.pk == actuelle %} actuelle{% endif %}"{% if c.pk == actuelle %} aria-current="true"{% endif %}>
+      <span class="choix-periode">{{ c.periode }} <span class="statut-choix statut-{{ c.statut }}">{{ c|choix_phrase:"statut" }}</span></span></a></li>{% endfor %}
+  </ul></details>{% endif %}
+</section>
+{% endfor %}
+</div>

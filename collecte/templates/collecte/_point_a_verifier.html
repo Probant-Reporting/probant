@@ -1,0 +1,34 @@
+{% load collecte %}{# un point de l'encadré « À vérifier » du panneau de saisie (vues_cellule._points_a_verifier) #}
+<div class="pa-point pa-{{ p.niveau }}{% if p.alerte and not p.motif %} pa-statut-{{ p.alerte.statut }}{% endif %}"{% if p.alerte %} data-alerte-point="{{ p.alerte.pk }}"{% endif %}>
+  <span class="pa-pastille"></span>
+  <div class="pa-texte">
+    <span class="pa-tete">{% if p.titre %}<strong>{{ p.titre }}</strong>{% endif %}<span class="pa-etiquette">{{ p.etiquette }}</span></span>
+    <span class="pa-detail">{{ p.detail }}</span>
+    {% if p.motif_rejet %}<span class="pa-detail">{% libelle "saisie.pav.rejet" motif=p.motif_rejet %}</span>{% endif %}
+    {% if p.justification %}<span class="pa-explication">{% libelle "saisie.pav.explication" texte=p.justification %}{% if p.alerte.justifie_par %} <span class="discret">{% libelle "saisie.pav.explication_par" auteur=p.alerte.justifie_par date=p.alerte.date_justification|date_courte %}</span>{% endif %}</span>{% endif %}
+    {% if p.seule_rse %}<span class="discret">{% libelle "saisie.pav.equipe_traite" %}</span>{% endif %}
+    {% if p.non_justifiable %}<span class="discret">{{ p.non_justifiable }}</span>{% endif %}
+    {% if p.succes %}{% encart "succes" classe="pa-message" role="status" tabindex="-1" data_message_justif=True %}{{ p.succes }}{% endencart %}{% endif %}
+    {% if p.vers_commentaire %}
+    {% if not p.motif %}<span class="pa-aide">{% libelle "saisie.pav.aide_debut" %}{% if reponse.statut == "valide" %} {% libelle "saisie.pav.aide_valide" %}{% endif %} {% libelle "saisie.pav.aide_fin" %}</span>{% endif %}
+    <button type="button" class="secondaire pa-bouton" data-vers-commentaire>{% libelle "saisie.pav.vers_commentaire" %}</button>
+    {% endif %}
+    {% if p.justifiable %}
+    <form method="post" action="{{ ici }}" class="pa-justifier" data-ajax data-justification>{% csrf_token %}
+      <input type="hidden" name="alerte" value="{{ p.alerte.pk }}">
+      <label class="pa-label" for="justif-{{ p.alerte.pk }}">{% libelle "saisie.pav.explique_pourquoi" %}</label>
+      <textarea id="justif-{{ p.alerte.pk }}" name="justification" rows="2" placeholder="{% libelle "saisie.pav.exemple_justification" %}"{% if p.erreur %} aria-invalid="true"{% endif %}{% if p.erreur or p.proposition or p.reprise %} aria-describedby="{% if p.erreur %}justif-{{ p.alerte.pk }}-erreur{% endif %}{% if p.erreur and p.proposition or p.erreur and p.reprise %} {% endif %}{% if p.proposition or p.reprise %}justif-{{ p.alerte.pk }}-aide{% endif %}"{% endif %}>{{ p.texte|default:"" }}</textarea>
+      {% if p.erreur %}<span class="erreur-champ" id="justif-{{ p.alerte.pk }}-erreur">{{ p.erreur }}</span>{% endif %}
+      {% if p.proposition %}<span class="aide-champ" id="justif-{{ p.alerte.pk }}-aide">{% libelle "saisie.pav.propose" %}</span>
+      {% elif p.reprise %}<span class="aide-champ" id="justif-{{ p.alerte.pk }}-aide">{% libelle "saisie.pav.reprise" %}</span>{% endif %}
+      {% if p.aussi %}<span class="pa-aide">{% libelle "saisie.pav.aussi" referentiels=p.aussi|guillemets_liste %}</span>{% endif %}
+      <button type="submit" name="action" value="justifier" class="secondaire pa-bouton">{% libelle "saisie.pav.enregistrer_explication" %}</button>
+    </form>
+    {% elif p.erreur %}<span class="erreur-champ" role="alert" tabindex="-1">{{ p.erreur }}</span>
+    {% endif %}
+    {% if ia_alertes and p.ia %}<div class="ia-zone" data-ia-zone>
+      <button type="button" class="secondaire compact ia-bouton" data-ia-expliquer="{% url 'collecte:alerte_ia' p.alerte.pk %}"{% if p.justifiable %} data-ia-cible="justif-{{ p.alerte.pk }}"{% endif %} hidden>{% icone "sparkles" %}<span>{% libelle "saisie.ia.expliquer" %}</span></button>
+      <div data-ia-resultat></div></div>{% endif %}
+    {% if p.fiche %}<a class="pa-fiche" href="{% url 'collecte:alerte' p.alerte.pk %}" data-panneau>{% libelle "saisie.pav.fiche" %} <span aria-hidden="true">›</span></a>{% endif %}
+  </div>
+</div>

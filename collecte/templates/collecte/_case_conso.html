@@ -1,0 +1,16 @@
+{% load collecte %}{# Une case de la Consolidation (c : consolidation.Case, avec son KPI et son organisation), dans les deux sens du tableau #}{% with k=c.kpi %}
+    {% if c.absente %}<td class="absente"><span aria-hidden="true">·</span><span class="visuellement-cache">{% libelle "suivi.conso.legende.absent" %}</span></td>
+    {% elif not c.point %}<td></td>
+    {% else %}<td class="nombre{% if c.partiel is not None or c.point.valeur is None and not c.erreur %} case-partielle{% endif %}">{% if not user.est_lecteur %}<a href="{% url 'collecte:cellule' campagne.pk k.code c.org.id %}" data-panneau>{% endif %}{% spaceless %}
+      {% if c.point.en_attente and c.partiel is not None %}<span class="partiel-conso" title="{% libelle "suivi.conso.legende.en_attente" %}">{% valeur_point_brut c.partiel k %}</span><span class="pictogramme-partiel" title="{% libelle "suivi.conso.partiel" n=c.manquants %}">{% icone "circle-dashed" %}<span class="visuellement-cache"> {% libelle "suivi.conso.partiel" n=c.manquants %}</span></span>
+      {% elif c.point.en_attente %}<span class="en-attente-conso">{% libelle "suivi.conso.en_attente" %}</span>
+      {% elif c.point.valeur is None %}
+        {% if c.erreur %}<span class="erreur-conso" title="{{ c.incomplet }}">{% icone "alerte" %} {% libelle "suivi.conso.erreur" %}<span class="visuellement-cache"> : {{ c.incomplet }}</span></span>
+        {% elif c.partiel is not None %}<span class="partiel-conso" title="{{ c.incomplet }}">{% valeur_point_brut c.partiel k %}</span><span class="pictogramme-partiel" title="{% libelle "suivi.conso.partiel" n=c.manquants %}">{% icone "circle-dashed" %}<span class="visuellement-cache"> {% libelle "suivi.conso.partiel" n=c.manquants %}</span></span>
+        {% elif c.non_saisie %}<span class="discret" title="{% libelle "suivi.conso.non_saisie" %}">—<span class="visuellement-cache"> {% libelle "suivi.conso.non_saisie" %}</span></span>
+        {% else %}<span class="discret" title="{{ c.incomplet }}">—<span class="visuellement-cache"> {{ c.incomplet }}</span></span>{% endif %}
+      {% else %}<span class="valeur-conso">{% valeur_point c.point k %}</span>{% if c.point.provisoire %}<span class="marque-provisoire" title="{% libelle "suivi.conso.legende.provisoire" %}"><span class="point p-brouillon" aria-hidden="true"></span><span class="visuellement-cache"> ({% libelle "suivi.conso.legende.provisoire" %})</span></span>{% endif %}{% endif %}
+      {% endspaceless %}{% if not user.est_lecteur %}</a>{% endif %}
+      {% if reglages.n1 and c.n1 and c.n1.valeur is not None %}<div class="n1-conso discret">{{ comparaison }} : {% valeur_point c.n1 k %}{% if c.ecart is not None %} {% ecart_fleche c.ecart campagne.seuil_ecart %}{% endif %}</div>{% endif %}
+    </td>{% endif %}
+{% endwith %}

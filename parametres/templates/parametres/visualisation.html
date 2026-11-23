@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% load collecte %}
+{% block titre %}{% libelle "visu.parametres.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{# Paramètres › Visualisation : vue d'accueil de chaque rôle (parmi les vues partagées), vues personnelles par personne #}
+<form method="post" class="page-seuils page-param-visu" novalidate>{% csrf_token %}
+  {% if erreurs %}{% encart "erreur" role="alert" %}{{ erreurs|join:" " }}{% endencart %}{% endif %}
+  <section class="bloc">
+    <h2><span class="num">1</span> {% libelle "visu.parametres.accueil" %}</h2>
+    <p class="aide-champ remonte">{% libelle "visu.parametres.accueil_aide" %}</p>
+    {% for r in roles %}
+    <div class="champ champ-role">
+      <label for="accueil-{{ r.code }}">{{ r.nom }}</label>
+      <select id="accueil-{{ r.code }}" name="accueil_{{ r.code }}">
+        <option value="">{% libelle "visu.parametres.aucune" %}</option>
+        {% for v in partagees %}<option value="{{ v.pk }}"{% if v.pk == r.vue %} selected{% endif %}>{{ v.nom }}</option>{% endfor %}
+      </select>
+    </div>
+    {% endfor %}
+    {% if not partagees %}<p class="discret">{% libelle "visu.parametres.aucune_partagee" %}</p>{% endif %}
+  </section>
+  <section class="bloc">
+    <h2><span class="num">2</span> {% libelle "visu.parametres.vues_perso" %}</h2>
+    <div class="champ champ-seuil{% if form.vues_personnelles_max.errors %} en-erreur{% endif %}">
+      <label for="{{ form.vues_personnelles_max.id_for_label }}">{% libelle "visu.parametres.vues_max" %}</label>
+      {{ form.vues_personnelles_max }}
+      <p class="aide-champ" id="aide-vues-max">{% libelle "visu.parametres.vues_max_aide" %}</p>
+      {% for e in form.vues_personnelles_max.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+    </div>
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit">{% libelle "visu.parametres.enregistrer" %}</button></div>
+</form>
+{% endblock %}

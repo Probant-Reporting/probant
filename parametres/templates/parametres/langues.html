@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.langues.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+<form method="post" id="f-ligne">{% csrf_token %}</form>
+<form method="post" id="f-langues">{% csrf_token %}<input type="hidden" name="action" value="enregistrer"></form>
+
+<div class="entete-langues">
+  <div>
+    <h2>{% libelle "admin.langues.titre_h1" %}</h2>
+    <p class="intro-page">{% libelle "admin.langues.intro" %} {% libelle "admin.langues.intro_menus" %}</p>
+  </div>
+  {% comment %}Créer est toujours un bouton principal en haut à droite : plus de carte pointillée.{% endcomment %}
+  <details class="menu-deroulant ajout-langue"{% if post.code or post.libelle %} open{% endif %}>
+    <summary class="bouton">{% icone "plus" %} {% libelle "admin.langues.ajouter_titre" %}</summary>
+    <form method="post" class="panneau-ajout-langue">{% csrf_token %}
+      <label class="champ"><span class="libelle">{% libelle "admin.langues.code" %}</span>{% libelle "admin.langues.code_ex" as t_ce %}<input type="text" name="code" value="{{ post.code }}" placeholder="{{ t_ce }}" maxlength="10" required></label>
+      <label class="champ"><span class="libelle">{% libelle "admin.langues.nom" %}</span>{% libelle "admin.langues.nom_ex" as t_ne %}<input type="text" name="libelle" value="{{ post.libelle }}" placeholder="{{ t_ne }}" maxlength="40"></label>
+      <button type="submit" name="action" value="ajouter">{% libelle "commun.ajouter" %}</button>
+    </form>
+  </details>
+</div>
+
+<div class="grille-langues">
+  {% libelle "admin.langues.monter" as t_monter %}{% libelle "admin.langues.descendre" as t_descendre %}{% libelle "admin.langues.supprimer" as t_supprimer %}{% libelle "admin.langues.utilisee" as t_utilisee %}{% for l in lignes %}{% with lg=l.langue %}
+  <article class="carte-langue{% if l.reference %} reference{% endif %}">
+    <header>
+      <span class="code-langue">{{ lg.code|upper }}</span>
+      <input type="text" name="libelle__{{ lg.code }}" value="{{ lg.libelle }}" maxlength="40" form="f-langues" class="nom-langue" aria-label="{% libelle "admin.langues.libelle_de" code=lg.code %}">
+      <span class="actions-niveau">
+        <button type="submit" form="f-ligne" name="monter" value="{{ lg.code }}" class="icone" title="{{ t_monter }}" aria-label="{% libelle "admin.langues.monter_langue" nom_langue=lg.libelle %}" {% if forloop.first %}disabled{% endif %}>{% icone "chevron-gauche" %}</button>
+        <button type="submit" form="f-ligne" name="descendre" value="{{ lg.code }}" class="icone" title="{{ t_descendre }}" aria-label="{% libelle "admin.langues.descendre_langue" nom_langue=lg.libelle %}" {% if forloop.last %}disabled{% endif %}>{% icone "chevron-droite" %}</button>
+        <button type="submit" form="f-ligne" name="supprimer" value="{{ lg.code }}" class="icone supprimer-niveau"
+          {% if not l.supprimable %}disabled title="{{ t_utilisee }}"{% else %}title="{{ t_supprimer }}" {% libelle "admin.langues.supprimer_confirmer" nom_langue=lg.libelle as t_sc %}data-confirmer="{{ t_sc }}"{% endif %} aria-label="{% libelle "admin.langues.supprimer_langue" nom_langue=lg.libelle %}">{% icone "fermer" %}</button>
+      </span>
+    </header>
+    {% comment %}Référence et par défaut : chaque mot est suivi de sa définition, sur la carte de la langue qui porte ce
+    rôle.{% endcomment %}
+    {% if l.reference or l.defaut %}
+    <dl class="roles-langue" aria-label="{% libelle "admin.langues.roles_de" nom_langue=lg.libelle %}">
+      {% if l.reference %}<div><dt><span class="pastille-langue forte">{% libelle "admin.langues.reference" %}</span></dt><dd>{% libelle "admin.langues.reference_aide" %}</dd></div>{% endif %}
+      {% if l.defaut %}<div><dt><span class="pastille-langue">{% libelle "admin.langues.par_defaut" %}</span></dt><dd>{% libelle "admin.langues.defaut_aide" %}</dd></div>{% endif %}
+    </dl>
+    {% endif %}
+    {% if l.comptes or not lg.active and not l.reference and not l.defaut %}
+    <div class="etiquettes-langue">
+      {% if l.comptes %}<span class="pastille-langue">{% libelle "admin.langues.comptes" n=l.comptes %}</span>{% endif %}
+      {% if not lg.active and not l.reference and not l.defaut %}<span class="pastille-langue eteinte">{% libelle "admin.langues.desactivee" %}</span>{% endif %}
+    </div>
+    {% endif %}
+    {% if not l.reference %}
+      <div class="avancement-langue">
+        <span class="pourcentage">{{ l.pct|pct }}</span>
+        <span class="barre-completude"><span style="width:{{ l.pct }}%"></span></span>
+        <span class="discret petit">{% libelle "admin.langues.avancement" faits=l.faits total=l.total %} · {% if l.reste %}<strong>{% libelle "admin.langues.a_traduire" nombre=l.reste %}</strong>{% else %}{% libelle "admin.langues.tout_traduit" %}{% endif %}</span>
+      </div>
+      <div class="actions-langue">
+        <a class="bouton secondaire compact" href="{% url 'parametres:traductions' lg.code %}">{% if l.reste %}{% libelle "admin.langues.traduire" %}{% else %}{% libelle "admin.langues.revoir" %}{% endif %}</a>
+        {% include "parametres/_menu_fichier_traductions.html" with cible=lg.code %}
+      </div>
+    {% endif %}
+    <footer>
+      {% libelle "admin.langues.active_info" as t_ai %}{% libelle "admin.langues.active_info_fixe" as t_aif %}<label title="{% if l.reference or l.defaut %}{{ t_aif }}{% else %}{{ t_ai }}{% endif %}"><input type="checkbox" name="active__{{ lg.code }}" form="f-langues" {% if lg.active %}checked{% endif %} {% if l.reference or l.defaut %}disabled{% endif %}> {% libelle "admin.langues.active" %}</label>
+      {% if l.reference or l.defaut %}<input type="hidden" name="active__{{ lg.code }}" value="on" form="f-langues">{% endif %}
+      {% libelle "admin.langues.defaut_info" as t_di %}<label title="{{ t_di }}"><input type="radio" name="defaut" value="{{ lg.code }}" form="f-langues" {% if l.defaut %}checked{% endif %}> {% libelle "admin.langues.par_defaut" %}</label>
+    </footer>
+  </article>
+  {% endwith %}{% endfor %}
+
+</div>
+
+<div class="barre-enregistrement collante"><button type="submit" form="f-langues">{% libelle "admin.langues.enregistrer" %}</button></div>
+
+{% if a_traduire %}
+<section class="carte carte-traduction" aria-labelledby="titre-toutes-langues">
+  <div class="texte-bandeau">
+    <h2 id="titre-toutes-langues">{% libelle "admin.langues.toutes_titre" %}</h2>
+    <p>{% libelle "admin.langues.toutes_intro" langues=a_traduire|liste %}</p>
+    <ol>
+      <li>{% libelle "admin.langues.toutes_etape_1" %}</li>
+      <li>{% libelle "admin.langues.toutes_etape_2" %}</li>
+      <li>{% libelle "admin.langues.toutes_etape_3" %}</li>
+    </ol>
+  </div>
+  {% include "parametres/_menu_fichier_traductions.html" with cible="toutes" fort=False %}
+</section>
+{% endif %}
+
+<details class="carte bon-a-savoir">
+  <summary><strong>{% libelle "admin.fichiers.bon_a_savoir" %}</strong></summary>
+  <ul>
+    <li>{% libelle_html "admin.langues.savoir_2" %}</li>
+    <li>{% libelle_html "admin.langues.savoir_3" %}</li>
+    <li>{% libelle_html "admin.langues.savoir_4" %}</li>
+    <li>{% libelle_html "admin.langues.savoir_5" %}</li>
+    <li>{% libelle_html "admin.langues.savoir_6" %}</li>
+  </ul>
+</details>
+{% endblock %}

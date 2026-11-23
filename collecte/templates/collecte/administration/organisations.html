@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.nav.organisations" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+
+{# Chiffres clés : une phrase de chiffres, comme Comptes ; chaque niveau reste un filtre (bouton) #}
+{% libelle "admin.organisations.structure" as t_st %}<section class="structure-orgs" aria-label="{{ t_st }}">
+  <p class="resume-comptes"><strong>{{ nb_orgs }}</strong> {% libelle "admin.organisations.nb" n=nb_orgs %}
+    <span class="sep" aria-hidden="true">·</span>
+    {# les chiffres par niveau : du texte ; le filtre par niveau est un champ de la barre #}{% for n in niveaux %}<span><strong>{{ n.total }}</strong> {% if n.total == 1 %}{{ n.libelle_un }}{% else %}{{ n.libelle }}{% endif %}</span>{% if not forloop.last %}, {% endif %}{% endfor %}
+    {% if nb_inactives %}<span class="sep" aria-hidden="true">·</span> {% libelle "admin.organisations.dont_inactives" n=nb_inactives %}{% endif %}</p>
+  <details class="aide-repliable aide-page"><summary>{% libelle "admin.organisations.aide_titre" %}</summary>
+    <p>{% libelle_html "admin.organisations.legende" chaine=chaine_niveaux %}
+      <a href="{% url 'parametres:niveaux' %}">{% libelle "admin.organisations.regler_niveaux" %}</a></p></details>
+</section>
+
+<div class="barre-filtres">
+  {% libelle "admin.organisations.recherche" as t_ph %}{% include "_recherche.html" with placeholder=t_ph %}
+  <div class="champ-filtre"><label for="filtre-niveau">{% libelle "admin.organisations.col.niveau" %}</label>
+    <select id="filtre-niveau" data-panneau-filtre data-multiple><option value="">{% libelle "commun.tous" %}</option>
+      {% for n in niveaux %}<option value="{{ n.code }}" data-nb="{{ n.total }}">{{ n.libelle }}</option>{% endfor %}</select></div>
+  <div class="filtres-droite">
+    {# affichage de l'arbre : la pastille grise (elle règle l'affichage, elle ne filtre pas) #}
+    {% libelle "admin.organisations.affichage" as t_aa %}<div class="segments" role="group" aria-label="{{ t_aa }}">
+      <button type="button" data-affichage="tout" aria-pressed="true">{% libelle "admin.organisations.tout" %}</button>
+      {% if niveaux|length > 1 %}{% with bas=niveaux|last %}<button type="button" data-affichage="sans-bas" aria-pressed="false">{% libelle "admin.organisations.sans_bas" niveau=bas.libelle %}</button>{% endwith %}{% endif %}
+      <button type="button" data-affichage="replie" aria-pressed="false">{% libelle "admin.organisations.replie" %}</button>
+    </div>
+    <a class="bouton secondaire" href="{% url 'collecte:admin_organisations_plusieurs' %}" {% libelle "admin.organisations.plusieurs_titre" as t_pl %}title="{{ t_pl }}">{% icone "plus" %} {% libelle "admin.organisations.plusieurs" %}</a>
+    <a class="bouton" href="{% url 'collecte:admin_organisation_nouvelle' %}" data-panneau>{% icone "plus" %} {% libelle "admin.organisations.nouvelle" %}</a>
+  </div>
+  {% include "_etat_filtres.html" %}
+</div>
+
+<div id="liste" data-rafraichir>
+<table class="carte-table arbre-orgs">
+  <colgroup><col class="l-92"><col><col class="mq-m l-120"><col class="mq-m l-22p"><col class="mq-s l-128"><col class="mq-xs l-120"><col class="l-150"></colgroup>
+  <thead><tr><th>{% libelle "admin.organisations.col.niveau" %}</th><th>{% libelle "admin.organisations.col.organisation" %}</th><th class="mq-m">{% libelle "admin.organisations.col.type" %}</th><th class="mq-m">{% libelle "admin.organisations.col.alias" %}</th><th class="mq-s">{% libelle "admin.organisations.col.attributions" %}</th><th class="mq-xs">{% libelle "admin.organisations.col.etat" %}</th><th><span class="visuellement-cache">{% libelle "admin.organisations.col.actions" %}</span></th></tr></thead>
+  {% for o in orgs %}
+  <tr class="ligne prof-{{ o.prof }} niv-{{ o.niveau_id }}{% if not o.actif %} inactive{% endif %}" style="--prof:{{ o.prof }}" data-id="{{ o.id }}" data-ancetres="{{ o.ids_ancetres }}" data-niveau="{{ o.niveau_id }}" data-prof="{{ o.prof }}"{% if not o.niveau_enfant %} data-bas="1"{% endif %}{% if o.que_bas %} data-que-bas="1"{% endif %} tabindex="0" aria-label="{% libelle "admin.organisations.ouvrir_ligne" nom=o.nom %}" data-url="{% url 'collecte:admin_organisation' o.id %}" data-statut=""
+      data-texte="{{ o.nom|lower }} {{ o.code|lower }} {{ o.nom_court|lower }}{% for a in o.liste_alias %} {{ a.libelle|lower }}{% endfor %}">
+    <td>{% etiquette_niveau o %}</td>
+    <td class="nom-arbre">{% if o.nb_descendants %}<button type="button" class="replier-org" {% libelle "admin.organisations.replier" as t_re %}aria-expanded="true" aria-label="{{ t_re }} {{ o.nom }}" title="{{ t_re }}">{% icone "chevron-droite" %}</button>{% else %}<span class="replier-vide"></span>{% endif %}<span class="branche"><span class="point-niveau"></span><span class="nom-org">{{ o.nom }}</span></span>{% if o.nom_court %}<span class="nom-court">{{ o.nom_court }}</span>{% endif %}{% if o.nb_descendants %}<span class="nb-caches">{% libelle "admin.organisations.rattachees" n=o.nb_descendants %}</span>{% endif %}</td>
+    <td class="mq-m">{% if o.type_site %}<span class="type-site">{{ o|choix:"type_site" }}</span>{% elif not o.niveau_enfant %}<span class="discret">{% libelle "admin.organisations.non_precise" %}</span>{% endif %}</td>
+    <td class="mq-m">{% for a in o.liste_alias|slice:":2" %}<span class="type-site alias" title="{{ a.source }}">{{ a.libelle }}</span>{% endfor %}{% if o.liste_alias|length > 2 %}<span class="discret"> +{{ o.liste_alias|length|add:"-2" }}</span>{% endif %}</td>
+    <td class="mq-s">{% if o.nb_attributions %}<span class="compteur" {% libelle "admin.organisations.nb_attributions" n=o.nb_attributions as t_na %}title="{{ t_na }}">{{ o.nb_attributions }}</span>{% else %}<span class="vide">—</span>{% endif %}</td>
+    <td class="mq-xs">{% if o.actif %}<span class="etat etat-actif">{% libelle "admin.organisation.active" %}</span>{% else %}<span class="etat etat-inactif">{% libelle "admin.organisations.inactive" %}</span>{% endif %}</td>
+    <td class="action">{% if o.niveau_enfant %}<a class="ajout-enfant" href="{% url 'collecte:admin_organisation_nouvelle' %}?parent={{ o.id }}" data-panneau {% libelle "admin.organisations.ajout_enfant" niveau=o.niveau_enfant.nom nom=o.nom as t_ae %}title="{{ t_ae }}">+ {{ o.niveau_enfant.nom }}</a>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p class="etat-vide" id="aucun-resultat" hidden>{% libelle "admin.organisations.aucun_resultat" %}</p>
+</div>
+{% endblock %}

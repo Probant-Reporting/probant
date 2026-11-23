@@ -1,0 +1,6 @@
+<div class="champ champ-seuil{% if champ.errors %} en-erreur{% endif %}">
+  <label for="{{ champ.id_for_label }}">{{ champ.label }}</label>
+  {{ champ }}
+  {% if champ.help_text %}<p class="aide-champ" id="{{ champ.id_for_label }}_aide">{{ champ.help_text }}</p>{% endif %}
+  {% for e in champ.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+</div>

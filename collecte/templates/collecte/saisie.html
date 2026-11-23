@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.page.titre" %}{% if org %} – {{ org.nom }}{% endif %}{% endblock %}
+{# second lien d'évitement : de la tête de page à la liste (summary de la première section, puis première ligne) #}
+{% block evitement %}{% if orgs and sections %}<a class="lien-evitement" href="#liste">{% libelle "saisie.evitement_kpi" %}</a>{% endif %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "saisie.page.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+  <div class="entete-actions">
+  {% if orgs %}{% include "collecte/_selecteur_org.html" with flux=False %}{% endif %}
+  </div>
+</div>
+{% if not orgs %}
+{% libelle "saisie.aucun_kpi_attribue" as t_vide %}{% libelle "saisie.vide.attribution_aide" as t_vide_aide %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_vide_aide %}
+<form method="get" class="barre-outils">{% include "collecte/_choix_campagne.html" %}</form>
+{% else %}
+{% include "collecte/_resume.html" %}
+<form method="get" class="barre-filtres">{# recherche, personne ; à droite « Affichage » et « Tout replier » #}
+  <input type="hidden" name="org" value="{{ org.id }}">
+  <noscript>{% include "collecte/_choix_campagne.html" %}</noscript>
+  {% libelle "saisie.recherche.placeholder_personne" as t_rech %}{% include "_recherche.html" with placeholder=t_rech %}
+  {% include "collecte/_filtres_saisie.html" %}
+  <div class="filtres-droite">
+    {% include "_menu_affichage.html" with codes=True options="collecte/_affichage_saisie.html" %}
+    {% libelle "saisie.replier_tout_titre" as t_replier %}<button type="button" class="secondaire" data-replier title="{{ t_replier }}">{% libelle "saisie.replier_tout" %}</button>
+  </div>
+  {% include "_etat_filtres.html" %}
+</form>
+{% libelle "saisie.vide.organisation" as msg_vide %}{% with montrer_org=False message_vide=msg_vide %}{% include "collecte/_sections.html" %}{% endwith %}
+{% endif %}
+{% endblock %}

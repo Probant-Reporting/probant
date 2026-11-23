@@ -1,0 +1,25 @@
+{% load collecte %}{# Menu « Vue … » : actions sur la vue ouverte (selon les droits) #}
+<div class="actions-vue">
+  {% if contexte_visu.droits.modifiable %}<button type="button" data-modifier-vue>{% icone "crayon" %} {% libelle "visu.vue.modifier" %}</button>
+  {% elif contexte_visu.vue.id and contexte_visu.vue.partage %}<button type="button" class="secondaire" data-action-vue="dupliquer">{% libelle "visu.vue.dupliquer_pour_modifier" %}</button>{% endif %}
+  {% if not contexte_visu.vue.id and contexte_visu.vue.visuels and contexte_visu.vue.auto != "nouvelle" %}<button type="button" class="secondaire" data-action-vue="enregistrer-comme">{% libelle "visu.vue.enregistrer_comme" %}</button>{% endif %}
+  <details class="menu-deroulant menu-vue">
+    <summary class="bouton secondaire" aria-label="{% libelle 'visu.vue.menu_aria' nom=contexte_visu.vue.nom %}">{% libelle "visu.vue.menu" %}</summary>
+    <div class="menu-liste" data-menu-vue>
+      <button type="button" data-action-vue="excel">{% icone "telecharger" %} {% libelle "visu.vue.exporter_excel" %}</button>
+      {% if contexte_visu.vue.id %}
+      {% if contexte_visu.vue.modifiable %}<button type="button" data-action-vue="renommer">{% icone "crayon" %} {% libelle "visu.vue.renommer" %}</button>{% endif %}
+      <button type="button" data-action-vue="defaut">{% icone "house" %} {% libelle "visu.vue.ouvrir_en_arrivant" %}</button>
+      <button type="button" data-action-vue="dupliquer">{% icone "copy" %} {% if contexte_visu.vue.partage %}{% libelle "visu.vue.dupliquer_pour_modifier" %}{% else %}{% libelle "visu.vue.dupliquer" %}{% endif %}</button>
+      <button type="button" data-action-vue="gauche">{% icone "arrow-left" %} {% libelle "visu.vue.gauche" %}</button>
+      <button type="button" data-action-vue="droite">{% icone "arrow-right" %} {% libelle "visu.vue.droite" %}</button>
+      {% if contexte_visu.droits.admin %}
+      {% if contexte_visu.vue.partage %}<button type="button" data-action-vue="ne-plus-partager">{% icone "cadenas" %} {% libelle "visu.vue.ne_plus_partager" %}</button>
+      <button type="button" data-action-vue="accueil" aria-haspopup="dialog">{% icone "users" %} {% libelle "visu.vue.accueil_menu" %}</button>
+      {% elif contexte_visu.vue.personnelle %}<button type="button" data-action-vue="partager">{% icone "share-2" %} {% libelle "visu.vue.partager" %}</button>{% endif %}
+      {% endif %}
+      {% if contexte_visu.vue.modifiable %}<button type="button" data-action-vue="supprimer" class="supprimer-vue">{% icone "supprimer" %} {% libelle "visu.vue.supprimer" %}</button>{% endif %}
+      {% endif %}
+    </div>
+  </details>
+</div>

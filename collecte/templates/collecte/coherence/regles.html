@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.coherence.regles.titre_page" %}{% endblock %}
+{% block contenu %}
+<p class="retour-page"><a href="{% url 'collecte:coherence' %}">{% libelle "saisie.coherence.regles.retour" %}</a></p>
+<div class="entete-page">
+  <h1>{% libelle "saisie.coherence.regles.titre" %}</h1>
+  <a class="bouton" href="{% url 'collecte:regle_nouvelle' %}" data-panneau>{% icone "plus" %} {% libelle "saisie.coherence.regles.nouvelle" %}</a>
+</div>
+<p class="intro-page">{% libelle "saisie.coherence.regles.sous_titre" %}</p>
+<ul class="mode-emploi">
+  <li>{% libelle_html "saisie.coherence.regles.mode_modifier" %}</li>
+  <li>{% libelle_html "saisie.coherence.regles.mode_pause" %}</li>
+  <li>{% libelle_html "saisie.coherence.regles.mode_bloquante" %}</li>
+</ul>
+<div id="liste" data-rafraichir>
+<table class="carte-table">
+  <colgroup><col class="l-22p"><col><col class="mq-s l-90"><col class="mq-s l-100"><col class="mq-xs l-110"><col class="l-120"></colgroup>
+  <thead><tr><th>{% libelle "saisie.coherence.regles.col_regle" %}</th><th>{% libelle "saisie.coherence.regles.col_verifie" %}</th><th class="mq-s">{% libelle "saisie.coherence.regles.col_niveau" %}</th><th class="mq-s">{% libelle "saisie.coherence.regles.col_effet" %}</th><th class="mq-xs">{% libelle "saisie.coherence.regles.col_alertes" %}</th><th>{% libelle "saisie.coherence.regles.col_statut" %}</th></tr></thead>
+  {% for r in regles %}
+  <tr class="ligne{% if not r.actif %} inactive{% endif %}" tabindex="0" aria-label="{% libelle "saisie.coherence.regles.ligne_aria" regle=r.nom_affiche %}" data-url="{% url 'collecte:regle' r.pk %}" data-statut="" data-texte="{{ r.nom_affiche|lower }}">
+    <td class="ind"><div class="nom">{{ r.nom_affiche }}</div>{% if r.doublon_de %}<div class="discret texte-petit">{% libelle "saisie.coherence.regles.doublon" regle=r.doublon_de %}</div>{% endif %}</td>
+    <td class="retour-ligne texte-petit">{{ r.lecture_gauche }} <strong class="operateur">{{ r|choix:"operateur"|slice:":1" }}</strong> {{ r.lecture_droite }}{% if r.tolerance %} <span class="discret">{% libelle "saisie.coherence.regles.tolerance" pct=r.tolerance_pct %}</span>{% endif %}</td>
+    <td class="mq-s">{% etiquette_niveau r %}</td>
+    <td class="mq-s">{% if r.bloquante %}<span class="gravite-texte bloquante">{% libelle "saisie.coherence.regles.bloquante" %}</span>{% else %}<span class="gravite-texte">{% libelle "saisie.coherence.regles.alerte" %}</span>{% endif %}</td>
+    <td class="mq-xs">{% if r.nb %}<span class="badge-sans">{% libelle "saisie.coherence.regles.a_traiter" n=r.nb %}</span>{% else %}<span class="vide">—</span>{% endif %}</td>
+    <td><form method="post" action="{% url 'collecte:regle_basculer' r.pk %}">{% csrf_token %}
+      <button type="submit" class="bascule-statut {% if r.actif %}actif{% endif %}" title="{% if r.actif %}{% libelle "saisie.coherence.regles.mettre_en_pause" %}{% else %}{% libelle "saisie.coherence.regles.reactiver" %}{% endif %}"><span class="glissiere"></span>{% if r.actif %}{% libelle "saisie.coherence.regles.active" %}{% else %}{% libelle "saisie.coherence.regles.inactive" %}{% endif %}</button></form></td>
+  </tr>
+  {% empty %}<tr><td colspan="6" class="discret">{% libelle "saisie.coherence.regles.aucune" %}</td></tr>{% endfor %}
+</table>
+</div>
+{% endblock %}

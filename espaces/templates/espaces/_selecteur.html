@@ -1,0 +1,70 @@
+{% load collecte %}{# Sélecteur « Espace » de la barre du haut : seulement à partir de deux espaces accessibles (docs/spaces.md) #}
+{% if espaces_menu.plusieurs %}<div class="choix-espace">
+  <button type="button" class="bouton-espace" id="bouton-espace" aria-expanded="false" aria-controls="liste-espaces"
+    aria-label="{% libelle 'espaces.selecteur.bouton' nom=espaces_menu.courant.nom %}" title="{% libelle 'espaces.selecteur.bouton' nom=espaces_menu.courant.nom %}">
+    <span class="nom-espace">{{ espaces_menu.courant.nom }}</span><span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span></button>
+  <div id="liste-espaces" class="panneau-espaces" hidden>
+    <p class="titre-espaces" id="titre-espaces">{% libelle "espaces.selecteur.titre" %}</p>
+    <ul aria-labelledby="titre-espaces">{% for e in espaces_menu.liste %}
+      <li><a href="{{ e.url }}"{% if e.courant %} aria-current="true" class="courant"{% endif %}><span class="nom">{{ e.nom }}</span><span class="role">{{ e.role }}{% if e.courant %} · {% libelle "espaces.selecteur.ici" %}{% endif %}</span></a></li>{% endfor %}
+    </ul>
+    {% if espaces_menu.gestionnaire %}<a class="gerer-espaces" href="{% url 'espaces:liste' %}">{% libelle "espaces.selecteur.gerer" %}</a>{% endif %}
+  </div>
+</div>
+<style nonce="{% jeton_csp %}">
+  .choix-espace { position: relative; flex: none; min-width: 0; }
+  .bouton-espace { display: inline-flex; align-items: center; gap: 6px; max-width: 220px; border: 1px solid var(--bord); border-radius: var(--coin);
+    padding: 6px 10px 6px 12px; background: var(--fond); color: var(--texte); font: inherit; font-size: var(--taille-petite); font-weight: 600; cursor: pointer; }
+  .bouton-espace:hover, .bouton-espace[aria-expanded="true"] { border-color: var(--principale-claire); background: var(--principale-pale); color: var(--texte); }
+  .bouton-espace:focus-visible { outline: 2px solid var(--sur-bandeau); outline-offset: 2px; }
+  .bouton-espace .nom-espace { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+  .bouton-espace .chevron { display: inline-flex; color: var(--texte-doux); flex: none; }
+  .bouton-espace .chevron svg { width: 16px; height: 16px; transition: transform .15s; }
+  .bouton-espace[aria-expanded="true"] .chevron svg { transform: rotate(180deg); }  /* comme le menu de la langue */
+  @media (prefers-reduced-motion: reduce) { .bouton-espace .chevron svg { transition: none; } }
+  /* même hauteur que le choix de la campagne voisin (sélecteurs de contexte côte à côte) */
+  @media (min-width: 1101px) { .bouton-espace { min-height: 38px; } }
+  .panneau-espaces { position: absolute; left: 0; top: calc(100% + 8px); z-index: 60; width: min(320px, calc(100vw - 32px));
+    background: var(--surface); border: 1px solid var(--bord); border-radius: var(--coin-carte); box-shadow: var(--ombre-flottante); padding: 10px; color: var(--texte); }
+  .panneau-espaces .titre-espaces { margin: 2px 6px 8px; font-size: var(--taille-mini); font-weight: 600; color: var(--texte-doux); }
+  .panneau-espaces ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+  .panneau-espaces li a { display: flex; flex-direction: column; gap: 2px; padding: 8px 10px; border-radius: var(--coin); border: 1px solid var(--bord); text-decoration: none; color: var(--texte); }
+  .panneau-espaces li a:hover { border-color: var(--principale-claire); background: var(--principale-pale); }
+  .panneau-espaces li a.courant { border: 2px solid var(--principale-bord); background: var(--principale-pale); }
+  .panneau-espaces .nom { font-weight: 600; } .panneau-espaces .role { font-size: var(--taille-mini); color: var(--texte-doux); }
+  .panneau-espaces .gerer-espaces { display: block; margin: 10px 6px 2px; font-size: var(--taille-petite); }
+  /* le nom de l'espace dit déjà où l'on est : sur un écran moyen, le sous-titre de l'outil laisse sa place aux onglets
+     (il reste dans l'info-bulle de la marque) */
+  @media (min-width: 801px) and (max-width: 1599px) { header.haut:has(.choix-espace) .marque .titre-app > span { display: none; } }
+  @media (max-width: 800px) { .bouton-espace { max-width: 150px; } }
+  @media (max-width: 420px) { .bouton-espace { padding: 6px 8px; } }
+  /* téléphone : le nom de l'espace se raccourcit (« … ») pour que la barre tienne dans l'écran, sans descendre sous la
+     zone à toucher de 44 px ; plus étroit encore (320 px), la déconnexion passe à la ligne plutôt que d'être coupée.
+     Ces règles n'existent qu'avec le sélecteur (deux espaces ou plus) : la barre à un seul espace ne change pas. */
+  @media (max-width: 480px) {
+    .compte-haut { flex: 0 1 auto; min-width: 0; flex-wrap: wrap; justify-content: flex-end; gap: 8px 4px; }
+    .choix-espace { flex: 1 1 44px; min-width: 44px; max-width: 150px; }
+    .bouton-espace { width: 100%; max-width: none; justify-content: space-between; }
+  }
+  @media (max-width: 420px) { .choix-espace { max-width: 110px; } }
+</style>
+<script nonce="{% jeton_csp %}">
+(function () {
+  var b = document.getElementById("bouton-espace"), p = document.getElementById("liste-espaces");
+  if (!b || !p) return;
+  function fermer(rendreFocus) { p.hidden = true; b.setAttribute("aria-expanded", "false"); if (rendreFocus) b.focus(); }
+  b.addEventListener("click", function () {
+    var ouvrir = p.hidden;
+    p.hidden = !ouvrir; b.setAttribute("aria-expanded", ouvrir ? "true" : "false");
+    if (ouvrir) {
+      p.style.left = "";  // sur un écran étroit, la liste reste dans la fenêtre
+      var r = p.getBoundingClientRect();
+      if (r.right > window.innerWidth - 8) p.style.left = Math.min(0, window.innerWidth - 8 - r.right) + "px";
+      var a = p.querySelector("a[aria-current]") || p.querySelector("a"); if (a) a.focus();
+    }
+  });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !p.hidden) { e.preventDefault(); fermer(true); } });
+  document.addEventListener("click", function (e) { if (!p.hidden && !p.contains(e.target) && !b.contains(e.target)) fermer(false); });
+  p.addEventListener("focusout", function (e) { if (e.relatedTarget && !p.contains(e.relatedTarget) && e.relatedTarget !== b) fermer(false); });
+})();
+</script>{% endif %}

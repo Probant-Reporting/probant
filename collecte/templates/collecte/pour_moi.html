@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.page.titre" %} – {% libelle "saisie.vues.flux" %}{% endblock %}
+{# second lien d'évitement : de la tête de page à la liste (summary de la première section, puis première ligne) #}
+{% block evitement %}{% if tous and blocs or not tous and sections %}<a class="lien-evitement" href="#liste">{% libelle "saisie.evitement_kpi" %}</a>{% endif %}{% endblock %}
+{% block contenu %}
+{# onglet Saisie, vue « Tout ce qui m'est attribué » : le flux des organisations (ancienne page Pour moi) #}
+<div class="entete-page"><h1>{% libelle "saisie.page.titre" %}<span class="tiret-titre"> –</span> {% if tous %}{% libelle "saisie.pour_moi.tous_titre" %}{% else %}{% include "collecte/_titre_campagne.html" %}{% endif %}</h1>
+  <div class="entete-actions">{% if orgs %}{% include "collecte/_selecteur_org.html" with flux=True %}{% endif %}</div></div>
+{% if onglets|length > 1 %}
+<nav class="sous-onglets onglets-refs" aria-label="{% libelle "saisie.pour_moi.onglets" %}">
+  {% for o in onglets %}<a href="?campagne={{ o.campagne.pk }}&amp;tous=0" class="onglet-ref{% if not tous and o.campagne == campagne %} actif{% endif %}"{% if not tous and o.campagne == campagne %} aria-current="page"{% endif %}>
+    <span class="point-ref {% classe_ref o.campagne.referentiel %}" aria-hidden="true"></span>
+    <span class="onglet-ref-texte">{{ o.campagne.referentiel }} · {{ o.campagne.periode }}</span>
+    {% include "collecte/_etat_avancement.html" with r=o.etat fermee=o.lecture_seule %}</a>{% endfor %}
+  <a href="?tous=1" class="onglet-ref onglet-tous{% if tous %} actif{% endif %}"{% if tous %} aria-current="page"{% endif %}>
+    <span class="onglet-ref-texte">{% libelle "saisie.pour_moi.tous_onglet" %}</span>
+    {% include "collecte/_etat_avancement.html" with r=reste_tous fermee=tous_fermes %}</a>
+</nav>
+{% endif %}
+{% if tous and blocs or not tous and sections %}{# rien d'attribué : ni résumé ni filtres au-dessus d'une liste vide #}
+{% include "collecte/_resume.html" %}
+{% for t in imports_fond %}
+{% encart "info" %}{% if t.active %}{% libelle "suivi.echanges.importer.fond.pour_moi_en_cours" nom=t.nom_fichier pct=t.pourcentage %}{% else %}{% libelle "suivi.echanges.importer.fond.pour_moi_fini" nom=t.nom_fichier %}{% endif %}
+  <a href="{% url 'collecte:echanges_importer' %}?tache={{ t.pk }}">{% if t.active %}{% libelle "suivi.echanges.importer.fond.voir_avancement" %}{% else %}{% libelle "suivi.echanges.importer.fond.voir" %}{% endif %}</a>{% endencart %}
+{% endfor %}
+{% if forcage_a_trancher or forcage_responsable %}
+{% encart "info" %}{% if forcage_a_trancher %}{% libelle "saisie.forcage.pour_moi.a_trancher" n=forcage_a_trancher %}{% if forcage_responsable %} · {% endif %}{% endif %}{% if forcage_responsable %}{% libelle "saisie.forcage.pour_moi.responsable" n=forcage_responsable %}{% endif %}
+  <a href="{% url 'collecte:forcages' %}?campagne={{ campagne.pk }}">{% libelle "saisie.forcage.pour_moi.voir" %}</a>{% endencart %}
+{% endif %}
+<form method="get" class="barre-filtres">{# recherche, personne, regroupement ; à droite « Affichage » et « Tout replier » #}
+  {% if not tous %}<noscript>{% include "collecte/_choix_campagne.html" %}</noscript>{% endif %}{# avec JavaScript : « Je réponds à », barre du haut #}
+  {% libelle "saisie.recherche.placeholder_organisation" as t_rech %}{% include "_recherche.html" with placeholder=t_rech %}
+  {% include "collecte/_filtres_saisie.html" %}
+  <div class="champ-filtre"><label for="choix-groupe">{% libelle "saisie.pour_moi.regrouper" %}</label>
+    <select id="choix-groupe" name="groupe" data-envoi-changement>
+      <option value="organisation" {% if groupe == "organisation" %}selected{% endif %}>{% libelle "saisie.pour_moi.par_organisation" %}</option>
+      <option value="theme" {% if groupe == "theme" %}selected{% endif %}>{% libelle "saisie.pour_moi.par_theme" %}</option>
+    </select></div>
+  <div class="filtres-droite">
+    {% include "_menu_affichage.html" with codes=True %}
+    {# longue liste : les sections au-delà d'environ 200 lignes sont repliées, le bouton commence par « Tout déplier » #}
+    {% libelle "saisie.replier_tout_titre" as t_replier %}<button type="button" class="secondaire" data-replier title="{{ t_replier }}">{% if sections_repliees %}{% libelle "saisie.deplier_tout" %}{% else %}{% libelle "saisie.replier_tout" %}{% endif %}</button>
+  </div>
+  {% include "_etat_filtres.html" %}
+</form>
+{% endif %}
+{% if tous %}
+<div id="liste" tabindex="-1"{% if url_reste %} data-url-reste="{{ url_reste }}"{% endif %}>
+  {% for b in blocs %}
+  <h2 class="titre-bloc-ref"><span class="point-ref {% classe_ref b.campagne.referentiel %}" aria-hidden="true"></span>{{ b.campagne.referentiel }} · {{ b.campagne.periode }}
+    <span class="discret">{{ b.campagne|choix_phrase:"statut" }}{% if b.campagne.date_fin_saisie %} · {% libelle "saisie.pour_moi.fin_saisie" date=b.campagne.date_fin_saisie|date_courte %}{% endif %}{% if b.reste.valeurs %} · {% if b.lecture_seule %}{% libelle "saisie.etat.non_validees" n=b.reste.valeurs %}{% else %}{% libelle "saisie.etat.a_faire" n=b.reste.valeurs %}{% endif %}{% endif %}{% if b.reste.alertes %} · {% libelle "saisie.alertes.a_traiter" n=b.reste.alertes %}{% endif %}</span></h2>
+  {% if b.lecture_seule %}{% encart "info" %}{{ b.campagne.motif_lecture_seule }}{% endencart %}{% endif %}
+  {% with campagne=b.campagne comparaison=b.comparaison sections=b.sections nb_ouvertes=b.nb_ouvertes montrer_org=True niveau_section=3 prefixe_section=b.prefixe %}{% include "collecte/_sections_corps.html" %}{% endwith %}
+  {% empty %}{% libelle "saisie.pour_moi.rien_en_cours" as t_vide %}{% libelle "saisie.vide.attribution_aide" as t_vide_aide %}{% libelle "saisie.vide.ouvrir_saisie" as t_vide_action %}{% url 'collecte:saisie' as u_saisie %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_vide_aide url=u_saisie action=t_vide_action %}
+  {% endfor %}
+  <p class="etat-vide" id="aucun-resultat" hidden>{% libelle "saisie.aucun_resultat" %}</p>
+</div>
+{% if admin %}{% include "collecte/_choix_spoc.html" %}{% endif %}
+{% else %}
+{% libelle "saisie.pour_moi.rien_campagne" as msg_vide %}{% libelle "saisie.vide.attribution_aide" as t_vide_aide %}{% libelle "saisie.vide.ouvrir_saisie" as t_vide_action %}{% url 'collecte:saisie' as u_saisie %}{% with montrer_org=True message_vide=msg_vide phrase_vide=t_vide_aide url_vide=u_saisie action_vide=t_vide_action %}{% include "collecte/_sections.html" %}{% endwith %}
+{% endif %}
+{% endblock %}

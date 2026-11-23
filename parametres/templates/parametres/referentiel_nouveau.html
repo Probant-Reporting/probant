@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.nouveau.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour-referentiels"><a href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.entete.retour" %}</a></p>
+<h2 class="titre-installation">{% libelle "referentiels.nouveau.titre" %}</h2>
+<p class="intro-page">{% libelle "referentiels.nouveau.chapeau" %}</p>
+{% include "parametres/_trois_portes.html" %}
+{% endblock %}

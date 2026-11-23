@@ -1,0 +1,26 @@
+{% load collecte %}
+<span hidden data-presents="{{ presents }}"></span>
+<div class="barre-lot" data-barre-lot hidden>
+  {% libelle "referentiels.contenu.lot.theme_aria" as t_theme %}{% libelle "referentiels.contenu.lot.sans_theme" as t_sans %}{% libelle "referentiels.contenu.lot.niveau_aria" as t_niveau %}{% libelle "referentiels.contenu.lot.retirer_confirmer" as t_retirer %}
+  <b data-nb-coches>0</b> <span data-nb-coches-texte>{% libelle "saisie.js.kpi_coches" n=0 %}</span>
+  <label>{% libelle "referentiels.contenu.ranger_dans" %} <select data-lot-theme aria-label="{{ t_theme }}"><option value="">{{ t_sans }}</option>{% for v, l in options_themes %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></label>
+  <button type="button" data-lot="deplacer">{% libelle "referentiels.contenu.lot.ranger" %}</button>
+  <span class="groupe-lot"><label>{% libelle "referentiels.contenu.lot.niveau" %} <select data-lot-niveau aria-label="{{ t_niveau }}">{% for n in options_niveaux %}<option value="{{ n.code }}">{{ n.nom }}</option>{% endfor %}</select></label>
+  <button type="button" class="secondaire" data-lot="niveau">{% libelle "referentiels.contenu.lot.appliquer" %}</button></span>
+  {% libelle "referentiels.contenu.lot.depuis_aria" as t_depuis %}<span class="groupe-lot"><label>{% libelle "referentiels.contenu.lot.depuis" %} {% libelle "referentiels.depuis.indisponible" as t_indispo %}<select data-lot-depuis data-indisponible="{{ t_indispo }}" aria-label="{{ t_depuis }}">{% for v, l in options_depuis %}<option value="{{ v }}">{{ l }}</option>{% endfor %}</select></label>
+  <button type="button" class="secondaire" data-lot="depuis">{% libelle "referentiels.contenu.lot.appliquer" %}</button></span>
+  <button type="button" class="secondaire" data-lot="obligatoire">{% libelle "referentiels.contenu.lot.obligatoires" %}</button>
+  <button type="button" class="secondaire" data-lot="facultatif">{% libelle "referentiels.contenu.lot.facultatifs" %}</button>
+  <button type="button" class="secondaire danger" data-lot="retirer" data-confirmer="{{ t_retirer }}">{% libelle "referentiels.contenu.lot.retirer" %}</button>
+  <button type="button" class="lien" data-lot-annuler>{% libelle "commun.annuler" %}</button>
+</div>
+<div class="zone-premier-niveau" data-zone="" data-nouveau-ici>
+  {% if sans_theme %}
+  <div class="tete-theme sans-theme"><span class="nom-theme">{{ t_sans }}</span> <span class="nb">{{ sans_theme|length }} KPI</span></div>
+  {% include "parametres/_contenu_kpis.html" with elements=sans_theme %}
+  {% endif %}
+</div>
+{% for n in noeuds %}{% include "parametres/_contenu_theme.html" %}{% empty %}
+{% if not sans_theme %}<div class="etat-vide vide-compo">
+  <p>{% libelle_html "referentiels.contenu.vide" %}</p></div>{% endif %}
+{% endfor %}

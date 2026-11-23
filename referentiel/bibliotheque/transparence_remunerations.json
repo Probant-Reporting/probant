@@ -1,0 +1,1868 @@
+{
+ "referentiel": {
+  "code": "TRANSPARENCE_REMU",
+  "identifiant": "b5d9f0d4-618b-54e5-838f-f2f66db8db11",
+  "nom": {
+   "fr": "Transparence des rémunérations – écarts entre femmes et hommes",
+   "en": "Pay transparency – gender pay gap reporting"
+  },
+  "description": {
+   "fr": "Déclaration des écarts de rémunération entre femmes et hommes demandée par la directive européenne 2023/970, une par employeur (saisie au niveau de l'entité) : écarts moyens et médians, part variable, quartiles, écarts par catégorie, évaluation conjointe et obligations de transparence. Les écarts moyens sont recalculés pour le groupe sur les totaux ; les médianes et les quartiles restent propres à chaque entité.",
+   "en": "Gender pay gap reporting required by the European directive 2023/970, one report per employer (entered at entity level): mean and median gaps, variable pay, quartiles, gaps by category, joint pay assessment and transparency obligations. Mean gaps are recalculated for the group from the totals; medians and quartiles stay specific to each entity."
+  },
+  "thematique": {
+   "fr": "Social",
+   "en": "Social"
+  },
+  "couleur": "#9C3D63",
+  "frequence": "annee",
+  "mois_debut": 1,
+  "comparaison": "N-1",
+  "version": "1.2",
+  "date_version": "2026-11-19",
+  "origine": "fourni"
+ },
+ "langue_reference": "fr",
+ "langues": [
+  {
+   "code": "fr",
+   "libelle": "Français"
+  },
+  {
+   "code": "en",
+   "libelle": "English"
+  }
+ ],
+ "niveaux": [],
+ "unites": [
+  {
+   "code": "€",
+   "symbole": {
+    "fr": "€",
+    "en": "€"
+   },
+   "libelle": {
+    "fr": "euro",
+    "en": "euro"
+   },
+   "entier": false,
+   "decimales": 0,
+   "famille": "Monnaie"
+  },
+  {
+   "code": "salariés",
+   "symbole": {
+    "fr": "salariés",
+    "en": "employees"
+   },
+   "libelle": {
+    "fr": "salariés",
+    "en": "employees"
+   },
+   "entier": true,
+   "decimales": 0,
+   "famille": "Effectif"
+  },
+  {
+   "code": "€/h",
+   "symbole": {
+    "fr": "€/h",
+    "en": "€/h"
+   },
+   "libelle": {
+    "fr": "euro par heure",
+    "en": "euro per hour"
+   },
+   "entier": false,
+   "decimales": 2,
+   "famille": "Monnaie"
+  }
+ ],
+ "types_saisie": [
+  {
+   "code": "Saisi",
+   "libelle": {
+    "fr": "Saisi",
+    "en": "Input"
+   },
+   "abrege": {
+    "fr": "Saisie",
+    "en": "Input"
+   },
+   "couleur": "#5A6B85",
+   "comportement": "saisie"
+  },
+  {
+   "code": "Calculé",
+   "libelle": {
+    "fr": "Calculé",
+    "en": "Calculated"
+   },
+   "abrege": {
+    "fr": "Calcul",
+    "en": "Calc."
+   },
+   "couleur": "#2B4596",
+   "comportement": "calcul"
+  }
+ ],
+ "types_reponse": [
+  {
+   "code": "Numérique",
+   "libelle": {
+    "fr": "Numérique",
+    "en": "Number"
+   },
+   "format": "nombre",
+   "valeurs": {}
+  },
+  {
+   "code": "Pourcentage",
+   "libelle": {
+    "fr": "Pourcentage",
+    "en": "Percentage"
+   },
+   "format": "pourcentage",
+   "valeurs": {}
+  },
+  {
+   "code": "OuiNon",
+   "libelle": {
+    "fr": "Oui / non",
+    "en": "Yes / no"
+   },
+   "format": "oui_non",
+   "valeurs": {
+    "en": [
+     "Yes",
+     "No"
+    ]
+   }
+  },
+  {
+   "code": "SOC-TAB-ECART-CAT",
+   "libelle": {
+    "fr": "Écarts par catégorie de travailleurs",
+    "en": "Gaps by category of workers"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "categorie",
+     "libelle": {
+      "fr": "Catégorie de travailleurs",
+      "en": "Category of workers"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "femmes",
+     "libelle": {
+      "fr": "Femmes",
+      "en": "Women"
+     },
+     "type": "nombre",
+     "unite": "salariés"
+    },
+    {
+     "code": "hommes",
+     "libelle": {
+      "fr": "Hommes",
+      "en": "Men"
+     },
+     "type": "nombre",
+     "unite": "salariés"
+    },
+    {
+     "code": "ecart_base",
+     "libelle": {
+      "fr": "Écart sur le salaire de base (%)",
+      "en": "Gap in basic wage or salary (%)"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "ecart_variable",
+     "libelle": {
+      "fr": "Écart sur la part variable (%)",
+      "en": "Gap in variable components (%)"
+     },
+     "type": "nombre"
+    }
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "code": "description",
+   "libelle": {
+    "fr": "Description",
+    "en": "Description"
+   },
+   "ordre": 1,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_inclure",
+   "libelle": {
+    "fr": "À inclure",
+    "en": "Include"
+   },
+   "ordre": 2,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_exclure",
+   "libelle": {
+    "fr": "À exclure",
+    "en": "Exclude"
+   },
+   "ordre": 3,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "source",
+   "libelle": {
+    "fr": "Source des données",
+    "en": "Data source"
+   },
+   "ordre": 4,
+   "affichee": true,
+   "obligatoire": false
+  }
+ ],
+ "champs": [],
+ "themes": [
+  {
+   "code": "DECLARATION",
+   "parent": "",
+   "nom": {
+    "fr": "Déclaration de l'année",
+    "en": "Reporting year"
+   },
+   "ordre": 1
+  },
+  {
+   "code": "PAIE",
+   "parent": "",
+   "nom": {
+    "fr": "Données de paie",
+    "en": "Pay data"
+   },
+   "ordre": 2
+  },
+  {
+   "code": "ECARTS",
+   "parent": "",
+   "nom": {
+    "fr": "Écarts de rémunération",
+    "en": "Pay gaps"
+   },
+   "ordre": 3
+  },
+  {
+   "code": "QUARTILES",
+   "parent": "",
+   "nom": {
+    "fr": "Quartiles de rémunération",
+    "en": "Pay quartiles"
+   },
+   "ordre": 4
+  },
+  {
+   "code": "CATEGORIES",
+   "parent": "",
+   "nom": {
+    "fr": "Catégories de travailleurs et évaluation conjointe",
+    "en": "Categories of workers and joint pay assessment"
+   },
+   "ordre": 5
+  },
+  {
+   "code": "COMMUNICATION",
+   "parent": "",
+   "nom": {
+    "fr": "Validation et communication",
+    "en": "Approval and communication"
+   },
+   "ordre": 6
+  },
+  {
+   "code": "PRATIQUES",
+   "parent": "",
+   "nom": {
+    "fr": "Transparence au quotidien",
+    "en": "Everyday transparency"
+   },
+   "ordre": 7
+  },
+  {
+   "code": "CALCUL",
+   "parent": "",
+   "nom": {
+    "fr": "Données de calcul",
+    "en": "Calculation data"
+   },
+   "ordre": 8
+  }
+ ],
+ "kpis": [
+  {
+   "code": "SOC-ECART-DECL-SOUMIS",
+   "libelle": {
+    "fr": "Employeur tenu de déclarer cette année",
+    "en": "Employer required to report this year"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si l'employeur doit déclarer ses écarts de rémunération pour cette année. Seuils de la directive : 250 travailleurs ou plus, chaque année (premier rapport en 2027 sur l'année 2026) ; 150 à 249, tous les trois ans (premier rapport en 2027) ; 100 à 149, tous les trois ans (premier rapport en 2031). Moins de 100 : déclaration volontaire, sauf si le droit national l'impose. Le droit national fixe les dates exactes."
+    },
+    "en": {
+     "description": "Yes if the employer must report its pay gaps for this year. Thresholds of the directive: 250 workers or more, every year (first report in 2027 on the year 2026); 150 to 249, every three years (first report in 2027); 100 to 149, every three years (first report in 2031). Fewer than 100: voluntary, unless national law requires it. National law sets the exact dates."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "DECLARATION",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-NB-F",
+   "libelle": {
+    "fr": "Femmes prises en compte dans les écarts",
+    "en": "Women included in the pay gap calculation"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Nombre de travailleuses de l'employeur prises en compte dans le calcul des rémunérations moyennes : tous les contrats, temps partiel, contrats à durée déterminée et intérimaires compris quand le droit national les rattache à l'employeur. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Number of female workers of the employer included in the calculation of average pay: all contracts, including part-time and fixed-term workers, and agency workers when national law assigns them to the employer. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-NB-H",
+   "libelle": {
+    "fr": "Hommes pris en compte dans les écarts",
+    "en": "Men included in the pay gap calculation"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Nombre de travailleurs masculins de l'employeur pris en compte dans le calcul des rémunérations moyennes, sur le même périmètre que les femmes. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Number of male workers of the employer included in the calculation of average pay, on the same perimeter as women. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-MOY-HOR-F",
+   "libelle": {
+    "fr": "Rémunération horaire brute moyenne des femmes",
+    "en": "Average gross hourly pay of women"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€/h",
+   "decimales": 2,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne de la rémunération brute horaire des femmes prises en compte (rémunération annuelle de chacune rapportée à ses heures rémunérées). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross hourly pay of the women included (the annual pay of each one divided by her paid hours). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-MOY-HOR-H",
+   "libelle": {
+    "fr": "Rémunération horaire brute moyenne des hommes",
+    "en": "Average gross hourly pay of men"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€/h",
+   "decimales": 2,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne de la rémunération brute horaire des hommes pris en compte (rémunération annuelle de chacun rapportée à ses heures rémunérées). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross hourly pay of the men included (the annual pay of each one divided by his paid hours). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-MOY-AN-F",
+   "libelle": {
+    "fr": "Rémunération annuelle brute moyenne des femmes",
+    "en": "Average gross annual pay of women"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne de la rémunération brute annuelle des femmes prises en compte : salaire de base et tous les autres éléments, en espèces ou en nature (primes, part variable, avantages). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross annual pay of the women included: basic wage or salary and all other components, in cash or in kind (bonuses, variable pay, benefits). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-MOY-AN-H",
+   "libelle": {
+    "fr": "Rémunération annuelle brute moyenne des hommes",
+    "en": "Average gross annual pay of men"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne de la rémunération brute annuelle des hommes pris en compte, avec les mêmes éléments que pour les femmes. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross annual pay of the men included, with the same components as for women. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-VAR-NB-F",
+   "libelle": {
+    "fr": "Femmes qui reçoivent une part variable",
+    "en": "Women who receive variable pay"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Nombre de femmes prises en compte qui ont reçu une part variable ou complémentaire pendant l'année (primes, commissions, intéressement…). Saisir 0 s'il n'y en a pas. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Number of the women included who received a complementary or variable component during the year (bonuses, commissions, profit-sharing…). Enter 0 if there is none. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-VAR-NB-H",
+   "libelle": {
+    "fr": "Hommes qui reçoivent une part variable",
+    "en": "Men who receive variable pay"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Nombre d'hommes pris en compte qui ont reçu une part variable ou complémentaire pendant l'année. Saisir 0 s'il n'y en a pas. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Number of the men included who received a complementary or variable component during the year. Enter 0 if there is none. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-VAR-MOY-F",
+   "libelle": {
+    "fr": "Part variable annuelle moyenne des femmes qui en reçoivent une",
+    "en": "Average annual variable pay of women who receive it"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne des parts variables ou complémentaires brutes de l'année, sur les seules femmes qui en ont reçu une. N/A si aucune femme n'en a reçu. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross complementary or variable components of the year, over the women who received one only. N/A if no woman received one. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-VAR-MOY-H",
+   "libelle": {
+    "fr": "Part variable annuelle moyenne des hommes qui en reçoivent une",
+    "en": "Average annual variable pay of men who receive it"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Restreint",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Moyenne des parts variables ou complémentaires brutes de l'année, sur les seuls hommes qui en ont reçu une. N/A si aucun homme n'en a reçu. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Average gross complementary or variable components of the year, over the men who received one only. N/A if no man received one. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PAIE",
+    "ordre": 10,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-MOY-HOR",
+   "libelle": {
+    "fr": "Écart de rémunération moyen (horaire)",
+    "en": "Gender pay gap (hourly)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Formule",
+   "agregation_temps": "moyenne",
+   "formule": "([SOC-REMU-TOT-HOR-H] / [SOC-REMU-NB-H] - [SOC-REMU-TOT-HOR-F] / [SOC-REMU-NB-F]) / ([SOC-REMU-TOT-HOR-H] / [SOC-REMU-NB-H])",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculé par l'outil : écart entre la rémunération horaire moyenne des hommes et celle des femmes, en part de celle des hommes. Positif quand les femmes sont moins payées. Recalculé à chaque niveau sur les totaux : l'écart du groupe n'est pas la moyenne des écarts des entités. Méthode de la directive (UE) 2023/970, par employeur ; la norme VS et l'ESRS S1 ont leurs propres KPI et leur propre calcul."
+    },
+    "en": {
+     "description": "Calculated by the tool: difference between the average hourly pay of men and that of women, as a share of men's. Positive when women are paid less. Recalculated at each level from the totals: the group gap is not the average of the entities' gaps. Method of Directive (EU) 2023/970, per employer; the Voluntary Standard VS and ESRS S1 have their own KPIs and their own calculation."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-ECART-MOY-AN",
+   "libelle": {
+    "fr": "Écart de rémunération moyen (annuel)",
+    "en": "Gender pay gap (annual)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Formule",
+   "agregation_temps": "moyenne",
+   "formule": "([SOC-REMU-TOT-AN-H] / [SOC-REMU-NB-H] - [SOC-REMU-TOT-AN-F] / [SOC-REMU-NB-F]) / ([SOC-REMU-TOT-AN-H] / [SOC-REMU-NB-H])",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculé par l'outil, comme l'écart horaire, à partir des rémunérations annuelles moyennes."
+    },
+    "en": {
+     "description": "Calculated by the tool, like the hourly gap, from the average annual pay."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-ECART-MED-HOR",
+   "libelle": {
+    "fr": "Écart de rémunération médian (horaire)",
+    "en": "Median gender pay gap (hourly)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Écart entre la rémunération horaire médiane des hommes et celle des femmes, en part de celle des hommes (la médiane partage les travailleurs en deux moitiés : l'une gagne plus, l'autre moins). Saisi par l'entité : la médiane d'un groupe ne se déduit pas de celles de ses entités. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Difference between the median hourly pay of men and that of women, as a share of men's (the median splits the workers into two halves: one earns more, the other less). Entered by the entity: the median of a group cannot be derived from those of its entities. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-MED-AN",
+   "libelle": {
+    "fr": "Écart de rémunération médian (annuel)",
+    "en": "Median gender pay gap (annual)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Comme l'écart médian horaire, à partir des rémunérations annuelles. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Like the hourly median gap, from the annual pay. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-VAR-MOY",
+   "libelle": {
+    "fr": "Écart moyen sur la part variable",
+    "en": "Gender pay gap in variable pay"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Formule",
+   "agregation_temps": "moyenne",
+   "formule": "([SOC-REMU-VAR-TOT-H] / [SOC-REMU-VAR-NB-H] - [SOC-REMU-VAR-TOT-F] / [SOC-REMU-VAR-NB-F]) / ([SOC-REMU-VAR-TOT-H] / [SOC-REMU-VAR-NB-H])",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculé par l'outil : écart entre la part variable moyenne des hommes et celle des femmes qui en reçoivent une, en part de celle des hommes. Recalculé à chaque niveau sur les totaux."
+    },
+    "en": {
+     "description": "Calculated by the tool: difference between the average variable pay of the men and of the women who receive it, as a share of men's. Recalculated at each level from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-ECART-VAR-MED",
+   "libelle": {
+    "fr": "Écart médian sur la part variable",
+    "en": "Median gender pay gap in variable pay"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Écart entre la part variable médiane des hommes et celle des femmes qui en reçoivent une, en part de celle des hommes. Saisi par l'entité. Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Difference between the median variable pay of the men and of the women who receive it, as a share of men's. Entered by the entity. Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-VAR-PART-F",
+   "libelle": {
+    "fr": "Part des femmes qui reçoivent une part variable",
+    "en": "Share of women who receive variable pay"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Formule",
+   "agregation_temps": "moyenne",
+   "formule": "[SOC-REMU-VAR-NB-F] / [SOC-REMU-NB-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil, à chaque niveau."
+    },
+    "en": {
+     "description": "Calculated by the tool, at each level."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-VAR-PART-H",
+   "libelle": {
+    "fr": "Part des hommes qui reçoivent une part variable",
+    "en": "Share of men who receive variable pay"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Formule",
+   "agregation_temps": "moyenne",
+   "formule": "[SOC-REMU-VAR-NB-H] / [SOC-REMU-NB-H]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil, à chaque niveau."
+    },
+    "en": {
+     "description": "Calculated by the tool, at each level."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "ECARTS",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-QUARTILE-1-F",
+   "libelle": {
+    "fr": "Part des femmes dans le quartile 1 (le plus bas)",
+    "en": "Share of women in pay quartile 1 (lowest)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Rangez les travailleurs du plus bas au plus haut niveau de rémunération et coupez la liste en quatre groupes de même taille. Part des femmes dans le groupe 1 (le plus bas). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Rank the workers from the lowest to the highest pay level and cut the list into four groups of the same size. Share of women in group 1 (lowest). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-QUARTILE-1-H",
+   "libelle": {
+    "fr": "Part des hommes dans le quartile 1 (le plus bas)",
+    "en": "Share of men in pay quartile 1 (lowest)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "moyenne",
+   "formule": "1 - [SOC-QUARTILE-1-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil : 100 % moins la part des femmes du même quartile. Pas de valeur au-dessus de l'entité : les quartiles d'un groupe ne se déduisent pas de ceux de ses entités."
+    },
+    "en": {
+     "description": "Calculated by the tool: 100% minus the share of women in the same quartile. No value above the entity: the quartiles of a group cannot be derived from those of its entities."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-QUARTILE-2-F",
+   "libelle": {
+    "fr": "Part des femmes dans le quartile 2 (inférieur)",
+    "en": "Share of women in pay quartile 2 (lower middle)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Rangez les travailleurs du plus bas au plus haut niveau de rémunération et coupez la liste en quatre groupes de même taille. Part des femmes dans le groupe 2 (inférieur). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Rank the workers from the lowest to the highest pay level and cut the list into four groups of the same size. Share of women in group 2 (lower middle). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-QUARTILE-2-H",
+   "libelle": {
+    "fr": "Part des hommes dans le quartile 2 (inférieur)",
+    "en": "Share of men in pay quartile 2 (lower middle)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "moyenne",
+   "formule": "1 - [SOC-QUARTILE-2-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil : 100 % moins la part des femmes du même quartile. Pas de valeur au-dessus de l'entité : les quartiles d'un groupe ne se déduisent pas de ceux de ses entités."
+    },
+    "en": {
+     "description": "Calculated by the tool: 100% minus the share of women in the same quartile. No value above the entity: the quartiles of a group cannot be derived from those of its entities."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-QUARTILE-3-F",
+   "libelle": {
+    "fr": "Part des femmes dans le quartile 3 (supérieur)",
+    "en": "Share of women in pay quartile 3 (upper middle)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Rangez les travailleurs du plus bas au plus haut niveau de rémunération et coupez la liste en quatre groupes de même taille. Part des femmes dans le groupe 3 (supérieur). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Rank the workers from the lowest to the highest pay level and cut the list into four groups of the same size. Share of women in group 3 (upper middle). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-QUARTILE-3-H",
+   "libelle": {
+    "fr": "Part des hommes dans le quartile 3 (supérieur)",
+    "en": "Share of men in pay quartile 3 (upper middle)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "moyenne",
+   "formule": "1 - [SOC-QUARTILE-3-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil : 100 % moins la part des femmes du même quartile. Pas de valeur au-dessus de l'entité : les quartiles d'un groupe ne se déduisent pas de ceux de ses entités."
+    },
+    "en": {
+     "description": "Calculated by the tool: 100% minus the share of women in the same quartile. No value above the entity: the quartiles of a group cannot be derived from those of its entities."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-QUARTILE-4-F",
+   "libelle": {
+    "fr": "Part des femmes dans le quartile 4 (le plus haut)",
+    "en": "Share of women in pay quartile 4 (highest)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Rangez les travailleurs du plus bas au plus haut niveau de rémunération et coupez la liste en quatre groupes de même taille. Part des femmes dans le groupe 4 (le plus haut). Méthode de calcul : celle fixée par le droit national (par exemple pour les salariés à temps partiel). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie."
+    },
+    "en": {
+     "description": "Rank the workers from the lowest to the highest pay level and cut the list into four groups of the same size. Share of women in group 4 (highest). Calculation method: the one set by national law (for example for part-time workers). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-QUARTILE-4-H",
+   "libelle": {
+    "fr": "Part des hommes dans le quartile 4 (le plus haut)",
+    "en": "Share of men in pay quartile 4 (highest)"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Pourcentage",
+   "unite": "",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "moyenne",
+   "formule": "1 - [SOC-QUARTILE-4-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Calculée par l'outil : 100 % moins la part des femmes du même quartile. Pas de valeur au-dessus de l'entité : les quartiles d'un groupe ne se déduisent pas de ceux de ses entités."
+    },
+    "en": {
+     "description": "Calculated by the tool: 100% minus the share of women in the same quartile. No value above the entity: the quartiles of a group cannot be derived from those of its entities."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "QUARTILES",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-ECART-CATEGORIES",
+   "libelle": {
+    "fr": "Écarts par catégorie de travailleurs",
+    "en": "Gender pay gap by category of workers"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "SOC-TAB-ECART-CAT",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par catégorie de travailleurs (personnes qui font le même travail ou un travail de même valeur, regroupées par l'employeur selon des critères neutres : compétences, efforts, responsabilités, conditions de travail). Pour chaque catégorie : nombre de femmes et d'hommes, écart sur le salaire de base et écart sur la part variable, en % de la rémunération moyenne des hommes. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux).",
+     "source": "Paie et classification des emplois."
+    },
+    "en": {
+     "description": "One row per category of workers (people who do the same work or work of equal value, grouped by the employer on neutral criteria: skills, effort, responsibility, working conditions). For each category: number of women and men, gap in basic wage or salary and gap in variable components, as a % of the average pay of men. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong).",
+     "source": "Payroll and job classification."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CATEGORIES",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-CAT-5PCT",
+   "libelle": {
+    "fr": "Écart d'au moins 5 % dans une catégorie",
+    "en": "Gap of at least 5% in a category"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si l'écart de rémunération moyen entre femmes et hommes atteint 5 % ou plus dans au moins une catégorie de travailleurs. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if the average pay gap between women and men is 5% or more in at least one category of workers. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CATEGORIES",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-EVAL-CONJOINTE-REQUISE",
+   "libelle": {
+    "fr": "Évaluation conjointe des rémunérations requise",
+    "en": "Joint pay assessment required"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si un écart d'au moins 5 % dans une catégorie n'est ni justifié par des critères objectifs et neutres, ni corrigé dans les six mois qui suivent la déclaration : l'employeur doit alors mener une évaluation conjointe avec les représentants du personnel. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if a gap of at least 5% in a category is neither justified by objective, gender-neutral criteria nor remedied within six months of the report: the employer must then carry out a joint pay assessment with the workers' representatives. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CATEGORIES",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-EVAL-CONJOINTE-MENEE",
+   "libelle": {
+    "fr": "Évaluation conjointe menée et communiquée",
+    "en": "Joint pay assessment carried out and shared"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si l'évaluation conjointe a été menée avec les représentants du personnel, puis mise à la disposition des travailleurs et transmise à l'autorité de contrôle. N/A si elle n'est pas requise. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if the joint pay assessment was carried out with the workers' representatives, then made available to the workers and sent to the monitoring body. N/A if it is not required. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CATEGORIES",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-CONFIRME",
+   "libelle": {
+    "fr": "Exactitude confirmée par la direction",
+    "en": "Accuracy confirmed by management"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si la direction a confirmé l'exactitude des informations, après consultation des représentants du personnel (qui ont accès à la méthode de calcul). Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if management confirmed the accuracy of the information, after consulting the workers' representatives (who have access to the calculation method). An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "COMMUNICATION",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-TRANSMIS",
+   "libelle": {
+    "fr": "Informations transmises à l'autorité",
+    "en": "Information sent to the authority"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si toutes les informations de la déclaration (écarts, part variable, quartiles, catégories) ont été transmises à l'autorité nationale chargée de les recueillir. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if all the information of the report (gaps, variable pay, quartiles, categories) was sent to the national authority in charge of collecting it. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "COMMUNICATION",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-CAT-DIFFUSE",
+   "libelle": {
+    "fr": "Écarts par catégorie communiqués aux travailleurs",
+    "en": "Gaps by category shared with the workers"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si les écarts par catégorie de travailleurs ont été communiqués à tous les travailleurs et à leurs représentants. Un employeur qui ne déclare pas cette année répond N/A, à cette donnée comme à toutes les autres données de paie (sinon le total du groupe serait faux)."
+    },
+    "en": {
+     "description": "Yes if the gaps by category of workers were shared with all the workers and their representatives. An employer that does not report this year answers N/A, here and for all the other pay data (otherwise the group total would be wrong)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "COMMUNICATION",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-ECART-PUBLIE",
+   "libelle": {
+    "fr": "Écarts publiés par l'employeur",
+    "en": "Gaps published by the employer"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Facultatif. Oui si l'employeur publie aussi ses écarts (sauf ceux par catégorie), par exemple sur son site internet."
+    },
+    "en": {
+     "description": "Optional. Yes if the employer also publishes its gaps (except those by category), for example on its website."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "COMMUNICATION",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-INFO-CANDIDATS",
+   "libelle": {
+    "fr": "Rémunération de départ indiquée aux candidats",
+    "en": "Starting pay given to applicants"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si les candidats reçoivent, avant l'entretien (par exemple dans l'offre d'emploi), la rémunération de départ du poste ou sa fourchette, et les règles de la convention collective qui s'y appliquent."
+    },
+    "en": {
+     "description": "Yes if applicants receive, before the interview (for example in the job vacancy notice), the starting pay of the position or its range, and the rules of the collective agreement that apply to it."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PRATIQUES",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-HISTO-NON-DEMANDE",
+   "libelle": {
+    "fr": "Aucune question sur la rémunération passée",
+    "en": "No question on pay history"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si les recruteurs ne demandent jamais aux candidats leur rémunération actuelle ou passée."
+    },
+    "en": {
+     "description": "Yes if recruiters never ask applicants about their current or previous pay."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PRATIQUES",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-CRITERES-ACCES",
+   "libelle": {
+    "fr": "Critères de rémunération accessibles aux travailleurs",
+    "en": "Pay criteria accessible to the workers"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si les travailleurs ont facilement accès aux critères, objectifs et neutres, qui fixent leur rémunération, leur niveau de rémunération et sa progression. Un État peut dispenser les employeurs de moins de 50 travailleurs de la partie sur la progression."
+    },
+    "en": {
+     "description": "Yes if the workers have easy access to the objective, gender-neutral criteria that set their pay, their pay level and its progression. A Member State can exempt employers with fewer than 50 workers from the part on progression."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PRATIQUES",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-INFO-DROIT",
+   "libelle": {
+    "fr": "Travailleurs informés de leur droit à l'information",
+    "en": "Workers informed of their right to information"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Oui si, cette année, tous les travailleurs ont été informés de leur droit à connaître leur niveau de rémunération et les niveaux moyens, par sexe, de leur catégorie, et de la façon de le demander (réponse écrite dans les deux mois)."
+    },
+    "en": {
+     "description": "Yes if, this year, all the workers were informed of their right to know their pay level and the average pay levels, by sex, of their category, and of how to ask for it (written answer within two months)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "PRATIQUES",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "entite"
+  },
+  {
+   "code": "SOC-REMU-TOT-HOR-F",
+   "libelle": {
+    "fr": "Somme des rémunérations horaires des femmes",
+    "en": "Sum of the hourly pay of women"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€/h",
+   "decimales": 2,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-MOY-HOR-F] * [SOC-REMU-NB-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-TOT-HOR-H",
+   "libelle": {
+    "fr": "Somme des rémunérations horaires des hommes",
+    "en": "Sum of the hourly pay of men"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€/h",
+   "decimales": 2,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-MOY-HOR-H] * [SOC-REMU-NB-H]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-TOT-AN-F",
+   "libelle": {
+    "fr": "Total des rémunérations annuelles des femmes",
+    "en": "Total annual pay of women"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-MOY-AN-F] * [SOC-REMU-NB-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-TOT-AN-H",
+   "libelle": {
+    "fr": "Total des rémunérations annuelles des hommes",
+    "en": "Total annual pay of men"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-MOY-AN-H] * [SOC-REMU-NB-H]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-VAR-TOT-F",
+   "libelle": {
+    "fr": "Total des parts variables des femmes",
+    "en": "Total variable pay of women"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-VAR-MOY-F] * [SOC-REMU-VAR-NB-F]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-REMU-VAR-TOT-H",
+   "libelle": {
+    "fr": "Total des parts variables des hommes",
+    "en": "Total variable pay of men"
+   },
+   "type_saisie": "Calculé",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "[SOC-REMU-VAR-MOY-H] * [SOC-REMU-VAR-NB-H]",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Donnée de calcul, calculée par l'outil : elle s'additionne d'une entité à l'autre, pour que l'écart du groupe soit recalculé sur les totaux."
+    },
+    "en": {
+     "description": "Calculation data, calculated by the tool: it adds up from one entity to the next, so that the group gap is recalculated from the totals."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "CALCUL",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   }
+  }
+ ],
+ "regles": [
+  {
+   "nom": "Femmes avec part variable ≤ femmes prises en compte",
+   "description": "Les femmes qui reçoivent une part variable font partie des femmes prises en compte.",
+   "gauche": "[SOC-REMU-VAR-NB-F]",
+   "operateur": "<=",
+   "droite": "[SOC-REMU-NB-F]",
+   "tolerance": "0",
+   "bloquante": false,
+   "actif": true,
+   "traductions": {
+    "en": {
+     "nom": "Women with variable pay ≤ women included",
+     "description": "Women who receive variable pay are part of the women included."
+    }
+   }
+  },
+  {
+   "nom": "Hommes avec part variable ≤ hommes pris en compte",
+   "description": "Les hommes qui reçoivent une part variable font partie des hommes pris en compte.",
+   "gauche": "[SOC-REMU-VAR-NB-H]",
+   "operateur": "<=",
+   "droite": "[SOC-REMU-NB-H]",
+   "tolerance": "0",
+   "bloquante": false,
+   "actif": true,
+   "traductions": {
+    "en": {
+     "nom": "Men with variable pay ≤ men included",
+     "description": "Men who receive variable pay are part of the men included."
+    }
+   }
+  }
+ ],
+ "exporte_le": "",
+ "exporte_de": "Bibliothèque de l'outil",
+ "documents": [
+  {
+   "titre": "Directive (EU) 2023/970 (pay transparency)",
+   "editeur": "European Parliament and Council of the European Union",
+   "version": "OJ L 132, 17/05/2023",
+   "date": "2023-05-10",
+   "url": "https://eur-lex.europa.eu/eli/dir/2023/970/oj",
+   "consulte_le": "2026-11-17",
+   "licence": "EU law: reuse allowed with acknowledgement of the source (Commission Decision 2011/833/EU)"
+  }
+ ]
+}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.niveaux.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<div class="page-identite page-niveaux" data-niveaux>
+  <div class="colonne-identite">
+    {% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+    <form method="post" id="f-ligne">{% csrf_token %}</form>
+    <form method="post">
+      {% csrf_token %}
+      <section class="bloc">
+        <h2><span class="num">1</span> {% libelle "admin.niveaux.niveaux_arbre" %} <span class="discret normal texte-mini">{% libelle "admin.niveaux.sommet_bas" nombre=niveaux|length maximum=maximum %}</span></h2>
+        {% libelle "admin.niveaux.nom" as t_nom %}{% libelle "admin.niveaux.pluriel" as t_plu %}{% libelle "admin.reference.legende" nom_langue=langues_champs.reference as t_legende %}{% etiquette_reference t_nom langues_champs as t_nom_ref %}{% etiquette_reference t_plu langues_champs as t_plu_ref %}
+        <details class="aide-repliable aide-suppression">
+          <summary>{% libelle "admin.niveaux.croix_titre" %}</summary>
+          <p>{% libelle "admin.niveaux.croix" %}</p>
+          <p>{% libelle "admin.niveaux.regle_montee" %}</p>
+        </details>
+        {% comment %}Les lignes dessinent l'arbre : chaque niveau est décalé sous celui du dessus (rattachement). Les
+        titres de colonnes remplacent les libellés répétés sur chaque ligne (gardés pour les lecteurs d'écran et le téléphone).{% endcomment %}
+        <div class="tete-niveaux" aria-hidden="true" style="--niveaux:{{ niveaux|length }}"><span>{% libelle "admin.niveaux.col_niveau" %}</span><span>{% libelle "admin.niveaux.couleur" %}</span>
+          <span class="noms-niveau"><span>{{ t_nom }}</span><span>{{ t_plu }}</span>{% if langues_champs.different %}<span class="legende-ref">{{ t_legende }}</span>{% endif %}</span><span>{% libelle "admin.niveaux.col_usage" %}</span><span></span></div>
+        <ol class="liste-niveaux" style="--niveaux:{{ niveaux|length }}">
+          {% libelle "admin.niveaux.monter_rang" as t_mr %}{% libelle "admin.niveaux.supprimer_vide" as t_sv %}{% libelle "admin.niveaux.descendre_rang" as t_dr %}
+          {% for n in niveaux %}
+          <li class="ligne-niveau" data-code="{{ n.code }}" style="--prof:{{ forloop.counter0 }}">
+            <div class="arbre-niveau"><span class="rang-niveau" aria-label="{% libelle "admin.niveaux.rang_n" rang=n.rang %}">{{ n.rang }}</span>
+              <span class="niveau niveau-{{ n.code }}" data-etiquette="{{ n.code }}">{{ n|tr:"nom" }}</span></div>
+            <div class="champ-couleur">
+              <div class="saisie-couleur"><input type="color" value="{{ n.couleur }}" data-pipette="couleur_{{ n.code }}" aria-label="{% libelle "admin.niveaux.couleur_selecteur" nom=n|tr:"nom" %}">
+                <input type="text" name="couleur_{{ n.code }}" id="couleur_{{ n.code }}" value="{{ n.couleur }}" maxlength="7" pattern="#[0-9A-Fa-f]{6}" class="code" aria-label="{% libelle "admin.niveaux.couleur_de" nom=n|tr:"nom" %}"></div>
+            </div>
+            <div class="noms-niveau">
+              <label><span>{{ t_nom_ref }}</span><input type="text" name="nom_{{ n.code }}" value="{{ n.nom }}" maxlength="60" required></label>
+              <label><span>{{ t_plu_ref }}</span><input type="text" name="pluriel_{{ n.code }}" value="{{ n.nom_pluriel }}" maxlength="60"></label>
+              {% if langues_champs.different %}<span class="traduction-ligne discret">{% ligne_traduction n "nom" "nom_pluriel" %}</span>{% endif %}
+            </div>
+            <div class="usage-niveau">
+              <span class="discret">{% if n.utilise %}{% libelle "admin.niveaux.usage_orgs" nombre=n.usage.orgs %} · {% libelle "admin.niveaux.usage_kpis" nombre=n.usage.kpis %}{% if n.usage.regles %} · {% libelle "admin.niveaux.usage_regles" n=n.usage.regles %}{% endif %}{% else %}{% libelle "admin.niveaux.vide" %}{% endif %}</span>
+            </div>
+            <div class="actions-niveau">
+              <button type="submit" form="f-ligne" name="monter" value="{{ n.code }}" class="icone" title="{{ t_mr }}" aria-label="{% libelle "admin.niveaux.monter_nom" nom=n|tr:"nom" %}" {% if forloop.first %}disabled{% endif %}>{% icone "chevron-haut" %}</button>
+              <button type="submit" form="f-ligne" name="descendre" value="{{ n.code }}" class="icone" title="{{ t_dr }}" aria-label="{% libelle "admin.niveaux.descendre_nom" nom=n|tr:"nom" %}" {% if forloop.last %}disabled{% endif %}>{% icone "chevron-bas" %}</button>
+              <button type="submit" form="f-ligne" name="supprimer" value="{{ n.code }}" class="icone supprimer-niveau"
+                {% if n.utilise or niveaux|length == 1 %}disabled title="{% if n.utilise %}{% libelle "admin.niveaux.util_orgs" n=n.usage.orgs as t_uo %}{% libelle "admin.niveaux.util_kpis" nombre=n.usage.kpis as t_uk %}{% if n.usage.regles %}{% libelle "admin.niveaux.util_regles" n=n.usage.regles as t_ur %}{% libelle "admin.niveaux.util_avec_regles" organisations=t_uo kpis=t_uk regles=t_ur as t_ut %}{% else %}{% libelle "admin.niveaux.util_sans_regles" organisations=t_uo kpis=t_uk as t_ut %}{% endif %}{% libelle "admin.niveaux.suppression_impossible" utilisation=t_ut %}{% else %}{% libelle "admin.niveaux.au_moins_un" %}{% endif %}"{% else %}title="{{ t_sv }}" data-confirmer="{% libelle "admin.niveaux.supprimer_confirmer" nom=n|tr:"nom" %}"{% endif %} aria-label="{% libelle "admin.niveaux.supprimer_niveau" nom=n|tr:"nom" %}">{% icone "fermer" %}</button>
+            </div>
+          </li>
+          {% endfor %}
+        </ol>
+        <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% libelle "admin.niveaux.enregistrer" %}</button></div>
+      </section>
+    </form>
+
+    <section class="bloc">
+      <h2><span class="num">2</span> {% libelle "admin.niveaux.ajouter" %}</h2>
+      {% if niveaux|length >= maximum %}<p class="discret">{% libelle "admin.niveaux.maximum_atteint" maximum=maximum %}</p>
+      {% else %}
+      <form method="post" class="ajout-niveau">
+        {% csrf_token %}
+        <label class="champ"><span class="libelle">{{ t_nom_ref }}</span>{% libelle "admin.niveaux.nom_ex" as t_ne %}<input type="text" name="nom" value="{{ post.nom }}" placeholder="{{ t_ne }}" maxlength="60" required></label>
+        <label class="champ"><span class="libelle">{{ t_plu_ref }}</span>{% libelle "admin.niveaux.pluriel_ex" as t_pe %}<input type="text" name="nom_pluriel" value="{{ post.nom_pluriel }}" placeholder="{{ t_pe }}" maxlength="60"></label>
+        <div class="champ-couleur"><span class="libelle">{% libelle "admin.niveaux.couleur" %}</span>
+          <div class="saisie-couleur"><input type="color" value="{{ couleur_suivante }}" data-pipette="couleur_nouveau" aria-label="{% libelle "admin.niveaux.couleur_nouveau_selecteur" %}">
+            <input type="text" name="couleur" id="couleur_nouveau" value="{{ post.couleur|default:couleur_suivante }}" maxlength="7" class="code" aria-label="{% libelle "admin.niveaux.couleur" %}"></div></div>
+        <label class="champ"><span class="libelle">{% libelle "admin.niveaux.position" %}</span>
+          <select name="position">
+            <option value="haut">{% libelle "admin.niveaux.tout_en_haut" %}</option>
+            {% for n in niveaux %}<option value="{{ n.code }}" {% if forloop.last %}selected{% endif %}>{% if forloop.last %}{% libelle "admin.niveaux.sous_en_bas" nom=n|tr:"nom" %}{% else %}{% libelle "admin.niveaux.sous" nom=n|tr:"nom" %}{% endif %}</option>{% endfor %}
+          </select></label>
+        <button type="submit" name="action" value="ajouter">{% libelle "commun.ajouter" %}</button>
+      </form>
+      {% endif %}
+    </section>
+  </div>
+
+  <aside class="colonne-apercu">
+    <div class="tete-apercu-arbre"><h2>{% libelle "admin.niveaux.apercu_arbre" %}</h2>
+      <a href="{% url 'collecte:admin_organisations' %}">{% libelle "admin.niveaux.gerer_orgs" %}</a></div>
+    <ul class="apercu-arbre">
+      {% for o in apercu_orgs %}
+      <li style="--prof:{{ o.prof }}" class="prof-{{ o.prof }} niv-{{ o.niveau_id }}{% if not o.actif %} inactive{% endif %}"><span class="trait" data-trait="{{ o.niveau_id }}"></span>
+        <span class="niveau niveau-{{ o.niveau_id }}" data-etiquette="{{ o.niveau_id }}">{{ o.niveau|tr:"nom" }}</span><span class="nom-org">{{ o.nom }}</span></li>
+      {% empty %}
+      {% for n in niveaux %}
+      <li style="--prof:{{ forloop.counter0 }}" class="prof-{{ forloop.counter0 }} niv-{{ n.code }} exemple"><span class="trait" data-trait="{{ n.code }}"></span>
+        <span class="niveau niveau-{{ n.code }}" data-etiquette="{{ n.code }}">{{ n|tr:"nom" }}</span><span class="nom-org discret">{% libelle "admin.niveaux.exemple" %}</span></li>
+      {% endfor %}
+      {% endfor %}
+    </ul>
+    {% if apercu_autres %}<p class="discret">{% libelle "admin.niveaux.autres" n=apercu_autres %}</p>{% endif %}
+    {% if not apercu_orgs %}<p class="discret">{% libelle "admin.niveaux.aucune_org" %}</p>{% endif %}
+  </aside>
+</div>
+{% endblock %}

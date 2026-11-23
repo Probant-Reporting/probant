@@ -1,0 +1,6 @@
+{% load collecte %}<div class="champ-couleur">
+  <label for="{{ champ.id_for_label }}">{{ champ.label|capfirst }}</label>
+  <div class="saisie-couleur"><input type="color" value="{{ champ.value }}" data-pipette="{{ champ.id_for_label }}" aria-label="{% libelle 'admin.couleur.selecteur' nom=champ.label %}">{{ champ }}</div>
+  <span class="aide-champ">{{ aide }}</span>
+  {% if champ.errors %}<span class="message-champ en-bloc">{{ champ.errors|join:" " }}</span>{% endif %}
+</div>

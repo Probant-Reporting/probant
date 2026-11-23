@@ -1,0 +1,21 @@
+# HTTPS proxy: Let's Encrypt certificate obtained and renewed automatically for DOMAIN (the server must be reachable
+# from the Internet on ports 80 and 443, and the domain name must point to it). "https" profile of docker-compose.yml,
+# which also passes DOMAIN and CADDY_MAX_SIZE from their former French names (DOMAINE, CADDY_TAILLE_MAX) if needed.
+{$DOMAIN} {
+	encode zstd gzip
+	request_body {
+		max_size {$CADDY_MAX_SIZE:50MB}
+	}
+	# idle connections to the tool closed after 60 s, before the tool closes them (GUNICORN_KEEPALIVE, 75 s): a request
+	# is never sent on a connection the tool is closing (error 502 on a save)
+	reverse_proxy web:8000 {
+		transport http {
+			keepalive 60s
+		}
+	}
+	header -Server
+	log {
+		output stdout
+		format console
+	}
+}

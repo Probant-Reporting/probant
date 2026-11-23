@@ -1,0 +1,33 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.referentiels.intro" %}</p>{% endblock %}
+{% block etape %}
+{% include "parametres/_trois_portes.html" with dans_assistant=True %}
+
+<form method="post" class="carte form-mep">
+  {% csrf_token %}
+  <h3>{% libelle "referentiels.mep.referentiels.titre" %}</h3>
+  {% if referentiels %}
+  <table class="table-mep">
+    <thead><tr><th>{% libelle "referentiels.mep.referentiels.col_referentiel" %}</th><th class="nombre">KPI</th><th>{% libelle "referentiels.mep.referentiels.col_frequence" %}</th><th>{% libelle "referentiels.mep.referentiels.col_debut" %}</th></tr></thead>
+    {% for r in referentiels %}
+    <tr><td><span class="pastille-ref" style="--c-ref:{{ r.couleur }}"></span> {{ r }} <span class="id-chip">{{ r.code }}</span>{% if r.origine == "fourni" %} <span class="origine-ref origine-fourni">{% libelle "referentiels.mep.referentiels.fourni" %}</span>{% endif %}</td>
+      <td class="nombre">{{ r.nb_kpi }}</td>
+      <td><select name="frequence__{{ r.code }}" {% if r.nb_campagnes %}disabled{% endif %} aria-label="{% libelle "referentiels.mep.referentiels.aria_frequence" referentiel=r %}">{% for v, l in frequences %}<option value="{{ v }}" {% if r.frequence == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></td>
+      <td><select name="mois_debut__{{ r.code }}" {% if r.nb_campagnes %}disabled{% endif %} aria-label="{% libelle "referentiels.mep.referentiels.aria_debut" referentiel=r %}">{% for n, m in mois %}<option value="{{ n }}" {% if r.mois_debut == n %}selected{% endif %}>{{ m }}</option>{% endfor %}</select></td></tr>
+    {% endfor %}
+  </table>
+  <p class="aide-champ">{% libelle "referentiels.mep.referentiels.frequence_aide" %}</p>
+  {% else %}<p class="discret">{% libelle "referentiels.mep.referentiels.aucun" %}</p>{% endif %}
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% endblock %}
+{% block apercu %}
+{% if apercu_ref %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.referentiels.apercu_titre" referentiel=apercu_ref.0 %}</strong>
+  <ul class="arbre-mep">{% for t in apercu_ref.1 %}<li style="--prof:{% if t.parent_id %}1{% else %}0{% endif %}">{% if t.parent_id %}{{ t }}{% else %}<b>{{ t }}</b>{% endif %}</li>{% endfor %}</ul>
+</div>
+<p class="discret">{% libelle "referentiels.mep.referentiels.apercu_aide" %}</p>
+{% else %}<p class="discret">{% libelle "referentiels.mep.referentiels.apercu_vide" %}</p>{% endif %}
+{% endblock %}

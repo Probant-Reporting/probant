@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.restauration.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour"><a href="{% url 'parametres:hebergement' %}">{% libelle "admin.restauration.retour" %}</a></p>
+<h1 class="texte-grand">{% libelle "admin.restauration.titre_h1" date=date_texte %}</h1>
+<p class="discret">{{ archive.nom }} · {{ archive.taille_texte }}{% if descriptif.installation %} · {% libelle "admin.restauration.installation" nom=descriptif.installation %}{% endif %}
+  · {% libelle "admin.restauration.version" version=descriptif.version %}</p>
+
+<div class="zone-danger">
+  <h2>{% icone "alerte" %} {% libelle "admin.restauration.danger_titre" date=date_texte %}</h2>
+  <ul>
+    <li>{% libelle_html "admin.restauration.danger_1" %}</li>
+    <li>{% libelle_html "admin.restauration.danger_2" %}</li>
+    <li>{% libelle "admin.restauration.danger_3" %}</li>
+    <li>{% libelle_html "admin.restauration.danger_4" %}</li>
+  </ul>
+  {% if refus_espace %}{% encart "erreur" %}{{ refus_espace }}{% endencart %}{% elif espace_archive and request.espace.code != "principal" %}<p>{% libelle "admin.restauration.espace_archive" nom=espace_archive %}</p>{% endif %}
+  {% if not meme_installation %}{% encart "erreur" %}{% libelle "admin.restauration.autre_installation" nom=descriptif.installation %}{% endencart %}{% endif %}
+  {% if version_differente %}{% encart "avertissement" %}{% libelle "admin.restauration.autre_version" version=descriptif.version installee=version_installee %}{% endencart %}{% endif %}
+</div>
+
+{% if resume %}
+<section class="bloc">
+  <h3>{% libelle "admin.restauration.ce_qui_change" %}</h3>
+  <table class="table-mep comparaison-restauration">
+    <thead><tr><th><span class="visuellement-cache">{% libelle "admin.restauration.col.contenu" %}</span></th><th>{% libelle "admin.restauration.aujourdhui" %}</th><th>{% libelle "admin.restauration.dans_sauvegarde" %}</th></tr></thead>
+    {% for libelle, actuel, sauve in resume %}
+    <tr{% if actuel != sauve %} class="different"{% endif %}><th>{{ libelle|capfirst }}</th><td>{{ actuel|default_if_none:"–" }}</td><td>{{ sauve|default_if_none:"–" }}</td></tr>
+    {% endfor %}
+  </table>
+</section>
+{% endif %}
+
+<form method="post" class="bloc confirmation-restauration">{% csrf_token %}
+  {% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+  <label class="case-confirmation"><input type="checkbox" name="compris" required> {% libelle "admin.restauration.compris" date=date_texte %}</label>
+  <label class="champ"><span class="libelle">{% libelle_html "admin.restauration.confirmer" mot=mot %}</span>
+    <input type="text" name="confirmation" autocomplete="off" required pattern="{{ motif_mot }}" placeholder="{{ mot }}"></label>
+  <div class="barre-enregistrement">
+    <button type="submit" class="bouton-danger" {% libelle "admin.restauration.en_cours" as t_ec %}data-attente="{{ t_ec }}">{% libelle "admin.restauration.restaurer" %}</button>
+    <a class="bouton secondaire" href="{% url 'parametres:hebergement' %}">{% libelle "commun.annuler" %}</a>
+  </div>
+</form>
+{% endblock %}

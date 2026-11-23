@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Aide dans l'outil (collecte/aide.py) : le guide du rôle de la personne, rendu depuis docs/guides/ ou docs/fr/guides/ (lisible
+hors ligne). Pas d'introduction qui répète l'écran : le titre du guide, le sommaire, puis les tâches.{% endcomment %}
+{% block titre %}{% libelle "cadre.aide.titre" %}{% endblock %}
+{% block contenu %}
+<div class="page-guide">
+  {% if langue_hors_guides %}<p class="aide-champ">{% libelle "cadre.aide.langues_guides" %}</p>{% endif %}
+  {% if visite %}<p class="rappel-visite"><button type="button" class="secondaire" data-visite-relancer>{% icone "circle-help" %} {% libelle "cadre.visite.relancer" %}</button> <span class="discret">{% libelle "cadre.visite.relancer_aide" %}</span></p>{% endif %}
+  <nav class="guide-sommaire" aria-label="{% libelle "cadre.aide.sommaire" %}">
+    <h2>{% libelle "cadre.aide.sommaire" %}</h2>
+    <ul>{% for ancre, nom in sommaire %}<li><a href="#{{ ancre }}">{{ nom }}</a></li>{% endfor %}</ul>
+  </nav>
+  <article class="guide-corps" lang="{{ langue_guide }}">{{ corps }}</article>
+  <nav class="guide-autres" aria-label="{% libelle "cadre.aide.autres" %}">
+    <h2>{% libelle "cadre.aide.autres" %}</h2>
+    <ul>{% if not guide_son_role %}<li><a href="{% url 'collecte:aide' %}">{% libelle "cadre.aide.le_mien" %}</a></li>{% endif %}
+      {% for url, nom in autres %}<li><a href="{{ url }}">{{ nom }}</a></li>{% endfor %}</ul>
+  </nav>
+</div>
+{% endblock %}

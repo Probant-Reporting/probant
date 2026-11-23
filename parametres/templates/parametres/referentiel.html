@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.reglable.titre_page" titre=titre %}{% endblock %}
+{% block contenu %}
+{% libelle "commun.oui" as t_oui %}{% libelle "commun.non" as t_non %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Une liste par vue (?section=…), toutes bâties pareil : titre, une phrase, aide repliée, tableau, « Enregistrer »,
+puis « Ajouter » en bas du même cadre.{% endcomment %}
+<nav class="sections-reglables" aria-label="{% libelle "referentiels.reglable.listes_aria" %}">
+  {% for s, t, n, resume in sections %}<a href="?section={{ s }}" class="{% if s == section %}actif{% endif %}"{% if s == section %} aria-current="page"{% endif %}><span class="nom">{{ t }} <span class="nb">{{ n }}</span></span><span class="resume">{{ resume }}</span></a>{% endfor %}
+</nav>
+<div class="page-identite page-reglable" data-reglable>
+  <div class="colonne-identite">
+    {% if confirmer_casse %}{% encart "avertissement" %}{{ erreur }}{% endencart %}
+    {% elif erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+    <form method="post" id="f-ligne">{% csrf_token %}</form>
+    <section class="bloc">
+      <h2>{{ titre }} <span class="discret normal texte-mini">{{ elements|length }}</span></h2>
+      <p class="aide-champ remonte">{{ aide }}</p>
+        {% if section == "types-saisie" %}
+        <details class="comportements">
+          <summary>{% libelle "referentiels.reglable.saisie.titre" %}</summary>
+          <div class="grille-comportements">
+            <div><h3>{% libelle "referentiels.reglable.saisie.saisie_titre" %}</h3><p>{% libelle "referentiels.reglable.saisie.saisie_texte" %}</p>
+              <p class="exemple">{% libelle "referentiels.reglable.saisie.saisie_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.saisie.calcul_titre" %}</h3><p>{% libelle "referentiels.reglable.saisie.calcul_texte" %}</p>
+              <p class="exemple">{% libelle "referentiels.reglable.saisie.calcul_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.saisie.herite_titre" %}</h3><p>{% libelle_html "referentiels.reglable.saisie.herite_texte" %}</p>
+              <p class="exemple">{% libelle "referentiels.reglable.saisie.herite_exemple" %}</p></div>
+          </div>
+          <p class="discret">{% libelle "referentiels.reglable.saisie.libre" %}</p>
+          <p class="discret">{% libelle "referentiels.reglable.traductions_aide" %} <a href="{% url 'parametres:langues' %}">{% libelle "referentiels.reglable.traductions_lien" %}</a>. {% libelle "referentiels.reglable.code_aide" %}</p>
+        </details>
+        {% elif section == "types-reponse" %}
+        <details class="comportements">
+          <summary>{% libelle "referentiels.reglable.reponse.titre" %}</summary>
+          <div class="grille-comportements">
+            <div><h3>{% libelle "referentiels.reglable.reponse.nombre_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.nombre_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.nombre_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.reponse.pct_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.pct_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.pct_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.reponse.oui_non_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.oui_non_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.oui_non_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.reponse.liste_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.liste_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.liste_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.reponse.texte_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.texte_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.texte_exemple" %}</p></div>
+            <div><h3>{% libelle "referentiels.reglable.reponse.tableau_titre" %}</h3><p>{% libelle "referentiels.reglable.reponse.tableau_texte" %}</p><p class="exemple">{% libelle "referentiels.reglable.reponse.tableau_exemple" %}</p></div>
+          </div>
+          <p class="discret">{% libelle_html "referentiels.reglable.reponse.fin_debut" %} <a href="?section=unites">{% libelle "referentiels.reglable.reponse.fin_lien" %}</a> {% libelle "referentiels.reglable.reponse.fin_suite" %}</p>
+          <p class="discret">{% libelle "referentiels.reglable.traductions_aide" %} <a href="{% url 'parametres:langues' %}">{% libelle "referentiels.reglable.traductions_lien" %}</a>. {% libelle "referentiels.reglable.code_aide" %}</p>
+        </details>
+        {% else %}
+        <details class="comportements">
+          <summary>{% libelle "admin.referentiel.en_savoir_plus" %}</summary>
+          {% if section == "unites" %}<p>{% libelle_html "admin.unites.legende" %}</p>
+          {% elif section == "categories" %}<p>{% libelle "admin.referentiel.categories.detail" %}</p>
+          {% else %}<p>{% libelle "admin.referentiel.champs.detail" %}</p>{% endif %}
+          <p class="discret">{% libelle "referentiels.reglable.traductions_aide" %} <a href="{% url 'parametres:langues' %}">{% libelle "referentiels.reglable.traductions_lien" %}</a>. {% libelle "referentiels.reglable.code_aide" %}</p>
+        </details>
+        {% endif %}
+      {% if section == "unites" %}{% include "parametres/_unites.html" %}{% else %}
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="nb" value="{{ elements|length }}">
+        {% if elements %}
+        <div class="table-reglable" style="--nb:{{ champs|length }}">
+          <div class="tete-reglable">{% for nom, libelle, genre in champs %}<span class="g-{{ genre }}">{{ libelle }}</span>{% endfor %}<span>{% libelle "referentiels.reglable.usage" %}</span><span></span></div>
+          {% for e in elements %}{% with i=forloop.counter0 %}
+          <div class="ligne-reglable" data-code="{{ e.pk }}">
+            <input type="hidden" name="code__{{ i }}" value="{{ e.pk }}">
+            {% for nom, libelle, genre in champs %}
+            <span class="g-{{ genre }}" data-libelle="{{ libelle }}">
+              {% if nom in figes and e.nb_usages %}
+                <span class="fige" title="{% libelle "referentiels.reglable.fige" %}">{% for v, l in choix|get_item:nom %}{% if v == e|attribut:nom %}{{ l }}{% endif %}{% endfor %} {% icone "cadenas" %}</span>
+              {% elif genre == "case" %}<input type="checkbox" name="{{ nom }}__{{ i }}" {% if e|attribut:nom %}checked{% endif %} aria-label="{{ libelle }}">
+              {% elif genre == "nombre" %}<input type="number" name="{{ nom }}__{{ i }}" value="{{ e|attribut:nom }}" min="0" max="10" aria-label="{{ libelle }}">
+              {% elif genre == "couleur" %}<span class="saisie-couleur"><input type="color" value="{{ e|attribut:nom }}" data-pipette="c{{ i }}" aria-label="{% libelle "referentiels.reglable.selecteur" libelle=libelle %}"><input type="text" id="c{{ i }}" name="{{ nom }}__{{ i }}" value="{{ e|attribut:nom }}" maxlength="7" class="code" aria-label="{{ libelle }}"></span>
+              {% elif genre == "choix" %}<select name="{{ nom }}__{{ i }}" aria-label="{{ libelle }}">{% for v, l in choix|get_item:nom %}<option value="{{ v }}" {% if v == e|attribut:nom %}selected{% endif %}>{{ l }}{% if precisions|get_item:v %} – {{ precisions|get_item:v }}{% endif %}</option>{% endfor %}</select>
+              {% elif genre == "lignes" and e.nb_usages and not e.est_liste %}<span class="discret" title="{% libelle "referentiels.reglable.seule_liste" %}">—</span>
+              {% elif genre == "lignes" %}<textarea name="{{ nom }}__{{ i }}" rows="2" aria-label="{{ libelle }}" placeholder="{% libelle "referentiels.reglable.valeurs_exemple" %}">{{ e|attribut:nom }}</textarea>
+              {% elif genre == "colonnes" and not e.est_tableau %}<span class="discret" title="{% libelle "referentiels.reglable.seul_tableau" %}">—</span>
+              {% elif genre == "colonnes" %}<textarea name="{{ nom }}__{{ i }}" rows="3" aria-label="{{ libelle }}" placeholder="{% libelle "referentiels.reglable.colonnes_exemple" %}">{{ e.colonnes_texte }}</textarea>
+              {% elif genre == "famille" %}<input type="text" name="{{ nom }}__{{ i }}" value="{{ e|attribut:nom }}" list="familles" aria-label="{{ libelle }}">
+              {% else %}<input type="text" name="{{ nom }}__{{ i }}" value="{{ e|attribut:nom }}" aria-label="{{ libelle }}"{% if nom == "abrege" %} maxlength="20"{% endif %}>{% if nom == "libelle" and langues_champs.different %}<small class="traduction-ligne discret">{% if section == "types-saisie" %}{% ligne_traduction e "libelle" "abrege" %}{% else %}{% ligne_traduction e "libelle" %}{% endif %}</small>{% endif %}{% endif %}
+            </span>
+            {% endfor %}
+            <span class="usage-reglable">{% if e.nb_usages %}{{ e.nb_usages }} {{ mot_usage }}{% else %}<span class="discret">{% libelle "referentiels.reglable.inutilise" %}</span>{% endif %}
+              <span class="code-niveau" title="{% libelle "referentiels.reglable.code_fixe" %}">{{ e.pk }}</span></span>
+            <span class="actions-niveau">
+              <button type="submit" form="f-ligne" name="monter" value="{{ e.pk }}" class="icone" title="{% libelle "referentiels.contenu.kpi.monter" %}" aria-label="{% libelle "referentiels.reglable.monter_element" element=e %}" {% if forloop.first %}disabled{% endif %}>{% icone "chevron-haut" %}</button>
+              <button type="submit" form="f-ligne" name="descendre" value="{{ e.pk }}" class="icone" title="{% libelle "referentiels.contenu.kpi.descendre" %}" aria-label="{% libelle "referentiels.reglable.descendre_element" element=e %}" {% if forloop.last %}disabled{% endif %}>{% icone "chevron-bas" %}</button>
+              <button type="submit" form="f-ligne" name="supprimer" value="{{ e.pk }}" class="icone supprimer-niveau" aria-label="{% libelle "referentiels.reglable.supprimer_element" element=e %}"
+                {% if e.nb_usages %}disabled title="{% libelle "referentiels.reglable.supprimer_impossible" %}"{% else %}title="{% libelle "referentiels.reglable.supprimer" %}" data-confirmer="{% libelle "referentiels.reglable.supprimer_confirmer" element=e %}"{% endif %}>{% icone "fermer" %}</button>
+            </span>
+          </div>
+          {% endwith %}{% endfor %}
+        </div>
+        <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% libelle "referentiels.reglable.enregistrer" %}</button></div>
+        {% else %}<p class="discret">{% libelle "referentiels.reglable.aucun_element" %}</p>{% endif %}
+      </form>
+      {% endif %}
+      <div class="ajout-bloc">
+        <h3>{% if section == "unites" %}{% libelle "referentiels.reglable.ajouter_unite" %}{% else %}{% libelle "commun.ajouter" %}{% endif %}</h3>
+      <form method="post" class="ajout-reglable" data-ajout-reglable>
+        {% csrf_token %}
+        {% for nom, libelle, genre in champs %}
+        <label class="champ g-{{ genre }}" data-champ-ajout="{{ nom }}"><span class="libelle">{{ libelle }}</span>
+          {% if genre == "case" %}<input type="checkbox" name="{{ nom }}" {% if nom == "affichee" %}checked{% endif %}>
+          {% elif genre == "nombre" %}<input type="number" name="{{ nom }}" value="{{ post|get_item:nom|default:'2' }}" min="0" max="10">
+          {% elif genre == "couleur" %}<span class="saisie-couleur"><input type="color" value="{{ couleur_suivante }}" data-pipette="c-nouveau" aria-label="{% libelle "referentiels.portes.composer.couleur_selecteur" %}"><input type="text" id="c-nouveau" name="{{ nom }}" value="{{ couleur_suivante }}" maxlength="7" class="code"></span>
+          {% elif genre == "choix" %}<select name="{{ nom }}">{% for v, l in choix|get_item:nom %}<option value="{{ v }}">{{ l }}{% if precisions|get_item:v %} – {{ precisions|get_item:v }}{% endif %}</option>{% endfor %}</select>
+          {% elif genre == "lignes" %}<textarea name="{{ nom }}" rows="4" placeholder="{% libelle "referentiels.reglable.valeurs_exemple_ajout" %}">{{ post|get_item:nom }}</textarea>
+          {% elif genre == "colonnes" %}<textarea name="{{ nom }}" rows="4" placeholder="{% libelle "referentiels.reglable.colonnes_exemple" %}">{{ post|get_item:nom }}</textarea>
+            <span class="aide-champ">{% libelle "referentiels.reglable.colonnes_aide" %}</span>
+          {% elif genre == "famille" %}<input type="text" name="{{ nom }}" data-choix-theme autocomplete="off" aria-label="{% libelle "referentiels.reglable.thematique" %}" value="{{ post|get_item:nom }}">
+          {% else %}<input type="text" name="{{ nom }}" value="{{ post|get_item:nom }}"{% if nom == "abrege" %} maxlength="20"{% endif %}>{% endif %}
+        </label>
+        {% endfor %}
+        <button type="submit" name="action" value="ajouter">{% libelle "commun.ajouter" %}</button>
+      </form>
+        {% if section == "unites" and catalogue_autres %}
+        <details class="comportements catalogue-autres" id="catalogue-unites">
+          <summary>{% libelle "admin.unites.catalogue_titre" %}</summary>
+          <p class="aide-champ">{% libelle "admin.unites.catalogue_aide" %}</p>
+          <div class="grille-catalogue">
+            {% for t in catalogue_autres %}
+            <div class="carte-catalogue">
+              <h4>{{ t.affiche }}</h4>
+              <p class="discret">{{ t.aide }}</p>
+              <div class="puces-catalogue">{% for s in t.suggestions %}<label class="puce-catalogue"><input type="checkbox" name="catalogue" value="{{ t.nom }}|{{ s.symbole }}" form="f-catalogue"><strong>{{ s.affiche }}</strong><span>{{ s.libelle }}{% if s.entier %} · {% libelle "admin.unites.entier_court" %}{% endif %}</span></label>{% endfor %}</div>
+            </div>
+            {% endfor %}
+          </div>
+          <button type="submit" form="f-catalogue">{% libelle "admin.unites.ajouter_cochees" %}</button>
+        </details>
+        {% endif %}
+      </div>
+    </section>
+  </div>
+
+  <aside class="colonne-apercu">
+    <h2>{% libelle "referentiels.mep.apercu" %}</h2>
+    <div class="apercu-reglable">
+      {% if section == "unites" %}{% with u=elements.0 %}
+        <div class="apercu-unite-detail" data-apercu-unite>
+          <p class="titre-apercu-unite"><strong data-ap-symbole>{{ u|tr:"symbole"|default:"—" }}</strong> <span class="discret" data-ap-nom>{{ u|tr:"libelle" }}</span></p>
+          <label class="apercu-etape"><span class="etape-apercu">{% libelle "admin.unites.apercu_saisie" %}</span>
+            <span class="champ-valeur apercu-saisie"><input type="text" inputmode="decimal" value="1234,5678" data-ap-valeur><span class="u" data-ap-u>{{ u|tr:"symbole" }}</span></span></label>
+          <p class="etape-apercu">{% libelle "admin.unites.apercu_affichee" %}</p>
+          <p class="apercu-affiche" data-ap-affiche>{% if u %}{{ u|exemple_unite }}{% endif %}</p>
+          <p class="encart encart-avertissement compact" data-ap-comptage {% if not u.entier %}hidden{% endif %}>{% libelle "referentiels.reglable.apercu.entier" %}</p>
+        </div>{% endwith %}
+      {% elif section == "types-saisie" %}
+        {% for t in elements %}<p>{% etiquette_type t %} <strong>{{ t|tr:"libelle" }}</strong><br><span class="discret">{{ t.aide }}</span></p>{% endfor %}
+      {% elif section == "types-reponse" %}
+        {% for t in elements %}<div class="apercu-reponse"><strong>{{ t|tr:"libelle" }}</strong>
+          {% if t.format == "oui_non" %}<div class="choix-reponse">{% for c in t.choix %}<label class="puce-reponse"><input type="radio" name="ap-{{ forloop.parentloop.counter }}" {% if forloop.first %}checked{% endif %}><span>{{ c }}</span></label>{% endfor %}</div>
+          {% elif t.format == "liste" %}<select class="champ-liste">{% for c in t.choix %}<option>{{ c }}</option>{% endfor %}</select>
+          {% elif t.format == "pourcentage" %}<span class="champ-valeur apercu-champ">35<span class="u">%</span></span>
+          {% elif t.format == "tableau" %}<table class="apercu-tableau"><thead><tr>{% for c in t.colonnes_libelles %}<th scope="col">{{ c }}</th>{% endfor %}</tr></thead><tbody><tr>{% for c in t.colonnes_libelles %}<td>…</td>{% endfor %}</tr></tbody></table>
+          {% elif t.format == "texte" %}<span class="apercu-champ apercu-texte">{% libelle "referentiels.reglable.apercu.texte_exemple" as t_ex %}{{ t_ex|markdown:5 }}</span>
+          {% else %}<span class="champ-valeur apercu-champ">1 234,5</span>{% endif %}</div>{% endfor %}
+      {% elif section == "categories" %}
+        <p class="etape-apercu">{% libelle "referentiels.reglable.apercu.vue_contributeur" %}{% if exemple %} · {{ exemple.code }}{% endif %}</p>
+        <details class="definition" open><summary>{% libelle "referentiels.reglable.apercu.definition" %}</summary>
+          {% for c in elements %}<p data-vue-contrib="{{ c.code }}" {% if not c.affichee %}hidden{% endif %}>{% if not forloop.first %}<strong>{{ c|tr:"libelle" }}.</strong> {% endif %}{{ exemple|description_kpi:c.code|default:"…"|truncatechars:160 }}</p>{% endfor %}
+        </details>
+        <p class="etape-apercu">{% libelle "referentiels.reglable.apercu.vue_admin" %}</p>
+        <div class="fiche-apercu">
+          {% for c in elements %}<div class="rubrique-apercu"><span class="nom-rubrique">{{ c|tr:"libelle" }} <span class="obligatoire" title="{% libelle "referentiels.reglable.apercu.a_remplir" %}" data-vue-oblig="{{ c.code }}" {% if not c.obligatoire %}hidden{% endif %}>*</span></span>
+            <span class="badge-interne" data-vue-interne="{{ c.code }}" {% if c.affichee %}hidden{% endif %}>{% libelle "referentiels.reglable.apercu.interne" %}</span>
+            <span class="champ-rubrique">{{ exemple|description_kpi:c.code|default:"…"|truncatechars:70 }}</span></div>{% endfor %}
+          <p class="discret petit">{% libelle "referentiels.reglable.apercu.legende" %}</p>
+        </div>
+      {% else %}
+        <p class="discret">{% libelle "referentiels.reglable.apercu.fiche_kpi" %}{% if exemple %} · {{ exemple.code }}{% endif %} :</p>
+        {% for c in elements %}<p><strong>{{ c|tr:"libelle" }}</strong> <span class="discret">({{ c|choix_phrase:"type" }})</span><br>
+          {% with v=exemple|champ_kpi:c.code %}{% if c.type == "case" %}{% if v %}{{ t_oui|lower }}{% else %}{{ t_non|lower }}{% endif %}{% else %}{{ v|default:"—" }}{% endif %}{% endwith %}</p>
+        {% empty %}<p class="discret">{% libelle "referentiels.reglable.apercu.aucun_champ" %}</p>{% endfor %}
+      {% endif %}
+    </div>
+  </aside>
+</div>
+<datalist id="familles">{% for f in familles %}<option value="{{ f }}">{% endfor %}</datalist>
+{% endblock %}

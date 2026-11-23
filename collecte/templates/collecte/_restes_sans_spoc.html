@@ -1,0 +1,2 @@
+{% load collecte %}{# Personne à relancer, mais tout n'est pas validé : ce qui reste n'a pas de SPOC (ni e-mail ni relance pour ces cases) #}
+{% encart "info" %}{% libelle "suivi.restes_sans_spoc" n=n %}{% if user.est_admin %} <a href="{% url 'collecte:admin_attributions' %}">{% libelle "suivi.tdb.attribuer_spoc" %}</a>{% endif %}{% endencart %}

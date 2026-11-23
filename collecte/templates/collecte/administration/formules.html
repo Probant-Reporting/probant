@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.formules.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<h2>{% libelle "admin.formules.titre" %}</h2>
+<p class="intro-page">{% libelle "admin.formules.intro" %}</p>
+
+<section class="bloc">
+  <h3>{% libelle "admin.formules.dans_la_formule" n=dans_la_formule|length %}</h3>
+  <p class="aide-champ mt-0">{% libelle "admin.formules.dans_la_formule_aide" %}</p>
+  {% if dans_la_formule %}
+  <div class="defile-x"><table class="carte-table table-formules">
+    <thead><tr><th scope="col">{% libelle "admin.formules.kpi" %}</th><th scope="col">{% libelle "admin.formules.formule" %}</th><th scope="col">{% libelle "admin.formules.probleme" %}</th><th scope="col"><span class="visuellement-cache">{% libelle "admin.formules.action" %}</span></th></tr></thead>
+    <tbody>
+    {% for e in dans_la_formule %}
+      <tr><td><strong>{{ e.kpi.code }}</strong><br><span class="discret">{{ e.kpi.nom }}</span></td>
+        <td><code class="formule-brute">{{ e.kpi.formule|default:"—" }}</code></td>
+        <td>{{ e.probleme }}{% for c in e.inactifs %}<br><a href="{% url 'collecte:referentiel_kpi' c %}">{% libelle "admin.formules.reactiver" code=c %}</a>{% endfor %}</td>
+        <td class="action-ligne"><a class="lien-action" href="{% url 'collecte:referentiel_kpi' e.kpi.code %}" aria-label="{% libelle "admin.formules.corriger_aria" code=e.kpi.code %}">{% libelle "admin.formules.corriger" %}</a></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}{% encart "succes" %}{% libelle "admin.formules.aucune" %}{% endencart %}{% endif %}
+</section>
+
+<section class="bloc">
+  <h3>{% libelle "admin.formules.au_calcul" n=au_calcul|length %}</h3>
+  <p class="aide-champ mt-0">{% libelle "admin.formules.au_calcul_aide" %}</p>
+  {% if au_calcul %}
+  <div class="defile-x"><table class="carte-table table-formules">
+    <thead><tr><th scope="col">{% libelle "admin.formules.kpi" %}</th><th scope="col">{% libelle "admin.formules.formule" %}</th><th scope="col">{% libelle "admin.formules.probleme" %}</th><th scope="col">{% libelle "admin.formules.cases" %}</th><th scope="col"><span class="visuellement-cache">{% libelle "admin.formules.action" %}</span></th></tr></thead>
+    <tbody>
+    {% for e in au_calcul %}
+      <tr><td><strong>{{ e.kpi.code }}</strong><br><span class="discret">{{ e.kpi.nom }}</span></td>
+        <td><code class="formule-brute">{{ e.kpi.formule|default:"—" }}</code></td>
+        <td>{{ e.message|default:"—" }}</td>
+        <td><ul class="cases-erreur">{% for org, c in e.exemples %}<li><a href="{% url 'collecte:cellule' c.pk e.kpi.code org.pk %}">{{ org.nom }} · {{ c.nom_complet_affiche }}</a></li>{% endfor %}{% if e.autres > 0 %}<li class="discret">{% libelle "admin.formules.autres_cases" n=e.autres %}</li>{% endif %}</ul></td>
+        <td class="action-ligne"><a class="lien-action" href="{% url 'collecte:referentiel_kpi' e.kpi.code %}" aria-label="{% libelle "admin.formules.voir_formule_aria" code=e.kpi.code %}">{% libelle "admin.formules.voir_formule" %}</a></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  {% else %}{% encart "succes" %}{% libelle "admin.formules.aucune_erreur" %}{% endencart %}{% endif %}
+</section>
+{% endblock %}

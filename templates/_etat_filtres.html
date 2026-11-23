@@ -1,0 +1,6 @@
+{% load collecte %}{% comment %}Sous une barre de filtres (.barre-filtres) : nombre de résultats et « Effacer les filtres », affichés par
+_app.js (majEtatFiltres) seulement quand un filtre est actif. total : nombre de lignes avant filtre, quand la page affichée
+est déjà filtrée par le serveur ; url_effacer : adresse de la page sans filtre (le serveur filtre), sinon le script vide les
+champs de la barre.{% endcomment %}
+<p class="etat-filtres"{% if total is not None %} data-total="{{ total|stringformat:"d" }}"{% endif %}><span data-compte-filtres hidden></span>
+  <button type="button" class="lien" data-reinitialiser-filtres{% if url_effacer %} data-url="{{ url_effacer }}"{% endif %} hidden>{% icone "x" %} {% libelle "commun.filtres.effacer_tout" %}</button></p>

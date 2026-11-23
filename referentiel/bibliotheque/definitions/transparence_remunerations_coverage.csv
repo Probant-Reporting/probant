@@ -1,0 +1,27 @@
+reference,requirement,datapoint,status,kpi_codes,note
+Art. 9(1)(a),if_applicable,Gender pay gap (difference in average pay levels as a % of men's average pay level),covered,SOC-ECART-MOY-HOR SOC-ECART-MOY-AN SOC-REMU-NB-F SOC-REMU-NB-H SOC-REMU-MOY-HOR-F SOC-REMU-MOY-HOR-H SOC-REMU-MOY-AN-F SOC-REMU-MOY-AN-H SOC-REMU-TOT-HOR-F SOC-REMU-TOT-HOR-H SOC-REMU-TOT-AN-F SOC-REMU-TOT-AN-H,"Pay level = gross annual pay and the corresponding gross hourly pay (Art. 3.1 b): both gaps. The entity enters averages and headcounts; the tool calculates the gap at every level from the totals (Formula aggregation), so the group gap is exact."
+Art. 9(1)(b),if_applicable,Gender pay gap in complementary or variable components,covered,SOC-ECART-VAR-MOY SOC-REMU-VAR-MOY-F SOC-REMU-VAR-MOY-H SOC-REMU-VAR-TOT-F SOC-REMU-VAR-TOT-H,"Average over the workers who receive variable pay (the directive does not say; usual practice, to check against national law). Recalculated at every level from the totals."
+Art. 9(1)(c),if_applicable,Median gender pay gap,covered,SOC-ECART-MED-HOR SOC-ECART-MED-AN,"Hourly and annual. Entered by the entity; no group value, because a median cannot be derived from the medians of the entities."
+Art. 9(1)(d),if_applicable,Median gender pay gap in complementary or variable components,covered,SOC-ECART-VAR-MED,Entered by the entity; no group value.
+Art. 9(1)(e),if_applicable,Proportion of female and male workers receiving complementary or variable components,covered,SOC-REMU-VAR-PART-F SOC-REMU-VAR-PART-H SOC-REMU-VAR-NB-F SOC-REMU-VAR-NB-H,Calculated from the counts at every level.
+Art. 9(1)(f),if_applicable,Proportion of female and male workers in each quartile pay band,covered,SOC-QUARTILE-1-F SOC-QUARTILE-1-H SOC-QUARTILE-2-F SOC-QUARTILE-2-H SOC-QUARTILE-3-F SOC-QUARTILE-3-H SOC-QUARTILE-4-F SOC-QUARTILE-4-H,"Share of women entered per quartile, share of men calculated (100% minus women). No group value: quartiles cannot be derived from those of the entities."
+Art. 9(1)(g),if_applicable,"Gender pay gap by category of workers, broken down by basic wage or salary and variable components",covered,SOC-ECART-CATEGORIES,"Table answer: one row per category (categories are set by each employer), with the number of women and men and the two gaps."
+Art. 9(2),if_applicable,"Employers with 250 workers or more: report every year, first by 7 June 2027",covered,SOC-ECART-DECL-SOUMIS,Thresholds and dates in the description; national law sets the exact dates.
+Art. 9(3),if_applicable,"Employers with 150 to 249 workers: report every three years, first by 7 June 2027",covered,SOC-ECART-DECL-SOUMIS,
+Art. 9(4),if_applicable,"Employers with 100 to 149 workers: report every three years, first by 7 June 2031",covered,SOC-ECART-DECL-SOUMIS,
+Art. 9(5),voluntary,Employers with fewer than 100 workers may report voluntarily,covered,SOC-ECART-DECL-SOUMIS,"Optional yes / no (the row is a « may »): it says whether the employer reports this year. An employer that does not report answers N/A to all the pay data."
+Art. 9(6),if_applicable,Accuracy confirmed by management after consulting workers' representatives,covered,SOC-ECART-CONFIRME,
+Art. 9(7),if_applicable,Information (a) to (g) sent to the monitoring authority; (a) to (f) may be published,covered,SOC-ECART-TRANSMIS SOC-ECART-PUBLIE,Publication is an optional item.
+Art. 9(8),if_applicable,Member State may compile (a) to (f) itself from administrative data,out_of_scope,,An option for the Member State: nothing for the employer to collect.
+Art. 9(9),if_applicable,Information (g) provided to all workers and their representatives,covered,SOC-ECART-CAT-DIFFUSE,
+Art. 9(10),if_applicable,"Answer requests for clarification; remedy gaps that are not justified",out_of_scope,,A process with workers and authorities: not a value per period. The joint pay assessment (Art. 10) follows it.
+Art. 10(1),if_applicable,"Joint pay assessment when a gap of at least 5% in a category is neither justified nor remedied within six months",covered,SOC-ECART-CAT-5PCT SOC-EVAL-CONJOINTE-REQUISE,
+Art. 10(2),if_applicable,"Content of the joint pay assessment (analysis, reasons, measures, evaluation)",out_of_scope,,A document written with the workers' representatives (writing a report is out of scope). Its figures by category are in SOC-ECART-CATEGORIES.
+Art. 10(3),if_applicable,Joint pay assessment made available to workers and sent to the monitoring body,covered,SOC-EVAL-CONJOINTE-MENEE,
+Art. 5(1),mandatory,Applicants receive the starting pay or its range and the applicable collective agreement rules,covered,SOC-REMU-INFO-CANDIDATS,
+Art. 5(2),mandatory,No question to applicants on their pay history,covered,SOC-REMU-HISTO-NON-DEMANDE,
+Art. 5(3),mandatory,Gender-neutral job vacancy notices and non-discriminatory recruitment,out_of_scope,,A quality of every recruitment: no single value to collect.
+Art. 6(1),mandatory,"Criteria for pay, pay levels and pay progression easily accessible to workers",covered,SOC-REMU-CRITERES-ACCES,
+Art. 7(1),mandatory,Workers can request their pay level and the average pay levels by sex of their category,out_of_scope,,An individual right exercised on request: not a value per period. Art. 7.3 (annual information) is covered.
+Art. 7(3),mandatory,Workers informed every year of their right to information and how to use it,covered,SOC-REMU-INFO-DROIT,
+Art. 7(4),mandatory,Information provided within two months of the request,out_of_scope,,Answers to individual requests: not a value per period.

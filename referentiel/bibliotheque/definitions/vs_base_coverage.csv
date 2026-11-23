@@ -1,0 +1,121 @@
+reference,requirement,datapoint,status,kpi_codes,note
+Rapport · Lang!G7,mandatory,G7,automatic,,"Display language of the workbook, chosen at export."
+Rapport · Gen!D3,mandatory,Name of the reporting entity,automatic,,Name of the exported organisation.
+XBRL (Gen!D4),mandatory,Identifier of the reporting entity (select and specify on the right),covered,GEN-IDENT-TYPE,
+XBRL (Gen!E4),mandatory,Identifier of the reporting entity (select and specify on the right),covered,GEN-IDENT,
+Rapport · Gen!D5,mandatory,Currency of the monetary values in the report,automatic,,EUR: the amounts of the templates are in euros.
+Rapport · Gen!D6,mandatory,Starting year,automatic,,Start of the exported reporting year.
+Rapport · Gen!D7,mandatory,Starting month,automatic,,Start of the exported reporting year.
+Rapport · Gen!D8,mandatory,Starting day,automatic,,Start of the exported reporting year.
+Rapport · Gen!D10,mandatory,Ending year,automatic,,End of the exported reporting year.
+Rapport · Gen!D11,mandatory,Ending month,automatic,,End of the exported reporting year.
+Rapport · Gen!D12,mandatory,Ending day,automatic,,End of the exported reporting year.
+Introduction (Gen!C17),voluntary,Introduction and/or other entity specific information,covered,GEN-INTRO,
+18 (Gen!E21),voluntary,This report contains disclosures from the previous reporting period that remain unchanged,covered,GEN-INFOS-INCHANGEES,Ticked when the table of unchanged disclosures has rows.
+18 (Gen!E122),voluntary,Link to previous report containing disclosures that remain unchanged,covered,GEN-RAPPORT-LIEN,
+B1 · Gen!E125,mandatory,Basis for preparation (Basic Module Only or Basic & Comprehensive Module),automatic,,"Option A, or Option B when the Comprehensive Module template is installed and active."
+B1 · 27(a) (Gen!E126),mandatory,Explicit statement of compliance,covered,GEN-CONFORMITE,
+B1 · 27(c) (Gen!E175),mandatory,Basis for reporting (consolidated or individual basis),covered,GEN-PERIMETRE,
+B1 · 27(e)(i) (Gen!E176),mandatory,Undertakings legal form,covered,GEN-FORME-JURIDIQUE,
+B1 · 27(e)(i) (Gen!E177),voluntary,Other undertaking's legal form specification,covered,GEN-FORME-AUTRE,
+B1 · 27(e)(iii) (Gen!E278),mandatory,Size of balance sheet (total assets) in,covered,ECO-TOTAL-BILAN,
+B1 · 27(e)(iv) (Gen!E279),mandatory,Turnover in,covered,ECO-CA,"M€ multiplied by 1,000,000 (report currency: EUR)."
+B1 · 27(e)(v) (Gen!E280),mandatory,Number of employees,covered,SOC-EFFECTIF,
+B1 · Gen!E281,mandatory,Employee counting methodology (At the end of reporting period or as an average during the reporting period),automatic,,Employees counted at the end of the reporting period (SOC-EFFECTIF).
+B1 · Gen!E282,mandatory,Employee counting methodology (Headcount or Full-time equivalent),automatic,,Employees counted as a headcount (SOC-EFFECTIF).
+B1 · 27(e)(vi) (Gen!E283),mandatory,Country of primary operations and location of significant asset(s),covered,GEN-PAYS-PRINCIPAL,
+B1 · 28 (Gen!E392),if_applicable,Has the undertaking obtained any sustainability-related certification(s) or label(s) ?,covered,GEN-CERTIF,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B1 · 28 (Gen!E393),if_applicable,Description of sustainability-related certification(s) or label(s) including where relevant the issuers of the certification or label date and rating score,covered,GEN-CERTIF-DESC,
+B1 (Gen!C531),voluntary,Other general entity-specific information,covered,GEN-AUTRES,Cell locked by mistake in Digital Template 2.0.0; filled all the same.
+B2 · 29-31 (Gen!C508),if_applicable,Has the undertaking put in place specific practices policies and or future initiatives for transitioning towards a more sustainable economy?,covered,GOV-B2-PRATIQUES,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B2 · 29-31 (Gen!D508),if_applicable,Climate change,covered,GOV-B2-CLIMAT,
+B2 · 29-31 (Gen!E508),if_applicable,Pollution,covered,GOV-B2-POLLUTION,
+B2 · 29-31 (Gen!F508),if_applicable,Water and marine resources,covered,GOV-B2-EAU,
+B2 · 29-31 (Gen!G508),if_applicable,Biodiversity and ecosystems,covered,GOV-B2-BIODIV,
+B2 · 29-31 (Gen!H508),if_applicable,Circular economy and Resource Use,covered,GOV-B2-CIRCULAIRE,
+B2 · 29-31 (Gen!I508),if_applicable,Own workforce,covered,GOV-B2-PERSONNEL,
+B2 · 29-31 (Gen!J508),if_applicable,Workers in the value chain,covered,GOV-B2-CHAINE,
+B2 · 29-31 (Gen!K508),if_applicable,Affected communities,covered,GOV-B2-COMMUNAUTES,
+B2 · 29-31 (Gen!L508),if_applicable,Practices on the issue: consumers and end-users,covered,GOV-B2-CONSO,
+B2 · 29-31 (Gen!M508),if_applicable,Business conduct,covered,GOV-B2-CONDUITE,
+B2 · 29-31 (Gen!N508),if_applicable,Undertaking has a practice policy and or future initiative that is publicly available,covered,GOV-B2-PUBLIC,
+B2 · 29-31 (Gen!O508),if_applicable,Undertaking has set a target which is related to a policy,covered,GOV-B2-CIBLE,
+B2 · guidance 15 (Gen!D512),voluntary,Effective participation of workers users or other interested parties or communities in governance,covered,GEN-COOP-PARTICIPATION,
+B2 · guidance 15 (Gen!D513),voluntary,Financial investment in the capital or assets of social economy entities referred to in the Council Recommendation of 29 September 2023 (excluding donations and,covered,GEN-COOP-INVEST,
+B2 · guidance 15 (Gen!D514),voluntary,Any limits to the distribution of profits connected to the mutualistic nature or to the nature of the activities consisting in services of general economic inte,covered,GEN-COOP-LIMITES,
+B3 · 32 (Env!G5),mandatory,Total Energy Consumption,covered,NRJ-TOTAL-MWH,kWh converted to MWh in the tool (NRJ-TOTAL-MWH).
+B3 · 32 (Env!G10),if_applicable,Voluntary for undertakings with 10 employees or less - Has the undertaking obtained the necessary information to provide an energy consumption breakdown?,covered,NRJ-ELEC,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B3 · 32 (Env!G12),if_applicable,Electricity (as reflected in utility billings),covered,NRJ-ELEC-REN,kWh converted to MWh.
+B3 · 32 (Env!J12),if_applicable,Electricity (as reflected in utility billings),covered,NRJ-ELEC NRJ-ELEC-REN NRJ-CHALEUR NRJ-FROID,"Purchased minus renewable electricity, plus purchased heat, steam and cooling (EFRAG guidance § 24), in MWh."
+B3 · 32 (Env!G13),if_applicable,Self-generated electricity,covered,NRJ-ELEC-AUTO,kWh converted to MWh.
+B3 · 32 (Env!G14),if_applicable,Renewable fuels,covered,NRJ-COMB-REN,"Renewable fuels in MWh (0 when only fossil fuels are reported), written in place of the Fuel Converter link (allowed by EFRAG)."
+B3 · 32 (Env!J14),if_applicable,Energy from fuels,covered,NRJ-COMBUSTIBLES,"Fossil fuels in MWh on a net calorific value basis (gas converted from gross with CONV-GAZ-PCI), written in place of the Fuel Converter link (allowed by EFRAG)."
+B3 · 33 (Env!D22),mandatory,Gross Scope 1 GHG Emissions,covered,GES-S1 GES-S1-AUTRES,"Scope 1 calculated in the tool plus the other direct emissions entered (process, other fuels)."
+B3 · 33 (Env!D23),mandatory,"Energy indirect emissions (scope 2, location-based)",covered,GES-S2-LB,
+B3 · 33 (guidance) (Env!D24),voluntary,"Energy indirect emissions (scope 2, market-based)",covered,GES-S2-MB,"Market-based factors of electricity, heat, steam and cooling contracts, residual mix otherwise (EFRAG guidance § 46)."
+B3 · 49-52 (Env!G29),voluntary,Voluntary for undertakings with 10 employees or less - Is the undertaking disclosing entity-specific information on Scope 3 emissions (in tCO2eq)?,covered,GES-S3-ACHATS GES-S3-IMMO GES-S3-ENERGIE GES-S3-FRET-AMONT GES-S3-DECHETS GES-S3-DEPLACEMENTS GES-S3-DOMICILE GES-S3-ACTIFS-AMONT GES-S3-FRET-AVAL GES-S3-TRANSFO GES-S3-UTILISATION GES-S3-FIN-VIE GES-S3-ACTIFS-AVAL GES-S3-FRANCHISES GES-S3-INVEST,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B3 · 49-52 (Env!D30),voluntary,1. Purchased Goods and Services,covered,GES-S3-ACHATS,
+B3 · 49-52 (Env!D31),voluntary,2. Capital Goods,covered,GES-S3-IMMO,
+B3 · 49-52 (Env!D32),voluntary,3. Fuel- and Energy-Related Activities (Not Included in Scope 1 or Scope 2),covered,GES-S3-ENERGIE,
+B3 · 49-52 (Env!D33),voluntary,4. Upstream Transportation and Distribution,covered,GES-S3-FRET-AMONT,
+B3 · 49-52 (Env!D34),voluntary,5. Waste Generated in Operations,covered,GES-S3-DECHETS,
+B3 · 49-52 (Env!D35),voluntary,6. Business Travel,covered,GES-S3-DEPLACEMENTS,
+B3 · 49-52 (Env!D36),voluntary,7. Employee Commuting,covered,GES-S3-DOMICILE,
+B3 · 49-52 (Env!D37),voluntary,8. Upstream Leased Assets,covered,GES-S3-ACTIFS-AMONT,
+B3 · 49-52 (Env!D38),voluntary,9. Downstream Transportation and Distribution,covered,GES-S3-FRET-AVAL,
+B3 · 49-52 (Env!D39),voluntary,10. Processing of Sold Products,covered,GES-S3-TRANSFO,
+B3 · 49-52 (Env!D40),voluntary,11. Use of Sold Products,covered,GES-S3-UTILISATION,
+B3 · 49-52 (Env!D41),voluntary,12. End-of-Life Treatment of Sold Products,covered,GES-S3-FIN-VIE,
+B3 · 49-52 (Env!D42),voluntary,13. Downstream Leased Assets,covered,GES-S3-ACTIFS-AVAL,
+B3 · 49-52 (Env!D43),voluntary,14. Franchises,covered,GES-S3-FRANCHISES,
+B3 · 49-52 (Env!D44),voluntary,15. Investments,covered,GES-S3-INVEST,
+B4 · 34 (Env!G68),if_applicable,Is the undertaking already required to report to competent authorities by EU or national law its emissions to pollutants or does it already voluntarily report o,covered,POL-DECLARATION,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B4 · 34 (Env!G69),if_applicable,Is this disclosure already publicly available?,covered,POL-PUBLIC,
+B4 · 34 (Env!G70),if_applicable,Please provide the relevant URL link or hyperlink of where this information is reported,covered,POL-URL,
+B4 · 34 (Env!C72),if_applicable,Please select the unit used for reporting the amount (i.e. either kg or tonne),covered,POL-REJETS POL-REJETS-AUTRES,Unit of the pollutant tables: kilograms.
+B5 · 35 (Env!G189),if_applicable,Does the undertaking have sites that are located in or near biodiversity sensitive areas?,covered,BIO-SITES,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B6 · 36 (Env!D296),mandatory,Total amount of water withdrawn from all sites (cubic meters m³),covered,EAU-PRELEVEMENT,
+B6 · 37 (Env!D301),if_applicable,Voluntary for undertakings with 10 employees or less - Does the undertaking have production processes in place which significantly consume water (e.g. thermal e,covered,EAU-REJET-PROCESS,Ticked when water is discharged from production processes (0 means no such processes).
+B6 · 37 (Env!D302),if_applicable,Water discharge from undertaking production processes (m³),covered,EAU-REJET-PROCESS,Written only if greater than 0.
+B6 · 37 (Env!D304),if_applicable,Water consumed at sites in water-stress areas,covered,EAU-STRESS,
+B7 · 38 (Env!D309),mandatory,Undertaking applies circular economy principles,covered,ECO-CIRCULAIRE,
+B7 · 38 (Env!D310),if_applicable,Description of how it applies these principles,covered,ECO-CIRCULAIRE-DESC,
+B7 · 39(a) (Env!G416),if_applicable,Total amount of waste generated,covered,DEC-TOTAL,"Unit of the waste totals: tonnes, or kilograms when the table by waste code is filled in."
+B7 · 39(a) (Env!J416),mandatory,Hazardous waste generated,covered,DEC-DANGEREUX,Total in tonnes written in place of the calculation from the waste-code table.
+B7 · 39(a) (Env!J417),mandatory,Total waste generated,covered,DEC-TOTAL DEC-DANGEREUX,"Total minus hazardous, written in place of the calculation from the waste-code table."
+B7 · 39(b) (Env!J422),mandatory,Waste diverted to recycling,covered,DEC-RECYCLES DEC-TOTAL,"Recycled ÷ total waste, written in place of the calculation from the waste-code table."
+B7 · 39(b) (Env!J423),mandatory,Waste diverted to preparation for reuse,covered,DEC-REEMPLOI DEC-TOTAL,"Prepared for reuse ÷ total waste (from the waste-code table when filled in), written in place of the workbook's formula 1 − J422, which is wrong."
+B7 · 39(c) (Env!G430),if_applicable,Voluntary for undertakings with 10 employees or less - Does the undertaking the undertaking operate in a sector using significant material flows (for example ma,covered,ECO-MATIERES,Ticked when the material table has rows.
+B1 (Env!C545),voluntary,Other environmental entity-specific information,covered,ENV-AUTRES,Cell locked by mistake in Digital Template 2.0.0; filled all the same.
+B8 · 40(a) (Soc!D10),mandatory,Permanent contract,covered,SOC-EFF-CDI,
+B8 · 40(b) (Soc!D18),mandatory,Male,covered,SOC-EFF-HOMMES,
+B8 · 40(b) (Soc!D19),mandatory,Female,covered,SOC-EFF-FEMMES,
+B8 · 40(b) (Soc!D20),voluntary,Other,covered,SOC-EFF-GENRE-AUTRE,
+B8 · 40(b) (Soc!D21),voluntary,Not reported,covered,SOC-EFF-GENRE-NC,
+B9 · 41(a) (Soc!D133),mandatory,Number of recordable work-related accidents in the reporting period,covered,SOC-ACCIDENTS-ENREG,
+B9 · 41(a) (Soc!D136),if_applicable,Select whether the rate is per 100 or 500 full-time workers over a yearly time frame,covered,SOC-ACCIDENTS-ENREG,"Rate per 500 full-time workers (1,000,000 hours), like the usual frequency rate."
+B9 · 41(b) (Soc!D139),mandatory,Work-related fatalities,covered,SOC-DECES,
+B10 · 42(a) (Soc!D142),mandatory,Employees receive pay that is equal or above applicable minimum wage determined directly by the national minimum wage law or through a collective bargaining agr,covered,SOC-SALAIRE-MINIMUM,
+B10 · 42(b) (Soc!D143),if_applicable,Is the undertaking is already required by EU law or other national regulations to report the percentage gap in pay between its female and male employees ?,covered,SOC-ECART-OBLIGATION,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B10 · 42(b) (Soc!D144),if_applicable,Average gross hourly pay level of male employees,covered,SOC-REMU-H-HOMMES,
+B10 · 42(b) (Soc!D145),if_applicable,Average gross hourly pay level of female employees,covered,SOC-REMU-H-FEMMES,
+B10 · 42(c) (Soc!D147),mandatory,Number of employees covered by collective bargaining agreements (in headcount),covered,SOC-SAL-CONVENTION,
+B10 · 42(d) (Soc!D153),mandatory,Training hours,covered,SOC-HEURES-FORM,
+B10 · 42(d) (Soc!D154),mandatory,Total number of employees in headcount,covered,SOC-EFFECTIF,
+B1 (Soc!C197),voluntary,Disclosure of any other social and/or entity specific social disclosures,covered,SOC-AUTRES,
+B11 · 43 (Gov!H5),if_applicable,Has the undertaking incurred in convictions and fines in the reporting period?,covered,GOV-CORRUPTION GOV-AMENDES,Yellow checkbox (not reported in XBRL): ticked when the information exists.
+B11 · 43 (Gov!H6),if_applicable,Total number of convictions for the violation of anti-corruption and anti-bribery laws,covered,GOV-CORRUPTION,Written only if greater than 0.
+B11 · 43 (Gov!H7),if_applicable,Total amount of fines for the violation of anti-corruption and anti-bribery laws,covered,GOV-AMENDES,Written only if greater than 0.
+B1 (Gov!C30),voluntary,Disclosure of any other governance and/or entity specific governance disclosures,covered,GOV-AUTRES,
+B1 · 27(e)(ii) (Gen!E178:E277),mandatory,NACE sector classification code(s),covered,GEN-NACE,Codes typed in the tool (one per line) matched to EFRAG's NACE list.
+B1 · 27(e)(vii) (Gen!D402:H501),mandatory,"List of sites (address, postal code, city, country)",covered,GEN-SITE-ADRESSE GEN-SITE-CP GEN-SITE-VILLE GEN-SITE-PAYS GEN-SITE-GPS,"One row per site (lowest level of the tree, open during the year), from the site's answers."
+B1 · 27(d) (Gen!D288:E387),if_applicable,List of subsidiaries with registered address (consolidated basis),covered,GEN-FILIALES,Table answer (one row per subsidiary) collected at the top of the tree.
+B1 · 27(b) (ToC!D13:D65),voluntary,Disclosures omitted as classified or sensitive information,covered,GEN-OMISSIONS,Table answer (one row per omitted disclosure); each row ticks its 'classified or sensitive information' checkbox in the table of contents.
+18 (Gen!E22:E121),voluntary,Disclosures unchanged from the previous report,covered,GEN-INFOS-INCHANGEES,Table answer; written in the display language of the workbook (its list values are translated labels).
+B4 · 34 (Env!D74:K173),if_applicable,"Emissions of each pollutant of the EU list to air, water and soil",covered,POL-REJETS,"Table answer collected per site (one row per pollutant, kg); rows of the same pollutant added up."
+B4 · 34 (Env!D174:K184),voluntary,"Emissions of other pollutants to air, water and soil",covered,POL-REJETS-AUTRES,"Table answer collected per site (pollutants outside the EU list, kg)."
+B7 · 39(a) (Env!D316:L415),voluntary,"Waste generated by European waste code, with shares diverted to recycling and reuse",covered,DEC-PAR-CODE,Optional table answer per site (one row per European waste code); written in kg so that the workbook's totals are right (its formula reads the unit in G438).
+B7 · 39(c) (Env!D432:J531),if_applicable,Annual mass-flow of relevant materials used,covered,ECO-MATIERES,"Table answer (one row per key material, quantity and unit)."
+B5 · 35 (Env!C191:K290),if_applicable,Sites in or near biodiversity sensitive areas,covered,BIO-SITE-ZONE BIO-SITE-ZONE-NOM,"Sites answering 'in' or 'near' a sensitive area, with their ID from the list of sites."
+B8 · 40(c) (Soc!C29:E128),if_applicable,Employees by country of employment contract,covered,GEN-SITE-PAYS SOC-EFFECTIF,Sum of the sites' headcount per country of the site; filled when there is more than one country.
+B9 · 41(a) (Soc!D134),mandatory,Hours worked by one full-time employee,automatic,,"The workbook's default of 2,000 hours is kept; the company can change it in the workbook."

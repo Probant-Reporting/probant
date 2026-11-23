@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.echanges.nav.officiel" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/echanges/_nav.html" %}
+{% if not formats %}
+{% libelle "suivi.officiel.vide_titre" as t_vide %}{% libelle "suivi.officiel.vide_phrase" as t_phrase %}{% libelle "suivi.officiel.vide_action" as t_action %}
+{% url 'parametres:referentiels' as u_ref %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_phrase url=u_ref action=t_action %}
+{% else %}
+<form method="post" class="carte form-export-officiel">{% csrf_token %}
+  <h2>{% libelle "suivi.officiel.titre" %}</h2>
+  <div class="champs-ligne">
+    <label class="champ"><span class="libelle">{% libelle "suivi.officiel.format" %}</span>
+      <select name="format">{% for f in formats %}<option value="{{ f.code }}" {% if choix.format == f.code %}selected{% endif %}>{{ f.nom }} – {% libelle "suivi.officiel.version" version=f.version %}</option>{% endfor %}</select></label>
+    <label class="champ"><span class="libelle">{% libelle "suivi.officiel.organisation" %}</span>
+      <select name="organisation">{% for o in organisations %}<option value="{{ o.pk }}" {% if choix.organisation == o.pk %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></label>
+    <label class="champ"><span class="libelle">{% libelle "suivi.officiel.exercice" %}</span>
+      <select name="periode">{% for f in formats %}{% for p in f.periodes %}<option value="{{ p.pk }}" {% if choix.periode == p.pk %}selected{% endif %}>{{ p }}</option>{% endfor %}{% endfor %}</select></label>
+    <label class="champ"><span class="libelle">{% libelle "suivi.officiel.langue" %}</span>
+      <select name="langue">{% for lg, nom in langues %}<option value="{{ lg }}" {% if choix.langue == lg %}selected{% endif %}>{{ nom }}</option>{% endfor %}</select></label>
+  </div>
+  <p class="aide-champ">{% libelle "suivi.officiel.aide" %}</p>
+  <div class="barre-enregistrement">
+    <button type="submit" name="action" value="telecharger">{% icone "telecharger" %} {% libelle "suivi.officiel.telecharger" %}</button>
+    <button type="submit" name="action" value="verifier" class="secondaire">{% libelle "suivi.officiel.verifier" %}</button>
+  </div>
+</form>
+{% if rapport %}
+<section class="carte rapport-export-officiel" aria-labelledby="titre-rapport-officiel">
+  <h2 id="titre-rapport-officiel">{% libelle "suivi.officiel.rapport_titre" %}</h2>
+  <p>{% libelle "suivi.officiel.rapport_remplies" n=rapport.remplies %} {% if rapport.option_b %}{% libelle "suivi.officiel.option_b" %}{% else %}{% libelle "suivi.officiel.option_a" %}{% endif %}</p>
+  {% if rapport.manquantes %}
+  <h3>{% libelle "suivi.officiel.manquantes" n=rapport.manquantes|length %}</h3>
+  <ul>{% for module, noms in rapport.manquantes %}<li><strong>{{ module }}</strong> · {{ noms|join:", " }}</li>{% endfor %}</ul>
+  {% else %}{% encart "succes" %}{% libelle "suivi.officiel.rien_ne_manque" %}{% endencart %}{% endif %}
+  {% if rapport.non_validees %}
+  <h3>{% libelle "suivi.officiel.non_validees" n=rapport.non_validees|length %}</h3>
+  <p class="discret">{{ rapport.non_validees|join:", " }}</p>
+  {% endif %}
+  {% if rapport.messages %}
+  <h3>{% libelle "suivi.officiel.remarques" %}</h3>
+  <ul>{% for m in rapport.messages %}<li>{{ m }}</li>{% endfor %}</ul>
+  {% endif %}
+  <p class="discret petit">{% libelle "suivi.officiel.suite" %}</p>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

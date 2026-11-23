@@ -1,0 +1,7 @@
+{% load collecte %}{# Une couleur des graphiques : sélecteur, code, contraste sur le fond des cartes (3:1 au moins) #}
+<div class="champ-couleur champ-viz">
+  <label for="{{ champ.id_for_label }}">{{ nom }}</label>
+  <div class="saisie-couleur"><input type="color" value="{{ champ.value }}" data-pipette="{{ champ.id_for_label }}" aria-label="{% libelle 'visu.couleurs.selecteur' nom=nom %}">{{ champ }}</div>
+  <span class="aide-champ"><span class="marque-viz {% if c.rapport >= 3 %}ok{% else %}bas{% endif %}" data-marque-viz="{{ champ.id_for_label }}" aria-hidden="true"></span><span data-rapport-viz="{{ champ.id_for_label }}">{{ c.rapport }}</span>:1 {% libelle "visu.couleurs.rapport" %}<span class="claire-viz" data-claire-viz="{{ champ.id_for_label }}"{% if not c.claire %} hidden{% endif %}> · {% libelle "visu.couleurs.claire" %}</span></span>
+  {% if champ.errors %}<span class="message-champ en-bloc">{{ champ.errors|join:" " }}</span>{% endif %}
+</div>

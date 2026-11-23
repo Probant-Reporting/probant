@@ -1,0 +1,65 @@
+{% load collecte %}
+<form method="post" class="monnaie-reference" id="monnaie-reference">{% csrf_token %}
+  <input type="hidden" name="action" value="monnaie">
+  <label for="choix-monnaie" class="libelle">{% libelle "admin.monnaies.titre" %}</label>
+  <span class="ligne-monnaie">
+    <select name="monnaie" id="choix-monnaie" aria-describedby="aide-monnaie">{% for c, t in monnaies %}<option value="{{ c }}"{% if c == monnaie %} selected{% endif %}>{{ t }}</option>{% endfor %}</select>
+    <button type="submit" class="secondaire">{% libelle "commun.enregistrer" %}</button>
+  </span>
+  <span class="aide-champ" id="aide-monnaie">{% libelle "admin.monnaies.aide" %}</span>
+  {% if unites_autre_monnaie %}<span class="aide-champ autre-monnaie">{% libelle "admin.monnaies.autres_kpi" n=kpi_autre_monnaie liste=unites_autre_monnaie|joindre:", " monnaie=monnaie_affichee %}</span>{% endif %}
+</form>
+<form method="post" id="f-catalogue">{% csrf_token %}<input type="hidden" name="action" value="ajouter_catalogue"></form>
+{% if a_ranger %}
+<form method="post" class="ranger-unites">{% csrf_token %}
+  <span>{% libelle "admin.unites.ranger_aide" %}</span>
+  <button type="submit" name="action" value="ranger">{% libelle "admin.unites.ranger" %}</button>
+</form>
+{% endif %}
+<p class="tout-deplier"><button type="button" class="lien" data-deplier="1">{% libelle "admin.unites.deplier" %}</button> ·
+  <button type="button" class="lien" data-deplier="0">{% libelle "admin.unites.replier" %}</button></p>
+
+<form method="post">
+  {% csrf_token %}
+  <input type="hidden" name="nb" value="{{ elements|length }}">
+  {% libelle "admin.unites.thematiques" as t_th %}<div class="themes-unites" role="group" aria-label="{{ t_th }}">
+  {% libelle "admin.unites.col.symbole" as t_cs0 %}{% libelle "admin.unites.col.libelle" as t_cl0 %}{% etiquette_reference t_cs0 langues_champs as t_cs %}{% etiquette_reference t_cl0 langues_champs as t_cl %}{% libelle "admin.unites.col.thematique" as t_ct %}{% libelle "admin.unites.col.entier" as t_ce %}{% libelle "admin.unites.col.decimales" as t_cd %}{% libelle "admin.unites.col.apercu" as t_ca %}{% libelle "admin.unites.nom_toutes_lettres" as t_nt %}{% libelle "admin.unites.entier_info2" as t_ei2 %}{% libelle "admin.unites.monter_court" as t_mo %}{% libelle "admin.unites.descendre_court" as t_de %}{% libelle "admin.unites.supprimer_court" as t_su %}
+  {% for t in themes_unites %}{% if t.unites %}
+  <details class="bloc theme-unites" id="theme-{{ forloop.counter }}" data-theme-unites>
+    <summary><span class="nom-theme">{{ t.affiche }}</span> <span class="nb-theme">{{ t.unites|length }}</span>
+      <span class="symboles-theme">{% for i, e in t.unites %}{{ e|tr:"symbole" }}{% if not forloop.last %} · {% endif %}{% endfor %}</span></summary>
+    {% if t.aide %}<p class="aide-champ">{{ t.aide }}</p>{% endif %}
+    <div class="liste-unites">
+      {% libelle "admin.unites.entier_info" as t_ei %}<div class="tete-unites" aria-hidden="true"><span class="champ-ref">{{ t_cs0 }}{% if langues_champs.different %}<small>{% libelle "admin.reference.legende" nom_langue=langues_champs.reference %}</small>{% endif %}</span><span class="champ-ref">{{ t_cl0 }}{% if langues_champs.different %}<small>{% libelle "admin.reference.legende" nom_langue=langues_champs.reference %}</small>{% endif %}</span><span>{% libelle "admin.unites.col.thematique" %}</span><span class="centre" title="{{ t_ei }}">{% libelle "admin.unites.col.entier" %}</span><span>{% libelle "admin.unites.col.decimales_court" %}</span><span>{% libelle "admin.unites.col.exemple" %}</span><span>{% libelle "admin.unites.col.usage" %}</span><span></span></div>
+      {% for i, e in t.unites %}
+      <div class="ligne-unite" data-unite data-symbole-ecran="{{ e|tr:"symbole" }}" data-nom-ecran="{{ e|tr:"libelle" }}">
+        <input type="hidden" name="code__{{ i }}" value="{{ e.pk }}">
+        <span data-libelle="{{ t_cs }}"><input type="text" name="symbole__{{ i }}" value="{{ e.symbole }}" title="{{ e.symbole }}" class="symbole-unite" aria-label="{{ t_cs }}" data-symbole></span>
+        <span data-libelle="{{ t_cl }}"><input type="text" name="libelle__{{ i }}" value="{{ e.libelle }}" title="{{ e.libelle }}" placeholder="{{ t_nt }}" aria-label="{% libelle "admin.unites.libelle_de" symbole=e|tr:"symbole" %}" data-nom>{% if langues_champs.different %}<small class="traduction-ligne discret">{% ligne_traduction e "symbole" "libelle" %}</small>{% endif %}</span>
+        <span data-libelle="{{ t_ct }}"><input type="text" name="famille__{{ i }}" value="{{ e.famille }}" title="{{ e.famille }}" data-choix-theme autocomplete="off" aria-label="{% libelle "admin.unites.thematique_de" symbole=e|tr:"symbole" %}"></span>
+        <label data-libelle="{{ t_ce }}" class="centre case-unite"><input type="checkbox" name="entier__{{ i }}" {% if e.entier %}checked{% endif %} aria-label="{% libelle "admin.unites.entier_de" symbole=e|tr:"symbole" %}" title="{{ t_ei2 }}" data-entier></label>
+        <span data-libelle="{{ t_cd }}"><input type="number" name="decimales__{{ i }}" value="{{ e.decimales }}" min="0" max="10" aria-label="{% libelle "admin.unites.decimales_de" symbole=e|tr:"symbole" %}" data-decimales></span>
+        <span data-libelle="{{ t_ca }}"><output class="apercu-unite" data-apercu>{{ e|exemple_unite }}</output></span>
+        <span class="usage-reglable" title="{% libelle "admin.unites.code_fixe" code=e.pk %}">{% if e.nb_usages %}{{ e.nb_usages }} KPI{% else %}<span class="discret">{% libelle "admin.unites.inutilisee" %}</span>{% endif %}</span>
+        <span class="actions-niveau">
+          <button type="submit" form="f-ligne" name="monter" value="{{ e.pk }}" class="icone" title="{{ t_mo }}" aria-label="{% libelle "admin.unites.monter" nom=e %}" {% if forloop.first %}disabled{% endif %}>{% icone "chevron-haut" %}</button>
+          <button type="submit" form="f-ligne" name="descendre" value="{{ e.pk }}" class="icone" title="{{ t_de }}" aria-label="{% libelle "admin.unites.descendre" nom=e %}" {% if forloop.last %}disabled{% endif %}>{% icone "chevron-bas" %}</button>
+          <button type="submit" form="f-ligne" name="supprimer" value="{{ e.pk }}" class="icone supprimer-niveau"
+            {% if e.nb_usages %}disabled title="{% libelle "admin.unites.utilisee_par" nombre=e.nb_usages %}"{% else %}title="{{ t_su }}" {% libelle "admin.unites.supprimer_confirmer" nom=e as t_sc %}data-confirmer="{{ t_sc }}"{% endif %} aria-label="{% libelle "admin.unites.supprimer_nom" nom=e %}">{% icone "fermer" %}</button>
+        </span>
+      </div>
+      {% endfor %}
+    </div>
+    {% if t.suggestions %}
+    <details class="catalogue-unites"><summary>{% libelle "admin.unites.catalogue_ajouter" n=t.suggestions|length theme=t.affiche %}</summary>
+      <div class="puces-catalogue">{% for s in t.suggestions %}<label class="puce-catalogue"><input type="checkbox" name="catalogue" value="{{ t.nom }}|{{ s.symbole }}" form="f-catalogue"><strong>{{ s.affiche }}</strong><span>{{ s.libelle }}{% if s.entier %} · {% libelle "admin.unites.entier_court" %}{% endif %}</span></label>{% endfor %}</div>
+      <button type="submit" form="f-catalogue">{% libelle "admin.unites.ajouter_cochees" %}</button>
+    </details>
+    {% endif %}
+  </details>
+  {% endif %}{% endfor %}
+  </div>
+  {% if confirmer_casse %}<label class="case-option confirmer-casse"><input type="checkbox" name="confirmer_casse" value="1">
+    <span>{% libelle "admin.unites.confirmer_casse" %}</span></label>{% endif %}
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% libelle "admin.langues.enregistrer" %}</button></div>
+</form>

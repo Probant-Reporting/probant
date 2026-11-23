@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.sante.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Santé de l'installation (parametres/sante_installation.py) : une phrase d'état, puis une ligne par point avec son
+état (forme, mot et teinte : jamais la couleur seule) et ce qu'il faut faire. Le détail pour l'IT (noms des espaces, chemins
+du disque) n'est montré qu'au gestionnaire des espaces et à l'administrateur de l'espace principal.{% endcomment %}
+<div class="page-sante">
+  <p class="bilan-sante bilan-sante-{{ bilan_etat }}" role="status">{% if bilan_etat == "bon" %}{% icone "coche" %}{% else %}{% icone "alerte" %}{% endif %}<span>{{ bilan_texte }}</span></p>
+  {% libelle "admin.sante.tableau" as t_tableau %}
+  <table class="carte-table table-sante" aria-label="{{ t_tableau }}">
+    <colgroup><col class="col-sante-point"><col class="col-sante-etat"><col></colgroup>
+    <thead><tr><th scope="col">{% libelle "admin.sante.col.point" %}</th><th scope="col">{% libelle "admin.sante.col.etat" %}</th><th scope="col">{% libelle "admin.sante.col.constat" %}</th></tr></thead>
+    <tbody>
+    {% for l in lignes %}
+    <tr id="sante-{{ l.cle }}">
+      <th scope="row">{{ l.titre }}</th>
+      <td>{% if l.etat == "bon" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "admin.sante.etat.bon" %}</span>{% elif l.etat == "regarder" %}<span class="etiquette e-orange">{% icone "alerte" %} {% libelle "admin.sante.etat.regarder" %}</span>{% else %}<span class="etiquette e-rouge">{% icone "x" %} {% libelle "admin.sante.etat.panne" %}</span>{% endif %}</td>
+      <td><p class="m-0">{{ l.constat }}</p>
+        {% if l.quoi %}<p class="sante-quoi"><strong>{% libelle "admin.sante.quoi_faire" %}</strong> {{ l.quoi }}</p>{% endif %}
+        {% if l.detail %}<p class="discret sante-detail">{% libelle "admin.sante.detail_it" %} <code>{{ l.detail }}</code></p>{% endif %}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="discret">{% if not detail_permis %}{% libelle "admin.sante.note_espace" %}{% elif avec_detail %}{% libelle "admin.sante.note_detail" %}{% endif %}
+    <a href="{% url 'parametres:hebergement' %}">{% libelle "admin.sante.lien_hebergement" %}</a></p>
+</div>
+{% endblock %}

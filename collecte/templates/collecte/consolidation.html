@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Tableau de bord › Consolidation : les valeurs de chaque niveau de l'arbre (lignes, à déplier) pour les KPI d'un
+   thème ou d'une liste (colonnes). Calcul : consolidation.py (moteur de la Visualisation : même périmètre, mêmes règles).
+   Sans JavaScript, toutes les lignes sont visibles ; le script replie ce qui est sous le 2e niveau.{% endcomment %}
+{% block titre %}{% libelle "suivi.conso.titre" %} – {% libelle "suivi.tdb.titre" %}{% endblock %}
+{% block evitement %}{% if lignes and kpis %}<a class="lien-evitement" href="#tableau-conso">{% libelle "suivi.conso.evitement" %}</a>{% endif %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "suivi.tdb.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+</div>
+{% include "collecte/_vues_tdb.html" %}
+<p class="intro-page">{% libelle "suivi.conso.intro" %}</p>
+
+<form method="get" class="barre-conso" data-conso-reglages>
+  <details class="carte choix-conso"{% if mode == "choix" and not kpis %} open{% endif %}>
+    <summary><span class="libelle-chiffre">{% libelle "suivi.conso.kpi_affiches" %}</span>
+      <strong class="resume-choix-conso">{% if mode == "choix" %}{% libelle "suivi.conso.kpi_choisis" n=ck.choisis|length %}{% elif liste %}{{ liste.nom }}{% elif theme %}{{ theme_nom }}{% endif %}</strong>
+      <span class="discret">{% libelle "suivi.conso.n_kpi" n=kpis|length %}</span>
+      <span class="lien-tuile">{% libelle "suivi.conso.changer_kpi" %}</span></summary>
+    <div class="corps-choix-conso">
+      {% include "collecte/echanges/_choix_kpi.html" with ck=ck id="conso" themes_choix=themes sans_sauvegarde=user.est_lecteur %}
+      <p class="boutons-choix-conso"><button type="submit" class="bouton">{% libelle "suivi.conso.afficher_kpi" %}</button></p>
+    </div>
+  </details>
+  <div class="carte options-carte-conso">
+    <fieldset class="options-conso" data-options-conso><legend class="visuellement-cache">{% libelle "suivi.conso.options" %}</legend>
+      <input type="hidden" name="brouillons" value="0"><input type="hidden" name="n1" value="0"><input type="hidden" name="masquer_vides" value="0"><input type="hidden" name="parametres" value="0">
+      <label><input type="checkbox" name="brouillons" value="1"{% if reglages.brouillons %} checked{% endif %}> {% libelle "suivi.conso.brouillons" %}</label>
+      <label><input type="checkbox" name="n1" value="1"{% if reglages.n1 %} checked{% endif %}> {% libelle "suivi.conso.comparer" comparaison=comparaison %}</label>
+      <label><input type="checkbox" name="masquer_vides" value="1"{% if not reglages.vides %} checked{% endif %}> {% libelle "suivi.conso.masquer_vides" %}</label>
+      <label class="case-codes" title="{% libelle "saisie.filtre.codes_aide" %}"><input type="checkbox" data-montrer-codes> {% libelle "saisie.filtre.codes" %}</label>
+      {% if parametres %}<label><input type="checkbox" name="parametres" value="1"{% if reglages.parametres %} checked{% endif %}> {% libelle "suivi.conso.montrer_parametres" n=parametres|length %}</label>{% endif %}
+    </fieldset>
+    <div class="sens-conso">
+      <span id="libelle-sens" class="discret">{% libelle "suivi.conso.sens" %}</span>
+      <span class="segments" role="radiogroup" aria-labelledby="libelle-sens">
+        <label class="{% if not en_lignes %}actif{% endif %}"><input type="radio" name="sens" value="orgs"{% if not en_lignes %} checked{% endif %}> {% libelle "suivi.conso.sens.orgs" %}</label>
+        <label class="{% if en_lignes %}actif{% endif %}"><input type="radio" name="sens" value="kpis"{% if en_lignes %} checked{% endif %}> {% libelle "suivi.conso.sens.kpis" %}</label>
+      </span>
+      {% if en_lignes and profondeurs|length > 1 %}<label class="niveaux-conso"><span class="discret">{% libelle "suivi.conso.niveaux" %}</span>
+        <select name="niveaux" data-auto>{% for p, nom in profondeurs %}<option value="{{ p }}"{% if p == reglages.niveaux %} selected{% endif %}>{% libelle "suivi.conso.jusqua" niveau=nom %}</option>{% endfor %}</select></label>
+      {% else %}<input type="hidden" name="niveaux" value="{{ reglages.niveaux }}">{% endif %}
+    </div>
+    <noscript><button type="submit" class="bouton secondaire">{% libelle "suivi.conso.appliquer" %}</button></noscript>
+  </div>
+</form>
+
+{% if caches %}{% encart "info" %}{% if en_lignes %}{% libelle "suivi.conso.trop_de_kpi_lignes" n=caches max=max_colonnes %}{% else %}{% libelle "suivi.conso.trop_de_kpi" n=caches max=max_colonnes %}{% endif %}{% endencart %}{% endif %}
+{% if not kpis %}
+<div class="carte">{% if vides and not reglages.vides %}{% libelle "suivi.conso.tout_vide" n=vides|length %}{% else %}{% libelle "suivi.conso.aucun_kpi" %}{% endif %}</div>
+{% elif not lignes %}
+<div class="carte">{% libelle "suivi.conso.aucune_organisation" %}</div>
+{% else %}
+<div class="dessus-tableau-conso">
+  {# légende : seulement les états présents dans le tableau #}
+  <p class="legende-conso discret">
+    {% if "partiel" in etats %}<span><span class="pastille-manque" aria-hidden="true"></span> {% libelle "suivi.conso.legende.partiel" %}</span>{% endif %}
+    {% if "provisoire" in etats %}<span><span class="point p-brouillon" aria-hidden="true"></span> {% libelle "suivi.conso.legende.provisoire" %}</span>{% endif %}
+    {% if "attente" in etats %}<span><span class="en-attente-conso">{% libelle "suivi.conso.en_attente" %}</span> {% libelle "suivi.conso.legende.en_attente" %}</span>{% endif %}
+    {% if "non_saisie" in etats or "incomplet" in etats %}<span>— {% libelle "suivi.conso.legende.pas_encore" %}</span>{% endif %}
+    {% if "absente" in etats %}<span><span aria-hidden="true">·</span> {% libelle "suivi.conso.legende.absent" %}</span>{% endif %}
+    {% if "erreur" in etats %}<span class="erreur-conso">{% icone "alerte" %} {% libelle "suivi.conso.legende.erreur" %}</span>{% endif %}
+  </p>
+  <span class="flex gap-8 aligne-centre">
+    {% if not en_lignes %}<button type="button" class="icone" data-arbre-tout="ouvrir" data-cible="table-conso" hidden>{% libelle "suivi.conso.tout_deplier" %}</button>
+    <button type="button" class="icone" data-arbre-tout="fermer" data-cible="table-conso" hidden>{% libelle "suivi.conso.tout_replier" %}</button>{% endif %}
+    <a class="bouton secondaire" href="{% url 'collecte:consolidation_excel' %}?{{ query }}" data-telechargement>{% icone "telecharger" %} {% libelle "suivi.conso.excel" %}</a>
+  </span>
+</div>
+<div class="tableau-conso" id="tableau-conso" role="region" aria-labelledby="titre-conso" tabindex="0">
+{% if en_lignes %}
+{# lignes et colonnes interverties : un KPI par ligne, les organisations en colonnes (jusqu'à la profondeur choisie) #}
+<table class="table-conso table-conso-kpis{% if reglages.n1 %} avec-n1{% endif %}" id="table-conso">
+  <caption id="titre-conso" class="visuellement-cache">{% libelle "suivi.conso.legende_tableau" referentiel=campagne.referentiel periode=campagne.periode %}</caption>
+  <thead><tr>
+    <th scope="col" class="col-org">{% libelle "suivi.conso.col.kpi" %}</th>
+    {% for l in colonnes_orgs %}<th scope="col" class="nombre col-org-entete" style="--prof:{{ l.prof }}" title="{{ l.org|chemin }}{% if l.org.parent %} › {% endif %}{{ l.org.nom }}">{% etiquette_niveau l.org %}<span class="nom-conso">{{ l.org.nom }}</span></th>{% endfor %}
+  </tr></thead>
+  <tbody>
+  {% for k, cases in rangs_kpi %}
+  <tr>
+    <th scope="row" class="col-org col-kpi" title="{{ k.code }} – {{ k.nom }}"><span class="code-conso code-kpi">{{ k.code }}</span><span class="nom-kpi-ligne">{{ k.nom }}</span>{% if k.symbole and not k.est_pourcentage %}<span class="discret unite-conso">{{ k.symbole }}</span>{% endif %}</th>
+    {% for c in cases %}{% include "collecte/_case_conso.html" %}{% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<table class="table-conso{% if reglages.n1 %} avec-n1{% endif %}" id="table-conso" data-arbre-table data-arbre-ouvert="1">
+  <caption id="titre-conso" class="visuellement-cache">{% libelle "suivi.conso.legende_tableau" referentiel=campagne.referentiel periode=campagne.periode %}</caption>
+  <thead><tr>
+    <th scope="col" class="col-org">{% libelle "suivi.conso.col.organisation" %}</th>
+    {% for k in kpis %}<th scope="col" class="nombre" title="{{ k.code }} – {{ k.nom }}"><span class="code-conso code-kpi">{{ k.code }}</span><span class="nom-conso">{{ k.nom }}</span>{% if k.symbole and not k.est_pourcentage %}<span class="discret unite-conso">{{ k.symbole }}</span>{% endif %}</th>{% endfor %}
+  </tr></thead>
+  <tbody>
+  {% for l in lignes %}
+  <tr data-org="{{ l.org.id }}"{% if l.parent_id %} data-parent="{{ l.parent_id }}"{% endif %} data-prof="{{ l.prof }}" class="niv-{{ l.org.niveau_id }}">
+    <th scope="row" class="col-org" style="--prof:{{ l.prof }}">
+      {% if l.a_enfants %}<button type="button" class="deplier-conso" aria-expanded="true" data-deplier="{{ l.org.id }}" aria-label="{% libelle "suivi.conso.deplier" nom=l.org.nom %}"><span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span></button>{% else %}<span class="place-chevron" aria-hidden="true"></span>{% endif %}
+      {% etiquette_niveau l.org %}<span class="nom-org" title="{{ l.org.nom }}">{{ l.org.nom }}</span>
+    </th>
+    {% for c in l.cases %}{% include "collecte/_case_conso.html" %}{% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+</div>
+{% endif %}
+<script nonce="{% jeton_csp %}">
+(function () {
+  // Consolidation : les options, le sens et la profondeur s'appliquent aussitôt ; un thème ou une liste aussi ; des KPI
+  // cochés un par un, avec « Afficher ces KPI » (la page ne se recharge pas à chaque case)
+  const f = document.querySelector("[data-conso-reglages]");
+  if (!f) return;
+  const envoyer = () => f.requestSubmit ? f.requestSubmit() : f.submit();
+  f.addEventListener("change", (e) => {
+    const t = e.target;
+    if (t.closest("[data-options-conso]") || t.name === "sens" || t.name === "niveaux" || t.matches("[data-theme-kpi], [data-liste-kpi]")
+        || (t.name === "choix_kpi" && t.value !== "choix")) envoyer();
+  });
+})();
+</script>
+{% endblock %}

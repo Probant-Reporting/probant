@@ -1,0 +1,23 @@
+{% load collecte %}{% comment %}Choix d'une organisation dans un formulaire (Import / Export › fichier à remplir ; filtre Organisation de la
+Visualisation désormais), avec le même sélecteur en arbre que la Saisie et la Cohérence :
+le choix remplit la liste déroulante ``nom``, qui reste le champ envoyé ; en tête, « toutes » (libellé
+``libelle_tous_key``, valeur ``valeur_tous``, vide par défaut ; ``sans_tous`` la retire). ``orgs`` : organisations visibles
+(avec ``prof``). ``id_champ`` : id de la liste déroulante (pour un label) ; ``id_libelle`` : id du libellé visible, qui nomme
+alors le sélecteur. Sans JavaScript : la liste déroulante. Quand un script change la valeur de la liste, il lui envoie
+l'événement ``selecteur:maj`` pour que le sélecteur affiche le bon nom.{% endcomment %}
+{% libelle libelle_tous_key as t_tous %}
+<details class="selecteur-org selecteur-champ" data-selecteur-champ hidden>
+  <summary{% if id_libelle %} aria-labelledby="{{ id_libelle }} {{ id_libelle }}-choix"{% endif %}>
+    <span class="org-actuelle"><strong data-selecteur-nom{% if id_libelle %} id="{{ id_libelle }}-choix"{% endif %}>{% for o in orgs %}{% if valeur == o.id|stringformat:"s" %}{{ o.nom }}{% endif %}{% endfor %}{% if not valeur or valeur == valeur_tous %}{{ t_tous }}{% endif %}</strong></span>
+    <span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span>
+  </summary>
+  <div class="org-liste">
+    {% libelle "saisie.org.rechercher" as t_rech_org %}<input type="search" placeholder="{{ t_rech_org }}" aria-label="{{ t_rech_org }}" data-recherche-org-champ>
+    <ul>
+      {% if not sans_tous %}<li class="prof-0" data-texte="{{ t_tous|lower }}"><button type="button" data-valeur="{{ valeur_tous|default:'' }}" class="{% if not valeur or valeur == valeur_tous %}actuelle{% endif %}"><span class="trait"></span><span class="nom-org">{{ t_tous }}</span></button></li>{% endif %}
+      {% for o in orgs %}<li class="prof-{{ o.prof }} niv-{{ o.niveau_id }}" style="--prof:{{ o.prof }}" data-texte="{% nom_niveau o.niveau_id as t_niv %}{{ o.nom|lower }} {{ t_niv|lower }}">
+        <button type="button" data-valeur="{{ o.id }}" class="{% if valeur == o.id|stringformat:"s" %}actuelle{% endif %}"><span class="trait"></span>{% etiquette_niveau o.niveau_id %}<span class="nom-org">{{ o.nom }}</span></button></li>{% endfor %}
+    </ul>
+  </div>
+</details>
+<select name="{{ nom }}"{% if id_champ %} id="{{ id_champ }}"{% endif %} data-selecteur-repli{% if not id_champ %} aria-label="{% libelle "suivi.echanges.importer.col.organisation" %}"{% endif %}>{% if not sans_tous %}<option value="{{ valeur_tous|default:'' }}"{% if not valeur or valeur == valeur_tous %} selected{% endif %}>{{ t_tous }}</option>{% endif %}{% for o in orgs %}<option value="{{ o.id }}"{% if valeur == o.id|stringformat:"s" %} selected{% endif %}>{{ o.nom }} · {% nom_niveau o.niveau_id %}</option>{% endfor %}</select>

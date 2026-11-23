@@ -1,0 +1,22 @@
+// GitHub Codespaces environment of the collection tool (guide in the README).
+{
+  "name": "Probant",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "containerEnv": {
+    "DJANGO_DEBUG": "1",
+    "DJANGO_ALLOWED_HOSTS": "localhost,127.0.0.1,.app.github.dev",
+    "DJANGO_CSRF_TRUSTED_ORIGINS": "https://*.app.github.dev"
+  },
+  // On creation: dependencies, database, demo data
+  "postCreateCommand": "bash .devcontainer/install.sh",
+  // On each opening: starts the site (unless it is already running)
+  "postAttachCommand": "bash .devcontainer/start.sh",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": { "label": "Probant", "onAutoForward": "openBrowser" }
+  },
+  "customizations": {
+    "codespaces": { "openFiles": ["README.md"] },
+    "vscode": { "extensions": ["ms-python.python"] }
+  }
+}

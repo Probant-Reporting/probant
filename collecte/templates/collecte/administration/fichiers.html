@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.nav.fichiers" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+
+{% if resultat %}
+<section class="carte resultat-import">
+  <h2>{% libelle "admin.fichiers.resultat_titre" nom=info.nom %}</h2>
+  {% encart "succes" %}{% libelle_html "admin.fichiers.ecrites" n=ecrites %}
+    {% if exercices %}{% libelle "admin.fichiers.recalcules" exercices=exercices|liste %}{% endif %}{% endencart %}
+  <div class="tuiles-config">
+    {% for nom, comptes in analyse.resume %}
+    <div class="carte-onglet"><strong>{{ nom }}</strong>
+      {% for code, libelle, n in comptes %}{% if n and code != "inchange" and code != "rejet" %}<span class="etiquette-action etiquette-{{ code }}">{% if code == "creer" %}{% libelle "admin.fichiers.etiquette.creer" n=n %}{% elif code == "modifier" %}{% libelle "admin.fichiers.etiquette.modifier" n=n %}{% else %}{% libelle "admin.fichiers.etiquette.desactiver" n=n %}{% endif %}</span>{% endif %}{% endfor %}
+      {% if not comptes.0.2 and not comptes.1.2 and not comptes.2.2 %}<span class="discret">{% libelle "admin.fichiers.aucun_changement" %}</span>{% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  <p><a class="bouton" href="{% url 'collecte:referentiel' %}">{% libelle "admin.fichiers.voir_referentiel" %}</a> <a class="bouton secondaire" href="{% url 'collecte:admin_fichiers' %}">{% libelle "admin.fichiers.retour" %}</a></p>
+</section>
+
+{% elif analyse %}
+{% libelle "admin.fichiers.vide" as t_vide %}
+<section class="carte apercu-import">
+  <h2>{% libelle "admin.fichiers.apercu_titre" %}</h2>
+  <p class="discret">{{ info.nom }} · {% libelle "admin.fichiers.rien_enregistre" %}{% if info.desactiver %} · {% libelle "admin.fichiers.absents_desactives" %}{% endif %}</p>
+  {% if analyse.erreur %}
+  {% encart "erreur" %}{{ analyse.erreur }}{% endencart %}
+  <form method="post">{% csrf_token %}<button type="submit" name="action" value="annuler" class="secondaire">{% libelle "admin.fichiers.recommencer" %}</button></form>
+  {% else %}
+  {% if analyse.nb_rejets %}{% encart "erreur" role="alert" %}{% libelle "admin.fichiers.rejets" n=analyse.nb_rejets %}{% endencart %}{% endif %}
+  {% if not apercus %}<p>{% libelle "admin.fichiers.aucun_changement_classeur" %}</p>{% endif %}
+  {% for nom, comptes, changements in apercus %}
+  <div class="onglet-apercu">
+    <h3>{{ nom }}</h3>
+    <div class="tuiles-import petites">
+      {% for code, libelle, n in comptes %}{% if n or code != "desactiver" %}<div class="tuile tuile-{{ code }}{% if not n %} zero{% endif %}"><b>{{ n }}</b><span>{{ libelle }}</span></div>{% endif %}{% endfor %}
+    </div>
+    {% if changements %}
+    {% libelle "admin.fichiers.apercu_lignes" as t_al %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_al }}"><table class="carte-table table-apercu">
+      <colgroup><col class="l-64"><col class="l-120"><col class="l-22p"><col></colgroup>
+      <thead><tr><th>{% libelle "admin.fichiers.col.ligne" %}</th><th>{% libelle "admin.fichiers.col.action" %}</th><th>{% if nom == "KPI" %}ID{% else %}{% libelle "admin.fichiers.col.nom" %}{% endif %}</th><th>{% libelle "admin.fichiers.col.detail" %}</th></tr></thead>
+      {% for c in changements %}
+      <tr class="action-{{ c.action }}"><td class="discret">{{ c.numero|default:"—" }}</td>
+        <td><span class="etiquette-action etiquette-{{ c.action }}">{% if c.action == "creer" %}{% libelle "admin.fichiers.action.creer" %}{% elif c.action == "modifier" %}{% libelle "admin.fichiers.action.modifier" %}{% elif c.action == "desactiver" %}{% libelle "admin.fichiers.action.desactiver" %}{% else %}{% libelle "admin.fichiers.action.rejet" %}{% endif %}</span></td>
+        <td>{% if nom == "KPI" %}<span class="id-chip">{{ c.cle }}</span> {{ c.objet.nom|default:""|truncatechars:50 }}{% else %}{{ c.cle }}{% endif %}</td>
+        <td class="retour-ligne">{% if c.motif %}<span class="{% if c.action == 'rejet' %}motif-rejet{% else %}discret{% endif %}">{{ c.motif }}</span>{% endif %}
+          {% if c.avertissement %}<span class="motif-avertissement">{{ c.avertissement }}</span>{% endif %}
+          {% for libelle, avant, apres in c.champs %}<div class="diff"><span class="diff-champ">{{ libelle }}</span> <span class="diff-avant">{{ avant|default:t_vide|truncatechars:60 }}</span> → <strong>{{ apres|default:t_vide|truncatechars:60 }}</strong></div>{% endfor %}
+          {% if c.action == "creer" and not c.champs %}<span class="discret">{% libelle "admin.fichiers.nouvel_element" %}</span>{% endif %}</td></tr>
+      {% endfor %}
+  {% if inchanges %}<p class="discret">{% libelle "admin.fichiers.onglets_inchanges" n=inchanges|length liste=inchanges|liste %}</p>{% endif %}
+    </table></div>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <form method="post" class="barre-enregistrement collante" data-chargement>{% csrf_token %}
+    <button type="submit" name="action" value="confirmer" {% if not analyse.importable %}disabled{% endif %}>{% if analyse.nb_ecritures %}{% libelle "admin.fichiers.importer" n=analyse.nb_ecritures %}{% elif analyse.importable %}{% libelle "commun.importer" %}{% else %}{% libelle "commun.rien_a_importer" %}{% endif %}</button>
+    <button type="submit" name="action" value="annuler" class="secondaire">{% libelle "commun.annuler" %}</button>
+  </form>
+  {% endif %}
+</section>
+{% else %}
+{% comment %} : une seule tâche principale, en trois étapes numérotées (télécharger, modifier dans
+Excel, importer) ; tout le reste dans une liste « Autres fichiers ». La sauvegarde de la base est dans « Bon à savoir ».{% endcomment %}
+<section class="carte carte-fichiers" aria-labelledby="titre-masse">
+  <h2 id="titre-masse">{% libelle "admin.fichiers.masse" %}</h2>
+  <p class="discret">{% libelle "admin.fichiers.masse_aide" %} {% libelle "admin.fichiers.intro_valeurs" %} <a href="{% url 'collecte:echanges' %}">{% libelle "admin.fichiers.intro_lien" %}</a>.</p>
+  <ol class="etapes-fichiers">
+    <li><span class="num-etape" aria-hidden="true">1</span>
+      <div><h3>{% libelle "admin.fichiers.etape_telecharger" %}</h3>
+        <p class="discret">{% libelle "admin.fichiers.nb_kpi" n=nb.kpi %}, {% libelle "admin.fichiers.nb_orgs" n=nb.orgs %}, {% libelle "admin.fichiers.nb_regles" n=nb.regles %}, {% libelle "admin.fichiers.classeur_suite" %}</p>
+        <a class="bouton secondaire" href="?telecharger=xlsx" data-telechargement>{% icone "telecharger" %} {% libelle "admin.fichiers.telecharger" %}</a></div></li>
+    <li><span class="num-etape" aria-hidden="true">2</span>
+      <div><h3>{% libelle "admin.fichiers.etape_modifier" %}</h3>
+        <p class="discret">{% libelle "admin.fichiers.etape_modifier_aide" %}</p></div></li>
+    <li><span class="num-etape" aria-hidden="true">3</span>
+      <div><h3>{% libelle "admin.fichiers.etape_importer" %}</h3>
+        <form method="post" enctype="multipart/form-data" class="formulaire-etape depot-preuve" data-chargement>
+          {% csrf_token %}
+          <label class="zone-depot"><input type="file" name="fichier" accept=".xlsx,.xlsm,.csv" {% libelle "admin.fichiers.classeur_config" as t_cc %}required aria-label="{{ t_cc }}" data-depot>
+            <span class="zone-depot-texte">{% libelle_html "admin.fichiers.choisir_fichier" %}<span class="discret">{% libelle "admin.fichiers.formats_fichier" %}</span></span></label>
+          <label class="case"><input type="checkbox" name="desactiver_absents"> {% libelle "admin.fichiers.desactiver_absents" %} <span class="discret">{% libelle "admin.fichiers.desactiver_absents_aide" %}</span></label>
+          <div><button type="submit" name="action" value="verifier">{% libelle "admin.fichiers.verifier" %}</button></div>
+          <p class="discret">{% libelle "admin.fichiers.etape_importer_aide" %}</p>
+        </form></div></li>
+  </ol>
+</section>
+<section class="carte mt-16" aria-labelledby="titre-modeles">
+  <h2 id="titre-modeles">{% libelle "admin.fichiers.modeles" %}</h2>
+  <ul class="liste-rubriques">
+    <li><a href="?telecharger=vierge" data-telechargement><span class="libelle-rubrique">{% libelle "admin.fichiers.modele_vierge" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.fichiers.modele_vierge_aide" %}</span>{% icone "telecharger" %}</a></li>
+    <li><a href="?telecharger=csv" data-telechargement><span class="libelle-rubrique">{% libelle "admin.fichiers.kpi_csv" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.fichiers.kpi_csv_aide" %}</span>{% icone "telecharger" %}</a></li>
+    <li><a href="{% url 'parametres:referentiels' %}"><span class="libelle-rubrique">{% libelle "admin.fichiers.fichiers_referentiels" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.fichiers.fichiers_referentiels_aide" %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'parametres:langues' %}"><span class="libelle-rubrique">{% libelle "admin.fichiers.traductions" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.fichiers.traductions_aide" %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'collecte:admin_reprise' %}"><span class="libelle-rubrique">{% libelle "admin.fichiers.reprise" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.fichiers.reprise_aide" %}{% if nb_profils %} · {% libelle "admin.fichiers.profils" n=nb_profils %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+  </ul>
+</section>
+<details class="carte bon-a-savoir">
+  <summary>{% libelle "admin.fichiers.bon_a_savoir" %}</summary>
+  <ul>
+    <li>{% libelle "admin.fichiers.savoir_1" %}</li>
+    <li>{% libelle_html "admin.fichiers.savoir_2" %}</li>
+    <li>{% libelle "admin.fichiers.savoir_3" %}</li>
+    <li>{% libelle "admin.fichiers.savoir_4" %}</li>
+    <li>{% if sauvegarde.active %}{% if sauvegarde.derniere %}{% libelle "admin.fichiers.sauvegarde_derniere" date=sauvegarde.derniere|date_courte heure=sauvegarde.derniere|date:"H:i" %}{% else %}{% libelle "admin.fichiers.sauvegarde_auto" %}{% endif %}{% else %}{% libelle "admin.fichiers.sauvegarde_desactivee" %}{% endif %}
+      <a href="{% url 'parametres:hebergement' %}">{% libelle "admin.fichiers.lien_hebergement" %}</a></li>
+  </ul>
+</details>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,110 @@
+{% load collecte static %}<!doctype html>
+<html lang="{{ langue_interface|default:'fr' }}"{% if apparence and apparence != "systeme" %} data-apparence="{{ apparence }}"{% endif %}>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="{% if apparence == 'clair' %}light{% elif apparence == 'sombre' %}dark{% else %}light dark{% endif %}">
+<meta name="csrf" content="{{ csrf_token }}">
+{% if instance.logo_disponible %}<link rel="icon" href="{% url 'parametres:logo' %}?v={{ instance.date_maj|date:'U' }}">{% else %}<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%278%27 fill=%27%23{{ couleur_icone }}%27/%3E%3Ctext x=%2716%27 y=%2722%27 font-size=%27{% if instance.sigle|length > 3 %}11{% else %}14{% endif %}%27 font-family=%27Arial%27 font-weight=%27700%27 fill=%27white%27 text-anchor=%27middle%27%3E{{ instance.sigle|urlencode }}%3C/text%3E%3C/svg%3E">{% endif %}
+<title>{% if espaces_menu.plusieurs %}{{ espaces_menu.courant.nom }} · {% endif %}{% block titre %}{{ instance.titre }}{% endblock %} – {{ instance.nom }}</title>
+<link rel="stylesheet" href="{% static 'css/outil.css' %}?v={{ version_css }}">
+<style nonce="{% jeton_csp %}">
+  /* couleurs réglées dans l'outil : marque (Paramètres › Identité), types de saisie, référentiels, niveaux ;
+     .apparence-claire : les couleurs claires, relues par la Visualisation pour les images exportées et l'impression */
+  :root, .apparence-claire { {{ couleurs_css }} }
+  {{ types_css }}
+  {{ referentiels_css }}
+  {{ niveaux_css }}
+  /* apparence sombre, tirée des mêmes couleurs (parametres/couleurs.py, gamme_sombre) */
+  {{ sombre_css }}
+</style>
+</head>
+<body data-page="{{ page|default:'' }}" data-campagne="{{ campagne.pk|default:'' }}">
+<header class="haut">
+  <a class="lien-evitement" href="#contenu">{% libelle "cadre.evitement" %}</a>
+  {% block evitement %}{% endblock %}
+  <div class="barre-haut">
+    <a class="marque" href="{% url 'collecte:accueil' %}" title="{{ instance.titre }}{% if instance.sous_titre %} – {{ instance.sous_titre }}{% endif %}">{% if instance.logo_disponible %}<img class="logo-image" src="{% url 'parametres:logo' %}?v={{ instance.date_maj|date:'U' }}" alt="{{ instance.nom }}">{% else %}<span class="logo">{{ instance.sigle }}</span>{% endif %}
+      <span class="titre-app"><b>{{ instance.titre }}</b>{% if instance.sous_titre %}<span>{{ instance.sous_titre }}</span>{% endif %}</span></a>
+    {% if user.is_authenticated %}
+    <nav class="onglets" aria-label="{% libelle "cadre.menu.principal" %}">
+      {# un seul onglet Saisie, deux vues : une organisation à la fois (saisie) ou tout ce qui m'est attribué (pour_moi) #}
+      {% if not user.est_lecteur %}<a href="{% if saisie_flux %}{% url 'collecte:pour_moi' %}{% else %}{% url 'collecte:saisie' %}{% endif %}"{% if page == 'saisie' or page == 'pour_moi' %} aria-current="page"{% endif %} class="{% if page == 'saisie' or page == 'pour_moi' %}actif{% endif %}">{% icone "menu-saisie" "" %}{% libelle "cadre.menu.saisie" %}</a>{% endif %}
+      <a href="{% url 'collecte:tableau_de_bord' %}"{% if page == 'tableau_de_bord' %} aria-current="page"{% endif %} class="{% if page == 'tableau_de_bord' %}actif{% endif %}">{% icone "menu-tableau-de-bord" "" %}{% libelle "cadre.menu.tableau_de_bord" %}</a>
+      <a href="{% url 'collecte:visu' %}"{% if page == 'visualisation' %} aria-current="page"{% endif %} class="{% if page == 'visualisation' %}actif{% endif %}">{% icone "menu-visualisation" "" %}{% libelle "cadre.menu.visualisation" %}</a>
+      {% if not user.est_lecteur %}<a href="{% url 'collecte:coherence' %}"{% if page == 'coherence' %} aria-current="page"{% endif %} class="{% if page == 'coherence' %}actif{% endif %}">{% icone "menu-coherence" "" %}{% libelle "cadre.menu.coherence" %}</a>{% endif %}
+      {% if user.est_auditeur %}<a href="{% url 'collecte:historique' %}"{% if page == 'historique' %} aria-current="page"{% endif %} class="{% if page == 'historique' %}actif{% endif %}">{% icone "menu-historique" "" %}{% libelle "cadre.menu.historique" %}</a>{% endif %}
+      {% if not user.est_lecteur %}<a href="{% if user.est_contributeur %}{% url 'collecte:echanges_importer' %}{% else %}{% url 'collecte:echanges' %}{% endif %}"{% if page == 'echanges' %} aria-current="page"{% endif %} class="{% if page == 'echanges' %}actif{% endif %}{% if user.est_admin %} onglet-icone{% endif %}" title="{% libelle "cadre.menu.echanges" %}">{% icone "menu-echanges" "" %}<span class="libelle-onglet">{% libelle "cadre.menu.echanges" %}</span></a>{% endif %}
+      {% if user.est_admin %}
+      <a href="{% url 'collecte:admin_accueil' %}"{% if page == 'administration' %} aria-current="page"{% endif %} class="{% if page == 'administration' %}actif{% endif %}{% if user.est_admin %} onglet-icone{% endif %}" title="{% libelle "cadre.menu.administration" %}">{% icone "menu-parametres" "" %}<span class="libelle-onglet">{% libelle "cadre.menu.administration" %}</span></a>
+      {% endif %}
+      {# téléphone : flèche collée au bord droit tant que des onglets restent cachés (indice de défilement) #}
+      <span class="indice-onglets" data-indice-onglets aria-hidden="true">{% icone "chevron-droite" %}</span>
+    </nav>
+    <div class="compte-haut">
+      {% if campagne_choisie %}{% with c=campagne_choisie %}{% with statut_c=c|choix_phrase:"statut" %}<div class="choix-reponse-haut">
+        <button type="button" class="bouton-choix-reponse" data-ouvrir-choix aria-haspopup="dialog" aria-expanded="false" aria-controls="choix-reponse"
+          title="{% libelle "cadre.reponse.titre" referentiel=c.referentiel periode=c.periode statut=statut_c %}">
+          <span class="point-ref {% classe_ref c.referentiel %}" aria-hidden="true"></span>
+          <span class="texte-choix"><span class="ref-choix">{{ c.referentiel }}</span><span class="periode-choix">{{ c.periode }}</span></span>
+          <span class="icone-statut-campagne{% if c.statut != 'ouverte' %} fermee{% endif %}" aria-hidden="true">{% if c.statut == "cloturee" %}{% icone "cadenas" %}{% elif c.statut != "preparation" %}{% icone "crayon" %}{% endif %}</span><span class="visually-hidden">{{ statut_c }}</span>
+          <span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span></button>
+        <div id="choix-reponse" class="panneau-choix-reponse" role="dialog" aria-labelledby="titre-choix-reponse" hidden data-url="{% url 'collecte:choix_reponse' %}"></div>
+      </div>{% endwith %}{% endwith %}{% endif %}
+      {% include "espaces/_selecteur.html" %}
+      {% include "_choix_langue.html" %}
+      {% if aide_url %}{% libelle "cadre.aide.lien" as texte_aide %}<a class="aide-haut" href="{{ aide_url }}"title="{{ texte_aide }}" aria-label="{{ texte_aide }}">{% icone "circle-help" "" %}</a>{% endif %}
+      <a class="moi" href="{% url 'collecte:mon_compte' %}" title="{% libelle "cadre.compte.lien" nom=user %}">{% avatar user %}<span class="nom-compte">{{ user }}<small>{{ user|choix:"role" }}</small></span></a>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}{% libelle "cadre.deconnexion" as deconnexion %}<button class="deconnexion" type="submit" title="{{ deconnexion }}" aria-label="{{ deconnexion }}">{% icone "deconnexion" "" %}</button></form>
+    </div>
+    {% else %}
+    <div class="compte-haut">{% include "_choix_langue.html" %}</div>
+    {% endif %}
+  </div>
+</header>
+{% if visite %}{% include "_visite.html" %}{% endif %}
+<main id="contenu" tabindex="-1">
+  {% block messages %}{% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m|premiere_phrase_gras }}</li>{% endfor %}</ul>{% endif %}{% endblock %}
+  {% if mise_en_place and page != "mise_en_place" %}<div class="bandeau-mise-en-place"><span><b>{% libelle "cadre.mise_en_place.en_cours" %}</b> – {% libelle "cadre.mise_en_place.etape" etape=mise_en_place.etape total=mise_en_place.total titre=mise_en_place.titre %}</span>
+    <span class="espace"></span><a class="bouton" href="{{ mise_en_place.url }}">{% libelle "cadre.mise_en_place.reprendre" %}</a></div>{% endif %}
+  {% block contenu %}{% endblock %}
+</main>
+<footer class="pied-version">{% libelle "cadre.pied.version" titre=instance.titre version=version_outil %} · <a href="{% url 'collecte:confidentialite' %}">{% libelle "cadre.pied.donnees" %}</a></footer>
+<div id="voile"></div>
+<aside id="panneau" role="dialog" aria-modal="true" aria-label="{% libelle "cadre.panneau" %}" tabindex="-1"><div id="panneau-contenu" data-conteneur></div></aside>
+<div id="toast" role="status"></div>
+{% comment %}« Supprimé : X. Annuler » (collecte/corbeille.py) : reste 10 secondes, et tant qu'il a le focus ou le pointeur ;
+   sans JavaScript, reste affiché. Rempli ici après un rechargement, ou par le script de la page (proposerAnnulation).{% endcomment %}
+{% annulation_proposee as offre %}<div id="annulation" class="annulation" role="status">{% if offre %}<form method="post" action="{{ offre.url }}" data-annulation>{% csrf_token %}<input type="hidden" name="suivant" value="{{ request.get_full_path }}"><span data-texte>{{ offre.texte }}</span> <button type="submit" class="lien-annulation">{{ offre.bouton }}</button></form>{% endif %}</div>
+{# flèches des en-têtes de colonne qui trient (tableaux triables, _app.js) #}
+<template id="icones-tri">{% icone "arrow-up-down" "icone-tri" %}{% icone "arrow-up" "icone-tri" %}{% icone "arrow-down" "icone-tri" %}</template>
+{# erreur qui reste à l'écran jusqu'à ce que la personne la ferme (règle « Error-Stays », DESIGN.md) #}
+<div id="erreur-persistante" class="erreur-persistante" role="alert" hidden><span data-texte></span><button type="button" class="lien" data-fermer-erreur>{% libelle "commun.fermer" %}</button></div>
+{# confirmation de l'outil à la place de window.confirm() (règle « Own-Confirmation », DESIGN.md) #}
+<dialog id="confirmation" class="confirmation" aria-labelledby="confirmation-texte"><form method="dialog">
+  <p id="confirmation-texte" class="confirmation-texte"></p>
+  <div class="confirmation-boutons"><button value="non" class="secondaire" data-annuler autofocus>{% libelle "commun.annuler" %}</button><button value="oui" data-confirmer-ok>{% libelle "commun.confirmer" %}</button></div>
+</form></dialog>
+{# retour en haut : visible seulement après avoir fait défiler une page longue #}
+<a href="#contenu" id="retour-haut" class="retour-haut" aria-label="{% libelle "cadre.retour_haut" %}" title="{% libelle "cadre.retour_haut_court" %}" hidden>{% icone "chevron-haut" %}</a>
+{% libelles_js %}
+<script nonce="{% jeton_csp %}">{% include "collecte/_app.js" %}</script>
+{# scripts propres à une page (bibliothèques copiées dans static/vendor, jamais de CDN) : la Visualisation #}
+{% block scripts %}{% endblock %}
+<script nonce="{% jeton_csp %}">
+(function () {
+  var b = document.getElementById("retour-haut");
+  if (!b) return;
+  function maj() { b.hidden = window.scrollY < 600; }
+  window.addEventListener("scroll", maj, { passive: true });
+  b.addEventListener("click", function (e) {
+    e.preventDefault();
+    var doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: doux ? "smooth" : "auto" });
+    document.getElementById("contenu").focus({ preventScroll: true });
+  });
+  maj();
+})();
+</script>
+</body>
+</html>

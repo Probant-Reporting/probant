@@ -1,0 +1,36 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.equipe.intro" %}</p>{% endblock %}
+{% block etape %}
+{% for u, mdp_donne in crees %}{% include "collecte/administration/_message_acces.html" %}{% endfor %}
+<form method="post" class="carte form-mep" autocomplete="off">
+  {% csrf_token %}
+  {% if erreurs_equipe %}{% encart "erreur" role="alert" %}{% for e in erreurs_equipe %}<p>{{ e }}</p>{% endfor %}{% endencart %}{% endif %}
+  {% libelle "referentiels.mep.equipe.col_prenom" as t_prenom %}{% libelle "referentiels.mep.equipe.col_nom" as t_nom %}{% libelle "referentiels.mep.equipe.col_email" as t_email %}{% libelle "referentiels.mep.equipe.col_role" as t_role %}
+  <table class="table-mep table-equipe">
+    <thead><tr><th>{{ t_prenom }}</th><th>{{ t_nom }}</th><th>{{ t_email }}</th><th>{{ t_role }}</th></tr></thead>
+    {% for k in lignes %}
+    <tr><td><input type="text" name="first_name_{{ k }}" maxlength="150" aria-label="{% libelle "referentiels.mep.equipe.aria_prenom" numero=k|add:1 %}"></td>
+      <td><input type="text" name="last_name_{{ k }}" maxlength="150" aria-label="{% libelle "referentiels.mep.equipe.aria_nom" numero=k|add:1 %}"></td>
+      <td><input type="email" name="email_{{ k }}" aria-label="{% libelle "referentiels.mep.equipe.aria_email" numero=k|add:1 %}"></td>
+      <td><select name="role_{{ k }}" aria-label="{% libelle "referentiels.mep.equipe.aria_role" numero=k|add:1 %}">{% for code, libelle, _ in roles %}<option value="{{ code }}" {% if code == "contributeur" %}selected{% endif %}>{{ libelle }}</option>{% endfor %}</select></td></tr>
+    {% endfor %}
+  </table>
+  <p class="aide-champ">{% for code, libelle, aide in roles %}{% libelle_html "referentiels.mep.equipe.role_aide" role=libelle aide=aide %} {% endfor %}</p>
+  <div class="actions-arbre"><button type="submit" name="action" value="creer" class="secondaire">{% libelle "referentiels.mep.equipe.creer" %}</button>
+    <a href="{% url 'collecte:admin_attributions' %}">{% libelle "referentiels.mep.equipe.attributions" %}</a></div>
+  <p class="discret mb-4">{% libelle "referentiels.mep.equipe.comptes" liste=comptes_texte %}</p>
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% endblock %}
+{% block apercu %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.equipe.apercu_premiere" %}</strong>
+  <span class="discret">{% libelle "referentiels.mep.equipe.apercu_premiere_aide" %}</span>
+  <span class="faux-champ">{% libelle "referentiels.mep.equipe.apercu_nouveau_mdp" %}</span><span class="ap-bouton">{% libelle "referentiels.mep.equipe.apercu_changer" %}</span>
+</div>
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.apercu_pour_moi" %}</strong>
+  <span class="discret">{% libelle "referentiels.mep.equipe.apercu_pour_moi_aide" %}</span>
+</div>
+{% endblock %}

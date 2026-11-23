@@ -1,0 +1,16 @@
+{% load collecte %}{# Exporter / importer un fichier de traductions : « cible » = code d'une langue ou « toutes ». #}
+<div class="outils-traduction">
+  <details class="menu-deroulant">
+    <summary class="bouton{% if not fort %} secondaire{% endif %}">{% icone "telecharger" %} {% libelle "commun.exporter" %}{% if titre_export %} {{ titre_export }}{% endif %}</summary>
+    <div class="menu-liste">
+      <a href="{% url 'parametres:traductions_export' cible %}"><strong>{% libelle "admin.menu_fichier.reste" %}</strong><span>{% libelle "admin.menu_fichier.excel_ia" %}</span></a>
+      <a href="{% url 'parametres:traductions_export' cible %}?tout=1"><strong>{% libelle "admin.menu_fichier.tous" %}</strong><span>{% libelle "admin.menu_fichier.excel_relire" %}</span></a>
+      <a href="{% url 'parametres:traductions_export' cible %}?format=csv"><strong>{% libelle "admin.menu_fichier.reste" %}</strong><span>CSV</span></a>
+      <a href="{% url 'parametres:traductions_export' cible %}?format=csv&tout=1"><strong>{% libelle "admin.menu_fichier.tous" %}</strong><span>CSV</span></a>
+    </div>
+  </details>
+  <form method="post" action="{% url 'parametres:traductions_import' cible %}" enctype="multipart/form-data" class="import-traduction">{% csrf_token %}
+    {% libelle "admin.menu_fichier.importer_info" as t_ii %}<label class="bouton{% if not fort %} secondaire{% endif %}" title="{{ t_ii }}">{% icone "importer" %} {% libelle "commun.importer" %}
+      <input type="file" name="fichier" accept=".xlsx,.csv" data-envoi-auto class="visuellement-cache"></label>
+  </form>
+</div>

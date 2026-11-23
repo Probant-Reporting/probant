@@ -1,0 +1,1 @@
+{% load collecte %}{# état d'une campagne : distinct des états d'une valeur (● ◐ ○) ; pictogramme + mot, bleu information quand la saisie est ouverte #}<span class="statut-campagne statut-campagne-{{ c.statut }}">{% if c.statut == "ouverte" or c.statut == "revue" %}{% icone "crayon" %}{% elif c.statut == "cloturee" %}{% icone "cadenas" %}{% endif %}{{ c|choix:"statut" }}</span>

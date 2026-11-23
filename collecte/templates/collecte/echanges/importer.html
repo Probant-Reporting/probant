@@ -1,0 +1,273 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.echanges.nav.importer" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/echanges/_nav.html" %}
+
+{% if tache_active %}
+{# import en arrière-plan : barre d'avancement relue toutes les 3 s (_app/10_fichiers.js, data-suivi-import), la page peut être quittée #}
+<section class="carte import-fond" data-suivi-import="{% url 'collecte:echanges_tache_etat' tache.pk %}" aria-labelledby="titre-import-fond">
+  <h2 id="titre-import-fond">{% if tache.statut == "attente" %}{% libelle "suivi.echanges.importer.fond.titre_attente" nom=tache.nom_fichier %}{% else %}{% libelle "suivi.echanges.importer.fond.titre" nom=tache.nom_fichier %}{% endif %}</h2>
+  {% libelle "suivi.echanges.importer.fond.aria" as t_aria %}
+  <div class="chargement-barre import-barre{% if tache.statut == 'attente' %} indeterminee{% endif %}" role="progressbar" aria-label="{{ t_aria }}"
+       aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ tache.pourcentage }}" aria-valuetext="{{ avancement }}"><span style="width: {{ tache.pourcentage }}%"></span></div>
+  <p class="import-fond-texte"><span data-avancement>{{ avancement }}</span> <span class="discret" data-pct>{{ tache.pourcentage|pct }}</span></p>
+  {# annonce discrète pour les lecteurs d'écran : à chaque quart et à chaque étape, pas à chaque relecture #}
+  <p class="visuellement-cache" role="status" data-annonce></p>
+  <p class="discret">{% libelle "suivi.echanges.importer.fond.quitter" %}</p>
+  <form method="post" action="{% url 'collecte:echanges_tache_arreter' tache.pk %}" class="import-fond-arreter">{% csrf_token %}
+    <button type="submit" class="secondaire" aria-describedby="aide-arreter"{% if tache.arret_demande %} disabled{% endif %} data-arreter>{% libelle "suivi.echanges.importer.fond.arreter" %}</button>
+    <span class="discret" id="aide-arreter">{% if tache.statut == "attente" %}{% libelle "suivi.echanges.importer.fond.arreter_aide_attente" %}{% else %}{% libelle "suivi.echanges.importer.fond.arreter_aide" %}{% endif %}</span></form>
+  <noscript><p><a href="{% url 'collecte:echanges_importer' %}?tache={{ tache.pk }}">{% libelle "suivi.echanges.importer.fond.actualiser" %}</a></p></noscript>
+</section>
+
+{% elif tache_probleme %}
+<section class="carte resultat-import">
+  {% if tache.statut == "arretee" %}
+  <h2>{% libelle "suivi.echanges.importer.fond.titre_arrete" nom=tache.nom_fichier %}</h2>
+  <p role="status">{% libelle "suivi.echanges.importer.fond.annule" %}</p>
+  {% elif tache.statut == "interrompue" %}
+  <h2>{% libelle "suivi.echanges.importer.fond.titre_interrompu" nom=tache.nom_fichier %}</h2>
+  {% encart "erreur" role="status" %}{% libelle "suivi.echanges.importer.fond.interrompu" n=tache.ecrites total=tache.total %}{% endencart %}
+  {% else %}
+  <h2>{% libelle "suivi.echanges.importer.fond.titre_echec" nom=tache.nom_fichier %}</h2>
+  {% encart "erreur" role="status" %}{% libelle "suivi.echanges.importer.fond.echec" n=tache.ecrites %}{% endencart %}
+  {% if tache.erreur %}<p class="discret retour-ligne">{{ tache.erreur }}</p>{% endif %}
+  {% endif %}
+  <p class="boutons-etape"><a class="bouton secondaire" href="{% url 'collecte:saisie' %}">{% libelle "suivi.echanges.importer.voir_saisie" %}</a>
+    <a class="bouton secondaire" href="{% url 'collecte:echanges_importer' %}">{% libelle "suivi.echanges.importer.autre_fichier" %}</a></p>
+</section>
+
+{% elif validation %}
+<section class="carte resultat-import">
+  <h2>{% libelle "suivi.echanges.importer.validation.titre" %}</h2>
+  {% if not validees and not gardees %}
+  <p role="status">{% libelle "suivi.echanges.importer.validation.rien" %}</p>
+  {% elif validees and not gardees %}
+  <div class="tout-fait" role="status"><span class="tout-fait-icone">{% icone "coche" %}</span>
+    <p>{% libelle_html "suivi.echanges.importer.validation.toutes" n=validees %}</p></div>
+  {% else %}
+  <p role="status">{% libelle_html "suivi.echanges.importer.validation.partielle_validees" n=validees %}
+    {% libelle_html "suivi.echanges.importer.validation.partielle_gardees" n=gardees|length %}</p>
+  {% endif %}
+  {% if gardees %}
+  <div class="points-attention"><strong class="pa-titre">{% libelle "suivi.echanges.importer.validation.restent" %} <span class="discret">{{ gardees|length }}</span></strong>
+    {% for m in gardees|slice:":100" %}{% include "collecte/echanges/_point_a_completer.html" %}{% endfor %}
+  </div>
+  {% endif %}
+  <p class="boutons-etape"><a class="bouton{% if not gardees %} secondaire{% endif %}" href="{% url 'collecte:saisie' %}">{% if gardees %}{% libelle "suivi.echanges.importer.completer_saisie" %}{% else %}{% libelle "suivi.echanges.importer.voir_saisie" %}{% endif %}</a>
+    <a class="bouton secondaire" href="{% url 'collecte:echanges_importer' %}">{% libelle "suivi.echanges.importer.autre_fichier" %}</a></p>
+</section>
+
+{% elif resultat %}
+<section class="carte resultat-import">
+  {% if tache.statut == "arretee" %}<h2>{% libelle "suivi.echanges.importer.fond.titre_arrete" nom=info.nom %}</h2>
+  {% encart "avertissement" compact=True role="status" %}{% libelle "suivi.echanges.importer.fond.arrete" n=tache.faites total=tache.total %}{% endencart %}
+  {% else %}<h2>{% libelle "suivi.echanges.importer.termine" nom=info.nom %}</h2>{% endif %}
+  {% if tache.reprises %}<p class="discret">{% libelle "suivi.echanges.importer.fond.reprise" %}</p>{% endif %}
+  {% if nb_brouillon %}
+  <div class="a-faire import-a-valider">
+    <p class="a-faire-texte">{% if nb_brouillon == ecrites %}{% libelle_html "suivi.echanges.importer.resultat.brouillons" n=ecrites %}{% else %}{% libelle_html "suivi.echanges.importer.resultat.dont_brouillons" n=ecrites brouillons=nb_brouillon %}{% endif %}{% if nb_validables %}{% libelle_html "suivi.echanges.importer.resultat.a_valider" n=nb_validables %}{% endif %}{% if a_completer %} · {% libelle_html "suivi.echanges.importer.resultat.a_completer" n=a_completer|length %}{% endif %}{% if nb_rejets %} · {% libelle_html "suivi.echanges.importer.resultat.non_importees" n=nb_rejets %}{% endif %}.</p>
+    {# ce qu'engage « Valider », sous le bouton et lu avec lui (comme dans le panneau de saisie) #}
+    {% if nb_validables %}<form method="post" class="valider-import">{% csrf_token %}<button type="submit" name="action" value="valider_import" aria-describedby="aide-valider-import">{% libelle "suivi.echanges.importer.resultat.valider" n=nb_validables %}</button>
+      <p class="aide-valider" id="aide-valider-import">{% libelle "suivi.echanges.importer.resultat.valider_aide" %}</p></form>
+    {% else %}<a class="bouton" href="{% url 'collecte:saisie' %}">{% libelle "suivi.echanges.importer.completer_saisie" %}</a>{% endif %}
+  </div>
+  {% if a_completer %}
+  <div class="points-attention"><strong class="pa-titre">{% libelle "suivi.echanges.importer.resultat.a_completer_titre" %} <span class="discret">{{ a_completer|length }}</span></strong>
+    {% for m in a_completer|slice:":100" %}{% include "collecte/echanges/_point_a_completer.html" %}{% endfor %}
+    <p class="discret pa-pied">{% libelle "suivi.echanges.importer.resultat.a_completer_pied" %}</p>
+  </div>
+  {% endif %}
+  {% elif ecrites %}
+  <div class="tout-fait" role="status"><span class="tout-fait-icone">{% icone "coche" %}</span>
+    <p><b>{% libelle "suivi.echanges.importer.resultat.enregistrees" n=ecrites %}{% if nb_validees %}{% libelle "suivi.echanges.importer.resultat.et_validees" n=nb_validees %}{% endif %}.</b>{% if nb_historique %} {% libelle "suivi.echanges.importer.resultat.dont_historique" nombre=nb_historique %}{% endif %}{% if nb_rejets %} {% libelle_html "suivi.echanges.importer.resultat.non_importees_phrase" n=nb_rejets %}{% endif %}</p></div>
+  {% else %}
+  <p role="status">{% libelle "suivi.echanges.importer.resultat.aucune" %}{% if nb_rejets %} {% libelle_html "suivi.echanges.importer.resultat.non_importees_phrase" n=nb_rejets %}{% endif %}</p>
+  {% endif %}
+  {% if nb_forcees %}<p class="resultat-forcees">{% libelle "suivi.echanges.importer.resultat.forcees" n=nb_forcees %} <a href="{% url 'collecte:forcages' %}">{% libelle "suivi.echanges.importer.resultat.forcees_lien" %}</a></p>{% endif %}
+  {% if nb_non_forcees %}<p class="resultat-non-forcees">{% libelle "suivi.echanges.importer.resultat.non_forcees" n=nb_non_forcees %}</p>{% endif %}
+  <p class="discret">{% libelle "suivi.echanges.importer.resultat.a_jour" %}</p>
+  {% if avertissements %}
+  <div class="points-attention"><strong class="pa-titre">{% libelle "suivi.echanges.importer.resultat.a_verifier" %} <span class="discret">{% firstof nb_avertissements avertissements|length %}</span></strong>
+    {% for m in avertissements|slice:":100" %}<div class="pa-point pa-alerte"><span class="pa-pastille"></span><span class="pa-texte"><span class="pa-detail">{{ m }}</span></span></div>{% endfor %}
+  </div>
+  {% endif %}
+  <p class="boutons-etape"><a class="bouton secondaire" href="{% url 'collecte:saisie' %}">{% libelle "suivi.echanges.importer.voir_saisie" %}</a> <a class="bouton secondaire" href="{% url 'collecte:echanges_importer' %}">{% libelle "suivi.echanges.importer.autre_fichier" %}</a>
+    {% if nb_rejets %}<a class="bouton secondaire" href="{% url 'collecte:echanges_rejets' %}" data-telechargement>{% libelle "suivi.echanges.importer.telecharger_rejets" n=nb_rejets %}</a>{% endif %}</p>
+</section>
+
+{% elif analyse %}
+<section class="carte apercu-import">
+  {% libelle "suivi.echanges.importer.col.ligne" as c_ligne %}{% libelle "suivi.echanges.importer.col.raison" as c_raison %}{% libelle "suivi.echanges.importer.col.id_kpi" as c_id_kpi %}{% libelle "suivi.echanges.importer.col.organisation" as c_organisation %}{% libelle "suivi.echanges.importer.col.periode" as c_periode %}{% libelle "suivi.echanges.importer.col.valeur" as c_valeur %}{% libelle "suivi.echanges.importer.col.commentaire" as c_commentaire %}
+  <div class="entete-apercu">
+    <div><h2>{% libelle "suivi.echanges.importer.apercu.titre" %}</h2><p class="discret">{% if analyse.onglet and analyse.onglet != "CSV" %}{# un CSV n'a pas d'onglet #}{% libelle "suivi.echanges.importer.apercu.sous_onglet" nom=info.nom onglet=analyse.onglet %}{% else %}{% libelle "suivi.echanges.importer.apercu.sous" nom=info.nom %}{% endif %}</p></div>
+  </div>
+  {% if analyse.erreur %}
+  {% encart "erreur" %}{{ analyse.erreur }}{% endencart %}
+  <form method="post">{% csrf_token %}<button type="submit" name="action" value="annuler" class="secondaire">{% libelle "suivi.echanges.importer.apercu.recommencer" %}</button></form>
+  {% else %}
+  {% comment %}ce qui compte pour la personne en tuiles (à enregistrer, rejetées) ; inchangées et ignorées dans une phrase :
+     elles prouvent qu'un fichier réimporté sans changement ne modifie rien {% endcomment %}
+  {% with nb=analyse.nombres %}
+  <div class="tuiles-import deux">
+    <div class="tuile tuile-creer{% if not nb.a_enregistrer %} zero{% endif %}"><b>{{ nb.a_enregistrer }}</b><span>{% libelle "suivi.echanges.importer.apercu.a_enregistrer" n=nb.a_enregistrer %}</span>
+      {% if nb.a_enregistrer %}<span class="detail-tuile">{% libelle "suivi.echanges.importer.apercu.dont_nouvelles" n=nb.creer %} · {% libelle "suivi.echanges.importer.apercu.dont_remplacees" n=nb.modifier %}</span>{% endif %}</div>
+    <div class="tuile tuile-rejet{% if not nb.rejet %} zero{% endif %}"><b>{{ nb.rejet }}</b><span>{% libelle "suivi.importer.action.rejet" %}</span></div>
+  </div>
+  {% if nb.inchange or nb.ignore %}<p class="discret comptes-import">{% libelle "suivi.echanges.importer.apercu.autres_lignes" inchangees=nb.inchange ignorees=nb.ignore %}</p>{% endif %}
+  {% endwith %}
+  {% if analyse.campagnes_a_creer %}{% encart "avertissement" %}{% libelle "suivi.echanges.importer.apercu.campagnes_creees" n=analyse.campagnes_a_creer|length liste=analyse.campagnes_a_creer|liste %}{% endencart %}{% endif %}
+  {% if info.valider %}<p class="discret">{% libelle "suivi.echanges.importer.apercu.seront_validees" %}</p>{% endif %}
+  {% if seuil_arriere_plan %}{% encart "info" %}{% libelle "suivi.echanges.importer.fond.apercu" seuil=seuil_arriere_plan %}{% endencart %}{% endif %}
+  {% with lectures=analyse.lectures_nombres %}{% if lectures %}{% encart "info" compact=True %}{% for t in lectures %}{{ t }}{% if not forloop.last %} {% endif %}{% endfor %}{% endencart %}{% endif %}{% endwith %}
+  {% if analyse.ambigus %}{% encart "avertissement" compact=True %}{% libelle_html "suivi.echanges.importer.apercu.ambigus" n=analyse.ambigus %}{% endencart %}{% endif %}
+  {% if ecarts.0 %}{% encart "avertissement" compact=True %}{% libelle_html "suivi.echanges.importer.apercu.ecarts" n=ecarts.0 seuils=ecarts_seuils %}{% endencart %}{% endif %}
+  {% if apres_correction %}{% encart "succes" role="status" %}{% libelle "suivi.echanges.importer.apercu.corrections" %}
+    {% if rejets %}{% libelle "suivi.echanges.importer.apercu.reste" n=rejets|length %}{% else %}{% libelle "suivi.echanges.importer.apercu.plus_aucune" %}{% endif %}
+    {% libelle "suivi.echanges.importer.apercu.rien_enregistre" %}{% endencart %}{% endif %}
+  {% if rejets %}
+  <form method="post" class="rejets-a-corriger" data-chargement>{% csrf_token %}
+    <input type="hidden" name="nb_rejets" value="{{ rejets|length }}">
+    <h3><span class="etiquette-action etiquette-rejet">{% libelle "suivi.echanges.importer.rejets.nb" n=rejets|length %}</span> {% libelle "suivi.echanges.importer.rejets.titre" %}</h3>
+    <p class="discret">{% libelle "suivi.echanges.importer.rejets.aide" %}</p>
+    {% libelle "suivi.echanges.importer.rejets.region" as t_region %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_region }}"><table class="carte-table table-rejets">
+      <thead><tr><th>{{ c_ligne }}</th><th>{{ c_raison }}</th><th>{{ c_id_kpi }}</th><th>{{ c_organisation }}</th><th>{{ c_periode }}</th><th>{{ c_valeur }}</th><th>N/A</th><th>{{ c_commentaire }}</th></tr></thead>
+      {% for r in rejets %}
+      <tr><td data-titre="{{ c_ligne }}" class="discret">{{ r.repere }}<input type="hidden" name="cle_{{ forloop.counter0 }}" value="{{ r.cle }}"></td>
+        <td data-titre="{{ c_raison }}" class="motif-rejet retour-ligne">{{ r.motif }}</td>
+        <td data-titre="{{ c_id_kpi }}"><input type="text" name="kpi_{{ forloop.counter0 }}" value="{{ r.kpi }}" list="liste-kpi" size="9" aria-label="{% libelle "suivi.echanges.importer.rejets.aria_kpi" repere=r.repere %}">
+          {% if r.indicateur %}<span class="discret nom-rejet">{{ r.indicateur|truncatechars:60 }}</span>{% endif %}</td>
+        <td data-titre="{{ c_organisation }}"><input type="text" name="organisation_{{ forloop.counter0 }}" value="{{ r.organisation }}" list="liste-orgs" size="22" aria-label="{% libelle "suivi.echanges.importer.rejets.aria_organisation" repere=r.repere %}"></td>
+        <td data-titre="{{ c_periode }}"><input type="text" name="periode_{{ forloop.counter0 }}" value="{{ r.periode|default:r.exercice }}" size="8" aria-label="{% libelle "suivi.echanges.importer.rejets.aria_periode" repere=r.repere %}"></td>
+        <td data-titre="{{ c_valeur }}"><span class="valeur-rejet"><input type="text" name="valeur_{{ forloop.counter0 }}" value="{{ r.valeur }}" size="9" inputmode="decimal" aria-label="{% libelle "suivi.echanges.importer.rejets.aria_valeur" repere=r.repere %}">
+          {% if r.unite %}<span class="discret">{{ r.unite }}</span>{% endif %}</span>
+          {% if r.n1 %}<span class="discret nom-rejet">{% libelle "suivi.echanges.importer.rejets.n1" valeur=r.n1_affiche|default:r.n1 %}</span>{% endif %}</td>
+        <td data-titre="N/A"><input type="checkbox" name="na_{{ forloop.counter0 }}"{% if r.na %} checked{% endif %} aria-label="{% libelle "suivi.echanges.importer.rejets.aria_na" repere=r.repere %}"></td>
+        <td data-titre="{{ c_commentaire }}"><input type="text" name="commentaire_{{ forloop.counter0 }}" value="{{ r.commentaire }}" size="22" aria-label="{% libelle "suivi.echanges.importer.rejets.aria_commentaire" repere=r.repere %}"></td></tr>
+      {% endfor %}
+    </table></div>
+    <datalist id="liste-kpi">{% for c in codes_kpi %}<option value="{{ c }}">{% endfor %}</datalist>
+    <datalist id="liste-orgs">{% for o in noms_orgs %}<option value="{{ o }}">{% endfor %}</datalist>
+    <p class="boutons-rejets"><button type="submit" name="action" value="corriger" class="secondaire">{% libelle "suivi.echanges.importer.rejets.reverifier" %}</button>
+      <a class="bouton secondaire" href="{% url 'collecte:echanges_rejets' %}" data-telechargement>{% libelle "suivi.echanges.importer.telecharger_rejets" n=nb_rejets %}</a></p>
+  </form>
+  {% endif %}
+  {% with lignes=analyse.apercu_ecrits %}
+  {% if lignes %}
+  <h3 class="titre-a-importer">{% libelle "suivi.echanges.importer.a_importer.titre" %}</h3>
+  {% libelle "suivi.echanges.importer.a_importer.region" as t_region_importer %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_region_importer }}"><table class="carte-table table-apercu table-apercu-import">
+    <colgroup><col class="l-64"><col class="l-110"><col><col class="l-150"><col class="l-70"><col class="l-130"><col class="l-130"><col class="l-26p"></colgroup>
+    {% libelle "suivi.echanges.importer.a_importer.action" as c_action %}{% libelle "suivi.echanges.importer.a_importer.avant" as c_avant %}{% libelle "suivi.echanges.importer.a_importer.apres" as c_apres %}{% libelle "suivi.echanges.importer.a_importer.remarque" as c_remarque %}
+    <thead><tr><th>{{ c_ligne }}</th><th>{{ c_action }}</th><th>KPI</th><th>{{ c_organisation }}</th><th>{{ c_periode }}</th><th>{{ c_avant }}</th><th>{{ c_apres }}</th><th>{{ c_remarque }}</th></tr></thead>
+    {% for l in lignes %}
+    <tr class="action-{{ l.action }}"><td class="discret" data-titre="{{ c_ligne }}">{{ l.repere }}</td>
+      <td data-titre="{{ c_action }}"><span class="etiquette-action etiquette-{{ l.action }}">{% if l.action == "creer" %}{% libelle "suivi.echanges.importer.a_importer.creation" %}{% elif l.action == "forcer" %}{% libelle "suivi.echanges.importer.a_importer.forcage" %}{% else %}{% libelle "suivi.echanges.importer.a_importer.modification" %}{% endif %}</span></td>
+      <td data-titre="KPI"><span class="id-chip">{{ l.kpi_id }}</span> {{ l.kpi.nom|default:""|truncatechars:60 }}</td><td data-titre="{{ c_organisation }}">{{ l.org.nom|default:l.organisation }}</td><td data-titre="{{ c_periode }}">{{ l.periode|default:"—" }}</td>
+      <td class="discret{% if not l.avant or l.avant == '—' %} vide-tel{% endif %}" data-titre="{{ c_avant }}">{{ l.avant }}</td><td data-titre="{{ c_apres }}"><strong>{{ l.apres }}</strong></td><td class="retour-ligne{% if not l.corrigee and not l.motif and l.ecart is None and not l.ambigu %} vide-tel{% endif %}" data-titre="{{ c_remarque }}">{% if l.corrigee %}{% libelle "suivi.echanges.importer.a_importer.corrigee" %} {% endif %}{{ l.motif }}{% if l.ecart is not None %} <span class="ecart-fort"><span class="ecart-fleche" aria-hidden="true">{% if l.ecart > 0 %}▲{% else %}▼{% endif %}</span>{% libelle "suivi.echanges.importer.a_importer.vs_n1" ecart=l.ecart|ecart %}</span>{% endif %}{% if l.ambigu %} <span class="ecart-fort">{{ l.ambigu }}</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table></div>
+  {% if analyse.a_ecrire|length|add:analyse.a_forcer|length > lignes|length %}<p class="discret">{% libelle "suivi.echanges.importer.a_importer.limite" n=lignes|length total=analyse.a_ecrire|length|add:analyse.a_forcer|length %}</p>{% endif %}
+  {% else %}<p class="discret">{% libelle "suivi.echanges.importer.a_importer.rien" %}</p>{% endif %}
+  {% endwith %}
+  {% with nf=analyse.a_forcer|length %}
+  {% if nf %}
+  {# KPI calculés : rien n'est forcé sans ce choix explicite (aucune option cochée d'avance) #}
+  <fieldset class="forcer-import" aria-describedby="aide-forcer-import">
+    <legend>{% libelle "suivi.echanges.importer.forcer.titre" n=nf %}</legend>
+    {% encart "avertissement" compact=True id="aide-forcer-import" %}{% libelle "suivi.echanges.importer.forcer.texte" n=nf %}{% endencart %}
+    <div class="cartes-choix deux">
+      <label class="carte-choix"><input type="radio" name="forcer" value="oui" form="confirmer-import" required>
+        <strong>{% libelle "suivi.echanges.importer.forcer.oui" n=nf %}</strong>
+        <span class="discret">{% libelle "suivi.echanges.importer.forcer.oui_aide" %}</span></label>
+      <label class="carte-choix"><input type="radio" name="forcer" value="non" form="confirmer-import" required>
+        <strong>{% libelle "suivi.echanges.importer.forcer.non" n=nf %}</strong>
+        <span class="discret">{% libelle "suivi.echanges.importer.forcer.non_aide" %}</span></label>
+    </div>
+  </fieldset>
+  {% endif %}
+  <form method="post" class="barre-enregistrement collante" id="confirmer-import" data-chargement>{% csrf_token %}
+    {% with n=analyse.a_ecrire|length|add:nf %}
+    <button type="submit" name="action" value="confirmer" {% if not n %}disabled{% endif %}>{% if n %}{% libelle "suivi.echanges.importer.importer_n" n=n %}{% else %}{% libelle "commun.rien_a_importer" %}{% endif %}</button>
+    {% endwith %}
+    <button type="submit" name="action" value="annuler" class="secondaire" formnovalidate>{% libelle "commun.annuler" %}</button>
+    {% if nb_rejets %}<span class="etat-barre">{% libelle "suivi.echanges.importer.rejets_non_importees" n=nb_rejets %}</span>{% endif %}
+  </form>
+  {% endwith %}
+  {% endif %}
+</section>
+
+{% else %}
+<p class="intro-page">{% libelle "suivi.echanges.importer.intro" %}</p>
+{% if reprise and user.est_admin %}{% encart "avertissement" %}{% libelle "suivi.echanges.importer.reprise.texte" %}
+  {% libelle "suivi.echanges.importer.reprise.autre_forme" %}
+  <a href="{% url 'collecte:admin_reprise' %}">{% libelle "suivi.echanges.importer.reprise.lien" %}</a>.{% endencart %}{% endif %}
+<div class="etapes-import">
+  <section class="carte carte-etape">
+    <span class="num-etape">1</span>
+    <h2>{% libelle "suivi.echanges.importer.etape1.titre" %}</h2>
+    <p class="discret">{% libelle_html "suivi.echanges.importer.etape1.aide" %}</p>
+    <form method="post" action="{% url 'collecte:echanges_modele' %}" class="formulaire-etape" data-telechargement>
+      {% csrf_token %}
+      {% choix_periodes groupes_campagnes campagne as choix %}
+      <div class="choix-ref-periode choix-fichier">
+        {% if choix.refs|length > 1 or plusieurs_en_cours %}<label>{% libelle "suivi.echanges.importer.etape1.referentiel" %}
+          <select name="ref" data-ref-fichier>
+            {% for r in choix.refs %}<option value="{{ r.code }}" {% if r.pk == campagne.referentiel_id %}selected{% endif %}>{{ r }}</option>{% endfor %}
+            {% if plusieurs_en_cours %}<option value="tous">{% libelle "suivi.echanges.importer.etape1.tous_referentiels" %}</option>{% endif %}
+          </select></label>{% endif %}
+        {# toujours « Période » (un seul référentiel : son nom en aide, jamais comme étiquette du champ) #}
+        <label>{% libelle "suivi.echanges.importer.col.periode" %}{% if not choix.refs|length > 1 and not plusieurs_en_cours %} <span class="discret normal">{{ campagne.referentiel }}</span>{% endif %}
+          <select name="campagne" data-periode-fichier>
+            {% for r, liste in groupes_campagnes %}<optgroup label="{{ r }}" data-ref="{{ r.code }}">
+              {% for c in liste %}<option value="{{ c.pk }}" {% if c.pk == campagne.pk %}selected{% endif %}>{% libelle "suivi.echanges.importer.etape1.option_periode" periode=c.periode statut=c|choix_phrase:"statut" %}</option>{% endfor %}
+            </optgroup>{% endfor %}
+          </select></label>
+      </div>
+      <span class="libelle-formule">{% libelle "suivi.echanges.importer.col.organisation" %}</span>
+      {% include "collecte/_selecteur_org_champ.html" with nom="org" valeur=request.GET.org libelle_tous_key="suivi.echanges.importer.etape1.toutes_orgs" %}
+      <div class="champ-kpi"><span class="libelle-formule">KPI</span>
+        {% libelle "suivi.echanges.kpi.tous_mes" as t_tous_mes %}{% include "collecte/echanges/_choix_kpi.html" with ck=ck libelle_tous=t_tous_mes id="fichier" %}</div>
+      <label class="case"><input type="checkbox" name="a_faire" checked> {% libelle "suivi.echanges.importer.etape1.a_faire" %}</label>
+      <label class="case" data-onglets-excel><input type="checkbox" name="par_organisation"> {% libelle "suivi.echanges.importer.etape1.par_organisation" %} <span class="discret">{% libelle "suivi.echanges.importer.etape1.par_organisation_aide" %}</span></label>
+      <span class="libelle-formule" id="l-format-fichier">{% libelle "suivi.echanges.export.format" %}</span>
+      <div class="puces-choix" role="radiogroup" aria-labelledby="l-format-fichier">
+        <label class="puce"><input type="radio" name="format" value="xlsx" checked><span>Excel</span></label>
+        <label class="puce"><input type="radio" name="format" value="csv"><span>CSV</span></label>
+      </div>
+      <div class="boutons-etape"><button type="submit">{% libelle "suivi.echanges.importer.etape1.telecharger" %}</button></div>
+      {# fichier vide : sous le bouton, avec son intérêt #}
+      <p class="fichier-vide"><a href="{% url 'collecte:echanges_modele' %}?vierge=1" data-telechargement>{% icone "download" %} {% libelle "suivi.echanges.importer.etape1.vide" %}</a><br>
+        <span class="discret">{% libelle "suivi.echanges.importer.etape1.vide_aide" %}</span></p>
+    </form>
+  </section>
+  <section class="carte carte-etape">
+    <span class="num-etape">2</span>
+    <h2>{% libelle "suivi.echanges.importer.etape2.titre" %}</h2>
+    <p class="discret">{% libelle_html "suivi.echanges.importer.etape2.aide" %}</p>
+    <form method="post" enctype="multipart/form-data" class="formulaire-etape depot-preuve" data-chargement>
+      {% csrf_token %}
+      <label class="zone-depot"><input type="file" name="fichier" accept=".xlsx,.xlsm,.csv" required aria-label="{% libelle "suivi.echanges.importer.etape2.fichier_aria" %}" data-depot>
+        <span class="zone-depot-texte">{% libelle_html "suivi.echanges.importer.etape2.choisir" %}<br><span class="discret">{% libelle "suivi.echanges.importer.etape2.taille" mo=taille_max_import %}</span></span></label>
+      <label class="case"><input type="checkbox" name="valider"> {% libelle "suivi.echanges.importer.etape2.valider_aussi" %} <span class="discret">{% libelle "suivi.echanges.importer.etape2.valider_aussi_aide" %}</span></label>
+      <details class="options-repliables options-import"{% if reprise %} open{% endif %}><summary>{% libelle "suivi.echanges.importer.etape2.options" %}</summary>
+        <label>{% libelle "suivi.echanges.importer.etape2.campagne_defaut" %}
+          {% include "collecte/_choix_campagne_simple.html" %}</label>
+        {% if user.est_admin %}<label class="case"><input type="checkbox" name="creer_campagnes"{% if reprise %} checked{% endif %}> {% libelle "suivi.echanges.importer.etape2.creer_campagnes" %} <span class="discret">{% libelle "suivi.echanges.importer.etape2.creer_campagnes_aide" %}</span></label>{% endif %}
+      </details>
+      <button type="submit" name="action" value="verifier">{% libelle "suivi.echanges.importer.etape2.verifier" %}</button>
+    </form>
+  </section>
+</div>
+<details class="carte bon-a-savoir formats-reconnus">
+  <summary>{% libelle_html "suivi.echanges.importer.formats.titre" %} <span class="discret">{% libelle "suivi.echanges.importer.formats.sous_titre" %}</span></summary>
+  <ul>
+    <li>{% libelle_html "suivi.echanges.importer.formats.fichier" %}</li>
+    <li>{% libelle_html "suivi.echanges.importer.formats.base" %}</li>
+    <li>{% libelle_html "suivi.echanges.importer.formats.historique" %}</li>
+  </ul>
+  <p class="discret">{% libelle "suivi.echanges.importer.formats.colonnes" %}
+    {% if user.est_admin %}{% libelle "suivi.echanges.importer.formats.cloture" %}{% endif %}</p>
+</details>
+{% endif %}
+{% endblock %}

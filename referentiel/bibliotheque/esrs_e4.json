@@ -1,0 +1,2383 @@
+{
+ "referentiel": {
+  "code": "ESRS_E4",
+  "identifiant": "e323fad0-1144-5a8f-b1b8-33e3b0ffca07",
+  "nom": {
+   "fr": "ESRS E4 – Biodiversité et écosystèmes",
+   "en": "ESRS E4 – Biodiversity and ecosystems",
+   "es": "ESRS E4 – Biodiversidad y ecosistemas",
+   "de": "ESRS E4 – Biologische Vielfalt und Ökosysteme",
+   "it": "ESRS E4 – Biodiversità ed ecosistemi",
+   "nl": "ESRS E4 – Biodiversiteit en ecosystemen",
+   "pt": "ESRS E4 – Biodiversidade e ecossistemas"
+  },
+  "description": {
+   "fr": "Norme ESRS E4 révisée : plan de transition pour la biodiversité, politiques, actions et cibles, compensations, sites liés aux zones sensibles et indicateurs. À installer si le sujet est important, avec le modèle ESRS 2. Construit d'après le règlement délégué (UE) 2026/1563 du 3 juillet 2026.",
+   "en": "Revised ESRS E4: biodiversity transition plan, policies, actions and targets, offsets, sites linked to sensitive areas and metrics. Install it if the topic is material, with the ESRS 2 template. Built from Delegated Regulation (EU) 2026/1563 of 3 July 2026.",
+   "es": "Norma ESRS E4 revisada: plan de transición para la biodiversidad, políticas, acciones y metas, compensaciones, emplazamientos vinculados a zonas sensibles y métricas. Instálelo si el tema es material, con el modelo ESRS 2. Reglamento Delegado (UE) 2026/1563 de 3 de julio de 2026; inventario hecho con la lista de puntos de datos del EFRAG (borrador de 28 de agosto de 2026).",
+   "de": "Überarbeiteter ESRS E4: Übergangsplan für die biologische Vielfalt, Konzepte, Maßnahmen und Ziele, Kompensationen, Standorte mit Bezug zu sensiblen Gebieten und Kennzahlen. Installieren, wenn das Thema wesentlich ist, zusammen mit der Vorlage ESRS 2. Delegierte Verordnung (EU) 2026/1563 vom 3. Juli 2026; Bestandsaufnahme mit der Liste der Datenpunkte der EFRAG (Entwurf vom 28. August 2026).",
+   "it": "ESRS E4 rivisto: piano di transizione per la biodiversità, politiche, azioni e obiettivi, compensazioni, siti legati alle aree sensibili e metriche. Da installare se il tema è rilevante, con il modello ESRS 2. Regolamento delegato (UE) 2026/1563 del 3 luglio 2026; inventario fatto con l'elenco dei punti dati dell'EFRAG (bozza del 28 agosto 2026).",
+   "nl": "Herziene ESRS E4: transitieplan voor biodiversiteit, beleid, acties en streefdoelen, compensaties, locaties die verband houden met kwetsbare gebieden en maatstaven. Installeer het als het onderwerp materieel is, samen met het model ESRS 2. Gedelegeerde Verordening (EU) 2026/1563 van 3 juli 2026; inventaris gemaakt met de lijst van datapunten van EFRAG (ontwerp van 28 augustus 2026).",
+   "pt": "ESRS E4 revista: plano de transição para a biodiversidade, políticas, ações e metas, compensações, locais ligados a zonas sensíveis e métricas. Instale-o se o tema for material, com o modelo ESRS 2. Regulamento Delegado (UE) 2026/1563 de 3 de julho de 2026; inventário feito com a lista de pontos de dados do EFRAG (projeto de 28 de agosto de 2026)."
+  },
+  "thematique": {
+   "fr": "Normes de reporting",
+   "en": "Reporting standards",
+   "es": "Normas de reporting",
+   "de": "Berichtsstandards",
+   "it": "Norme di rendicontazione",
+   "nl": "Rapportagestandaarden",
+   "pt": "Normas de reporte"
+  },
+  "couleur": "#3E7D2E",
+  "frequence": "annee",
+  "mois_debut": 1,
+  "comparaison": "N-1",
+  "version": "1.1",
+  "date_version": "2026-11-19",
+  "origine": "fourni"
+ },
+ "langue_reference": "fr",
+ "langues": [
+  {
+   "code": "fr",
+   "libelle": "Français"
+  },
+  {
+   "code": "en",
+   "libelle": "English"
+  },
+  {
+   "code": "es",
+   "libelle": "Español"
+  },
+  {
+   "code": "de",
+   "libelle": "Deutsch"
+  },
+  {
+   "code": "it",
+   "libelle": "Italiano"
+  },
+  {
+   "code": "nl",
+   "libelle": "Nederlands"
+  },
+  {
+   "code": "pt",
+   "libelle": "Português"
+  }
+ ],
+ "niveaux": [],
+ "unites": [],
+ "types_saisie": [
+  {
+   "code": "Saisi",
+   "libelle": {
+    "fr": "Saisi",
+    "en": "Input"
+   },
+   "abrege": {
+    "fr": "Saisie",
+    "en": "Input"
+   },
+   "couleur": "#5A6B85",
+   "comportement": "saisie"
+  }
+ ],
+ "types_reponse": [
+  {
+   "code": "OuiNon",
+   "libelle": {
+    "fr": "Oui / non",
+    "en": "Yes / no",
+    "es": "Sí / no",
+    "de": "Ja / Nein",
+    "it": "Sì / no",
+    "nl": "Ja / nee",
+    "pt": "Sim / não"
+   },
+   "format": "oui_non",
+   "valeurs": {
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "Texte",
+   "libelle": {
+    "fr": "Texte rédigé",
+    "en": "Written text",
+    "es": "Texto redactado",
+    "de": "Ausformulierter Text",
+    "it": "Testo redatto",
+    "nl": "Uitgeschreven tekst",
+    "pt": "Texto redigido"
+   },
+   "format": "texte",
+   "valeurs": {}
+  },
+  {
+   "code": "ESRS-OUI-NON",
+   "libelle": {
+    "fr": "Oui / non (tableau)",
+    "en": "Yes / no (table)",
+    "es": "Sí / no (tabla)",
+    "de": "Ja / Nein (Tabelle)",
+    "it": "Sì / no (tabella)",
+    "nl": "Ja / nee (tabel)",
+    "pt": "Sim / não (tabela)"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non"
+    ],
+    "en": [
+     "Yes",
+     "No"
+    ],
+    "es": [
+     "Sí",
+     "No"
+    ],
+    "de": [
+     "Ja",
+     "Nein"
+    ],
+    "it": [
+     "Sì",
+     "No"
+    ],
+    "nl": [
+     "Ja",
+     "Nee"
+    ],
+    "pt": [
+     "Sim",
+     "Não"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-OUI-NON-SO",
+   "libelle": {
+    "fr": "Oui / non / sans objet",
+    "en": "Yes / no / not applicable",
+    "es": "Sí / no / no aplica",
+    "de": "Ja / Nein / nicht zutreffend",
+    "it": "Sì / no / non applicabile",
+    "nl": "Ja / nee / niet van toepassing",
+    "pt": "Sim / não / não aplicável"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Oui",
+     "Non",
+     "Sans objet"
+    ],
+    "en": [
+     "Yes",
+     "No",
+     "Not applicable"
+    ],
+    "es": [
+     "Sí",
+     "No",
+     "No aplica"
+    ],
+    "de": [
+     "Ja",
+     "Nein",
+     "Nicht zutreffend"
+    ],
+    "it": [
+     "Sì",
+     "No",
+     "Non applicabile"
+    ],
+    "nl": [
+     "Ja",
+     "Nee",
+     "Niet van toepassing"
+    ],
+    "pt": [
+     "Sim",
+     "Não",
+     "Não aplicável"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-HORIZON",
+   "libelle": {
+    "fr": "Horizon de temps",
+    "en": "Time horizon",
+    "es": "Horizonte temporal",
+    "de": "Zeithorizont",
+    "it": "Orizzonte temporale",
+    "nl": "Tijdshorizon",
+    "pt": "Horizonte temporal"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Court terme (période de reporting)",
+     "Moyen terme (jusqu'à 5 ans)",
+     "Long terme (plus de 5 ans)"
+    ],
+    "en": [
+     "Short term (reporting period)",
+     "Medium term (up to 5 years)",
+     "Long term (more than 5 years)"
+    ],
+    "es": [
+     "Corto plazo (periodo de referencia)",
+     "Medio plazo (hasta 5 años)",
+     "Largo plazo (más de 5 años)"
+    ],
+    "de": [
+     "Kurzfristig (Berichtszeitraum)",
+     "Mittelfristig (bis zu 5 Jahre)",
+     "Langfristig (mehr als 5 Jahre)"
+    ],
+    "it": [
+     "Breve termine (periodo di rendicontazione)",
+     "Medio termine (fino a 5 anni)",
+     "Lungo termine (oltre 5 anni)"
+    ],
+    "nl": [
+     "Korte termijn (verslagperiode)",
+     "Middellange termijn (tot 5 jaar)",
+     "Lange termijn (meer dan 5 jaar)"
+    ],
+    "pt": [
+     "Curto prazo (período de reporte)",
+     "Médio prazo (até 5 anos)",
+     "Longo prazo (mais de 5 anos)"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-STATUT-ACTION",
+   "libelle": {
+    "fr": "État d'une action",
+    "en": "Status of an action",
+    "es": "Estado de una acción",
+    "de": "Status einer Maßnahme",
+    "it": "Stato di un'azione",
+    "nl": "Status van een actie",
+    "pt": "Estado de uma ação"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Réalisée dans la période",
+     "En cours",
+     "Prévue"
+    ],
+    "en": [
+     "Taken in the period",
+     "Under way",
+     "Planned"
+    ],
+    "es": [
+     "Realizada en el periodo",
+     "En curso",
+     "Prevista"
+    ],
+    "de": [
+     "Im Zeitraum durchgeführt",
+     "Laufend",
+     "Geplant"
+    ],
+    "it": [
+     "Realizzata nel periodo",
+     "In corso",
+     "Pianificata"
+    ],
+    "nl": [
+     "In de periode uitgevoerd",
+     "Lopend",
+     "Gepland"
+    ],
+    "pt": [
+     "Realizada no período",
+     "Em curso",
+     "Planeada"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-NATURE-CIBLE",
+   "libelle": {
+    "fr": "Cible absolue ou relative",
+    "en": "Absolute or relative target",
+    "es": "Meta absoluta o relativa",
+    "de": "Absolutes oder relatives Ziel",
+    "it": "Obiettivo assoluto o relativo",
+    "nl": "Absoluut of relatief streefdoel",
+    "pt": "Meta absoluta ou relativa"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "Absolue",
+     "Relative"
+    ],
+    "en": [
+     "Absolute",
+     "Relative"
+    ],
+    "es": [
+     "Absoluta",
+     "Relativa"
+    ],
+    "de": [
+     "Absolut",
+     "Relativ"
+    ],
+    "it": [
+     "Assoluto",
+     "Relativo"
+    ],
+    "nl": [
+     "Absoluut",
+     "Relatief"
+    ],
+    "pt": [
+     "Absoluta",
+     "Relativa"
+    ]
+   }
+  },
+  {
+   "code": "ESRS-TAB-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés",
+    "en": "Key actions",
+    "es": "Acciones principales",
+    "de": "Wichtigste Maßnahmen",
+    "it": "Azioni principali",
+    "nl": "Belangrijkste acties",
+    "pt": "Ações principais"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "action",
+     "libelle": {
+      "fr": "Action clé",
+      "en": "Key action",
+      "es": "Acción principal",
+      "de": "Wichtigste Maßnahme",
+      "it": "Azione principale",
+      "nl": "Belangrijkste actie",
+      "pt": "Ação principal"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "statut",
+     "libelle": {
+      "fr": "État",
+      "en": "Status",
+      "es": "Estado",
+      "de": "Status",
+      "it": "Stato",
+      "nl": "Status",
+      "pt": "Estado"
+     },
+     "type": "liste",
+     "liste": "ESRS-STATUT-ACTION"
+    },
+    {
+     "code": "horizon",
+     "libelle": {
+      "fr": "Horizon",
+      "en": "Timeframe",
+      "es": "Plazo",
+      "de": "Zeitrahmen",
+      "it": "Tempi",
+      "nl": "Tijdsbestek",
+      "pt": "Prazo"
+     },
+     "type": "liste",
+     "liste": "ESRS-HORIZON"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "capex",
+     "libelle": {
+      "fr": "Dépenses d'investissement de la période",
+      "en": "Capital expenditure of the period",
+      "es": "Gastos de capital del periodo",
+      "de": "Investitionsausgaben des Zeitraums",
+      "it": "Spese in conto capitale del periodo",
+      "nl": "Kapitaaluitgaven van de periode",
+      "pt": "Despesas de capital do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "opex",
+     "libelle": {
+      "fr": "Dépenses d'exploitation de la période",
+      "en": "Operating expenditure of the period",
+      "es": "Gastos operativos del periodo",
+      "de": "Betriebsausgaben des Zeitraums",
+      "it": "Spese operative del periodo",
+      "nl": "Operationele uitgaven van de periode",
+      "pt": "Despesas operacionais do período"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_bas",
+     "libelle": {
+      "fr": "Ressources futures, estimation basse",
+      "en": "Future resources, low estimate",
+      "es": "Recursos futuros, estimación baja",
+      "de": "Künftige Ressourcen, untere Schätzung",
+      "it": "Risorse future, stima minima",
+      "nl": "Toekomstige middelen, lage schatting",
+      "pt": "Recursos futuros, estimativa baixa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "futur_haut",
+     "libelle": {
+      "fr": "Ressources futures, estimation haute",
+      "en": "Future resources, high estimate",
+      "es": "Recursos futuros, estimación alta",
+      "de": "Künftige Ressourcen, obere Schätzung",
+      "it": "Risorse future, stima massima",
+      "nl": "Toekomstige middelen, hoge schatting",
+      "pt": "Recursos futuros, estimativa alta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "conditions",
+     "libelle": {
+      "fr": "Dépend de conditions préalables",
+      "en": "Depends on preconditions",
+      "es": "Depende de condiciones previas",
+      "de": "Hängt von Voraussetzungen ab",
+      "it": "Dipende da condizioni preliminari",
+      "nl": "Afhankelijk van voorwaarden",
+      "pt": "Depende de condições prévias"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    }
+   ]
+  },
+  {
+   "code": "ESRS-TAB-CIBLES",
+   "libelle": {
+    "fr": "Cibles",
+    "en": "Targets",
+    "es": "Metas",
+    "de": "Ziele",
+    "it": "Obiettivi",
+    "nl": "Streefdoelen",
+    "pt": "Metas"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "cible",
+     "libelle": {
+      "fr": "Cible",
+      "en": "Target",
+      "es": "Meta",
+      "de": "Ziel",
+      "it": "Obiettivo",
+      "nl": "Streefdoel",
+      "pt": "Meta"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "indicateur",
+     "libelle": {
+      "fr": "Indicateur",
+      "en": "Metric",
+      "es": "Parámetro",
+      "de": "Kennzahl",
+      "it": "Metrica",
+      "nl": "Metriek",
+      "pt": "Métrica"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "nature",
+     "libelle": {
+      "fr": "Absolue ou relative",
+      "en": "Absolute or relative",
+      "es": "Absoluta o relativa",
+      "de": "Absolut oder relativ",
+      "it": "Assoluto o relativo",
+      "nl": "Absoluut of relatief",
+      "pt": "Absoluta ou relativa"
+     },
+     "type": "liste",
+     "liste": "ESRS-NATURE-CIBLE"
+    },
+    {
+     "code": "unite",
+     "libelle": {
+      "fr": "Unité",
+      "en": "Unit",
+      "es": "Unidad",
+      "de": "Einheit",
+      "it": "Unità",
+      "nl": "Eenheid",
+      "pt": "Unidade"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "annee_ref",
+     "libelle": {
+      "fr": "Année de référence",
+      "en": "Base year",
+      "es": "Año de referencia",
+      "de": "Basisjahr",
+      "it": "Anno di base",
+      "nl": "Basisjaar",
+      "pt": "Ano de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_ref",
+     "libelle": {
+      "fr": "Valeur de référence",
+      "en": "Baseline value",
+      "es": "Valor de referencia",
+      "de": "Basiswert",
+      "it": "Valore di base",
+      "nl": "Basiswaarde",
+      "pt": "Valor de base"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_etape",
+     "libelle": {
+      "fr": "Année d'étape",
+      "en": "Milestone year",
+      "es": "Año del hito",
+      "de": "Jahr des Meilensteins",
+      "it": "Anno della tappa",
+      "nl": "Jaar van de mijlpaal",
+      "pt": "Ano da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_etape",
+     "libelle": {
+      "fr": "Valeur d'étape",
+      "en": "Milestone value",
+      "es": "Valor del hito",
+      "de": "Wert des Meilensteins",
+      "it": "Valore della tappa",
+      "nl": "Waarde van de mijlpaal",
+      "pt": "Valor da etapa"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "annee_cible",
+     "libelle": {
+      "fr": "Année cible",
+      "en": "Target year",
+      "es": "Año objetivo",
+      "de": "Zieljahr",
+      "it": "Anno obiettivo",
+      "nl": "Doeljaar",
+      "pt": "Ano-alvo"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "valeur_cible",
+     "libelle": {
+      "fr": "Valeur cible",
+      "en": "Target value",
+      "es": "Valor de la meta",
+      "de": "Zielwert",
+      "it": "Valore obiettivo",
+      "nl": "Streefwaarde",
+      "pt": "Valor da meta"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "loi",
+     "libelle": {
+      "fr": "Imposée par la loi",
+      "en": "Required by law",
+      "es": "Exigida por ley",
+      "de": "Gesetzlich vorgeschrieben",
+      "it": "Richiesto dalla legge",
+      "nl": "Wettelijk vereist",
+      "pt": "Exigida por lei"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON"
+    },
+    {
+     "code": "science",
+     "libelle": {
+      "fr": "Fondée sur des preuves scientifiques concluantes",
+      "en": "Based on conclusive scientific evidence",
+      "es": "Basada en pruebas científicas concluyentes",
+      "de": "Auf eindeutigen wissenschaftlichen Belegen beruhend",
+      "it": "Basato su prove scientifiche conclusive",
+      "nl": "Gebaseerd op overtuigend wetenschappelijk bewijs",
+      "pt": "Baseada em provas científicas conclusivas"
+     },
+     "type": "liste",
+     "liste": "ESRS-OUI-NON-SO"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    }
+   ]
+  },
+  {
+   "code": "ESRS-TAB-INDICATEURS",
+   "libelle": {
+    "fr": "Indicateurs propres à l'entreprise",
+    "en": "Entity-specific metrics",
+    "es": "Parámetros propios de la entidad",
+    "de": "Unternehmensspezifische Kennzahlen",
+    "it": "Metriche specifiche dell'entità",
+    "nl": "Entiteitsspecifieke metrieken",
+    "pt": "Métricas específicas da entidade"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "indicateur",
+     "libelle": {
+      "fr": "Indicateur",
+      "en": "Metric",
+      "es": "Parámetro",
+      "de": "Kennzahl",
+      "it": "Metrica",
+      "nl": "Metriek",
+      "pt": "Métrica"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "valeur",
+     "libelle": {
+      "fr": "Valeur",
+      "en": "Value",
+      "es": "Valor",
+      "de": "Wert",
+      "it": "Valore",
+      "nl": "Waarde",
+      "pt": "Valor"
+     },
+     "type": "nombre"
+    },
+    {
+     "code": "unite",
+     "libelle": {
+      "fr": "Unité",
+      "en": "Unit",
+      "es": "Unidad",
+      "de": "Einheit",
+      "it": "Unità",
+      "nl": "Eenheid",
+      "pt": "Unidade"
+     },
+     "type": "texte"
+    },
+    {
+     "code": "perimetre",
+     "libelle": {
+      "fr": "Périmètre",
+      "en": "Scope",
+      "es": "Alcance",
+      "de": "Geltungsbereich",
+      "it": "Ambito",
+      "nl": "Reikwijdte",
+      "pt": "Âmbito"
+     },
+     "type": "texte"
+    }
+   ]
+  }
+ ],
+ "categories": [
+  {
+   "code": "description",
+   "libelle": {
+    "fr": "Description",
+    "en": "Description"
+   },
+   "ordre": 1,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_inclure",
+   "libelle": {
+    "fr": "À inclure",
+    "en": "Include"
+   },
+   "ordre": 2,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_exclure",
+   "libelle": {
+    "fr": "À exclure",
+    "en": "Exclude"
+   },
+   "ordre": 3,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "source",
+   "libelle": {
+    "fr": "Source des données",
+    "en": "Data source"
+   },
+   "ordre": 4,
+   "affichee": true,
+   "obligatoire": false
+  }
+ ],
+ "champs": [],
+ "themes": [
+  {
+   "code": "E4_1",
+   "parent": "",
+   "nom": {
+    "fr": "E4-1 – Plan de transition pour la biodiversité et les écosystèmes",
+    "en": "E4-1 – Biodiversity and ecosystems transition plan",
+    "es": "E4-1 – Plan de transición para la biodiversidad y los ecosistemas",
+    "de": "E4-1 – Übergangsplan für biologische Vielfalt und Ökosysteme",
+    "it": "E4-1 – Piano di transizione per la biodiversità e gli ecosistemi",
+    "nl": "E4-1 – Transitieplan voor biodiversiteit en ecosystemen",
+    "pt": "E4-1 – Plano de transição para a biodiversidade e os ecossistemas"
+   },
+   "ordre": 1
+  },
+  {
+   "code": "E4_2",
+   "parent": "",
+   "nom": {
+    "fr": "E4-2 – Politiques relatives à la biodiversité et aux écosystèmes",
+    "en": "E4-2 – Policies related to biodiversity and ecosystems",
+    "es": "E4-2 – Políticas relacionadas con la biodiversidad y los ecosistemas",
+    "de": "E4-2 – Konzepte im Zusammenhang mit biologischer Vielfalt und Ökosystemen",
+    "it": "E4-2 – Politiche relative alla biodiversità e agli ecosistemi",
+    "nl": "E4-2 – Beleid met betrekking tot biodiversiteit en ecosystemen",
+    "pt": "E4-2 – Políticas relacionadas com a biodiversidade e os ecossistemas"
+   },
+   "ordre": 2
+  },
+  {
+   "code": "E4_3",
+   "parent": "",
+   "nom": {
+    "fr": "E4-3 – Actions et ressources relatives à la biodiversité et aux écosystèmes",
+    "en": "E4-3 – Actions and resources related to biodiversity and ecosystems",
+    "es": "E4-3 – Acciones y recursos relacionados con la biodiversidad y los ecosistemas",
+    "de": "E4-3 – Maßnahmen und Ressourcen im Zusammenhang mit biologischer Vielfalt und Ökosystemen",
+    "it": "E4-3 – Azioni e risorse relative alla biodiversità e agli ecosistemi",
+    "nl": "E4-3 – Acties en middelen met betrekking tot biodiversiteit en ecosystemen",
+    "pt": "E4-3 – Ações e recursos relacionados com a biodiversidade e os ecossistemas"
+   },
+   "ordre": 3
+  },
+  {
+   "code": "E4_4",
+   "parent": "",
+   "nom": {
+    "fr": "E4-4 – Cibles relatives à la biodiversité et aux écosystèmes",
+    "en": "E4-4 – Targets related to biodiversity and ecosystems",
+    "es": "E4-4 – Metas relacionadas con la biodiversidad y los ecosistemas",
+    "de": "E4-4 – Ziele im Zusammenhang mit biologischer Vielfalt und Ökosystemen",
+    "it": "E4-4 – Obiettivi relativi alla biodiversità e agli ecosistemi",
+    "nl": "E4-4 – Streefdoelen met betrekking tot biodiversiteit en ecosystemen",
+    "pt": "E4-4 – Metas relacionadas com a biodiversidade e os ecossistemas"
+   },
+   "ordre": 4
+  },
+  {
+   "code": "E4_5",
+   "parent": "",
+   "nom": {
+    "fr": "E4-5 – Indicateurs relatifs aux changements de la biodiversité et des écosystèmes",
+    "en": "E4-5 – Metrics related to biodiversity and ecosystems change",
+    "es": "E4-5 – Parámetros relacionados con los cambios en la biodiversidad y los ecosistemas",
+    "de": "E4-5 – Kennzahlen zu Veränderungen der biologischen Vielfalt und der Ökosysteme",
+    "it": "E4-5 – Metriche relative ai cambiamenti della biodiversità e degli ecosistemi",
+    "nl": "E4-5 – Metrieken met betrekking tot veranderingen in biodiversiteit en ecosystemen",
+    "pt": "E4-5 – Métricas relacionadas com as alterações da biodiversidade e dos ecossistemas"
+   },
+   "ordre": 5
+  }
+ ],
+ "kpis": [
+  {
+   "code": "BIO-PLAN",
+   "libelle": {
+    "fr": "Plan de transition pour la biodiversité en place et public",
+    "en": "Biodiversity transition plan in place and made public",
+    "es": "Plan de transición para la biodiversidad establecido y hecho público",
+    "de": "Übergangsplan für biologische Vielfalt vorhanden und veröffentlicht",
+    "it": "Piano di transizione per la biodiversità adottato e reso pubblico",
+    "nl": "Transitieplan voor biodiversiteit aanwezig en openbaar gemaakt",
+    "pt": "Plano de transição para a biodiversidade estabelecido e tornado público"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle un plan de transition qui transforme son modèle d'affaires et sa stratégie pour contribuer à arrêter et inverser la perte de biodiversité (cadre mondial de Kunming-Montréal), et en a-t-elle rendu publiques les caractéristiques clés ? « Rendu public » : accessible avant ou à la publication de l'état de durabilité, par exemple sur son site ou dans ses rapports. Un plan climat qui intègre la biodiversité peut convenir. Si oui, décrire le plan ci-dessous (E4-1 §11, E4 AR 1, AR 2). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Does the company have a transition plan that transforms its business model and strategy to contribute to halting and reversing biodiversity loss (Kunming-Montreal Global Biodiversity Framework), and has it made the key features public? ‘Made public’: available before or at the release of the sustainability statement, for example on its website or in its reports. A climate plan that integrates biodiversity may do. If yes, describe the plan below (E4-1 §11, E4 AR 1, AR 2). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "¿Tiene la empresa un plan de transición que transforme su modelo de negocio y su estrategia para contribuir a detener e invertir la pérdida de biodiversidad (Marco Mundial de Biodiversidad de Kunming-Montreal), y ha hecho públicas sus características principales? «Hecho público»: disponible antes o en el momento de la publicación de la declaración de sostenibilidad, por ejemplo en su sitio web o en sus informes. Puede valer un plan climático que integre la biodiversidad. En caso afirmativo, describa el plan a continuación (E4-1 §11, E4 AR 1, AR 2). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen einen Übergangsplan, der sein Geschäftsmodell und seine Strategie so umgestaltet, dass sie dazu beitragen, den Verlust der biologischen Vielfalt zu stoppen und umzukehren (Globaler Biodiversitätsrahmen von Kunming-Montreal), und hat es die wesentlichen Merkmale veröffentlicht? „Veröffentlicht“: vor oder mit der Veröffentlichung der Nachhaltigkeitserklärung verfügbar, zum Beispiel auf seiner Website oder in seinen Berichten. Ein Klimaplan, der die biologische Vielfalt einbezieht, kann genügen. Wenn ja, den Plan unten beschreiben (E4-1 §11, E4 AR 1, AR 2). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha un piano di transizione che trasforma il suo modello di business e la sua strategia per contribuire a fermare e invertire la perdita di biodiversità (Quadro globale per la biodiversità di Kunming-Montreal) e ne ha reso pubbliche le caratteristiche principali? «Reso pubblico»: disponibile prima o al momento della pubblicazione della rendicontazione di sostenibilità, ad esempio sul suo sito web o nelle sue relazioni. Può bastare un piano climatico che integri la biodiversità. In caso affermativo, descrivere il piano di seguito (E4-1 §11, E4 AR 1, AR 2). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming een transitieplan dat haar bedrijfsmodel en strategie omvormt om bij te dragen aan het stoppen en omkeren van het verlies aan biodiversiteit (Mondiaal Biodiversiteitskader van Kunming-Montreal), en heeft zij de belangrijkste kenmerken openbaar gemaakt? ‘Openbaar gemaakt’: beschikbaar vóór of bij de publicatie van de duurzaamheidsverklaring, bijvoorbeeld op haar website of in haar verslagen. Een klimaatplan dat biodiversiteit integreert, kan volstaan. Zo ja, beschrijf het plan hieronder (E4-1 §11, E4 AR 1, AR 2). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "A empresa tem um plano de transição que transforme o seu modelo de negócio e a sua estratégia para contribuir para travar e inverter a perda de biodiversidade (Quadro Mundial da Biodiversidade de Kunming-Montreal) e tornou públicas as suas características principais? «Tornado público»: disponível antes ou no momento da publicação da declaração de sustentabilidade, por exemplo no seu sítio na Internet ou nos seus relatórios. Pode servir um plano climático que integre a biodiversidade. Em caso afirmativo, descreva o plano abaixo (E4-1 §11, E4 AR 1, AR 2). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_1",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-PLAN-TRANSITION",
+   "libelle": {
+    "fr": "Caractéristiques clés du plan de transition pour la biodiversité",
+    "en": "Key features of the biodiversity transition plan",
+    "es": "Características principales del plan de transición para la biodiversidad",
+    "de": "Wesentliche Merkmale des Übergangsplans für biologische Vielfalt",
+    "it": "Caratteristiche principali del piano di transizione per la biodiversità",
+    "nl": "Belangrijkste kenmerken van het transitieplan voor biodiversiteit",
+    "pt": "Características principais do plano de transição para a biodiversidade"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si le plan existe et est public : ses caractéristiques clés (E4-1 §11). Un plan de ce type contient en général des cibles, des actions clés, un plan financier et la gouvernance, et explique comment la stratégie et le modèle d'affaires évolueront ; il peut traiter les synergies et les arbitrages avec les autres plans de transition (E4 AR 1). Répondre N/A s'il n'y a pas de plan public. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Only if the plan exists and is public: its key features (E4-1 §11). Such a plan usually contains targets, key actions, financial planning and governance, and explains how the strategy and business model will evolve; it can address synergies and trade-offs with other transition plan objectives (E4 AR 1). Answer N/A if there is no public plan. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Solo si el plan existe y es público: sus características principales (E4-1 §11). Un plan de este tipo suele contener metas, acciones principales, planificación financiera y gobernanza, y explica cómo evolucionarán la estrategia y el modelo de negocio; puede abordar las sinergias y los compromisos con otros objetivos del plan de transición (E4 AR 1). Responda N/A si no hay un plan público. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn der Plan besteht und öffentlich ist: seine wesentlichen Merkmale (E4-1 §11). Ein solcher Plan enthält üblicherweise Ziele, wichtigste Maßnahmen, Finanzplanung und Governance und erläutert, wie sich Strategie und Geschäftsmodell entwickeln werden; er kann Synergien und Zielkonflikte mit anderen Zielen des Übergangsplans behandeln (E4 AR 1). Mit N/A antworten, wenn es keinen öffentlichen Plan gibt. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Solo se il piano esiste ed è pubblico: le sue caratteristiche principali (E4-1 §11). Un piano di questo tipo contiene di solito obiettivi, azioni principali, pianificazione finanziaria e governance, e spiega come evolveranno la strategia e il modello di business; può affrontare le sinergie e i compromessi con altri obiettivi del piano di transizione (E4 AR 1). Rispondere N/A se non esiste un piano pubblico. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als het plan bestaat en openbaar is: de belangrijkste kenmerken (E4-1 §11). Zo'n plan bevat meestal streefdoelen, belangrijkste acties, financiële planning en governance, en legt uit hoe de strategie en het bedrijfsmodel zullen evolueren; het kan ingaan op synergieën en afwegingen met andere doelstellingen van het transitieplan (E4 AR 1). Antwoord N/A als er geen openbaar plan is. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se o plano existir e for público: as suas características principais (E4-1 §11). Um plano deste tipo contém habitualmente metas, ações principais, planeamento financeiro e governação, e explica como evoluirão a estratégia e o modelo de negócio; pode abordar as sinergias e os compromissos com outros objetivos do plano de transição (E4 AR 1). Responda N/A se não existir um plano público. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_1",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLITIQUES",
+   "libelle": {
+    "fr": "Politiques adoptées sur la biodiversité et les écosystèmes",
+    "en": "Policies adopted on biodiversity and ecosystems",
+    "es": "Políticas adoptadas sobre la biodiversidad y los ecosistemas",
+    "de": "Verabschiedete Konzepte zu biologischer Vielfalt und Ökosystemen",
+    "it": "Politiche adottate sulla biodiversità e sugli ecosistemi",
+    "nl": "Vastgesteld beleid voor biodiversiteit en ecosystemen",
+    "pt": "Políticas adotadas sobre a biodiversidade e os ecossistemas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle adopté des politiques pour gérer ses impacts, risques et opportunités importants liés à la biodiversité et aux écosystèmes ? Sinon, répondre Non : la norme demande de le dire (ESRS 2 §39). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Has the company adopted policies to manage its material impacts, risks and opportunities on biodiversity and ecosystems? If not, answer No: the standard asks to say so (ESRS 2 §39). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "¿Ha adoptado la empresa políticas para gestionar sus impactos, riesgos y oportunidades materiales relacionados con la biodiversidad y los ecosistemas? Si no, responda No: la norma exige indicarlo (ESRS 2 §39). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen Konzepte verabschiedet, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit biologischer Vielfalt und Ökosystemen zu steuern? Wenn nicht, mit Nein antworten: Der Standard verlangt diese Angabe (ESRS 2 §39). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha adottato politiche per gestire i suoi impatti, rischi e opportunità rilevanti relativi alla biodiversità e agli ecosistemi? In caso contrario, rispondere No: la norma richiede di indicarlo (ESRS 2 §39). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming beleid vastgesteld om haar materiële effecten, risico's en kansen met betrekking tot biodiversiteit en ecosystemen te beheren? Zo niet, antwoord dan Nee: de standaard vraagt dit te vermelden (ESRS 2 §39). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "A empresa adotou políticas para gerir os seus impactos, riscos e oportunidades materiais relacionados com a biodiversidade e os ecossistemas? Se não, responda Não: a norma exige que seja indicado (ESRS 2 §39). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLIT-CONTENU",
+   "libelle": {
+    "fr": "Politiques sur la biodiversité et les écosystèmes : contenu et changements",
+    "en": "Policies on biodiversity and ecosystems: contents and changes",
+    "es": "Políticas sobre la biodiversidad y los ecosistemas: contenido y cambios",
+    "de": "Konzepte zu biologischer Vielfalt und Ökosystemen: Inhalte und Änderungen",
+    "it": "Politiche sulla biodiversità e sugli ecosistemi: contenuto e modifiche",
+    "nl": "Beleid voor biodiversiteit en ecosystemen: inhoud en wijzigingen",
+    "pt": "Políticas sobre a biodiversidade e os ecossistemas: conteúdo e alterações"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son contenu principal, ses objectifs généraux et les impacts, risques ou opportunités importants qu'elle traite ; décrire les changements faits pendant la période (ESRS 2 §42(a)). Préciser, si c'est le cas, si les politiques traitent les pratiques durables d'usage des terres ou d'agriculture, les pratiques durables sur les océans et les mers, et la déforestation (E4 AR 3). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "For each policy: its key contents, its general objectives and the material impacts, risks or opportunities it addresses; describe the changes made during the period (ESRS 2 §42(a)). Say, where applicable, whether the policies address sustainable land or agricultural practices, sustainable oceans or seas practices, and deforestation (E4 AR 3). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Para cada política: su contenido principal, sus objetivos generales y los impactos, riesgos u oportunidades materiales que aborda; describa los cambios realizados durante el periodo (ESRS 2 §42(a)). Indique, en su caso, si las políticas abordan las prácticas sostenibles de uso del suelo o agrícolas, las prácticas sostenibles en océanos o mares y la deforestación (E4 AR 3). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: seine wesentlichen Inhalte, seine allgemeinen Ziele und die wesentlichen Auswirkungen, Risiken oder Chancen, die es adressiert; die im Zeitraum vorgenommenen Änderungen beschreiben (ESRS 2 §42(a)). Gegebenenfalls angeben, ob die Konzepte nachhaltige Land- oder Landwirtschaftspraktiken, nachhaltige Praktiken in Ozeanen oder Meeren und Entwaldung behandeln (E4 AR 3). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: i suoi contenuti principali, i suoi obiettivi generali e gli impatti, rischi od opportunità rilevanti che affronta; descrivere le modifiche apportate nel periodo (ESRS 2 §42(a)). Indicare, se del caso, se le politiche riguardano pratiche sostenibili di uso del suolo o agricole, pratiche sostenibili in oceani o mari e deforestazione (E4 AR 3). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de belangrijkste inhoud, de algemene doelstellingen en de materiële effecten, risico's of kansen waarop het ingaat; beschrijf de wijzigingen tijdens de periode (ESRS 2 §42(a)). Geef, indien van toepassing, aan of het beleid duurzame land- of landbouwpraktijken, duurzame praktijken in oceanen of zeeën en ontbossing behandelt (E4 AR 3). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu conteúdo principal, os seus objetivos gerais e os impactos, riscos ou oportunidades materiais que aborda; descreva as alterações feitas durante o período (ESRS 2 §42(a)). Indique, se aplicável, se as políticas abordam as práticas sustentáveis de utilização dos solos ou agrícolas, as práticas sustentáveis nos oceanos ou mares e a desflorestação (E4 AR 3). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLIT-PERIMETRE",
+   "libelle": {
+    "fr": "Politiques sur la biodiversité et les écosystèmes : périmètre et exclusions",
+    "en": "Policies on biodiversity and ecosystems: scope and exclusions",
+    "es": "Políticas sobre la biodiversidad y los ecosistemas: alcance y exclusiones",
+    "de": "Konzepte zu biologischer Vielfalt und Ökosystemen: Geltungsbereich und Ausnahmen",
+    "it": "Politiche sulla biodiversità e sugli ecosistemi: ambito ed esclusioni",
+    "nl": "Beleid voor biodiversiteit en ecosystemen: reikwijdte en uitsluitingen",
+    "pt": "Políticas sobre a biodiversidade e os ecossistemas: âmbito e exclusões"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque politique : son périmètre ou ses exclusions (activités propres, chaîne de valeur amont et aval, zones géographiques et, s'ils sont définis, groupes de parties prenantes concernés) (ESRS 2 §42(b)). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "For each policy: its scope or exclusions (own operations, upstream and downstream value chain, geographies and, if defined, the affected stakeholder groups) (ESRS 2 §42(b)). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Para cada política: su alcance o exclusiones (operaciones propias, cadena de valor ascendente y descendente, zonas geográficas y, si se han definido, los grupos de partes interesadas afectadas) (ESRS 2 §42(b)). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Konzept: sein Geltungsbereich oder seine Ausnahmen (eigene Geschäftstätigkeit, vor- und nachgelagerte Wertschöpfungskette, Regionen und, falls festgelegt, die betroffenen Gruppen von Interessenträgern) (ESRS 2 §42(b)). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Per ogni politica: il suo ambito o le sue esclusioni (attività proprie, catena del valore a monte e a valle, aree geografiche e, se definiti, i gruppi di portatori di interessi interessati) (ESRS 2 §42(b)). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk beleid: de reikwijdte of uitsluitingen (eigen activiteiten, upstream- en downstream-waardeketen, geografische gebieden en, indien vastgesteld, de getroffen groepen belanghebbenden) (ESRS 2 §42(b)). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Para cada política: o seu âmbito ou exclusões (operações próprias, cadeia de valor a montante e a jusante, zonas geográficas e, se definidos, os grupos de partes interessadas afetadas) (ESRS 2 §42(b)). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLIT-REFERENCES",
+   "libelle": {
+    "fr": "Politiques sur la biodiversité et les écosystèmes : normes ou initiatives de tiers",
+    "en": "Policies on biodiversity and ecosystems: third-party standards or initiatives",
+    "es": "Políticas sobre la biodiversidad y los ecosistemas: normas o iniciativas de terceros",
+    "de": "Konzepte zu biologischer Vielfalt und Ökosystemen: Standards oder Initiativen Dritter",
+    "it": "Politiche sulla biodiversità e sugli ecosistemi: norme o iniziative di terzi",
+    "nl": "Beleid voor biodiversiteit en ecosystemen: standaarden of initiatieven van derden",
+    "pt": "Políticas sobre a biodiversidade e os ecossistemas: normas ou iniciativas de terceiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Normes ou initiatives de tiers que l'entreprise s'engage à respecter par ses politiques (ESRS 2 §42(c)). Répondre N/A si aucune politique n'y renvoie. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Third-party standards or initiatives that the company commits to respect through its policies (ESRS 2 §42(c)). Answer N/A if no policy refers to one. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Normas o iniciativas de terceros que la empresa se compromete a respetar mediante sus políticas (ESRS 2 §42(c)). Responda N/A si ninguna política hace referencia a ellas. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Standards oder Initiativen Dritter, zu deren Einhaltung sich das Unternehmen mit seinen Konzepten verpflichtet (ESRS 2 §42(c)). Mit N/A antworten, wenn kein Konzept darauf verweist. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Norme o iniziative di terzi che l'impresa si impegna a rispettare attraverso le sue politiche (ESRS 2 §42(c)). Rispondere N/A se nessuna politica vi fa riferimento. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Standaarden of initiatieven van derden die de onderneming met haar beleid zegt na te leven (ESRS 2 §42(c)). Antwoord N/A als geen enkel beleid ernaar verwijst. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Normas ou iniciativas de terceiros que a empresa se compromete a respeitar através das suas políticas (ESRS 2 §42(c)). Responda N/A se nenhuma política fizer referência a elas. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLIT-TRACABILITE",
+   "libelle": {
+    "fr": "Politiques sur la biodiversité : traçabilité dans la chaîne de valeur",
+    "en": "Biodiversity policies: traceability in the value chain",
+    "es": "Políticas de biodiversidad: trazabilidad en la cadena de valor",
+    "de": "Konzepte zur biologischen Vielfalt: Rückverfolgbarkeit in der Wertschöpfungskette",
+    "it": "Politiche sulla biodiversità: tracciabilità nella catena del valore",
+    "nl": "Biodiversiteitsbeleid: traceerbaarheid in de waardeketen",
+    "pt": "Políticas de biodiversidade: rastreabilidade na cadeia de valor"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Comment les politiques sur la biodiversité et les écosystèmes soutiennent la traçabilité des produits, composants et matières premières qui ont, ou pourraient avoir, des impacts importants sur la biodiversité dans la chaîne de valeur (E4-2 §13(a)). Répondre N/A s'il n'y a pas de politique sur ce point. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "How the biodiversity and ecosystems policies support the traceability of the products, components and raw materials that have, or could have, material impacts on biodiversity in the value chain (E4-2 §13(a)). Answer N/A if there is no policy on this point. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Cómo respaldan las políticas de biodiversidad y ecosistemas la trazabilidad de los productos, componentes y materias primas que tienen, o podrían tener, impactos materiales sobre la biodiversidad en la cadena de valor (E4-2 §13(a)). Responda N/A si no hay ninguna política sobre este punto. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Wie die Konzepte zu biologischer Vielfalt und Ökosystemen die Rückverfolgbarkeit der Produkte, Komponenten und Rohstoffe unterstützen, die wesentliche Auswirkungen auf die biologische Vielfalt in der Wertschöpfungskette haben oder haben könnten (E4-2 §13(a)). Mit N/A antworten, wenn es dazu kein Konzept gibt. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Come le politiche sulla biodiversità e sugli ecosistemi sostengono la tracciabilità dei prodotti, dei componenti e delle materie prime che hanno, o potrebbero avere, impatti rilevanti sulla biodiversità nella catena del valore (E4-2 §13(a)). Rispondere N/A se non vi è alcuna politica su questo punto. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Hoe het beleid voor biodiversiteit en ecosystemen de traceerbaarheid ondersteunt van de producten, onderdelen en grondstoffen die materiële effecten op biodiversiteit in de waardeketen hebben of kunnen hebben (E4-2 §13(a)). Antwoord N/A als er hierover geen beleid is. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Como as políticas de biodiversidade e ecossistemas apoiam a rastreabilidade dos produtos, componentes e matérias-primas que têm, ou poderiam ter, impactos materiais na biodiversidade na cadeia de valor (E4-2 §13(a)). Responda N/A se não houver nenhuma política sobre este ponto. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-POLIT-SITES",
+   "libelle": {
+    "fr": "Politiques sur la biodiversité : sites dans ou près d'une zone sensible",
+    "en": "Biodiversity policies: sites in or near sensitive areas",
+    "es": "Políticas de biodiversidad: centros en zonas sensibles o cercanas a ellas",
+    "de": "Konzepte zur biologischen Vielfalt: Standorte in oder nahe sensiblen Gebieten",
+    "it": "Politiche sulla biodiversità: siti in aree sensibili o nelle vicinanze",
+    "nl": "Biodiversiteitsbeleid: locaties in of nabij gevoelige gebieden",
+    "pt": "Políticas de biodiversidade: locais em zonas sensíveis ou próximo delas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Ce que les politiques sur la biodiversité et les écosystèmes prévoient pour les sites des activités propres situés dans ou près d'une zone sensible pour la biodiversité (E4-2 §13(b)). Un site hors d'une zone est « près » d'elle selon sa zone d'influence, que l'entreprise définit par exemple avec des distances tampons propres à son activité (E4 AR 5). Répondre N/A si aucun site n'est concerné. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "What the biodiversity and ecosystems policies provide for the sites of the own operations in or near a biodiversity-sensitive area (E4-2 §13(b)). A site outside an area is ‘near’ it according to its area of influence, which the company defines for example with buffer distances specific to its type of activity (E4 AR 5). Answer N/A if no site is concerned. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Qué prevén las políticas de biodiversidad y ecosistemas para los centros de las operaciones propias situados en una zona sensible para la biodiversidad o cerca de ella (E4-2 §13(b)). Un centro situado fuera de una zona está «cerca» de ella según su zona de influencia, que la empresa define, por ejemplo, con distancias de amortiguación propias de su tipo de actividad (E4 AR 5). Responda N/A si no hay ningún centro afectado. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Was die Konzepte zu biologischer Vielfalt und Ökosystemen für die Standorte der eigenen Geschäftstätigkeit in oder nahe einem für die biologische Vielfalt sensiblen Gebiet vorsehen (E4-2 §13(b)). Ein Standort außerhalb eines Gebiets liegt „nahe“ daran entsprechend seinem Einflussbereich, den das Unternehmen zum Beispiel mit Pufferabständen festlegt, die für seine Tätigkeitsart spezifisch sind (E4 AR 5). Mit N/A antworten, wenn kein Standort betroffen ist. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Che cosa prevedono le politiche sulla biodiversità e sugli ecosistemi per i siti delle attività proprie situati in un'area sensibile per la biodiversità o nelle vicinanze (E4-2 §13(b)). Un sito fuori da un'area è «nelle vicinanze» in base alla sua area di influenza, che l'impresa definisce ad esempio con distanze cuscinetto specifiche per il suo tipo di attività (E4 AR 5). Rispondere N/A se nessun sito è interessato. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Wat het beleid voor biodiversiteit en ecosystemen bepaalt voor de locaties van de eigen activiteiten in of nabij een voor biodiversiteit gevoelig gebied (E4-2 §13(b)). Een locatie buiten een gebied ligt ‘nabij’ dat gebied volgens haar invloedssfeer, die de onderneming bijvoorbeeld vaststelt met bufferafstanden die specifiek zijn voor haar soort activiteit (E4 AR 5). Antwoord N/A als geen locatie betrokken is. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "O que as políticas de biodiversidade e ecossistemas preveem para os locais das operações próprias situados numa zona sensível para a biodiversidade ou próximo dela (E4-2 §13(b)). Um local situado fora de uma zona está «próximo» dela consoante a sua zona de influência, que a empresa define, por exemplo, com distâncias-tampão específicas do seu tipo de atividade (E4 AR 5). Responda N/A se nenhum local estiver em causa. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_2",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-ACTIONS",
+   "libelle": {
+    "fr": "Actions clés sur la biodiversité et les écosystèmes",
+    "en": "Key actions on biodiversity and ecosystems",
+    "es": "Acciones principales sobre la biodiversidad y los ecosistemas",
+    "de": "Wichtigste Maßnahmen zu biologischer Vielfalt und Ökosystemen",
+    "it": "Azioni principali sulla biodiversità e sugli ecosistemi",
+    "nl": "Belangrijkste acties voor biodiversiteit en ecosystemen",
+    "pt": "Ações principais sobre a biodiversidade e os ecossistemas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle mené ou prévu des actions clés pour gérer ses impacts, risques et opportunités importants liés à la biodiversité et aux écosystèmes ? Sinon, répondre Non (ESRS 2 §39). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Has the company taken or planned key actions to manage its material impacts, risks and opportunities on biodiversity and ecosystems? If not, answer No (ESRS 2 §39). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "¿Ha realizado o planificado la empresa acciones principales para gestionar sus impactos, riesgos y oportunidades materiales relacionados con la biodiversidad y los ecosistemas? Si no, responda No (ESRS 2 §39). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen wichtigste Maßnahmen ergriffen oder geplant, um seine wesentlichen Auswirkungen, Risiken und Chancen im Zusammenhang mit biologischer Vielfalt und Ökosystemen zu steuern? Wenn nicht, mit Nein antworten (ESRS 2 §39). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha realizzato o pianificato azioni principali per gestire i suoi impatti, rischi e opportunità rilevanti relativi alla biodiversità e agli ecosistemi? In caso contrario, rispondere No (ESRS 2 §39). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming belangrijkste acties ondernomen of gepland om haar materiële effecten, risico's en kansen met betrekking tot biodiversiteit en ecosystemen te beheren? Zo niet, antwoord dan Nee (ESRS 2 §39). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "A empresa realizou ou planeou ações principais para gerir os seus impactos, riscos e oportunidades materiais relacionados com a biodiversidade e os ecossistemas? Se não, responda Não (ESRS 2 §39). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_3",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-ACT-DESC",
+   "libelle": {
+    "fr": "Actions clés sur la biodiversité et les écosystèmes : description, périmètre et résultats attendus",
+    "en": "Key actions on biodiversity and ecosystems: description, scope and expected outcomes",
+    "es": "Acciones principales sobre la biodiversidad y los ecosistemas: descripción, alcance y resultados esperados",
+    "de": "Wichtigste Maßnahmen zu biologischer Vielfalt und Ökosystemen: Beschreibung, Geltungsbereich und erwartete Ergebnisse",
+    "it": "Azioni principali sulla biodiversità e sugli ecosistemi: descrizione, ambito e risultati attesi",
+    "nl": "Belangrijkste acties voor biodiversiteit en ecosystemen: beschrijving, reikwijdte en verwachte resultaten",
+    "pt": "Ações principais sobre a biodiversidade e os ecossistemas: descrição, âmbito e resultados esperados"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Actions clés menées pendant la période et prévues, avec leur calendrier, leur périmètre (activités propres, chaîne de valeur, filiales, zones géographiques, parties prenantes) et leurs résultats attendus, et comment elles servent les objectifs des politiques (ESRS 2 §45). Les actions tiennent compte du droit des peuples autochtones au consentement libre, préalable et éclairé (E4 AR 6). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Key actions taken during the period and planned, with their timeframe, their scope (own operations, value chain, subsidiaries, geographies, stakeholders) and their expected outcomes, and how they serve the policy objectives (ESRS 2 §45). The actions take into account the right of indigenous peoples to free, prior and informed consent (E4 AR 6). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Acciones principales realizadas durante el periodo y previstas, con su calendario, su alcance (operaciones propias, cadena de valor, filiales, zonas geográficas, partes interesadas) y sus resultados esperados, y cómo contribuyen a los objetivos de las políticas (ESRS 2 §45). Las acciones tienen en cuenta el derecho de los pueblos indígenas al consentimiento libre, previo e informado (E4 AR 6). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Im Zeitraum durchgeführte und geplante wichtigste Maßnahmen mit ihrem Zeitrahmen, ihrem Geltungsbereich (eigene Geschäftstätigkeit, Wertschöpfungskette, Tochterunternehmen, Regionen, Interessenträger) und ihren erwarteten Ergebnissen sowie dazu, wie sie den Zielen der Konzepte dienen (ESRS 2 §45). Die Maßnahmen berücksichtigen das Recht indigener Völker auf freie, vorherige und informierte Zustimmung (E4 AR 6). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Azioni principali realizzate nel periodo e previste, con i loro tempi, il loro ambito (attività proprie, catena del valore, controllate, aree geografiche, portatori di interessi) e i risultati attesi, e il modo in cui servono gli obiettivi delle politiche (ESRS 2 §45). Le azioni tengono conto del diritto dei popoli indigeni al consenso libero, previo e informato (E4 AR 6). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Tijdens de periode uitgevoerde en geplande belangrijkste acties, met hun tijdsbestek, hun reikwijdte (eigen activiteiten, waardeketen, dochterondernemingen, geografische gebieden, belanghebbenden) en hun verwachte resultaten, en hoe zij de doelstellingen van het beleid dienen (ESRS 2 §45). De acties houden rekening met het recht van inheemse volkeren op vrije, voorafgaande en geïnformeerde toestemming (E4 AR 6). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Ações principais realizadas durante o período e previstas, com o seu calendário, o seu âmbito (operações próprias, cadeia de valor, filiais, zonas geográficas, partes interessadas) e os seus resultados esperados, e a forma como servem os objetivos das políticas (ESRS 2 §45). As ações têm em conta o direito dos povos indígenas ao consentimento livre, prévio e informado (E4 AR 6). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_3",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-ACT-TAB",
+   "libelle": {
+    "fr": "Actions clés sur la biodiversité et les écosystèmes : calendrier et ressources financières",
+    "en": "Key actions on biodiversity and ecosystems: timeframe and financial resources",
+    "es": "Acciones principales sobre la biodiversidad y los ecosistemas: calendario y recursos financieros",
+    "de": "Wichtigste Maßnahmen zu biologischer Vielfalt und Ökosystemen: Zeitrahmen und finanzielle Ressourcen",
+    "it": "Azioni principali sulla biodiversità e sugli ecosistemi: tempi e risorse finanziarie",
+    "nl": "Belangrijkste acties voor biodiversiteit en ecosystemen: tijdschema en financiële middelen",
+    "pt": "Ações principais sobre a biodiversidade e os ecossistemas: calendário e recursos financeiros"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-ACTIONS",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par action clé : état, horizon, périmètre, dépenses d'investissement et d'exploitation de la période, fourchette des ressources futures, et si l'action dépend de conditions préalables (ESRS 2 §45-46). Les montants seulement quand des ressources importantes y sont consacrées. Montants dans la monnaie des états financiers (ESRS 1 AR 50). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Plans d'action, budget, comptabilité (dépenses d'investissement et d'exploitation)."
+    },
+    "en": {
+     "description": "One row per key action: status, timeframe, scope, capital and operating expenditure of the period, range of future resources, and whether the action depends on preconditions (ESRS 2 §45-46). Amounts only when significant resources are allocated. Amounts in the currency of the financial statements (ESRS 1 AR 50). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Action plans, budget, accounting (capital and operating expenditure)."
+    },
+    "es": {
+     "description": "Una fila por acción principal: estado, calendario, alcance, gastos de capital y operativos del periodo, intervalo de recursos futuros y si la acción depende de condiciones previas (ESRS 2 §45-46). Importes solo cuando se asignan recursos significativos. Importes en la moneda de los estados financieros (ESRS 1 AR 50). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Planes de acción, presupuesto, contabilidad (gastos de capital y operativos)."
+    },
+    "de": {
+     "description": "Eine Zeile je wichtigster Maßnahme: Status, Zeitrahmen, Geltungsbereich, Investitions- und Betriebsausgaben des Zeitraums, Spanne der künftigen Ressourcen und ob die Maßnahme von Voraussetzungen abhängt (ESRS 2 §45-46). Beträge nur, wenn erhebliche Ressourcen zugewiesen werden. Beträge in der Währung des Abschlusses (ESRS 1 AR 50). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Aktionspläne, Budget, Buchhaltung (Investitions- und Betriebsausgaben)."
+    },
+    "it": {
+     "description": "Una riga per azione principale: stato, tempi, ambito, spese in conto capitale e operative del periodo, intervallo delle risorse future e se l'azione dipende da condizioni preliminari (ESRS 2 §45-46). Importi solo quando sono assegnate risorse significative. Importi nella valuta del bilancio (ESRS 1 AR 50). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Piani d'azione, budget, contabilità (spese in conto capitale e operative)."
+    },
+    "nl": {
+     "description": "Eén rij per belangrijkste actie: status, tijdsbestek, reikwijdte, kapitaal- en operationele uitgaven van de periode, bandbreedte van de toekomstige middelen en of de actie van voorwaarden afhangt (ESRS 2 §45-46). Bedragen alleen als er aanzienlijke middelen worden toegewezen. Bedragen in de valuta van de jaarrekening (ESRS 1 AR 50). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Actieplannen, budget, boekhouding (kapitaal- en operationele uitgaven)."
+    },
+    "pt": {
+     "description": "Uma linha por ação principal: estado, calendário, âmbito, despesas de capital e operacionais do período, intervalo de recursos futuros e se a ação depende de condições prévias (ESRS 2 §45-46). Montantes apenas quando são afetados recursos significativos. Montantes na moeda das demonstrações financeiras (ESRS 1 AR 50). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Planos de ação, orçamento, contabilidade (despesas de capital e operacionais)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_3",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-ACT-MOYENS",
+   "libelle": {
+    "fr": "Actions clés sur la biodiversité et les écosystèmes : nature des ressources, conditions et postes comptables",
+    "en": "Key actions on biodiversity and ecosystems: type of resources, preconditions and line items",
+    "es": "Acciones principales sobre la biodiversidad y los ecosistemas: tipo de recursos, condiciones previas y partidas",
+    "de": "Wichtigste Maßnahmen zu biologischer Vielfalt und Ökosystemen: Art der Ressourcen, Voraussetzungen und Posten",
+    "it": "Azioni principali sulla biodiversità e sugli ecosistemi: tipo di risorse, condizioni preliminari e voci di bilancio",
+    "nl": "Belangrijkste acties voor biodiversiteit en ecosystemen: soort middelen, voorwaarden en posten",
+    "pt": "Ações principais sobre a biodiversidade e os ecossistemas: tipo de recursos, condições prévias e rubricas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Quand des ressources financières importantes sont consacrées aux actions : leur nature (actuelles et futures), les conditions préalables dont les actions dépendent (aide financière, politiques publiques, marché) et les postes ou notes des états financiers qui contiennent les montants (ESRS 2 §46). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "When significant financial resources are allocated to the actions: their type (current and future), the preconditions the actions depend on (financial support, public policy, market) and the line items or notes of the financial statements that contain the amounts (ESRS 2 §46). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Cuando se asignan recursos financieros significativos a las acciones: su tipo (actuales y futuros), las condiciones previas de las que dependen las acciones (apoyo financiero, política pública, mercado) y las partidas o notas de los estados financieros que contienen los importes (ESRS 2 §46). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Wenn den Maßnahmen erhebliche finanzielle Ressourcen zugewiesen werden: ihre Art (laufend und künftig), die Voraussetzungen, von denen die Maßnahmen abhängen (finanzielle Unterstützung, öffentliche Politik, Markt), und die Posten oder Anhangangaben des Abschlusses, die die Beträge enthalten (ESRS 2 §46). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Quando alle azioni sono assegnate risorse finanziarie significative: il loro tipo (correnti e future), le condizioni preliminari da cui dipendono le azioni (sostegno finanziario, politica pubblica, mercato) e le voci o note del bilancio che contengono gli importi (ESRS 2 §46). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Wanneer aan de acties aanzienlijke financiële middelen worden toegewezen: hun soort (huidige en toekomstige), de voorwaarden waarvan de acties afhangen (financiële steun, overheidsbeleid, markt) en de posten of toelichtingen van de jaarrekening waarin de bedragen staan (ESRS 2 §46). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Quando são afetados recursos financeiros significativos às ações: o seu tipo (atuais e futuros), as condições prévias de que as ações dependem (apoio financeiro, política pública, mercado) e as rubricas ou notas das demonstrações financeiras que contêm os montantes (ESRS 2 §46). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_3",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-COMPENSATIONS",
+   "libelle": {
+    "fr": "Compensations de biodiversité utilisées",
+    "en": "Biodiversity offsets used",
+    "es": "Compensaciones de biodiversidad utilizadas",
+    "de": "Verwendete Biodiversitätsausgleiche",
+    "it": "Compensazioni per la biodiversità utilizzate",
+    "nl": "Gebruikte biodiversiteitscompensaties",
+    "pt": "Compensações de biodiversidade utilizadas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Les compensations de biodiversité utilisées dans les actions : leur but, leurs effets financiers en valeur monétaire, la surface, le type et les critères de qualité retenus, et les normes qu'elles respectent (E4-3 §15). Une compensation est un résultat de conservation mesurable qui compense les impacts négatifs inévitables, en plus de la prévention et de l'atténuation (glossaire). Écrire les montants et les surfaces dans le texte. Répondre N/A s'il n'y en a pas. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "The biodiversity offsets used in the actions: their aim, the financing effects in monetary terms, the area, type and quality criteria applied, and the standards they comply with (E4-3 §15). An offset is a measurable conservation outcome that compensates for unavoidable negative impacts, in addition to prevention and mitigation (glossary). Write the amounts and areas in the text. Answer N/A if there are none. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Las compensaciones de biodiversidad utilizadas en las acciones: su objetivo, los efectos de la financiación en términos monetarios, la superficie, el tipo y los criterios de calidad aplicados, y las normas que cumplen (E4-3 §15). Una compensación es un resultado de conservación medible que compensa los impactos negativos inevitables, además de la prevención y la mitigación (glosario). Escriba los importes y las superficies en el texto. Responda N/A si no hay ninguno. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Die in den Maßnahmen verwendeten Biodiversitätsausgleiche: ihr Ziel, die Finanzierungseffekte in Geldeinheiten, die Fläche, die Art und die angewandten Qualitätskriterien sowie die Standards, die sie erfüllen (E4-3 §15). Ein Ausgleich ist ein messbares Naturschutzergebnis, das zusätzlich zu Vermeidung und Minderung unvermeidbare negative Auswirkungen kompensiert (Glossar). Die Beträge und Flächen im Text angeben. Mit N/A antworten, wenn es keine gibt. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Le compensazioni per la biodiversità utilizzate nelle azioni: il loro scopo, gli effetti del finanziamento in termini monetari, la superficie, il tipo e i criteri di qualità applicati, e le norme che rispettano (E4-3 §15). Una compensazione è un risultato di conservazione misurabile che compensa gli impatti negativi inevitabili, in aggiunta alla prevenzione e alla mitigazione (glossario). Scrivere gli importi e le superfici nel testo. Rispondere N/A se non ve ne sono. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "De in de acties gebruikte biodiversiteitscompensaties: hun doel, de financieringseffecten in geldbedragen, de oppervlakte, het soort en de toegepaste kwaliteitscriteria, en de standaarden waaraan zij voldoen (E4-3 §15). Een compensatie is een meetbaar behoudsresultaat dat onvermijdelijke negatieve effecten compenseert, naast preventie en mitigatie (verklarende woordenlijst). Schrijf de bedragen en oppervlakten in de tekst. Antwoord N/A als er geen zijn. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "As compensações de biodiversidade utilizadas nas ações: o seu objetivo, os efeitos do financiamento em termos monetários, a superfície, o tipo e os critérios de qualidade aplicados, e as normas que cumprem (E4-3 §15). Uma compensação é um resultado de conservação mensurável que compensa os impactos negativos inevitáveis, além da prevenção e da mitigação (glossário). Escreva os montantes e as superfícies no texto. Responda N/A se não houver nenhum. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_3",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-CIBLES",
+   "libelle": {
+    "fr": "Cibles mesurables sur la biodiversité et les écosystèmes",
+    "en": "Measurable targets on biodiversity and ecosystems",
+    "es": "Metas medibles sobre la biodiversidad y los ecosistemas",
+    "de": "Messbare Ziele zu biologischer Vielfalt und Ökosystemen",
+    "it": "Obiettivi misurabili sulla biodiversità e sugli ecosistemi",
+    "nl": "Meetbare streefdoelen voor biodiversiteit en ecosystemen",
+    "pt": "Metas mensuráveis sobre a biodiversidade e os ecossistemas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle fixé des cibles mesurables, datées et axées sur les résultats pour la biodiversité et les écosystèmes ? Sinon, répondre Non et décrire ci-dessous comment elle suit l'efficacité de ses politiques et actions (ESRS 2 §52). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Has the company set measurable, time-bound and outcome-oriented targets on biodiversity and ecosystems? If not, answer No and describe below how it tracks the effectiveness of its policies and actions (ESRS 2 §52). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "¿Ha fijado la empresa metas medibles, con plazo y orientadas a resultados sobre la biodiversidad y los ecosistemas? Si no, responda No y describa a continuación cómo realiza el seguimiento de la eficacia de sus políticas y acciones (ESRS 2 §52). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Hat das Unternehmen messbare, terminierte und ergebnisorientierte Ziele zu biologischer Vielfalt und Ökosystemen gesetzt? Wenn nicht, mit Nein antworten und unten beschreiben, wie die Wirksamkeit der Konzepte und Maßnahmen überwacht wird (ESRS 2 §52). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "L'impresa ha fissato obiettivi misurabili, con scadenza e orientati ai risultati sulla biodiversità e sugli ecosistemi? In caso contrario, rispondere No e descrivere di seguito come si monitora l'efficacia delle politiche e delle azioni (ESRS 2 §52). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Heeft de onderneming meetbare, tijdgebonden en resultaatgerichte streefdoelen voor biodiversiteit en ecosystemen vastgesteld? Zo niet, antwoord dan Nee en beschrijf hieronder hoe de doeltreffendheid van het beleid en de acties wordt gemonitord (ESRS 2 §52). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "A empresa fixou metas mensuráveis, com prazo e orientadas para resultados sobre a biodiversidade e os ecossistemas? Se não, responda Não e descreva abaixo como acompanha a eficácia das suas políticas e ações (ESRS 2 §52). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_4",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-CIB-TAB",
+   "libelle": {
+    "fr": "Cibles sur la biodiversité et les écosystèmes : valeurs, années et périmètre",
+    "en": "Targets on biodiversity and ecosystems: values, years and scope",
+    "es": "Metas sobre la biodiversidad y los ecosistemas: valores, años y alcance",
+    "de": "Ziele zu biologischer Vielfalt und Ökosystemen: Werte, Jahre und Geltungsbereich",
+    "it": "Obiettivi sulla biodiversità e sugli ecosistemi: valori, anni e ambito",
+    "nl": "Streefdoelen voor biodiversiteit en ecosystemen: waarden, jaren en reikwijdte",
+    "pt": "Metas sobre a biodiversidade e os ecossistemas: valores, anos e âmbito"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-CIBLES",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par cible : indicateur et unité, cible absolue ou relative, valeur et année de référence, étape, valeur et année cibles, imposée par la loi ou non, fondée ou non sur des preuves scientifiques concluantes (sujets environnementaux), périmètre (ESRS 2 §51). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Stratégie, feuilles de route et tableaux de bord de l'entreprise."
+    },
+    "en": {
+     "description": "One row per target: metric and unit, absolute or relative target, baseline value and year, milestone, target value and year, whether it is required by law, whether it is based on conclusive scientific evidence (environmental topics), scope (ESRS 2 §51). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Company strategy, roadmaps and dashboards."
+    },
+    "es": {
+     "description": "Una fila por meta: parámetro y unidad, meta absoluta o relativa, valor y año de referencia, hito, valor y año de la meta, si es exigida por ley, si se basa en pruebas científicas concluyentes (temas medioambientales), alcance (ESRS 2 §51). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Estrategia de la empresa, hojas de ruta y cuadros de mando."
+    },
+    "de": {
+     "description": "Eine Zeile je Ziel: Kennzahl und Einheit, absolutes oder relatives Ziel, Basiswert und Basisjahr, Meilenstein, Zielwert und Zieljahr, ob gesetzlich vorgeschrieben, ob auf eindeutigen wissenschaftlichen Belegen beruhend (Umweltthemen), Geltungsbereich (ESRS 2 §51). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Unternehmensstrategie, Fahrpläne und Dashboards."
+    },
+    "it": {
+     "description": "Una riga per obiettivo: metrica e unità, obiettivo assoluto o relativo, valore e anno di base, tappa, valore e anno dell'obiettivo, se richiesto dalla legge, se basato su prove scientifiche conclusive (temi ambientali), ambito (ESRS 2 §51). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Strategia dell'impresa, piani e cruscotti."
+    },
+    "nl": {
+     "description": "Eén rij per streefdoel: metriek en eenheid, absoluut of relatief streefdoel, basiswaarde en basisjaar, mijlpaal, streefwaarde en streefjaar, of het wettelijk vereist is, of het op overtuigend wetenschappelijk bewijs is gebaseerd (milieuonderwerpen), reikwijdte (ESRS 2 §51). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Strategie van de onderneming, stappenplannen en dashboards."
+    },
+    "pt": {
+     "description": "Uma linha por meta: métrica e unidade, meta absoluta ou relativa, valor e ano de base, etapa, valor e ano da meta, se é exigida por lei, se se baseia em provas científicas conclusivas (temas ambientais), âmbito (ESRS 2 §51). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Estratégia da empresa, roteiros e painéis de controlo."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_4",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-CIB-DESC",
+   "libelle": {
+    "fr": "Cibles sur la biodiversité et les écosystèmes : lien avec les politiques, étapes, méthodes et scénarios",
+    "en": "Targets on biodiversity and ecosystems: link to policies, milestones, methods and scenarios",
+    "es": "Metas sobre la biodiversidad y los ecosistemas: vínculo con las políticas, hitos, métodos y escenarios",
+    "de": "Ziele zu biologischer Vielfalt und Ökosystemen: Bezug zu Konzepten, Meilensteine, Methoden und Szenarien",
+    "it": "Obiettivi sulla biodiversità e sugli ecosistemi: collegamento con le politiche, tappe, metodi e scenari",
+    "nl": "Streefdoelen voor biodiversiteit en ecosystemen: verband met beleid, mijlpalen, methoden en scenario's",
+    "pt": "Metas sobre a biodiversidade e os ecossistemas: ligação às políticas, etapas, métodos e cenários"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque cible : son lien avec les objectifs des politiques et les actions, les étapes ou cibles intermédiaires, les méthodes et hypothèses importantes et, le cas échéant, les scénarios, les principales sources de données et la compatibilité avec les objectifs nationaux, européens ou internationaux (ESRS 2 §51(a), (e), (f), (h)). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "For each target: its link to the policy objectives and actions, the milestones or interim targets, the methods and significant assumptions and, where applicable, the scenarios, the key data sources and the compatibility with national, EU or international policy goals (ESRS 2 §51(a), (e), (f), (h)). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Para cada meta: su vínculo con los objetivos y las acciones de las políticas, los hitos o metas intermedias, los métodos y las hipótesis significativas y, en su caso, los escenarios, las principales fuentes de datos y la compatibilidad con los objetivos de las políticas nacionales, de la UE o internacionales (ESRS 2 §51(a), (e), (f), (h)). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Für jedes Ziel: sein Bezug zu den Zielen und Maßnahmen der Konzepte, die Meilensteine oder Zwischenziele, die Methoden und wesentlichen Annahmen und gegebenenfalls die Szenarien, die wichtigsten Datenquellen und die Vereinbarkeit mit nationalen, EU-weiten oder internationalen politischen Zielen (ESRS 2 §51(a), (e), (f), (h)). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Per ogni obiettivo: il suo collegamento con gli obiettivi e le azioni delle politiche, le tappe o gli obiettivi intermedi, i metodi e le ipotesi significative e, se del caso, gli scenari, le principali fonti di dati e la compatibilità con gli obiettivi delle politiche nazionali, dell'UE o internazionali (ESRS 2 §51(a), (e), (f), (h)). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Voor elk streefdoel: het verband met de doelstellingen en acties van het beleid, de mijlpalen of tussentijdse streefdoelen, de methoden en belangrijke aannames en, indien van toepassing, de scenario's, de belangrijkste gegevensbronnen en de verenigbaarheid met nationale, EU- of internationale beleidsdoelen (ESRS 2 §51(a), (e), (f), (h)). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Para cada meta: a sua ligação aos objetivos e às ações das políticas, as etapas ou metas intermédias, os métodos e pressupostos significativos e, se aplicável, os cenários, as principais fontes de dados e a compatibilidade com os objetivos das políticas nacionais, da UE ou internacionais (ESRS 2 §51(a), (e), (f), (h)). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_4",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-SUIVI-SS-CIBLE",
+   "libelle": {
+    "fr": "Suivi de l'efficacité sans cible sur la biodiversité et les écosystèmes",
+    "en": "Tracking of effectiveness without targets on biodiversity and ecosystems",
+    "es": "Seguimiento de la eficacia sin metas sobre la biodiversidad y los ecosistemas",
+    "de": "Wirksamkeitsüberwachung ohne Ziele zu biologischer Vielfalt und Ökosystemen",
+    "it": "Monitoraggio dell'efficacia in assenza di obiettivi sulla biodiversità e sugli ecosistemi",
+    "nl": "Monitoring van de doeltreffendheid zonder streefdoelen voor biodiversiteit en ecosystemen",
+    "pt": "Acompanhamento da eficácia sem metas sobre a biodiversidade e os ecossistemas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si aucune cible mesurable n'est fixée : si et comment l'entreprise suit malgré tout l'efficacité de ses politiques et actions (ESRS 2 §52). Répondre N/A si des cibles sont fixées. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Only if no measurable target is set: whether and how the company still tracks the effectiveness of its policies and actions (ESRS 2 §52). Answer N/A if targets are set. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Solo si no se fija ninguna meta medible: si la empresa sigue, y cómo, la eficacia de sus políticas y acciones (ESRS 2 §52). Responda N/A si se han fijado metas. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn kein messbares Ziel gesetzt ist: ob und wie das Unternehmen die Wirksamkeit seiner Konzepte und Maßnahmen dennoch überwacht (ESRS 2 §52). Mit N/A antworten, wenn Ziele gesetzt sind. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Solo se non è fissato alcun obiettivo misurabile: se e come l'impresa monitora comunque l'efficacia delle sue politiche e azioni (ESRS 2 §52). Rispondere N/A se sono fissati obiettivi. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als er geen meetbaar streefdoel is vastgesteld: of en hoe de onderneming de doeltreffendheid van haar beleid en acties toch monitort (ESRS 2 §52). Antwoord N/A als er streefdoelen zijn vastgesteld. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se não for fixada nenhuma meta mensurável: se a empresa acompanha, e como, a eficácia das suas políticas e ações (ESRS 2 §52). Responda N/A se forem fixadas metas. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_4",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-CIBLES-COMPENSATIONS",
+   "libelle": {
+    "fr": "Compensations de biodiversité utilisées dans les cibles",
+    "en": "Use of biodiversity offsets in the targets",
+    "es": "Uso de compensaciones de biodiversidad en las metas",
+    "de": "Einsatz von Biodiversitätsausgleichen in den Zielen",
+    "it": "Uso di compensazioni per la biodiversità negli obiettivi",
+    "nl": "Gebruik van biodiversiteitscompensaties in de streefdoelen",
+    "pt": "Utilização de compensações de biodiversidade nas metas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement si l'entreprise utilise des compensations de biodiversité pour fixer ses cibles : comment elle les a utilisées (E4-4 §17). Répondre N/A sinon. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Only if the company uses biodiversity offsets in setting its targets: how it used them (E4-4 §17). Answer N/A otherwise. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Solo si la empresa utiliza compensaciones de biodiversidad al fijar sus metas: cómo las ha utilizado (E4-4 §17). Responda N/A en caso contrario. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Nur wenn das Unternehmen bei der Festlegung seiner Ziele Biodiversitätsausgleiche einsetzt: wie es sie eingesetzt hat (E4-4 §17). Sonst mit N/A antworten. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Solo se l'impresa utilizza compensazioni per la biodiversità nella definizione dei suoi obiettivi: come le ha utilizzate (E4-4 §17). In caso contrario, rispondere N/A. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Alleen als de onderneming biodiversiteitscompensaties gebruikt bij het vaststellen van haar streefdoelen: hoe zij die heeft gebruikt (E4-4 §17). Antwoord anders N/A. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Apenas se a empresa utilizar compensações de biodiversidade na definição das suas metas: como as utilizou (E4-4 §17). Responda N/A caso contrário. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_4",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-LIEUX-DESC",
+   "libelle": {
+    "fr": "Lieux des activités propres liés à des enjeux de biodiversité importants",
+    "en": "Locations of the own operations linked to material biodiversity matters",
+    "es": "Ubicaciones de las operaciones propias vinculadas a cuestiones materiales de biodiversidad",
+    "de": "Standorte der eigenen Geschäftstätigkeit mit Bezug zu wesentlichen Themen der biologischen Vielfalt",
+    "it": "Ubicazioni delle attività proprie legate a temi rilevanti di biodiversità",
+    "nl": "Locaties van de eigen activiteiten die verband houden met materiële biodiversiteitskwesties",
+    "pt": "Localizações das operações próprias ligadas a questões materiais de biodiversidade"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Les lieux des activités propres auxquels se rapportent les impacts, risques ou opportunités importants liés à la biodiversité et aux écosystèmes, quand ils ne sont pas des sites de l'arbre des organisations (E4-5 §19(a), E4 AR 8). Les sites de l'arbre répondent chacun par le oui / non « site concerné ». Pas de liste exhaustive : l'entreprise peut regrouper les sites qui touchent la même zone sensible ou subissent des impacts, risques ou opportunités semblables, sans masquer d'information importante. Répondre N/A si tous les lieux sont des sites de l'arbre. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "The locations of the own operations to which the material biodiversity and ecosystems impacts, risks or opportunities relate, when they are not sites of the organisation tree (E4-5 §19(a), E4 AR 8). Each site of the tree answers with the yes / no ‘site concerned’. No exhaustive list is needed: the company may group the sites that affect the same sensitive area or have similar impacts, risks or opportunities, as long as this does not hide material information. Answer N/A if all the locations are sites of the tree. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Las ubicaciones de las operaciones propias a las que se refieren los impactos, riesgos u oportunidades materiales sobre la biodiversidad y los ecosistemas, cuando no son centros del árbol de organizaciones (E4-5 §19(a), E4 AR 8). Cada centro del árbol responde con el sí / no «centro afectado». No se necesita una lista exhaustiva: la empresa puede agrupar los centros que afectan a la misma zona sensible o que tienen impactos, riesgos u oportunidades similares, siempre que ello no oculte información material. Responda N/A si todas las ubicaciones son centros del árbol. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Die Standorte der eigenen Geschäftstätigkeit, auf die sich die wesentlichen Auswirkungen, Risiken oder Chancen für biologische Vielfalt und Ökosysteme beziehen, wenn sie keine Standorte der Organisationsstruktur sind (E4-5 §19(a), E4 AR 8). Jeder Standort der Struktur antwortet mit Ja / Nein zu „betroffener Standort“. Eine vollständige Liste ist nicht nötig: Das Unternehmen kann die Standorte zusammenfassen, die dasselbe sensible Gebiet beeinträchtigen oder ähnliche Auswirkungen, Risiken oder Chancen haben, solange dies keine wesentlichen Informationen verbirgt. Mit N/A antworten, wenn alle Standorte Standorte der Struktur sind. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Le ubicazioni delle attività proprie a cui si riferiscono gli impatti, rischi o opportunità rilevanti sulla biodiversità e sugli ecosistemi, quando non sono siti dell'albero delle organizzazioni (E4-5 §19(a), E4 AR 8). Ogni sito dell'albero risponde con il sì / no «sito interessato». Non serve un elenco esaustivo: l'impresa può raggruppare i siti che incidono sulla stessa area sensibile o hanno impatti, rischi o opportunità simili, purché ciò non nasconda informazioni rilevanti. Rispondere N/A se tutte le ubicazioni sono siti dell'albero. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "De locaties van de eigen activiteiten waarop de materiële effecten, risico's of kansen voor biodiversiteit en ecosystemen betrekking hebben, wanneer het geen locaties van de organisatiestructuur zijn (E4-5 §19(a), E4 AR 8). Elke locatie van de structuur antwoordt met ja / nee op ‘betrokken locatie’. Een uitputtende lijst is niet nodig: de onderneming mag locaties groeperen die hetzelfde gevoelige gebied beïnvloeden of vergelijkbare effecten, risico's of kansen hebben, mits dit geen materiële informatie verbergt. Antwoord N/A als alle locaties locaties van de structuur zijn. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "As localizações das operações próprias a que dizem respeito os impactos, riscos ou oportunidades materiais sobre a biodiversidade e os ecossistemas, quando não são locais da árvore de organizações (E4-5 §19(a), E4 AR 8). Cada local da árvore responde com o sim / não «local em causa». Não é necessária uma lista exaustiva: a empresa pode agrupar os locais que afetam a mesma zona sensível ou têm impactos, riscos ou oportunidades semelhantes, desde que tal não oculte informação material. Responda N/A se todas as localizações forem locais da árvore. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-SITE-IRO",
+   "libelle": {
+    "fr": "Site lié à un impact, risque ou opportunité important pour la biodiversité",
+    "en": "Site linked to a material biodiversity impact, risk or opportunity",
+    "es": "Centro vinculado a un impacto, riesgo u oportunidad material de biodiversidad",
+    "de": "Standort mit Bezug zu einer wesentlichen Auswirkung, einem Risiko oder einer Chance für die biologische Vielfalt",
+    "it": "Sito legato a un impatto, rischio od opportunità rilevante per la biodiversità",
+    "nl": "Locatie die verband houdt met een materieel effect, risico of kans voor biodiversiteit",
+    "pt": "Local ligado a um impacto, risco ou oportunidade material de biodiversidade"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le site est-il un lieu auquel se rapportent des impacts, risques ou opportunités importants liés à la biodiversité et aux écosystèmes (E4-5 §19(a), E4 AR 8) ? Si oui, remplir les deux textes suivants. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Is the site a location to which material biodiversity and ecosystems impacts, risks or opportunities relate (E4-5 §19(a), E4 AR 8)? If yes, fill in the next two texts. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "¿Es el centro una ubicación a la que se refieren impactos, riesgos u oportunidades materiales sobre la biodiversidad y los ecosistemas (E4-5 §19(a), E4 AR 8)? En caso afirmativo, rellene los dos textos siguientes. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Ist der Standort ein Ort, auf den sich wesentliche Auswirkungen, Risiken oder Chancen für biologische Vielfalt und Ökosysteme beziehen (E4-5 §19(a), E4 AR 8)? Wenn ja, die nächsten zwei Texte ausfüllen. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Il sito è un'ubicazione a cui si riferiscono impatti, rischi o opportunità rilevanti sulla biodiversità e sugli ecosistemi (E4-5 §19(a), E4 AR 8)? In caso affermativo, compilare i due testi successivi. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Is de locatie een plaats waarop materiële effecten, risico's of kansen voor biodiversiteit en ecosystemen betrekking hebben (E4-5 §19(a), E4 AR 8)? Zo ja, vul de volgende twee teksten in. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "O local é uma localização a que dizem respeito impactos, riscos ou oportunidades materiais sobre a biodiversidade e os ecossistemas (E4-5 §19(a), E4 AR 8)? Em caso afirmativo, preencha os dois textos seguintes. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "BIO-SITE-ZONE-IMPACT",
+   "libelle": {
+    "fr": "Zones sensibles touchées par le site (nom et type)",
+    "en": "Sensitive areas affected by the site (name and type)",
+    "es": "Zonas sensibles afectadas por el centro (nombre y tipo)",
+    "de": "Vom Standort betroffene sensible Gebiete (Name und Art)",
+    "it": "Aree sensibili interessate dal sito (nome e tipo)",
+    "nl": "Door de locatie getroffen gevoelige gebieden (naam en soort)",
+    "pt": "Zonas sensíveis afetadas pelo local (nome e tipo)"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour un site concerné : la liste des zones sensibles pour la biodiversité liées à ses impacts négatifs importants, avec le nom et le type de chaque zone (E4-5 §19(b)). Zones sensibles : zones protégées (Natura 2000, sites du patrimoine mondial naturel, sites Ramsar…), zones clés pour la biodiversité, zones marines d'importance écologique ou biologique, habitats d'espèces de la liste rouge de l'UICN (glossaire). Répondre N/A si le site n'est pas concerné ou n'a pas d'impact négatif important sur une zone sensible. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Étude d'impact, autorisations d'exploiter, cartes des zones protégées, registres de l'exploitation du site."
+    },
+    "en": {
+     "description": "For a site concerned: the list of the biodiversity-sensitive areas related to its material negative impacts, with the name and type of each area (E4-5 §19(b)). Sensitive areas: protected areas (Natura 2000, UNESCO natural world heritage sites, Ramsar sites…), Key Biodiversity Areas, ecologically or biologically significant marine areas, habitats of species of the IUCN Red List (glossary). Answer N/A if the site is not concerned or has no material negative impact on a sensitive area. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Impact assessment, operating permits, maps of protected areas, site operating records."
+    },
+    "es": {
+     "description": "Para un centro afectado: la lista de las zonas sensibles para la biodiversidad relacionadas con sus impactos negativos materiales, con el nombre y el tipo de cada zona (E4-5 §19(b)). Zonas sensibles: zonas protegidas (Natura 2000, sitios naturales del patrimonio mundial de la UNESCO, sitios Ramsar…), Áreas Clave para la Biodiversidad, zonas marinas de importancia ecológica o biológica, hábitats de especies de la Lista Roja de la UICN (glosario). Responda N/A si el centro no está afectado o no tiene ningún impacto negativo material sobre una zona sensible. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Evaluación de impacto, permisos de explotación, mapas de zonas protegidas, registros de explotación del centro."
+    },
+    "de": {
+     "description": "Für einen betroffenen Standort: die Liste der für die biologische Vielfalt sensiblen Gebiete, die mit seinen wesentlichen negativen Auswirkungen zusammenhängen, mit Name und Art jedes Gebiets (E4-5 §19(b)). Sensible Gebiete: Schutzgebiete (Natura 2000, UNESCO-Weltnaturerbestätten, Ramsar-Gebiete …), Schlüsselgebiete für die biologische Vielfalt, ökologisch oder biologisch bedeutende Meeresgebiete, Lebensräume von Arten der Roten Liste der IUCN (Glossar). Mit N/A antworten, wenn der Standort nicht betroffen ist oder keine wesentliche negative Auswirkung auf ein sensibles Gebiet hat. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Auswirkungsbewertung, Betriebsgenehmigungen, Karten der Schutzgebiete, Betriebsaufzeichnungen des Standorts."
+    },
+    "it": {
+     "description": "Per un sito interessato: l'elenco delle aree sensibili per la biodiversità collegate ai suoi impatti negativi rilevanti, con il nome e il tipo di ciascuna area (E4-5 §19(b)). Aree sensibili: aree protette (Natura 2000, siti naturali del patrimonio mondiale dell'UNESCO, siti Ramsar…), Aree chiave per la biodiversità, aree marine di importanza ecologica o biologica, habitat di specie della Lista rossa dell'IUCN (glossario). Rispondere N/A se il sito non è interessato o non ha alcun impatto negativo rilevante su un'area sensibile. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Valutazione d'impatto, autorizzazioni di esercizio, mappe delle aree protette, registri di esercizio del sito."
+    },
+    "nl": {
+     "description": "Voor een betrokken locatie: de lijst van de voor biodiversiteit gevoelige gebieden die verband houden met haar materiële negatieve effecten, met de naam en het soort van elk gebied (E4-5 §19(b)). Gevoelige gebieden: beschermde gebieden (Natura 2000, UNESCO-werelderfgoed van de natuur, Ramsargebieden…), Key Biodiversity Areas (kerngebieden voor biodiversiteit), ecologisch of biologisch belangrijke mariene gebieden, habitats van soorten van de Rode Lijst van de IUCN (verklarende woordenlijst). Antwoord N/A als de locatie niet betrokken is of geen materieel negatief effect op een gevoelig gebied heeft. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Effectbeoordeling, exploitatievergunningen, kaarten van beschermde gebieden, exploitatiegegevens van de locatie."
+    },
+    "pt": {
+     "description": "Para um local em causa: a lista das zonas sensíveis para a biodiversidade relacionadas com os seus impactos negativos materiais, com o nome e o tipo de cada zona (E4-5 §19(b)). Zonas sensíveis: áreas protegidas (Natura 2000, sítios naturais do património mundial da UNESCO, sítios Ramsar…), Áreas-Chave para a Biodiversidade, zonas marinhas de importância ecológica ou biológica, habitats de espécies da Lista Vermelha da UICN (glossário). Responda N/A se o local não estiver em causa ou não tiver nenhum impacto negativo material numa zona sensível. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Avaliação de impacto, licenças de exploração, mapas de áreas protegidas, registos de exploração do local."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "BIO-SITE-ACTIVITES",
+   "libelle": {
+    "fr": "Activités du site liées à des impacts négatifs sur des zones sensibles",
+    "en": "Activities of the site linked to negative impacts on sensitive areas",
+    "es": "Actividades del centro vinculadas a impactos negativos en zonas sensibles",
+    "de": "Tätigkeiten des Standorts mit negativen Auswirkungen auf sensible Gebiete",
+    "it": "Attività del sito legate a impatti negativi sulle aree sensibili",
+    "nl": "Activiteiten van de locatie die verband houden met negatieve effecten op gevoelige gebieden",
+    "pt": "Atividades do local ligadas a impactos negativos em zonas sensíveis"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour un site qui a un impact négatif important sur une zone sensible : les activités du site liées à cet impact (E4-5 §19(c)). Répondre N/A sinon. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Étude d'impact, autorisations d'exploiter, cartes des zones protégées, registres de l'exploitation du site."
+    },
+    "en": {
+     "description": "For a site that has a material negative impact on a sensitive area: the activities of the site that are linked to this impact (E4-5 §19(c)). Answer N/A otherwise. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Impact assessment, operating permits, maps of protected areas, site operating records."
+    },
+    "es": {
+     "description": "Para un centro que tiene un impacto negativo material sobre una zona sensible: las actividades del centro vinculadas a este impacto (E4-5 §19(c)). Responda N/A en caso contrario. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Evaluación de impacto, permisos de explotación, mapas de zonas protegidas, registros de explotación del centro."
+    },
+    "de": {
+     "description": "Für einen Standort mit einer wesentlichen negativen Auswirkung auf ein sensibles Gebiet: die Tätigkeiten des Standorts, die mit dieser Auswirkung zusammenhängen (E4-5 §19(c)). Sonst mit N/A antworten. Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Auswirkungsbewertung, Betriebsgenehmigungen, Karten der Schutzgebiete, Betriebsaufzeichnungen des Standorts."
+    },
+    "it": {
+     "description": "Per un sito che ha un impatto negativo rilevante su un'area sensibile: le attività del sito collegate a tale impatto (E4-5 §19(c)). In caso contrario, rispondere N/A. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Valutazione d'impatto, autorizzazioni di esercizio, mappe delle aree protette, registri di esercizio del sito."
+    },
+    "nl": {
+     "description": "Voor een locatie met een materieel negatief effect op een gevoelig gebied: de activiteiten van de locatie die met dit effect verband houden (E4-5 §19(c)). Antwoord anders N/A. Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Effectbeoordeling, exploitatievergunningen, kaarten van beschermde gebieden, exploitatiegegevens van de locatie."
+    },
+    "pt": {
+     "description": "Para um local que tem um impacto negativo material numa zona sensível: as atividades do local ligadas a esse impacto (E4-5 §19(c)). Responda N/A caso contrário. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Avaliação de impacto, licenças de exploração, mapas de áreas protegidas, registos de exploração do local."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "BIO-INDICATEURS",
+   "libelle": {
+    "fr": "Indicateurs sur les impacts importants sur la biodiversité",
+    "en": "Metrics on the material impacts on biodiversity",
+    "es": "Parámetros sobre los impactos materiales en la biodiversidad",
+    "de": "Kennzahlen zu den wesentlichen Auswirkungen auf die biologische Vielfalt",
+    "it": "Metriche sugli impatti rilevanti sulla biodiversità",
+    "nl": "Metrieken voor de materiële effecten op biodiversiteit",
+    "pt": "Métricas sobre os impactos materiais na biodiversidade"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "ESRS-TAB-INDICATEURS",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Une ligne par indicateur de l'entreprise sur ses impacts importants sur la biodiversité et les écosystèmes : nom, valeur, unité, périmètre (E4-5 §20). La norme ne définit aucun indicateur. Selon le sujet important, ils portent sur les facteurs de changement, l'état des espèces, l'état et l'étendue des écosystèmes ou les services écosystémiques (E4 AR 10). Les données de terrain ou de télédétection sont les meilleures ; à défaut, des estimations à partir des facteurs de pression (E4 AR 11). Préciser dans le texte de méthode la fréquence de suivi, l'état et l'année de référence (E4 AR 12). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Suivi écologique, relevés de terrain, imagerie satellite, études d'impact."
+    },
+    "en": {
+     "description": "One row per company metric on its material impacts on biodiversity and ecosystems: name, value, unit, scope (E4-5 §20). The standard defines no metric. Depending on the material sub-topic, they cover drivers of change, the state of species, the condition and extent of ecosystems or ecosystem services (E4 AR 10). Primary data from the field or remote sensing is best; otherwise estimates from pressure data (E4 AR 11). Say in the methods text the monitoring frequency, the baseline condition and the baseline year (E4 AR 12). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Ecological monitoring, field surveys, satellite imagery, impact assessments."
+    },
+    "es": {
+     "description": "Una fila por parámetro de la empresa sobre sus impactos materiales en la biodiversidad y los ecosistemas: nombre, valor, unidad, alcance (E4-5 §20). La norma no define ningún parámetro. Según el subtema material, abarcan los factores de cambio, el estado de las especies, la condición y la extensión de los ecosistemas o los servicios ecosistémicos (E4 AR 10). Lo mejor son los datos primarios de campo o de teledetección; en su defecto, las estimaciones a partir de datos de presión (E4 AR 11). Indique en el texto de métodos la frecuencia de seguimiento, la situación de referencia y el año de referencia (E4 AR 12). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Seguimiento ecológico, estudios de campo, imágenes de satélite, evaluaciones de impacto."
+    },
+    "de": {
+     "description": "Eine Zeile je Kennzahl des Unternehmens zu seinen wesentlichen Auswirkungen auf biologische Vielfalt und Ökosysteme: Name, Wert, Einheit, Geltungsbereich (E4-5 §20). Der Standard definiert keine Kennzahl. Je nach wesentlichem Unterthema betreffen sie Treiber des Wandels, den Zustand von Arten, den Zustand und die Ausdehnung von Ökosystemen oder Ökosystemleistungen (E4 AR 10). Am besten sind Primärdaten aus dem Gelände oder der Fernerkundung; andernfalls Schätzungen aus Belastungsdaten (E4 AR 11). Im Methodentext die Überwachungshäufigkeit, den Ausgangszustand und das Basisjahr angeben (E4 AR 12). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Ökologisches Monitoring, Geländeerhebungen, Satellitenbilder, Auswirkungsbewertungen."
+    },
+    "it": {
+     "description": "Una riga per metrica dell'impresa sui suoi impatti rilevanti sulla biodiversità e sugli ecosistemi: nome, valore, unità, ambito (E4-5 §20). La norma non definisce alcuna metrica. A seconda del sotto-tema rilevante, riguardano i fattori di cambiamento, lo stato delle specie, le condizioni e l'estensione degli ecosistemi o i servizi ecosistemici (E4 AR 10). Sono preferibili i dati primari sul campo o da telerilevamento; altrimenti stime a partire da dati di pressione (E4 AR 11). Indicare nel testo dei metodi la frequenza di monitoraggio, la condizione di base e l'anno di base (E4 AR 12). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Monitoraggio ecologico, rilievi sul campo, immagini satellitari, valutazioni d'impatto."
+    },
+    "nl": {
+     "description": "Eén rij per metriek van de onderneming over haar materiële effecten op biodiversiteit en ecosystemen: naam, waarde, eenheid, reikwijdte (E4-5 §20). De standaard definieert geen metriek. Afhankelijk van het materiële subonderwerp betreffen ze veranderingsfactoren, de staat van soorten, de toestand en omvang van ecosystemen of ecosysteemdiensten (E4 AR 10). Primaire gegevens uit het veld of via remote sensing zijn het best; anders schattingen op basis van drukgegevens (E4 AR 11). Geef in de methodetekst de monitoringfrequentie, de uitgangstoestand en het basisjaar (E4 AR 12). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Ecologische monitoring, veldonderzoek, satellietbeelden, effectbeoordelingen."
+    },
+    "pt": {
+     "description": "Uma linha por métrica da empresa sobre os seus impactos materiais na biodiversidade e nos ecossistemas: nome, valor, unidade, âmbito (E4-5 §20). A norma não define nenhuma métrica. Consoante o subtema material, abrangem os fatores de mudança, o estado das espécies, a condição e a extensão dos ecossistemas ou os serviços ecossistémicos (E4 AR 10). O melhor são os dados primários de campo ou de deteção remota; caso contrário, estimativas a partir de dados de pressão (E4 AR 11). Indique no texto dos métodos a frequência de acompanhamento, a condição de base e o ano de base (E4 AR 12). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a)).",
+     "source": "Monitorização ecológica, levantamentos de campo, imagens de satélite, avaliações de impacto."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-IMPACT-SOLS",
+   "libelle": {
+    "fr": "Impacts importants liés à la dégradation des terres, la désertification ou l'imperméabilisation des sols",
+    "en": "Material impacts related to land degradation, desertification or soil sealing",
+    "es": "Impactos materiales relacionados con la degradación del suelo, la desertificación o el sellado del suelo",
+    "de": "Wesentliche Auswirkungen im Zusammenhang mit Bodendegradation, Wüstenbildung oder Bodenversiegelung",
+    "it": "Impatti rilevanti legati al degrado del suolo, alla desertificazione o all'impermeabilizzazione del suolo",
+    "nl": "Materiële effecten in verband met landdegradatie, woestijnvorming of bodemverzegeling",
+    "pt": "Impactos materiais relacionados com a degradação dos solos, a desertificação ou a impermeabilização dos solos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Parmi les impacts importants décrits dans l'analyse des impacts, risques et opportunités, certains concernent-ils la dégradation des terres, la désertification ou l'imperméabilisation des sols (E4 AR 9, pour E4-5 §20) ? Si oui, le texte des impacts importants (ESRS 2 IRO-2) le dit. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Among the material impacts described in the assessment of impacts, risks and opportunities, do any concern land degradation, desertification or soil sealing (E4 AR 9, for E4-5 §20)? If yes, the text on the material impacts (ESRS 2 IRO-2) says so. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Entre los impactos materiales descritos en la evaluación de impactos, riesgos y oportunidades, ¿alguno se refiere a la degradación del suelo, la desertificación o el sellado del suelo (E4 AR 9, para E4-5 §20)? En caso afirmativo, el texto sobre los impactos materiales (ESRS 2 IRO-2) lo indica. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Betrifft eine der in der Bewertung von Auswirkungen, Risiken und Chancen beschriebenen wesentlichen Auswirkungen Bodendegradation, Wüstenbildung oder Bodenversiegelung (E4 AR 9, für E4-5 §20)? Wenn ja, sagt dies der Text zu den wesentlichen Auswirkungen (ESRS 2 IRO-2). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Tra gli impatti rilevanti descritti nella valutazione di impatti, rischi e opportunità, ve ne sono che riguardano il degrado del suolo, la desertificazione o l'impermeabilizzazione del suolo (E4 AR 9, per E4-5 §20)? In caso affermativo, il testo sugli impatti rilevanti (ESRS 2 IRO-2) lo indica. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Gaat een van de materiële effecten die in de beoordeling van effecten, risico's en kansen zijn beschreven over landdegradatie, woestijnvorming of bodemverzegeling (E4 AR 9, voor E4-5 §20)? Zo ja, dan staat dat in de tekst over de materiële effecten (ESRS 2 IRO-2). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Entre os impactos materiais descritos na avaliação de impactos, riscos e oportunidades, algum diz respeito à degradação dos solos, à desertificação ou à impermeabilização dos solos (E4 AR 9, para E4-5 §20)? Em caso afirmativo, o texto sobre os impactos materiais (ESRS 2 IRO-2) di-lo. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-IMPACT-ESPECES",
+   "libelle": {
+    "fr": "Activités touchant des espèces ou des écosystèmes menacés",
+    "en": "Operations that affect threatened species or ecosystems",
+    "es": "Operaciones que afectan a especies o ecosistemas amenazados",
+    "de": "Tätigkeiten, die bedrohte Arten oder Ökosysteme beeinträchtigen",
+    "it": "Attività che interessano specie o ecosistemi minacciati",
+    "nl": "Activiteiten die bedreigde soorten of ecosystemen beïnvloeden",
+    "pt": "Operações que afetam espécies ou ecossistemas ameaçados"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Parmi les impacts importants, certains concernent-ils des activités qui touchent des espèces ou des écosystèmes menacés (E4 AR 9, pour E4-5 §20) ? Espèces menacées : espèces en danger de la liste rouge européenne ou de la liste rouge de l'UICN ; écosystèmes menacés : écosystèmes en danger critique, en danger ou vulnérables de la liste rouge des écosystèmes de l'UICN (glossaire). Si oui, le texte des impacts importants (ESRS 2 IRO-2) le dit. Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Among the material impacts, do any concern operations that affect threatened species or ecosystems (E4 AR 9, for E4-5 §20)? Threatened species: endangered species of the European Red List or the IUCN Red List of Threatened Species; threatened ecosystems: ecosystems classed as critically endangered, endangered or vulnerable in the IUCN Red List of Ecosystems (glossary). If yes, the text on the material impacts (ESRS 2 IRO-2) says so. Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Entre los impactos materiales, ¿alguno se refiere a operaciones que afectan a especies o ecosistemas amenazados (E4 AR 9, para E4-5 §20)? Especies amenazadas: especies en peligro de la Lista Roja Europea o de la Lista Roja de Especies Amenazadas de la UICN; ecosistemas amenazados: ecosistemas clasificados como en peligro crítico, en peligro o vulnerables en la Lista Roja de Ecosistemas de la UICN (glosario). En caso afirmativo, el texto sobre los impactos materiales (ESRS 2 IRO-2) lo indica. Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Betrifft eine der wesentlichen Auswirkungen Tätigkeiten, die bedrohte Arten oder Ökosysteme beeinträchtigen (E4 AR 9, für E4-5 §20)? Bedrohte Arten: gefährdete Arten der Europäischen Roten Liste oder der Roten Liste der bedrohten Arten der IUCN; bedrohte Ökosysteme: Ökosysteme, die in der Roten Liste der Ökosysteme der IUCN als vom Zusammenbruch bedroht, gefährdet oder verletzlich eingestuft sind (Glossar). Wenn ja, sagt dies der Text zu den wesentlichen Auswirkungen (ESRS 2 IRO-2). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Tra gli impatti rilevanti, ve ne sono che riguardano attività che incidono su specie o ecosistemi minacciati (E4 AR 9, per E4-5 §20)? Specie minacciate: specie in pericolo della Lista rossa europea o della Lista rossa delle specie minacciate dell'IUCN; ecosistemi minacciati: ecosistemi classificati come in pericolo critico, in pericolo o vulnerabili nella Lista rossa degli ecosistemi dell'IUCN (glossario). In caso affermativo, il testo sugli impatti rilevanti (ESRS 2 IRO-2) lo indica. Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Gaat een van de materiële effecten over activiteiten die bedreigde soorten of ecosystemen beïnvloeden (E4 AR 9, voor E4-5 §20)? Bedreigde soorten: bedreigde soorten van de Europese Rode Lijst of de Rode Lijst van bedreigde soorten van de IUCN; bedreigde ecosystemen: ecosystemen die in de Rode Lijst van ecosystemen van de IUCN als ernstig bedreigd, bedreigd of kwetsbaar zijn ingedeeld (verklarende woordenlijst). Zo ja, dan staat dat in de tekst over de materiële effecten (ESRS 2 IRO-2). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Entre os impactos materiais, algum diz respeito a operações que afetam espécies ou ecossistemas ameaçados (E4 AR 9, para E4-5 §20)? Espécies ameaçadas: espécies em perigo da Lista Vermelha Europeia ou da Lista Vermelha de Espécies Ameaçadas da UICN; ecossistemas ameaçados: ecossistemas classificados como em perigo crítico, em perigo ou vulneráveis na Lista Vermelha de Ecossistemas da UICN (glossário). Em caso afirmativo, o texto sobre os impactos materiais (ESRS 2 IRO-2) di-lo. Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-METHODES",
+   "libelle": {
+    "fr": "Indicateurs sur la biodiversité et les écosystèmes : méthodes, sources, chaîne de valeur et contexte",
+    "en": "Metrics on biodiversity and ecosystems: methods, sources, value chain data and context",
+    "es": "Parámetros sobre la biodiversidad y los ecosistemas: métodos, fuentes, datos de la cadena de valor y contexto",
+    "de": "Kennzahlen zu biologischer Vielfalt und Ökosystemen: Methoden, Quellen, Daten der Wertschöpfungskette und Kontext",
+    "it": "Metriche sulla biodiversità e sugli ecosistemi: metodi, fonti, dati della catena del valore e contesto",
+    "nl": "Metrieken voor biodiversiteit en ecosystemen: methoden, bronnen, gegevens uit de waardeketen en context",
+    "pt": "Métricas sobre a biodiversidade e os ecossistemas: métodos, fontes, dados da cadeia de valor e contexto"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Pour chaque indicateur : unité, méthode de calcul et sources, méthode d'estimation avec ses hypothèses et limites importantes ; pour un indicateur de la chaîne de valeur, part des données indirectes ou approchées et améliorations prévues ; informations de contexte (ESRS 2 §49(a) à (c)). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "For each metric: unit, calculation method and sources, estimation method with its significant assumptions and limitations; for a value chain metric, reliance on indirect sources or proxies and the planned improvements; contextual information (ESRS 2 §49(a) to (c)). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Para cada parámetro: unidad, método de cálculo y fuentes, método de estimación con sus hipótesis y limitaciones significativas; para un parámetro de la cadena de valor, el recurso a fuentes indirectas o aproximaciones y las mejoras previstas; información de contexto (ESRS 2 §49(a) a (c)). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Für jede Kennzahl: Einheit, Berechnungsmethode und Quellen, Schätzmethode mit ihren wesentlichen Annahmen und Einschränkungen; bei einer Kennzahl der Wertschöpfungskette die Nutzung indirekter Quellen oder Näherungswerte und die geplanten Verbesserungen; Kontextinformationen (ESRS 2 §49(a) bis (c)). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Per ogni metrica: unità, metodo di calcolo e fonti, metodo di stima con le sue ipotesi e limiti significativi; per una metrica della catena del valore, il ricorso a fonti indirette o a stime di approssimazione e i miglioramenti previsti; informazioni di contesto (ESRS 2 §49(a)-(c)). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Voor elke metriek: eenheid, berekeningsmethode en bronnen, schattingsmethode met de belangrijke aannames en beperkingen; voor een metriek van de waardeketen het gebruik van indirecte bronnen of benaderingen en de geplande verbeteringen; contextinformatie (ESRS 2 §49(a) tot en met (c)). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Para cada métrica: unidade, método de cálculo e fontes, método de estimativa com os seus pressupostos e limitações significativos; para uma métrica da cadeia de valor, o recurso a fontes indiretas ou aproximações e as melhorias previstas; informação de contexto (ESRS 2 §49(a) a (c)). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "BIO-EVOLUTION",
+   "libelle": {
+    "fr": "Indicateurs sur la biodiversité et les écosystèmes : évolutions importantes et progrès",
+    "en": "Metrics on biodiversity and ecosystems: significant changes and progress",
+    "es": "Parámetros sobre la biodiversidad y los ecosistemas: cambios significativos y avances",
+    "de": "Kennzahlen zu biologischer Vielfalt und Ökosystemen: wesentliche Änderungen und Fortschritte",
+    "it": "Metriche sulla biodiversità e sugli ecosistemi: cambiamenti significativi e progressi",
+    "nl": "Metrieken voor biodiversiteit en ecosystemen: belangrijke wijzigingen en voortgang",
+    "pt": "Métricas sobre a biodiversidade e os ecossistemas: alterações significativas e progressos"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Évolutions importantes des résultats par rapport aux périodes précédentes, progrès vers les cibles et effet des acquisitions ou cessions importantes (ESRS 2 §49(d)). Mesure transitoire : une entreprise de la première vague peut omettre toute l'ESRS E4 pour les exercices ouverts avant 2027, et toute autre entreprise pour ses deux premiers exercices de reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "en": {
+     "description": "Significant changes in performance compared with the previous periods, progress towards the targets and effect of major acquisitions or disposals (ESRS 2 §49(d)). Phase-in: a wave-one company may omit the whole of ESRS E4 for financial years starting before 2027, and any other company for its first two financial years of reporting (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "es": {
+     "description": "Cambios significativos del desempeño respecto a los periodos anteriores, avances hacia las metas y efecto de las adquisiciones o enajenaciones importantes (ESRS 2 §49(d)). Disposición transitoria: una empresa de la primera oleada puede omitir toda la ESRS E4 en los ejercicios que comiencen antes de 2027, y cualquier otra empresa durante sus dos primeros ejercicios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "de": {
+     "description": "Wesentliche Veränderungen der Leistung gegenüber den Vorperioden, Fortschritte bei den Zielen und Auswirkung größerer Übernahmen oder Veräußerungen (ESRS 2 §49(d)). Übergangsbestimmung: Ein Unternehmen der ersten Welle darf die gesamte ESRS E4 für vor 2027 beginnende Geschäftsjahre auslassen, jedes andere Unternehmen für seine ersten zwei Berichtsjahre (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "it": {
+     "description": "Cambiamenti significativi della performance rispetto ai periodi precedenti, progressi verso gli obiettivi ed effetto di acquisizioni o cessioni rilevanti (ESRS 2 §49(d)). Disposizione transitoria: un'impresa della prima ondata può omettere l'intero ESRS E4 per gli esercizi che iniziano prima del 2027, e qualsiasi altra impresa per i suoi primi due esercizi di rendicontazione (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "nl": {
+     "description": "Belangrijke veranderingen in de prestaties ten opzichte van eerdere perioden, voortgang richting de streefdoelen en effect van grote overnames of afstotingen (ESRS 2 §49(d)). Overgangsbepaling: een onderneming van de eerste golf mag de volledige ESRS E4 weglaten voor boekjaren die vóór 2027 beginnen, en elke andere onderneming voor haar eerste twee verslagjaren (ESRS 1 §125(a), §126(a), §127(a))."
+    },
+    "pt": {
+     "description": "Alterações significativas do desempenho face aos períodos anteriores, progressos em direção às metas e efeito de aquisições ou alienações importantes (ESRS 2 §49(d)). Disposição transitória: uma empresa da primeira vaga pode omitir toda a ESRS E4 nos exercícios que comecem antes de 2027, e qualquer outra empresa nos seus dois primeiros exercícios de reporte (ESRS 1 §125(a), §126(a), §127(a))."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "E4_5",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  }
+ ],
+ "regles": [],
+ "exporte_le": "",
+ "exporte_de": "Bibliothèque de l'outil",
+ "documents": [
+  {
+   "titre": "Commission Delegated Regulation (EU) 2026/1563 of 3 July 2026 amending Delegated Regulation (EU) 2023/2772 (revised ESRS: ESRS 1, ESRS 2, E1 to E5, S1 to S4, G1, glossary)",
+   "editeur": "European Commission",
+   "version": "OJ L, 21 September 2026",
+   "date": "2026-07-03",
+   "url": "http://data.europa.eu/eli/reg_del/2026/1563/oj",
+   "consulte_le": "2026-11-18",
+   "licence": "EU law: reuse allowed with acknowledgement of the source (Commission Decision 2011/833/EU)"
+  },
+  {
+   "titre": "Draft List of Datapoints effective from 2026, Revised ESRS Delegated Act of 3 July 2026, clean version (workbook)",
+   "editeur": "EFRAG",
+   "version": "Draft, version of 28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; non-authoritative draft, reproduction and use rights restricted; consulted only to check that the inventory is complete, nothing of it is reproduced in the templates"
+  },
+  {
+   "titre": "Explanatory Note: Revised ESRS, Draft List of Datapoints and Draft XBRL Taxonomy 2026",
+   "editeur": "EFRAG",
+   "version": "28 August 2026",
+   "date": "2026-08-28",
+   "url": "https://www.efrag.org/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; read for reference only, nothing of it is reproduced in the templates"
+  }
+ ]
+}

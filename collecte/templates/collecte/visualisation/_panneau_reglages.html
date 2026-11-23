@@ -1,0 +1,73 @@
+{% load collecte %}{# Mode modification : réglages du visuel sélectionné, à droite (forme, données, filtres propres, présentation) #}
+<aside class="panneau-visu panneau-reglages" aria-labelledby="titre-reglages" data-panneau-reglages hidden>
+  <div class="tete-panneau">
+    <h2 id="titre-reglages" tabindex="-1">{% libelle "visu.reglages" %}</h2>
+    <button type="button" class="icone fermer-panneau" data-fermer-panneau aria-label="{% libelle 'visu.reglages.fermer' %}">{% icone "fermer" %}</button>
+  </div>
+  <p class="discret" data-sans-selection>{% libelle "visu.reglages.aucun" %}</p>
+  <form class="form-reglages" data-form-reglages hidden>
+    <fieldset class="choix-formes">
+      <legend>{% libelle "visu.reglages.forme" %}</legend>
+      {% for f in contexte_visu.formes %}{% with nom_icone="forme-"|add:f.code %}
+      <label class="choix-forme" data-forme="{{ f.code }}"><input type="radio" name="type" value="{{ f.code }}" aria-describedby="raison-{{ f.code }}">{% icone nom_icone %}<span class="nom-forme">{{ f.nom }}</span><span class="raison-forme" id="raison-{{ f.code }}"></span></label>
+      {% endwith %}{% endfor %}
+    </fieldset>
+    <fieldset>
+      <legend>{% libelle "visu.reglages.donnees" %}</legend>
+      <p class="sous-legende">{% libelle "visu.reglages.kpis" %}</p>
+      <ol class="kpis-visuel" data-kpis-visuel></ol>
+      <p class="discret" data-source-visuel hidden></p>
+      <div class="champ-reglage" data-si="axe"><label for="r-axe">{% libelle "visu.reglages.axe" %}</label>
+        <select id="r-axe" name="axe"><option value="">{% libelle "visu.reglages.axe.auto" %}</option><option value="periodes">{% libelle "visu.reglages.axe.periodes" %}</option><option value="organisations">{% libelle "visu.reglages.axe.organisations" %}</option><option value="kpis">{% libelle "visu.reglages.axe.kpis" %}</option></select></div>
+      <div class="champ-reglage" data-si="series"><label for="r-series">{% libelle "visu.reglages.series" %}</label>
+        <select id="r-series" name="series"><option value="">{% libelle "visu.reglages.series.auto" %}</option><option value="kpis">{% libelle "visu.reglages.series.kpis" %}</option><option value="organisations">{% libelle "visu.reglages.series.organisations" %}</option></select></div>
+    </fieldset>
+    <fieldset>
+      <legend>{% libelle "visu.filtres.visuel" %}</legend>
+      <div class="champ-reglage"><label for="r-periode">{% libelle "visu.filtres.periode" %}</label>
+        <select id="r-periode" name="f_periode"><option value="">{% libelle "visu.filtres.comme_vue" %}</option>
+          {% for g in options.periodes %}<optgroup label="{{ g.groupe }}">{% for p in g.periodes %}<option value="{{ p.id }}">{{ p.libelle }}</option>{% endfor %}</optgroup>{% endfor %}</select></div>
+      <div class="champ-reglage"><label for="r-cmp">{% libelle "visu.filtres.comparer" %}</label>
+        <select id="r-cmp" name="f_comparaison"><option value="">{% libelle "visu.filtres.comme_vue" %}</option><option value="n1">{% libelle "visu.filtres.n1_court" %}</option><option value="p1">{% libelle "visu.filtres.p1" %}</option><option value="aucune">{% libelle "visu.filtres.aucune" %}</option></select></div>
+      <div class="champ-reglage"><label for="r-org">{% libelle "visu.filtres.organisation" %}</label>
+        <select id="r-org" name="f_org"><option value="">{% libelle "visu.filtres.comme_vue" %}</option>
+          {% for o in options.organisations %}<option value="{{ o.id }}">{{ o.prof|retrait }}{{ o.nom }}</option>{% endfor %}</select></div>
+      <div class="champ-reglage"><label for="r-orgs">{% libelle "visu.filtres.orgs_comparees" %}</label>
+        <select id="r-orgs" name="f_orgs_mode"><option value="">{% libelle "visu.filtres.comme_vue" %}</option><option value="dessous">{% libelle "visu.filtres.dessous" %}</option><option value="niveau">{% libelle "visu.reglages.niveau" %}</option><option value="choisies">{% libelle "visu.filtres.choisies" %}</option></select></div>
+      <div class="champ-reglage" data-si-mode="niveau"><label for="r-niveau">{% libelle "visu.reglages.niveau" %}</label>
+        <select id="r-niveau" name="f_niveau">{% for n in contexte_visu.niveaux %}<option value="{{ n.code }}">{{ n.nom }}</option>{% endfor %}</select></div>
+      <fieldset class="orgs-choisies" data-si-mode="choisies"><legend class="visuellement-cache">{% libelle "visu.filtres.choisies" %}</legend>
+        {% for o in options.organisations %}<label style="padding-left:{{ o.prof }}em"><input type="checkbox" name="f_ids" value="{{ o.id }}"> {{ o.nom }}</label>{% endfor %}</fieldset>
+      <div class="champ-reglage"><label for="r-valeurs">{% libelle "visu.filtres.valeurs" %}</label>
+        <select id="r-valeurs" name="f_valeurs"><option value="">{% libelle "visu.filtres.comme_vue" %}</option><option value="validees">{% libelle "visu.filtres.validees" %}</option><option value="brouillons">{% libelle "visu.filtres.brouillons" %}</option></select></div>
+      <div class="champ-reglage"><label for="r-nb">{% libelle "visu.filtres.nb_periodes" %}</label>
+        <input type="number" id="r-nb" name="f_nb_periodes" min="2" max="24" placeholder="{% libelle 'visu.filtres.comme_vue' %}"></div>
+    </fieldset>
+    <fieldset>
+      <legend>{% libelle "visu.reglages.presentation" %}</legend>
+      <div class="champ-reglage"><label for="r-titre">{% libelle "visu.reglages.titre" %}</label>
+        <input type="text" id="r-titre" name="titre" maxlength="150" aria-describedby="aide-titre"><span class="aide-filtre" id="aide-titre">{% libelle "visu.reglages.titre_aide" %}</span></div>
+      <div class="champ-reglage"><label for="r-largeur">{% libelle "visu.reglages.largeur" %}</label>
+        <select id="r-largeur" name="largeur"><option value="3">{% libelle "visu.reglages.largeur.3" %}</option><option value="4">{% libelle "visu.reglages.largeur.4" %}</option><option value="6">{% libelle "visu.reglages.largeur.6" %}</option><option value="8">{% libelle "visu.reglages.largeur.8" %}</option><option value="9">{% libelle "visu.reglages.largeur.9" %}</option><option value="12">{% libelle "visu.reglages.largeur.12" %}</option></select></div>
+      <div class="champ-reglage"><label for="r-hauteur">{% libelle "visu.reglages.hauteur" %}</label>
+        <select id="r-hauteur" name="hauteur"><option value="s">{% libelle "visu.reglages.hauteur.s" %}</option><option value="m">{% libelle "visu.reglages.hauteur.m" %}</option><option value="l">{% libelle "visu.reglages.hauteur.l" %}</option></select></div>
+      <div class="champ-reglage" data-si="valeurs_ecrites"><label for="r-ve">{% libelle "visu.reglages.valeurs_ecrites" %}</label>
+        <select id="r-ve" name="o_valeurs_ecrites"><option value="">{% libelle "visu.reglages.axe.auto" %}</option><option value="aucune">{% libelle "visu.reglages.valeurs_ecrites.aucune" %}</option><option value="derniere">{% libelle "visu.reglages.valeurs_ecrites.derniere" %}</option><option value="toutes">{% libelle "visu.reglages.valeurs_ecrites.toutes" %}</option></select></div>
+      <div class="champ-reglage" data-si="tri"><label for="r-tri">{% libelle "visu.reglages.tri" %}</label>
+        <select id="r-tri" name="o_tri"><option value="valeur">{% libelle "visu.reglages.tri.valeur" %}</option><option value="arbre">{% libelle "visu.reglages.tri.arbre" %}</option><option value="nom">{% libelle "visu.reglages.tri.nom" %}</option></select></div>
+      <div class="champ-reglage" data-si="max"><label for="r-max">{% libelle "visu.reglages.max" %}</label><input type="number" id="r-max" name="o_max" min="1" max="30"></div>
+      <div class="champ-reglage" data-si="remplissage_par"><label for="r-rp">{% libelle "visu.reglages.remplissage_par" %}</label>
+        <select id="r-rp" name="o_remplissage_par"><option value="organisations">{% libelle "visu.remplissage.par_organisations" %}</option><option value="themes">{% libelle "visu.remplissage.par_themes" %}</option><option value="total">{% libelle "visu.remplissage.total" %}</option></select></div>
+      <div class="champ-reglage" data-si="colonnes"><label for="r-col">{% libelle "visu.reglages.colonnes" %}</label>
+        <select id="r-col" name="o_colonnes"><option value="periodes">{% libelle "visu.reglages.colonnes.periodes" %}</option><option value="organisations">{% libelle "visu.reglages.colonnes.organisations" %}</option></select></div>
+      <label class="case-reglage" data-si="repere"><input type="checkbox" name="o_repere"> {% libelle "visu.reglages.repere" %}</label>
+      <label class="case-reglage" data-si="cent_pour_cent"><input type="checkbox" name="o_cent_pour_cent"> {% libelle "visu.reglages.cent_pour_cent" %}</label>
+      <label class="case-reglage" data-si="forme_anneau"><input type="checkbox" name="o_camembert"> {% libelle "visu.reglages.camembert" %}</label>
+      <label class="case-reglage" data-si="total_centre"><input type="checkbox" name="o_total_centre"> {% libelle "visu.reglages.total_centre" %}</label>
+    </fieldset>
+    <div class="actions-reglages">
+      <button type="button" class="secondaire" data-dupliquer-visuel>{% libelle "visu.visuel.dupliquer" %}</button>
+      <button type="button" class="secondaire supprimer-visuel" data-supprimer-visuel>{% icone "supprimer" %} {% libelle "visu.visuel.supprimer" %}</button>
+    </div>
+  </form>
+</aside>

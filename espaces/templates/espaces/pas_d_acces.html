@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "espaces.pas_acces.titre" nom=espace_refuse.nom %}{% endblock %}
+{% block contenu %}
+<section class="bloc page-etroite">
+  <h1>{% libelle "espaces.pas_acces.titre" nom=espace_refuse.nom %}</h1>
+  <p>{% libelle "espaces.pas_acces.aide" %}</p>
+  {% if mes_espaces %}
+  <h2 class="texte-grand">{% libelle "espaces.pas_acces.mes_espaces" %}</h2>
+  <ul class="liste-espaces">{% for e, url in mes_espaces %}<li><a href="{{ url }}">{{ e.nom }}</a></li>{% endfor %}</ul>
+  {% endif %}
+  <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit" class="secondaire">{% libelle "espaces.pas_acces.deconnexion" %}</button></form>
+</section>
+{% endblock %}

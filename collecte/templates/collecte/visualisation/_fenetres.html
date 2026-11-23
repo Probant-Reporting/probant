@@ -1,0 +1,46 @@
+{% load collecte %}{# Fenêtres de la page : plein écran d'un visuel (le focus y reste, Échap ferme) #}
+<div class="voile-visu" data-voile-visu hidden></div>
+<div class="fenetre-visu fenetre-plein-ecran" role="dialog" aria-modal="true" aria-labelledby="titre-plein-ecran" data-fenetre="plein-ecran" hidden tabindex="-1">
+  <div class="tete-fenetre"><h2 id="titre-plein-ecran" data-titre-fenetre></h2>
+    <button type="button" class="icone" data-fermer-fenetre aria-label="{% libelle 'visu.visuel.fermer' %}">{% icone "fermer" %}</button></div>
+  <p class="sous-titre-visuel" data-sous-titre-fenetre></p>
+  <div class="graphique-plein-ecran" data-graphique-fenetre></div>
+  <div class="donnees-fenetre" data-donnees-fenetre></div>
+</div>
+<div class="fenetre-visu fenetre-petite" role="dialog" aria-modal="true" aria-labelledby="titre-renommer" data-fenetre="renommer" hidden tabindex="-1">
+  <form data-form-renommer>
+    <div class="tete-fenetre"><h2 id="titre-renommer">{% libelle "visu.vue.renommer_titre" %}</h2>
+      <button type="button" class="icone" data-fermer-fenetre aria-label="{% libelle 'visu.visuel.fermer' %}">{% icone "fermer" %}</button></div>
+    <div class="champ-reglage"><label for="nom-vue">{% libelle "visu.vue.nom" %}</label><input type="text" id="nom-vue" name="nom" maxlength="100" required></div>
+    <div class="champ-reglage"><label for="desc-vue">{% libelle "visu.vue.description" %}</label><input type="text" id="desc-vue" name="description" maxlength="200"></div>
+    <div class="actions-fenetre"><button type="button" class="secondaire" data-fermer-fenetre>{% libelle "visu.bouton.annuler" %}</button><button type="submit">{% libelle "visu.bouton.valider" %}</button></div>
+  </form>
+</div>
+{% if contexte_visu.droits.admin and contexte_visu.vue.partage %}{# vue d'accueil par rôle : une seule par rôle #}
+<div class="fenetre-visu fenetre-petite" role="dialog" aria-modal="true" aria-labelledby="titre-accueil" aria-describedby="aide-accueil" data-fenetre="accueil" hidden tabindex="-1">
+  <form data-form-accueil>
+    <div class="tete-fenetre"><h2 id="titre-accueil">{% libelle "visu.accueil.titre" %}</h2>
+      <button type="button" class="icone" data-fermer-fenetre aria-label="{% libelle 'visu.visuel.fermer' %}">{% icone "fermer" %}</button></div>
+    <p id="aide-accueil">{% libelle "visu.accueil.aide" nom=contexte_visu.vue.nom %}</p>
+    <fieldset class="roles-accueil">
+      <legend>{% libelle "visu.accueil.roles" %}</legend>
+      {% for r in contexte_visu.roles %}<label class="case-reglage"><input type="checkbox" name="role" value="{{ r.code }}"{% if r.vue == contexte_visu.vue.id %} checked{% endif %}>
+        <span>{{ r.nom }}{% if r.vue and r.vue != contexte_visu.vue.id %} <span class="discret">({% libelle "visu.accueil.actuelle" nom=r.vue_nom %})</span>{% endif %}</span></label>{% endfor %}
+    </fieldset>
+    <div class="actions-fenetre"><button type="button" class="secondaire" data-fermer-fenetre>{% libelle "visu.bouton.annuler" %}</button><button type="submit">{% libelle "visu.bouton.valider" %}</button></div>
+  </form>
+</div>
+{% endif %}
+{# « Supprimer la vue » : sans question, « Supprimé : X. Annuler » sur la page suivante (corbeille) #}
+{% comment %}question de l'outil en quittant le mode modification par un lien de l'outil (onglets des vues, onglets du bandeau,
+   tout lien interne) avec des modifications non enregistrées, comme la question de fermeture du panneau de saisie ;
+   « Continuer la modification » a le focus, Échap y revient. Fermer l'onglet ou la fenêtre garde la question du
+   navigateur (beforeunload), qui ne peut pas être remplacée.{% endcomment %}
+<div class="fenetre-visu fenetre-petite question-quitter" role="alertdialog" aria-modal="true" aria-labelledby="titre-quitter" data-fenetre="quitter" hidden tabindex="-1">
+  <div class="tete-fenetre"><h2 id="titre-quitter">{% icone "alerte" %} {% libelle "visu.vue.quitter" %}</h2></div>
+  <div class="question-actions">
+    <button type="button" data-quitter="enregistrer">{% libelle "visu.vue.quitter_enregistrer" %}</button>
+    <button type="button" class="secondaire" data-quitter="sans">{% libelle "visu.vue.quitter_sans" %}</button>
+    <button type="button" class="secondaire" data-quitter="continuer">{% libelle "visu.vue.quitter_continuer" %}</button>
+  </div>
+</div>

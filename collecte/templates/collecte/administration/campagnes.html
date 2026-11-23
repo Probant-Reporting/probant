@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.nav.campagnes" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="intro-page">{% libelle_html "admin.campagnes.aide_intro" %}</p>
+<details class="aide-repliable aide-rubriques aide-campagnes">
+  <summary>{% libelle "admin.campagnes.aide_titre" %}</summary>
+  <p>{% libelle "admin.campagnes.aide_etapes" %}</p>
+  <ol class="etapes-campagne">
+    <li><span class="statut-campagne statut-campagne-preparation">{% libelle "admin.campagnes.etape_preparation" %}</span> {% libelle "admin.campagnes.etape_preparation_aide" %}</li>
+    <li><span class="statut-campagne statut-campagne-ouverte">{% icone "crayon" %}{% libelle "admin.campagnes.etape_ouverte" %}</span> {% libelle "admin.campagnes.etape_ouverte_aide" %}</li>
+    <li><span class="statut-campagne statut-campagne-revue">{% icone "crayon" %}{% libelle "admin.campagnes.etape_revue" %}</span> {% libelle_html "admin.campagnes.etape_revue_aide" %}</li>
+    <li><span class="statut-campagne statut-campagne-cloturee">{% icone "cadenas" %}{% libelle "admin.campagnes.etape_cloturee" %}</span> {% libelle_html "admin.campagnes.etape_cloturee_aide" %}</li>
+  </ol>
+  <p>{% libelle "admin.campagnes.aide_fin" %}</p>
+</details>
+<div id="liste" data-rafraichir>
+{% for ref, liste, ouvert in groupes %}
+{% comment %}Un groupe par référentiel, repliable : ouvert s'il a une campagne en cours ou aucune
+campagne, replié s'il n'a que des campagnes clôturées ; le choix de la personne est gardé (data-pli-memoire, _app/08_fiches.js).
+Un seul bouton « Nouvelle campagne », prérempli avec la période suivante, quelle que soit la fréquence.{% endcomment %}
+<section class="groupe-campagnes">
+  {% if ref.actif %}<a class="bouton bouton-groupe-campagnes" href="{% url 'collecte:admin_campagne_nouvelle' %}?referentiel={{ ref.code|urlencode }}" data-panneau>{% icone "plus" %} {% libelle "admin.campagnes.nouvelle" %}</a>{% endif %}
+  <details class="pli-campagnes" data-pli-memoire="campagnes.{{ ref.code }}"{% if ouvert %} open{% endif %}>
+  <summary class="tete-groupe-campagnes">
+    <h2>{% etiquette_referentiel ref %} <span class="discret">{{ ref|choix:"frequence" }}{% if ref.mois_debut != 1 %} · {% libelle "admin.campagnes.mois_debut" mois=ref.mois_debut %}{% endif %}{% if not ref.actif %} · {% libelle "admin.campagnes.inactif" %}{% endif %} · {% libelle "admin.campagnes.nb" n=liste|length %}</span></h2>
+  </summary>
+  <table class="carte-table">
+    <thead><tr><th>{% if ref.frequence == "annee" %}{% libelle "admin.campagnes.col.exercice" %}{% else %}{% libelle "admin.campagnes.col.periode" %}{% endif %}</th><th>{% libelle "admin.campagnes.col.statut" %}</th><th class="mq-s">{% libelle "admin.campagnes.col.saisie" %}</th><th class="mq-m">{% libelle "admin.campagnes.col.seuil" %}</th><th class="mq-m">{% libelle "admin.campagnes.col.valeurs" %}</th><th><span class="visuellement-cache">{% libelle "admin.campagnes.col.actions" %}</span></th></tr></thead>
+    {% for c in liste %}
+    <tr class="ligne" tabindex="0" aria-label="{% libelle "admin.campagnes.ouvrir_ligne" nom=c.nom_affiche %}" data-url="{% url 'collecte:admin_campagne' c.pk %}" data-texte="{{ c.periode|lower }}" data-statut="">
+      <td><strong>{{ c.nom_affiche }}</strong></td>
+      <td>{% include "collecte/administration/_statut_campagne.html" %}
+        {% if c.statut == "ouverte" and c.date_fin_saisie and c.date_fin_saisie < aujourdhui %}<span class="discret"> · {% libelle "admin.campagnes.fin_depassee" %}</span>{% endif %}</td>
+      <td class="mq-s">{% if c.date_ouverture %}{% libelle "admin.campagnes.du" date=c.date_ouverture|date_courte %}{% endif %}{% if c.date_fin_saisie %} {% libelle "admin.campagnes.au" date=c.date_fin_saisie|date_courte %}{% endif %}{% if not c.date_ouverture and not c.date_fin_saisie %}<span class="discret">{% libelle "admin.campagnes.dates_a_definir" %}</span>{% endif %}</td>
+      <td class="mq-m">{% if c.seuil_ecart is not None %}{{ c.seuil_ecart|pourcent }}{% else %}<span class="discret">{% libelle "admin.campagnes.aucun" %}</span>{% endif %}</td>
+      <td class="mq-m">{% libelle "admin.campagnes.nb_saisies" n=c.nb_saisies %}</td>
+      <td class="action-ligne"><a class="lien-action" href="{% url 'collecte:admin_campagne' c.pk %}" data-panneau tabindex="-1">{% libelle "admin.campagnes.gerer" %}</a></td>
+    </tr>
+    {% empty %}<tr><td colspan="6" class="discret">{% libelle "admin.campagnes.aucune" %}</td></tr>{% endfor %}
+  </table>
+  </details>
+</section>
+{% empty %}<p class="carte discret">{% libelle "admin.campagnes.aucun_referentiel" %} <a href="{% url 'parametres:referentiel_nouveau' %}">{% libelle "admin.campagnes.ajouter_referentiel" %}</a> {% libelle "admin.campagnes.chemin_referentiels" %}</p>
+{% endfor %}
+</div>
+{% endblock %}

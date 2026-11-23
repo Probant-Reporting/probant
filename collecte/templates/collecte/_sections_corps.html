@@ -1,0 +1,28 @@
+{% comment %}Sections repliables d'une campagne (thèmes ou organisations) ; « campagne » et « comparaison » : celles des lignes.
+   Le nom de la section est un vrai titre (h2, h3 sous le titre d'un référentiel : « niveau_section ») pour la navigation
+   par titres d'un lecteur d'écran ; il garde l'allure du summary (outil.css, .titre-section). « nb_ouvertes » (Pour moi
+   d'une longue liste) : seules les premières sections sont ouvertes ; sans lui, toutes le sont.
+   Pour moi d'une longue liste (échelle, P-A9) : « sections_a_charger » écrit les sections repliées sans leurs lignes
+   (même balise qu'une section repliée ; son contenu .chargement-section porte data-a-charger, identifiant
+   « prefixe_section » + rang) ; le script les remplit d'une seule demande
+   (« seulement_repliees » : ces sections-là, complètes) ; sans script, le lien mène à la liste entière.{% endcomment %}
+{% load collecte %}{% for titre, sous_sections in sections %}{% if sections_a_charger and nb_ouvertes is not None and forloop.counter0 >= nb_ouvertes %}
+<details class="section">
+  <summary><h{{ niveau_section|default:2 }} class="titre-section">{{ titre }}</h{{ niveau_section|default:2 }}> <span class="compte-section"></span></summary>
+  <p class="chargement-section" data-a-charger="{{ prefixe_section }}{{ forloop.counter0 }}"><a href="{{ url_complet }}">{% libelle "saisie.sections.liste_complete" %}</a></p>
+</details>{% elif not seulement_repliees or nb_ouvertes is not None and forloop.counter0 >= nb_ouvertes %}
+<details class="section"{% if nb_ouvertes is None or forloop.counter0 < nb_ouvertes %} open{% endif %}{% if seulement_repliees %} data-section="{{ prefixe_section }}{{ forloop.counter0 }}"{% endif %}>
+  <summary><h{{ niveau_section|default:2 }} class="titre-section">{{ titre }}</h{{ niveau_section|default:2 }}> <span class="compte-section"></span></summary>
+  <table class="cellules{% if admin %} avec-choix{% endif %}">
+    {% include "collecte/_colonnes.html" %}
+    {% for sous_titre, lignes in sous_sections %}
+    <tbody>
+      {% if sous_titre %}<tr class="sous-titre"><th colspan="{% if admin %}10{% elif user.role == "contributeur" %}6{% else %}9{% endif %}">{{ sous_titre }}</th></tr>{% endif %}
+      {% for l in lignes %}{% ligne_grille l %}{% endfor %}
+    </tbody>
+    {% endfor %}
+  </table>
+</details>{% endif %}
+{% empty %}
+{% libelle "saisie.vide.aucun_kpi" as vide_defaut %}{% include "collecte/_vide.html" with titre=message_vide|default:vide_defaut phrase=phrase_vide url=url_vide action=action_vide %}
+{% endfor %}

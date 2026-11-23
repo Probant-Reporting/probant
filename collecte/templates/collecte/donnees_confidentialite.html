@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Données et confidentialité (collecte/confidentialite.py) : ce que l'outil garde sur les personnes, écrit à partir
+des réglages de l'installation ; puis le texte de l'entreprise (Paramètres › Identité, Markdown rendu sans danger).
+Lisible sans compte (lien de la page de connexion) et par tous les rôles, lecteur et auditeur compris.{% endcomment %}
+{% block titre %}{% libelle "cadre.donnees.titre" %}{% endblock %}
+{% block contenu %}
+<div class="page-donnees">
+  <header class="entete-donnees">
+    <h1>{% libelle "cadre.donnees.titre" %}</h1>
+    <p class="intro-page">{% libelle "cadre.donnees.chapeau" outil=instance.titre %}</p>
+  </header>
+
+  {% comment %} « En bref » en trois tuiles, sommaire, puis une carte par donnée (deux colonnes sur grand
+     écran), avec Pourquoi / Combien de temps / Qui peut les voir l'un sous l'autre, chacun avec son icône{% endcomment %}
+  <section class="bref-donnees" aria-labelledby="titre-bref">
+    <h2 id="titre-bref" class="visuellement-cache">{% libelle "cadre.donnees.bref.titre" %}</h2>
+    <div class="tuile-donnees">{% icone "database" %}<span>{% libelle "cadre.donnees.bref.nombre" n=lignes|length %}</span></div>
+    <div class="tuile-donnees">{% icone "shield-check" %}<span>{% libelle "cadre.donnees.bref.partage" %}</span></div>
+    <a class="tuile-donnees" href="#titre-droits">{% icone "user-round-pen" %}<span>{% libelle "cadre.donnees.bref.droits" %}</span></a>
+  </section>
+
+  <section aria-labelledby="titre-gardees">
+    <h2 id="titre-gardees">{% libelle "cadre.donnees.gardees.titre" %}</h2>
+    <p class="aide-champ remonte">{% libelle "cadre.donnees.gardees.aide" %}</p>
+    <nav class="sommaire-donnees" aria-label="{% libelle "cadre.donnees.sommaire" %}">
+      {% for cle, titre, contenu, pourquoi, duree, qui in lignes %}<a href="#donnee-{{ cle }}">{{ titre }}</a>{% endfor %}
+    </nav>
+    {% libelle "cadre.donnees.col.pourquoi" as t_pourquoi %}{% libelle "cadre.donnees.col.duree" as t_duree %}{% libelle "cadre.donnees.col.qui" as t_qui %}
+    <div class="liste-donnees">
+      {% for cle, titre, contenu, pourquoi, duree, qui in lignes %}
+      <article class="carte donnee" id="donnee-{{ cle }}" aria-labelledby="titre-donnee-{{ cle }}">
+        <h3 id="titre-donnee-{{ cle }}"><span class="pictogramme-donnee" aria-hidden="true">{% icone_donnee cle %}</span>{{ titre }}</h3>
+        <p class="contenu-donnee">{{ contenu }}</p>
+        <dl class="faits-donnee">
+          <div><dt>{% icone "target" %}{{ t_pourquoi }}</dt><dd>{{ pourquoi }}</dd></div>
+          <div><dt>{% icone "clock" %}{{ t_duree }}</dt><dd>{{ duree }}</dd></div>
+          <div><dt>{% icone "eye" %}{{ t_qui }}</dt><dd>{{ qui }}</dd></div>
+        </dl>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="carte" aria-labelledby="titre-droits">
+    <h2 id="titre-droits">{% libelle "cadre.donnees.droits.titre" %}</h2>
+    <p>{% libelle_html "cadre.donnees.droits.contact" contact=instance.contact %}</p>
+    <p>{% libelle "cadre.donnees.droits.correction" %}</p>
+    {% if user.is_authenticated %}<p><a href="{% url 'collecte:mon_compte' %}">{% libelle "cadre.donnees.droits.mon_compte" %}</a></p>{% endif %}
+    {% if espaces_menu.plusieurs %}<p class="aide-champ">{% libelle "cadre.donnees.droits.espaces" %}</p>{% endif %}
+  </section>
+
+  {% if texte_entreprise %}
+  <section class="carte" aria-labelledby="titre-entreprise">
+    <h2 id="titre-entreprise">{% libelle "cadre.donnees.entreprise.titre" nom=instance.nom %}</h2>
+    <div class="md-rendu texte-entreprise">{{ texte_entreprise|markdown:3 }}</div>
+  </section>
+  {% elif user.is_authenticated and user.est_admin %}
+  {% encart "avertissement" %}{% libelle "cadre.donnees.entreprise.vide" %} <a href="{% url 'parametres:identite' %}#texte-confidentialite">{% libelle "cadre.donnees.entreprise.vide_lien" %}</a>{% endencart %}
+  {% endif %}
+  <p class="discret">{% libelle "cadre.donnees.pied" version=version_outil %}</p>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.coherence.liste.titre" %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "saisie.coherence.liste.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+  <div class="flex gap-8 aligne-bas passe-ligne">
+    {% if user.est_admin %}<a class="bouton secondaire" href="{% url 'collecte:regles' %}">{% libelle "saisie.coherence.liste.regles" n=nb_regles %}</a>{% endif %}
+    <noscript><form method="get">{% include "collecte/_choix_campagne.html" %}</form></noscript>{# avec JavaScript : « Je réponds à », dans la barre du haut #}
+    {% if choix_orgs %}{# même sélecteur d'organisation que la Saisie #}
+    <details class="selecteur-org" id="choix-org">
+      <summary>
+        <span class="visually-hidden">{% libelle "saisie.org.changer" %}</span>
+        {% if org_choisie %}{% etiquette_niveau org_choisie %}{% else %}<span class="pictogramme-tous" aria-hidden="true">{% icone "network" %}</span>{% endif %}
+        <span class="org-actuelle">{% if org_choisie %}<strong>{{ org_choisie.nom }}</strong><span class="discret">{% libelle "saisie.org.niveau_haut" as niveau_haut %}{{ org_choisie|chemin|default:niveau_haut }}</span>
+          {% else %}<strong>{% libelle "saisie.coherence.liste.toutes_organisations" %}</strong><span class="discret">{% libelle "saisie.coherence.liste.toutes_organisations_aide" %}</span>{% endif %}</span>
+        <span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span>
+      </summary>
+      <div class="org-liste">
+        {% libelle "saisie.org.rechercher" as t_rech_org %}<input type="search" placeholder="{{ t_rech_org }}" aria-label="{{ t_rech_org }}" data-recherche-org>
+        <ul id="liste-orgs">
+          <li class="prof-0" data-texte="{% libelle "saisie.coherence.liste.toutes_organisations" as t_toutes %}{{ t_toutes|lower }}"><a href="?campagne={{ campagne.pk }}&amp;statut={{ statut }}{{ qs_controles }}" class="{% if not org_choisie %}actuelle{% endif %}"><span class="trait"></span><span class="nom-org">{{ t_toutes }}</span></a></li>
+          {% for o, p, n in choix_orgs %}
+          <li class="prof-{{ p }} niv-{{ o.niveau_id }}" style="--prof:{{ p }}" data-texte="{{ o.nom|lower }} {{ o.niveau|lower }}">
+            <a href="?campagne={{ campagne.pk }}&amp;statut={{ statut }}{{ qs_controles }}&amp;org={{ o.id }}" class="{% if o == org_choisie %}actuelle{% endif %}" title="{{ o|chemin }}{% if o.parent %} › {% endif %}{{ o.nom }}">
+              <span class="trait"></span>{% etiquette_niveau o %}<span class="nom-org">{{ o.nom }}</span>
+              {% if n %}<span class="badge-alerte">{% icone "alerte" %} {% libelle "saisie.coherence.liste.n_alertes" n=n %}</span>{% endif %}
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </details>
+    {% endif %}
+  </div>
+</div>
+<p class="intro-page">{% libelle "saisie.coherence.liste.sous_titre" %}</p>
+
+{% if nb_calculs %}<p class="discret">{% libelle "saisie.coherence.liste.calculs" n=nb_calculs %}
+  {% if voit_calculs %}<a href="?campagne={{ campagne.pk }}&amp;statut=a_traiter">{% libelle "saisie.coherence.liste.revenir_alertes" %}</a>{% else %}<a href="?campagne={{ campagne.pk }}&amp;statut=a_traiter&amp;controle=calcul">{% libelle "saisie.coherence.liste.voir_calculs" %}</a>{% endif %}</p>{% endif %}
+{% if nb_bloquantes %}{% encart "erreur" %}{% libelle "saisie.coherence.liste.bloquantes" n=nb_bloquantes %}{% endencart %}{% endif %}
+
+{% comment %}Barre de filtres : la recherche filtre dans la page ; le statut (un choix) et les contrôles
+(plusieurs à la fois) sont appliqués par le serveur, avec le nombre d'alertes de chaque choix dans le panneau, à la place
+des deux pastilles grises. Sans JavaScript : deux listes et un bouton « Filtrer ».{% endcomment %}
+<form method="get" class="barre-filtres">
+  <input type="hidden" name="campagne" value="{{ campagne.pk }}">{% if org %}<input type="hidden" name="org" value="{{ org }}">{% endif %}
+  {% libelle "saisie.coherence.liste.rechercher" as t_rech %}{% include "_recherche.html" with placeholder=t_rech %}
+  <div class="champ-filtre"><label for="filtre-statut-alerte">{% libelle "saisie.coherence.liste.statut" %}</label>
+    <select id="filtre-statut-alerte" name="statut" data-panneau-filtre data-envoyer data-defaut="a_traiter">
+      {% for code, libelle, n in statuts %}<option value="{{ code }}" data-nb="{{ n }}"{% if statut == code %} selected{% endif %}>{{ libelle }}</option>{% endfor %}</select></div>
+  <div class="champ-filtre"><label for="filtre-controle">{% libelle "saisie.coherence.liste.col_controle" %}</label>
+    <select id="filtre-controle" name="controle" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ controle }}">
+      <option value="">{% libelle "commun.tous" %}</option>
+      {% for code, libelle, n in par_controle %}<option value="{{ code }}" data-nb="{{ n }}"{% if code in controles %} selected{% endif %}>{{ libelle }}</option>{% endfor %}</select></div>
+  <noscript><button type="submit" class="secondaire">{% libelle "commun.filtrer" %}</button></noscript>
+  <div class="filtres-droite">
+    {% include "_menu_affichage.html" with codes=True %}
+  </div>
+  {% include "_etat_filtres.html" with total=nb_statut url_effacer=url_sans_filtre %}
+</form>
+
+<div id="liste" data-rafraichir>
+{% if alertes %}
+<table class="carte-table table-alertes" id="alertes" data-triable{% if trop %} data-tri-serveur{% endif %}>{# colonnes triables (_app/13_tableaux.js ; le serveur trie aussi : vues_coherence) #}
+  <colgroup><col class="l-34"><col class="l-150"><col><col class="mq-m l-40p"><col class="mq-xs l-150"></colgroup>
+  <thead><tr><th><span class="visuellement-cache">{% libelle "saisie.coherence.liste.col_gravite" %}</span></th><th>{% libelle "saisie.coherence.liste.col_controle" %}</th><th data-tri="texte"><button type="button" data-tri-col="kpi">{% libelle "saisie.coherence.liste.col_kpi" %}</button><span aria-hidden="true"> · </span><button type="button" data-tri-col="organisation">{% libelle "saisie.coherence.liste.col_organisation" %}</button></th><th class="mq-m">{% libelle "saisie.coherence.liste.col_constat" %}</th><th class="mq-xs" data-tri="texte"><button type="button" data-tri-col="statut">{% libelle "saisie.coherence.liste.col_statut" %}</button><span aria-hidden="true"> · </span><button type="button" data-tri-col="date" data-tri-type="date">{% libelle "saisie.coherence.liste.col_date" %}</button></th></tr></thead>
+  {% for a in alertes %}
+  <tr class="ligne" tabindex="0" aria-label="{% libelle "saisie.coherence.liste.ligne_aria" kpi=a.kpi.nom organisation=a.organisation.nom constat=a|constat|sans_point_final %}" data-url="{% url 'collecte:alerte' a.pk %}" data-statut="" data-texte="{{ a.kpi.nom|lower }} {{ a.kpi.code|lower }} {{ a.organisation.nom|lower }} {{ a|constat|lower }}">
+    <td>{# gravité : forme (octogone : bloque la validation), mot (lu, et badge dans la colonne Statut) et couleur #}<span class="gravite-icone gravite-icone-{{ a.gravite }}">{% if a.gravite == "bloquante" %}{% icone "octagon-alert" %}{% elif a.gravite == "info" %}{% icone "info" %}{% else %}{% icone "alerte" %}{% endif %}<span class="visuellement-cache">{{ a|choix:"gravite" }}</span></span></td>
+    <td><span class="controle controle-{{ a.controle }}">{{ a|choix:"controle" }}</span></td>
+    <td class="ind" data-tri-kpi="{{ a.kpi.nom }}" data-tri-organisation="{{ a.organisation.nom }}"><div class="nom">{{ a.kpi.nom }}</div><div class="discret">{% etiquette_niveau a.organisation a.organisation.nom %}<span class="code-kpi"> · {{ a.kpi.code }}</span></div></td>
+    {# Constat et « Valeur / référence » fusionnés ; règle entre KPI : valeur et limite dessous #}
+    <td class="mq-m retour-ligne">{{ a|constat }}{% if a.controle == "regle" and a.valeur %}<div class="discret"><strong>{{ a|texte_alerte:"valeur" }}</strong>{% if a.reference %} · {{ a|texte_alerte:"reference" }}{% endif %}</div>{% endif %}</td>
+    {% with d_etat=a|date_etat %}<td class="mq-xs" data-tri-statut="{{ a|choix:"statut" }}" data-tri-date="{{ d_etat|date:'c' }}">{# une alerte qui bloque la validation est forcément à traiter : un seul badge #}{% if a.gravite == "bloquante" and a.a_traiter %}<span class="gravite-texte bloquante">{% libelle "saisie.pav.bloque_validation" %}</span>{% else %}<span class="statut-alerte statut-alerte-{{ a.statut }}">{{ a|choix:"statut" }}</span>{% endif %}
+      <div class="discret texte-mini">{% libelle "saisie.coherence.liste.depuis" date=d_etat|date_courte %}</div></td>{% endwith %}
+  </tr>
+  {% endfor %}
+</table>
+{% if trop %}<p class="discret">{% libelle "saisie.coherence.liste.limite" %}</p>{% endif %}
+{% else %}
+{# état vide : une phrase grise, sans cadre ni pastille #}
+<p class="etat-vide vide-coherence"><strong>{% if statut == "a_traiter" %}{% libelle "saisie.coherence.liste.rien_pour_linstant" %}{% else %}{% libelle "saisie.coherence.liste.rien" %}{% endif %}</strong>
+  {% if statut == "a_traiter" %}{% libelle "saisie.coherence.liste.tout_passe" %}{% else %}{% libelle "saisie.coherence.liste.aucune_dans_statut" %}{% endif %}</p>
+{% endif %}
+<p class="etat-vide" id="aucun-resultat" hidden>{% libelle "saisie.coherence.liste.aucun_resultat" %}</p>
+</div>
+{% endblock %}

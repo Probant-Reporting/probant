@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load collecte static %}
+{% block titre %}{{ contexte_visu.vue.nom }} – {% libelle "visu.titre" %}{% endblock %}
+{% block contenu %}
+{% comment %}Visualisation v2 : des vues (onglets), des visuels sur une grille de 12 colonnes, sous les filtres de la vue.
+   Le serveur calcule (collecte/visuels/), le script dessine (static/js/visualisation.js, Apache ECharts).{% endcomment %}
+<div class="page-visu{% if modifier %} en-modification{% endif %}" data-visu{% if langue != "fr" %} lang="{{ langue }}"{% endif %}>
+  <div class="entete-page entete-visu">
+    <div class="titre-visu">
+      <h1>{% libelle "visu.titre" %}</h1>
+    </div>
+    {% include "collecte/visualisation/_menu_vue.html" %}
+  </div>
+  {% comment %}Mode modification : « Annuler » et « Enregistrer la vue » toujours visibles en haut, tôt dans l'ordre du clavier ;
+     raccourci Ctrl + S (Cmd + S sur Mac), écrit par le script selon l'ordinateur.{% endcomment %}
+  <div class="barre-modification-haut" data-barre-haut tabindex="-1" hidden>
+    <p class="mode-modification"><strong>{% libelle "visu.vue.mode" %}</strong> <span class="etat-brouillon" data-etat-brouillon></span></p>
+    <span class="aide-raccourci" id="aide-raccourci-visu" data-aide-raccourci></span>
+    <button type="button" class="secondaire" data-annuler-vue>{% libelle "visu.vue.annuler" %}</button>
+    <button type="button" data-enregistrer-vue aria-keyshortcuts="Control+S Meta+S" aria-describedby="aide-raccourci-visu">{% libelle "visu.vue.enregistrer" %}</button>
+  </div>
+  {% include "collecte/visualisation/_onglets_vues.html" %}
+  {# description de la vue : plus affichée sous les onglets, en info-bulle de l'onglet #}
+  {% include "collecte/visualisation/_filtres_vue.html" %}
+  <div class="etat-vue" data-etat-vue>
+    <p class="phrase-etat" data-phrase-etat><span class="visuellement-cache">{{ donnees_visu.etat.phrase }}</span></p>
+    {% if donnees_visu.etat.phrase_masques %}<p class="phrase-etat">{{ donnees_visu.etat.phrase_masques }}</p>{% endif %}
+    {% for a in donnees_visu.avertissements %}<p class="avertissement-vue">{{ a }}</p>{% endfor %}
+    {% if f.chemin|length > 1 %}<nav class="chemin-org" aria-label="{% libelle 'visu.chemin' %}">{% for o in f.chemin %}{% if not forloop.last %}<a href="?org={{ o.id }}" data-org="{{ o.id }}">{{ o.nom }}</a><span class="sep" aria-hidden="true">›</span>{% else %}<span aria-current="location">{{ o.nom }}</span>{% endif %}{% endfor %}</nav>{% endif %}
+  </div>
+  <div class="outils-modification" data-outils-modification hidden>
+    <button type="button" class="secondaire" data-ouvrir-panneau="kpi">{% icone "forme-tableau" %} {% libelle "visu.kpi.ouvrir" %}</button>
+    <button type="button" class="secondaire" data-ouvrir-panneau="reglages">{% libelle "visu.reglages.ouvrir" %}</button>
+  </div>
+  <div class="espace-vue" data-espace-vue>
+    {% include "collecte/visualisation/_panneau_kpi.html" %}
+    <div class="grille-vue" data-grille aria-busy="false" aria-label="{{ contexte_visu.vue.nom }}"></div>
+    {% include "collecte/visualisation/_panneau_reglages.html" %}
+  </div>
+  {% if kpi_defini %}{% include "collecte/visualisation/_definition_kpi.html" %}{% endif %}
+  {% include "collecte/visualisation/_noscript.html" %}
+  <div class="barre-modification" data-barre-modification hidden>
+    <label class="nom-vue-modification"><span>{% libelle "visu.vue.nom" %}</span><input type="text" data-nom-vue maxlength="100" value="{{ contexte_visu.vue.nom }}"></label>
+    <span class="etat-brouillon" data-etat-brouillon role="status"></span>
+    <button type="button" class="secondaire" data-annuler-vue>{% libelle "visu.vue.annuler" %}</button>
+    <button type="button" data-enregistrer-vue aria-keyshortcuts="Control+S Meta+S">{% libelle "visu.vue.enregistrer" %}</button>
+  </div>
+</div>
+{% include "collecte/visualisation/_visuel.html" %}
+{% include "collecte/visualisation/_fenetres.html" %}
+<div id="annonce-visu" class="visuellement-cache" role="status" aria-live="polite"></div>
+{{ contexte_visu|json_script:"visu-contexte" }}
+{{ donnees_visu|json_script:"visu-donnees" }}
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/echarts-6.1.0/echarts.min.js' %}" defer></script>
+<script src="{% static 'vendor/echarts-6.1.0/' %}{% if langue == 'fr' %}langFR.js{% else %}langEN.js{% endif %}" defer></script>
+<script src="{% static 'vendor/sortablejs-1.15.7/Sortable.min.js' %}" defer></script>
+<script src="{% static 'js/visualisation.js' %}?v={{ version_js }}" defer></script>
+{% endblock %}

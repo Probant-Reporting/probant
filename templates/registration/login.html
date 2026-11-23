@@ -1,0 +1,35 @@
+{% extends "base.html" %}{% load collecte %}
+{% block titre %}{% libelle "cadre.connexion.titre" %}{% endblock %}
+{% comment %}Les messages (ex. « Restauration réussie ») sont rendus dans la carte, au-dessus des champs, et reliés au champ
+   E-mail (aria-describedby) : le lecteur d'écran les lit avec le champ qui reçoit le focus.{% endcomment %}
+{% block messages %}{% endblock %}
+{% block contenu %}
+<div class="page-connexion">
+  <form method="post" class="carte carte-connexion">
+    {% csrf_token %}
+    <div class="tete-connexion">
+      {% if instance.logo_disponible %}<img class="logo-connexion" src="{% url 'parametres:logo' %}?v={{ instance.date_maj|date:'U' }}" alt="{{ instance.nom }}">
+      {% else %}<span class="pictogramme-connexion" aria-hidden="true">{% icone "lock-keyhole" %}</span>{% endif %}
+      <div><h1>{% libelle "cadre.connexion.titre" %}</h1>
+      <p class="chapeau">{{ instance.titre }} · {{ instance.nom }}</p></div>
+    </div>
+    <div class="corps-connexion">
+    {% if messages %}<div id="message-connexion">{% for m in messages %}<p class="encart {% if m.tags == 'error' %}encart-erreur{% elif m.tags == 'success' %}encart-succes{% else %}encart-avertissement{% endif %}">{{ m|premiere_phrase_gras }}</p>{% endfor %}</div>{% endif %}
+    {% if form.bloquee %}{% encart "erreur" id="erreur-connexion" role="alert" %}{% libelle "cadre.connexion.trop_essais" contact=instance.contact %}{% endencart %}
+    {% elif form.errors %}{% encart "erreur" id="erreur-connexion" role="alert" %}{% libelle "cadre.connexion.incorrect" %}{% endencart %}{% endif %}
+    {# l'erreur est reliée aux deux champs (aria-describedby, aria-invalid) : le lecteur d'écran la lit avec le champ E-mail #}
+    <div class="champ"><label for="id_username">{% libelle "cadre.connexion.email" %}</label><input type="text" name="username" id="id_username"{% if messages or form.errors or form.bloquee %} aria-describedby="{% if messages %}message-connexion{% endif %}{% if messages and form.errors or messages and form.bloquee %} {% endif %}{% if form.errors or form.bloquee %}erreur-connexion{% endif %}"{% endif %}{% if form.errors or form.bloquee %} aria-invalid="true"{% endif %} autofocus required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" value="{{ form.username.value|default:'' }}"></div>
+    <div class="champ"><label for="id_password">{% libelle "cadre.connexion.mot_de_passe" %}</label><input type="password" name="password" id="id_password"{% if form.errors or form.bloquee %} aria-describedby="erreur-connexion" aria-invalid="true"{% endif %} required autocomplete="current-password"></div>
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="bouton-large">{% libelle "cadre.connexion.bouton" %}</button>
+    </div>
+    <div class="aide-connexion">
+      <span class="icone-aide" aria-hidden="true">{% icone "circle-help" %}</span>
+      <div>
+        <strong>{% libelle "cadre.connexion.aide_titre" %}</strong>
+        <p>{% libelle_html "cadre.connexion.aide" contact=instance.contact %}</p>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

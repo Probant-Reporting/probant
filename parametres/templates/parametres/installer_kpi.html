@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.installer.kpi.titre" nom=p.nom %}{% endblock %}
+{% block evitement %}<a class="lien-evitement" href="#continuer-installation">{% libelle "referentiels.installer.kpi.evitement" %}</a>{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour-referentiels"><a href="{% url 'parametres:referentiels' %}">{% libelle "referentiels.installer.kpi.retour" %}</a></p>
+<div class="tete-installation">
+  <h2 class="titre-installation"><span class="pastille-ref grande" style="--c-ref:{{ p.referentiel.couleur }}" aria-hidden="true"></span> {{ p.nom }}</h2>
+  {% include "parametres/_etapes_installation.html" %}
+</div>
+{% if existant %}
+<p class="intro-page">{% if nouvelle_version %}{% libelle "referentiels.installer.kpi.nouvelle_version" version=p.version existant=existant installee=existant.version n=nb_presents %}
+  {% elif nb_presents >= nb %}{% libelle "referentiels.installer.kpi.tous_presents" existant=existant %}
+  <a href="{% url 'parametres:referentiel_contenu' existant.code %}">{% libelle "referentiels.installer.voir_referentiel" %}</a>
+  {% else %}{% libelle "referentiels.installer.kpi.deja_installe" existant=existant n=nb_presents %}{% endif %}</p>
+{% else %}
+<p class="intro-page">{% libelle "referentiels.installer.kpi.tout_coche" %}</p>
+{% endif %}
+{% include "parametres/_installer_documents_source.html" with documents=p.documents_affiches detaille=True %}
+{% if montants %}<p class="intro-page monnaie-modele">{% libelle "admin.monnaies.installer" monnaie=monnaie_affichee %}
+  <a href="{% url 'parametres:referentiel' %}?section=unites#monnaie-reference">{% libelle "admin.monnaies.lien_reglage" %}</a></p>{% endif %}
+
+<form method="post" class="form-cocher" data-cocher{% if nouvelle_version %} data-sans-ajout{% endif %}>
+  {% csrf_token %}
+  <div class="outils-cocher">
+    <p class="compteur-coches" aria-live="polite"><b data-nb-coches>{{ nb_coches }}</b> {% libelle "referentiels.installer.kpi.coches_suite" n=nb_coches total=nb %}<span data-nb-existants-texte{% if not nb_existants %} hidden{% endif %}>, {% libelle "referentiels.installer.kpi.dont_existants" nombre=nb_existants %}</span></p>
+    {% libelle "referentiels.installer.kpi.rechercher" as t_rechercher %}{% libelle "referentiels.installer.kpi.rechercher_placeholder" as t_placeholder %}
+    <label class="recherche-cocher"><span class="visually-hidden">{{ t_rechercher }}</span><input type="search" placeholder="{{ t_placeholder }}" data-recherche-coche></label>
+    <div class="liens-cocher">
+      <button type="submit" name="action" value="tout" class="lien" data-tout-kpi="1" formnovalidate>{% libelle "referentiels.installer.kpi.tout_cocher" %}</button>
+      <button type="submit" name="action" value="rien" class="lien" data-tout-kpi="0" formnovalidate>{% libelle "referentiels.installer.kpi.tout_decocher" %}</button>
+    </div>
+  </div>
+  <p class="visually-hidden" role="status" data-annonce></p>
+  <p class="aucun-resultat discret" data-aucun-resultat hidden>{% libelle "referentiels.installer.kpi.aucun_resultat" %}</p>
+
+  <div class="arbre-coche">
+    {% if sans_theme %}<fieldset class="theme-coche" style="--prof:0"><legend><span class="nom-theme-coche">{% libelle "referentiels.contenu.lot.sans_theme" %}</span></legend>
+      <div class="corps-theme-coche"><div class="entete-coche" aria-hidden="true"><span></span><span>ID</span><span>{% libelle "referentiels.catalogue.col_indicateur" %}</span><span>{% libelle "referentiels.catalogue.type_aria" %}</span><span>{% libelle "referentiels.catalogue.col_unite" %}</span><span>{% libelle "referentiels.installer.col_etat" %}</span></div>
+      <ul class="liste-coche">{% for l in sans_theme %}{% include "parametres/_installer_ligne.html" %}{% endfor %}</ul></div></fieldset>{% endif %}
+    {% for n in racines %}{% include "parametres/_installer_theme.html" with replie=False %}{% endfor %}
+  </div>
+
+  {# barre d'enregistrement unique (lot 3) : action principale à gauche, « Annuler » ensuite, message à droite #}
+  <div class="barre-enregistrement collante">
+    <button type="submit" name="action" value="continuer" id="continuer-installation" data-continuer>{% libelle "referentiels.installer.kpi.continuer" %}</button>
+    <a class="bouton secondaire" href="{% url 'parametres:installer_modeles' %}">{% libelle "commun.annuler" %}</a>
+    <span class="etat-barre" data-message-zero{% if nb_coches > nb_presents or nouvelle_version %} hidden{% endif %}>{% if existant %}{% libelle "referentiels.installer.kpi.cocher_un_ajouter" %}{% else %}{% libelle "referentiels.installer.kpi.cocher_un" %}{% endif %}</span>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+{% include "parametres/_script_cocher.html" %}
+{% endblock %}

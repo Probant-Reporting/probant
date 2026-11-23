@@ -1,0 +1,14 @@
+{% load collecte %}<div id="choix-spoc" role="dialog" aria-label="{% if role_choix == "validateur" %}{% libelle "saisie.spoc.dialogue_validateur" %}{% else %}{% libelle "saisie.spoc.dialogue" %}{% endif %}">
+  {% libelle "saisie.spoc.rechercher" as t_rech %}<input type="search" placeholder="{{ t_rech }}" aria-label="{{ t_rech }}">
+  <ul></ul>
+  <p class="visuellement-cache">{% libelle "saisie.spoc.aide" %}</p>{# lue par les lecteurs d'écran seulement #}
+</div>
+<div id="barre-masse" role="region" aria-label="{% libelle "saisie.spoc.selection" %}">
+  <span class="compte-selection"><b class="nb">0</b><span class="lib-selection">{% libelle "saisie.spoc.selectionnees" n=2 %}</span></span>
+  <span class="sep-masse"></span>
+  {# choix Validateurs des Attributions : les boutons disent qu'ils donnent ou retirent un validateur #}
+  <button type="button" data-masse="attribuer">{% icone "plus" %} {% if role_choix == "validateur" %}{% libelle "saisie.spoc.attribuer_validateur" %}{% else %}{% libelle "saisie.spoc.attribuer" %}{% endif %}</button>
+  <button type="button" class="secondaire" data-masse="retirer">{% if role_choix == "validateur" %}{% libelle "saisie.spoc.retirer_validateur" %}{% else %}{% libelle "saisie.spoc.retirer" %}{% endif %}</button>
+  <button type="button" class="fermer-masse" data-masse="annuler" title="{% libelle "saisie.spoc.annuler_selection" %}" aria-label="{% libelle "saisie.spoc.annuler_selection" %}">{% icone "fermer" %}</button>
+</div>
+{{ comptes_json|json_script:"comptes" }}

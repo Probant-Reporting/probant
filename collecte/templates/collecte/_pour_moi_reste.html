@@ -1,0 +1,3 @@
+{% comment %}Pour moi d'une longue liste (échelle, P-A9) : les sections repliées, complètes, demandées par le script après
+l'affichage de la page (?reste=1) ; chacune porte data-section, l'identifiant de sa section vide dans la page.{% endcomment %}
+{% if tous %}{% for b in blocs %}{% with campagne=b.campagne comparaison=b.comparaison sections=b.sections nb_ouvertes=b.nb_ouvertes montrer_org=True niveau_section=3 prefixe_section=b.prefixe seulement_repliees=True %}{% include "collecte/_sections_corps.html" %}{% endwith %}{% endfor %}{% else %}{% with montrer_org=True seulement_repliees=True %}{% include "collecte/_sections_corps.html" %}{% endwith %}{% endif %}

@@ -1,0 +1,21 @@
+{% load collecte %}<div class="entete-page">
+  <h1>{% libelle "admin.titre" %}</h1>
+</div>
+{% comment %}Téléphone (sous 560 px) : le script replie les rubriques derrière le bouton « Rubrique : <actuelle> » (menu compact,
+data-menu-compact). Sans script, ou sur ordinateur, les onglets restent affichés (liens ordinaires).{% endcomment %}
+{% if not rubrique %}{% libelle "admin.nav.vue" as t_act %}{% elif rubrique == 'campagnes' %}{% libelle "admin.nav.campagnes" as t_act %}{% elif rubrique == 'organisations' %}{% libelle "admin.nav.organisations" as t_act %}{% elif rubrique == 'comptes' %}{% libelle "admin.nav.comptes" as t_act %}{% elif rubrique == 'attributions' %}{% libelle "admin.nav.attributions" as t_act %}{% elif rubrique == 'referentiels' %}{% libelle "admin.nav.referentiels" as t_act %}{% elif rubrique == 'parametres' %}{% libelle "admin.nav.parametres" as t_act %}{% elif rubrique == 'fichiers' %}{% libelle "admin.nav.fichiers" as t_act %}{% elif rubrique == 'journal' %}{% libelle "admin.nav.journal" as t_act %}{% endif %}
+{% libelle "admin.nav.rubriques" as t_rub %}<div class="menu-compact" data-menu-compact>
+  <button type="button" class="bouton-menu-compact secondaire" aria-expanded="false" aria-controls="rubriques-admin" hidden>{% if t_act %}{% libelle "admin.nav.rubrique_actuelle" rubrique=t_act %}{% else %}{{ t_rub }}{% endif %} {% icone "chevron-down" %}</button>
+<nav class="sous-onglets" id="rubriques-admin" aria-label="{{ t_rub }}">
+  <a href="{% url 'collecte:admin_accueil' %}"{% if not rubrique %} aria-current="page"{% endif %} class="{% if not rubrique %}actif{% endif %}">{% libelle "admin.nav.vue" %}</a>
+  {# ordre : l'arbre et les personnes, ce qu'on collecte, qui saisit quoi, quand, puis réglages, fichiers, traces #}
+  <a href="{% url 'collecte:admin_organisations' %}"{% if rubrique == 'organisations' %} aria-current="page"{% endif %} class="{% if rubrique == 'organisations' %}actif{% endif %}">{% libelle "admin.nav.organisations" %}</a>
+  <a href="{% url 'collecte:admin_comptes' %}"{% if rubrique == 'comptes' %} aria-current="page"{% endif %} class="{% if rubrique == 'comptes' %}actif{% endif %}">{% libelle "admin.nav.comptes" %}</a>
+  <a href="{% url 'parametres:referentiels' %}"{% if rubrique == 'referentiels' %} aria-current="page"{% endif %} class="{% if rubrique == 'referentiels' %}actif{% endif %}">{% libelle "admin.nav.referentiels" %}</a>
+  <a href="{% url 'collecte:admin_attributions' %}"{% if rubrique == 'attributions' %} aria-current="page"{% endif %} class="{% if rubrique == 'attributions' %}actif{% endif %}">{% libelle "admin.nav.attributions" %}</a>
+  <a href="{% url 'collecte:admin_campagnes' %}"{% if rubrique == 'campagnes' %} aria-current="page"{% endif %} class="{% if rubrique == 'campagnes' %}actif{% endif %}">{% libelle "admin.nav.campagnes" %}</a>
+  <a href="{% url 'parametres:identite' %}"{% if rubrique == 'parametres' %} aria-current="page"{% endif %} class="{% if rubrique == 'parametres' %}actif{% endif %}">{% libelle "admin.nav.parametres" %}</a>
+  <a href="{% url 'collecte:admin_fichiers' %}"{% if rubrique == 'fichiers' %} aria-current="page"{% endif %} class="{% if rubrique == 'fichiers' %}actif{% endif %}">{% libelle "admin.nav.fichiers" %}</a>
+  <a href="{% url 'collecte:admin_journal' %}"{% if rubrique == 'journal' %} aria-current="page"{% endif %} class="{% if rubrique == 'journal' %}actif{% endif %}">{% libelle "admin.nav.journal" %}</a>
+</nav>
+</div>

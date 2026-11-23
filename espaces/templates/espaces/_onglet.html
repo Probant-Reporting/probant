@@ -1,0 +1,1 @@
+{% load collecte %}{% if espaces_menu.gestionnaire %}<a href="{% url 'espaces:liste' %}"{% if sous_rubrique == 'espaces' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'espaces' %}actif{% endif %}">{% libelle "espaces.onglet" %}</a>{% endif %}

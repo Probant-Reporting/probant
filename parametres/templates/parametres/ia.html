@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.ia.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Paramètres › Assistant IA (docs/ai_socket.md) : éteint par défaut ; la page dit exactement ce qui part, usage
+par usage. La clé n'est jamais réaffichée : un champ mot de passe toujours vide, et la date de son enregistrement.{% endcomment %}
+{% if not permise %}{% encart "avertissement" role="status" %}{% libelle "admin.ia.coupee_it" %}{% endencart %}{% endif %}
+
+<form method="post" class="page-ia" novalidate>{% csrf_token %}
+  {% if form.non_field_errors %}{% encart "erreur" %}{{ form.non_field_errors|join:" " }}{% endencart %}{% endif %}
+  <section class="bloc">
+    <h2>{% libelle "admin.ia.prise" %}</h2>
+    <p class="etat-ia{% if disponible %} allume{% endif %}" role="status">{% if disponible %}{% icone "check" %}<span>{% libelle "admin.ia.etat_allume" n=appels max=instance.ia_appels_jour %}</span>
+      {% elif instance.ia_active and not cle_presente %}{% icone "alerte" %}<span>{% libelle "admin.ia.etat_sans_cle" %}</span>
+      {% else %}<span>{% libelle "admin.ia.etat_eteint" %}</span>{% endif %}</p>
+    <label class="case-option"><input type="checkbox" name="ia_active" {% if form.ia_active.value %}checked{% endif %}{% if not permise %} disabled{% endif %}>
+      <span><strong>{% libelle "admin.ia.form.ia_active" %}</strong><br><span class="discret">{% libelle "admin.ia.active_aide" %}</span></span></label>
+    <div class="champs-ia">
+      <div class="champ{% if form.ia_fournisseur.errors %} en-erreur{% endif %}"><label for="{{ form.ia_fournisseur.id_for_label }}">{{ form.ia_fournisseur.label }}</label>{{ form.ia_fournisseur }}</div>
+      <div class="champ{% if form.ia_modele.errors %} en-erreur{% endif %}"><label for="{{ form.ia_modele.id_for_label }}">{{ form.ia_modele.label }}</label>{{ form.ia_modele }}</div>
+    </div>
+    <ul class="notes-modeles aide-champ">{% for m, nom, note in modeles %}<li><strong>{{ nom }}</strong> : {{ note }}</li>{% endfor %}</ul>
+  </section>
+
+  <section class="bloc">
+    <h2>{% libelle "admin.ia.cle_titre" %}</h2>
+    {% if cle_presente %}<p class="etat-cle">{% icone "cadenas" %}<span>{% libelle "admin.ia.cle_presente" date=date_cle|date_heure_courte %}</span>
+      <button type="submit" form="form-retirer-cle" class="secondaire compact" data-confirmer="{% libelle "admin.ia.retirer_confirmer" %}">{% libelle "admin.ia.retirer" %}</button></p>
+    {% else %}<p class="etat-cle discret">{% libelle "admin.ia.cle_absente" %}</p>{% endif %}
+    <div class="champ champ-cle{% if form.api_key.errors %} en-erreur{% endif %}">
+      <label for="{{ form.api_key.id_for_label }}">{% if cle_presente %}{% libelle "admin.ia.form.cle_remplacer" %}{% else %}{{ form.api_key.label }}{% endif %}</label>
+      {{ form.api_key }}
+      <p class="aide-champ" id="aide-cle">{% libelle "admin.ia.cle_aide" %}</p>
+      {% for e in form.api_key.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+    </div>
+  </section>
+
+  <section class="bloc">
+    <h2>{% libelle "admin.ia.usages" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.ia.usages_aide" fournisseur=fournisseur.nom|default:"" hote=fournisseur.hote|default:"" %}</p>
+    {% for code, champ, envoye, jamais in usages %}
+    <div class="usage-ia">
+      <label class="case-option"><input type="checkbox" name="{{ champ.html_name }}" {% if champ.value %}checked{% endif %}{% if not permise %} disabled{% endif %}>
+        <span><strong>{% libelle "admin.ia.usage."|add:code %}</strong><br><span class="discret">{% libelle "admin.ia.usage_aide."|add:code %}</span></span></label>
+      <div class="envoye-ia">
+        <div><h3>{% libelle "admin.ia.envoye_titre" %}</h3><ul>{% for x in envoye %}<li>{{ x }}</li>{% endfor %}</ul></div>
+        <div><h3>{% libelle "admin.ia.jamais_titre" %}</h3><ul>{% for x in jamais %}<li>{{ x }}</li>{% endfor %}</ul></div>
+      </div>
+    </div>
+    {% endfor %}
+    {% comment %}KPI sensibles (collecte/sensibles.py) : éteint par défaut, pour les trois usages{% endcomment %}
+    <label class="case-option usage-ia"><input type="checkbox" name="{{ form.ia_kpi_sensibles.html_name }}" {% if form.ia_kpi_sensibles.value %}checked{% endif %}{% if not permise %} disabled{% endif %}>
+      <span><strong>{% libelle "admin.ia.form.ia_kpi_sensibles" %}</strong><br><span class="discret">{% libelle "admin.ia.kpi_sensibles_aide" %}</span></span></label>
+  </section>
+
+  <section class="bloc">
+    <h2>{% libelle "admin.ia.limites" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.ia.limites_aide" %}</p>
+    {% include "parametres/_champ_seuil.html" with champ=form.ia_appels_jour %}
+    {% include "parametres/_champ_seuil.html" with champ=form.ia_taille_max %}
+    {% include "parametres/_champ_seuil.html" with champ=form.ia_delai %}
+  </section>
+  <div class="barre-enregistrement collante"><button type="submit">{% libelle "commun.enregistrer" %}</button></div>
+</form>
+<form method="post" id="form-retirer-cle" hidden>{% csrf_token %}<input type="hidden" name="action" value="retirer_cle"></form>
+
+<details class="carte bon-a-savoir">
+  <summary><strong>{% libelle "admin.fichiers.bon_a_savoir" %}</strong></summary>
+  <ul>
+    <li>{% libelle "admin.ia.savoir.propositions" %}</li>
+    <li>{% libelle "admin.ia.savoir.journal" %}</li>
+    <li>{% libelle "admin.ia.savoir.reseau" hote=hotes|join:", " %}</li>
+    <li>{% libelle "admin.ia.savoir.cle" %}</li>
+    <li>{% libelle "admin.ia.savoir.depense" %}</li>
+    <li>{% libelle "admin.ia.savoir.espaces" %}</li>
+  </ul>
+</details>
+{% endblock %}

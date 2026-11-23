@@ -1,0 +1,38 @@
+{% load collecte %}{% comment %}Réponse en tableau (format « tableau », collecte/tableaux.py) : une ligne par élément (polluant, déchet, filiale…).
+Le tableau de saisie écrit, à chaque changement, un tableau Markdown dans la zone « valeur » (cachée par le script) ; c'est
+elle qui est envoyée et vérifiée par le serveur. Sans JavaScript, la zone de texte reste visible : on peut y écrire le
+tableau en Markdown. Les listes longues se filtrent en tapant (datalist).{% endcomment %}
+<div class="saisie-tableau" data-editeur-tableau>
+  <div class="entete-redigee">
+    <span class="titre" id="titre-tableau">{% libelle "saisie.panneau.reponse" %} <span class="annee-courante">{{ campagne.periode }}</span></span>
+  </div>
+  <div class="defilement-tableau-saisie">
+    <table class="tableau-saisie" role="table" aria-labelledby="titre-tableau" data-tableau-saisie hidden>
+      <thead role="rowgroup"><tr role="row">{% for col in tableau.colonnes %}<th scope="col" role="columnheader" data-col{% if col.type == "nombre" %} class="nombre"{% endif %}>{{ col.libelle }}</th>{% endfor %}{% if droits.modifier %}<th scope="col" role="columnheader"><span class="visually-hidden">{% libelle "saisie.tableau.actions" %}</span></th>{% endif %}</tr></thead>
+      <tbody data-lignes-tableau role="rowgroup">
+        {% for ligne in tableau.lignes %}{% include "collecte/_saisie_tableau_ligne.html" %}{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% for col in tableau.colonnes %}{% if col.options %}<datalist id="dl-{{ kpi.code|slugify }}-{{ col.code|slugify }}">{% for o in col.options %}<option value="{{ o }}">{% endfor %}</datalist>{% endif %}{% endfor %}
+  {% if droits.modifier %}
+  <template data-modele-ligne>{% include "collecte/_saisie_tableau_ligne.html" with ligne=tableau.vide %}</template>
+  <p class="actions-tableau-saisie" data-actions-tableau hidden>
+    <button type="button" class="secondaire petit" data-ajouter-ligne {% if saisi.non_applicable %}disabled{% endif %}>{% icone "plus" %} {% libelle "saisie.tableau.ajouter" %}</button>
+    <span class="discret petit" data-compte-lignes></span>
+  </p>
+  <label for="valeur" class="visually-hidden">{% libelle "saisie.tableau.markdown" %}</label>
+  <textarea id="valeur" name="valeur" rows="6" class="zone-md" maxlength="{{ texte_max }}" {% if saisi.non_applicable %}disabled{% endif %}{% if valeur_refusee %} aria-invalid="true"{% endif %}
+    aria-describedby="aide-tableau{% if erreurs_saisie %} erreurs-saisie{% endif %}" data-zone-tableau>{{ saisi.valeur }}</textarea>
+  <p class="aide-champ" id="aide-tableau"><span data-aide-sans-script>{% libelle "saisie.tableau.aide_markdown" %}</span><span data-aide-script hidden>{% libelle "saisie.tableau.aide" %}</span></p>
+  {% else %}
+  <div class="md-rendu reponse-redigee" role="region" aria-labelledby="titre-tableau">{% if reponse.non_applicable %}<p>N/A</p>{% elif tableau.lignes %}
+    <table role="table"><thead role="rowgroup"><tr role="row">{% for col in tableau.colonnes %}<th scope="col" role="columnheader">{{ col.libelle }}</th>{% endfor %}</tr></thead>
+      <tbody role="rowgroup">{% for ligne in tableau.lignes %}<tr role="row">{% for c in ligne %}<td role="cell" data-label="{{ c.col.libelle }}">{{ c.v }}</td>{% endfor %}</tr>{% endfor %}</tbody></table>
+    {% else %}<p class="discret">{% libelle "saisie.md.vide" %}</p>{% endif %}</div>
+  {% endif %}
+  <details class="n1-redigee"{% if not n1 or not n1.texte and not n1.non_applicable %} hidden{% endif %}>
+    <summary>{% if comparaison == "N-1" %}{% libelle "saisie.panneau.n1_exercice" exercice=campagne.exercice|add:"-1" %}{% else %}{{ comparaison }}{% endif %} <span class="discret">· {% valeur n1 kpi %}</span></summary>
+    <div class="md-rendu">{% if n1.non_applicable %}<p>N/A</p>{% else %}{{ n1.texte|markdown:5 }}{% endif %}</div>
+  </details>
+</div>

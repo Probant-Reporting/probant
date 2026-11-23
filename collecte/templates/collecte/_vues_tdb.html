@@ -1,0 +1,7 @@
+{% comment %}Tableau de bord : onglets soulignés (.sous-onglets : un onglet change de page, la pastille grise
+   filtre ou règle l'affichage d'une même liste) entre l'avancement de la campagne (taux de remplissage) et la consolidation
+   (valeurs de chaque niveau de l'arbre).{% endcomment %}
+{% load collecte %}<nav class="sous-onglets vues-tdb" aria-label="{% libelle "suivi.conso.vues_aria" %}">
+  <a href="{% url 'collecte:tableau_de_bord' %}" class="{% if not consolidation %}actif{% endif %}"{% if not consolidation %} aria-current="page"{% endif %}>{% icone "forme-barres" %}<span>{% libelle "suivi.conso.vue_avancement" %}</span></a>
+  <a href="{% url 'collecte:consolidation' %}" class="{% if consolidation %}actif{% endif %}"{% if consolidation %} aria-current="page"{% endif %}>{% icone "forme-organisations" %}<span>{% libelle "suivi.conso.titre" %}</span></a>
+</nav>

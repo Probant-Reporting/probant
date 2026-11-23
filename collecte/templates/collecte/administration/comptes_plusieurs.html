@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.comptes_plusieurs.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_comptes' %}">{% libelle "admin.comptes_plusieurs.retour" %}</a></p>
+{% if crees %}{% encart "succes" %}{% libelle "admin.comptes_plusieurs.crees" n=crees|length %}{% endencart %}{% endif %}
+{% for u, mdp_donne in crees %}{% include "collecte/administration/_message_acces.html" %}{% endfor %}
+<form method="post" class="carte form-mep page-plusieurs" autocomplete="off">
+  {% csrf_token %}
+  <h2>{% libelle "admin.comptes_plusieurs.titre_h2" %}</h2>
+  <p class="discret">{% libelle "admin.comptes_plusieurs.aide" %}</p>
+  {% if erreurs %}{% encart "erreur" role="alert" %}{% for e in erreurs %}<p>{{ e }}</p>{% endfor %}{% endencart %}{% endif %}
+  <table class="table-mep table-equipe">
+    <thead><tr><th>{% libelle "admin.comptes_plusieurs.col.prenom" %}</th><th>{% libelle "admin.comptes_plusieurs.col.nom" %}</th><th>{% libelle "admin.comptes_plusieurs.col.email" %}</th><th>{% libelle "admin.comptes_plusieurs.col.role" %}</th></tr></thead>
+    {% for k in lignes %}
+    {% with numero=k|add:1 %}
+    <tr><td>{% libelle "admin.comptes_plusieurs.ligne.prenom" numero=numero as t_p %}<input type="text" name="first_name_{{ k }}" maxlength="150" aria-label="{{ t_p }}"></td>
+      <td>{% libelle "admin.comptes_plusieurs.ligne.nom" numero=numero as t_n %}<input type="text" name="last_name_{{ k }}" maxlength="150" aria-label="{{ t_n }}"></td>
+      <td>{% libelle "admin.comptes_plusieurs.ligne.email" numero=numero as t_e %}<input type="email" name="email_{{ k }}" aria-label="{{ t_e }}"></td>
+      <td><select name="role_{{ k }}" aria-label="{% libelle "admin.comptes_plusieurs.ligne.role" numero=numero %}">{% for code, libelle, _ in roles %}<option value="{{ code }}" {% if code == "contributeur" %}selected{% endif %}>{{ libelle }}</option>{% endfor %}</select></td></tr>
+    {% endwith %}
+    {% endfor %}
+  </table>
+  <ul class="aide-champ liste-roles">{% for code, libelle, aide in roles %}<li>{% libelle_html "admin.roles.ligne_aide" role=libelle aide=aide %}</li>{% endfor %}</ul>
+  <div class="barre-enregistrement"><button type="submit">{% libelle "admin.comptes_plusieurs.creer" %}</button></div>
+</form>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% load collecte %}{% comment %}Langue de l'interface (barre du haut, aussi sur la page de connexion) : un menu déroulant
+(details, ouvert au clavier par Entrée ou Espace, fermé par Échap ou un clic ailleurs) ; chaque langue est un bouton du
+formulaire, sans JavaScript. Le choix est gardé dans la session et, pour une personne connectée, dans son compte.{% endcomment %}
+{% if langues_interface|length > 1 %}{% for code, nom in langues_interface %}{% if code == langue_interface %}{% libelle "cadre.langue.actuelle" nom=nom as actuelle %}
+<details class="menu-deroulant menu-langue">
+  <summary class="bouton-langue" title="{{ actuelle }}">{% icone "langue" %}<span class="langue-code">{{ code|upper }}</span><span class="visually-hidden"> – {{ actuelle }}</span><span class="langue-chevron" aria-hidden="true">{% icone "chevron-bas" %}</span></summary>
+  <form method="post" action="{% url 'langue' %}" class="menu-liste liste-langues" aria-label="{% libelle "cadre.langue.groupe" %}">{% csrf_token %}
+    <input type="hidden" name="suivant" value="{{ request.get_full_path }}">
+    {% for code2, nom2 in langues_interface %}<button type="submit" name="langue" value="{{ code2 }}" lang="{{ code2 }}" aria-pressed="{% if code2 == langue_interface %}true{% else %}false{% endif %}">
+      <span class="nom-langue-choix">{{ nom2 }}</span><span class="langue-code" aria-hidden="true">{{ code2|upper }}</span>{% if code2 == langue_interface %}{% icone "coche" %}{% endif %}</button>
+    {% endfor %}
+  </form>
+</details>{% endif %}{% endfor %}{% endif %}

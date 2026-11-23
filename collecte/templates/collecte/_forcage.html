@@ -1,0 +1,49 @@
+{% load collecte %}
+{% comment %}Valeur forcée d'un KPI calculé (collecte/forcage.py) : valeur en place, demande en attente d'accord, et
+   formulaire de demande (responsable du résultat) ou de forçage direct (administrateur, validateur){% endcomment %}
+{% if forcage.forcee or forcage.attente or forcage.demander %}
+<section class="bloc-cellule bloc-forcage" aria-labelledby="forcage-titre">
+  <h3 id="forcage-titre">{% libelle "saisie.forcage.titre" %}</h3>
+  {% if forcage.forcee %}
+  {% encart "info" %}
+    <p>{% if forcage.appliquee %}{% libelle_html "saisie.forcage.en_place" valeur=forcage.appliquee_valeur demandeur=forcage.appliquee.demandeur accord=forcage.appliquee.traite_par date=forcage.appliquee.date_traitement|date_courte %}{% else %}{% libelle "saisie.forcage.en_place_simple" %}{% endif %}</p>
+    {% if forcage.appliquee.justification %}<p class="discret">{% libelle "saisie.guillemets" texte=forcage.appliquee.justification %}</p>{% endif %}
+    {% if forcage.appliquee_calcul %}<p class="discret">{% libelle "saisie.forcage.resultat_calcul" valeur=forcage.appliquee_calcul %}</p>{% endif %}
+    {% if forcage.trancher %}<form method="post" action="{{ ici }}" data-ajax>{% csrf_token %}<button type="submit" name="action" value="revenir_calcul" class="lien">{% libelle "saisie.forcage.revenir" %}</button></form>{% endif %}
+  {% endencart %}
+  {% endif %}
+  {% if forcage.attente %}
+  <div class="encart encart-info">
+    <p>{% libelle_html "saisie.forcage.attente" demandeur=forcage.attente.demandeur date=forcage.attente.date_demande|date_courte valeur=forcage.attente_valeur %}</p>
+    <p>{% libelle "saisie.guillemets" texte=forcage.attente.justification %}</p>
+    {% if forcage.attente_calcul %}<p>{% libelle "saisie.forcage.resultat_calcul" valeur=forcage.attente_calcul %}</p>{% endif %}
+    {% if forcage.trancher %}
+    <form method="post" action="{{ ici }}" data-ajax class="formulaire">{% csrf_token %}<input type="hidden" name="demande" value="{{ forcage.attente.pk }}">
+      <label class="titre" for="motif-forcage">{% libelle "saisie.forcage.motif_refus" %}</label>
+      <textarea id="motif-forcage" name="motif" rows="2"></textarea>
+      <div class="actions">
+        <button type="submit" name="action" value="refuser_forcage" class="secondaire">{% libelle "saisie.forcage.refuser" %}</button>
+        <button type="submit" name="action" value="accepter_forcage">{% libelle "saisie.forcage.accepter" %}</button>
+      </div>
+    </form>
+    {% elif forcage.demandeur %}
+    <form method="post" action="{{ ici }}" data-ajax>{% csrf_token %}<input type="hidden" name="demande" value="{{ forcage.attente.pk }}"><button type="submit" name="action" value="retirer_forcage" class="lien">{% libelle "saisie.forcage.retirer" %}</button></form>
+    {% else %}<p class="discret">{% libelle "saisie.forcage.attente_accord" %}</p>{% endif %}
+  </div>
+  {% endif %}
+  {% if forcage.demander and not forcage.attente %}
+  <details class="forcage-demande">
+    <summary>{% if forcage.trancher %}{% libelle "saisie.forcage.forcer" %}{% else %}{% libelle "saisie.forcage.demander" %}{% endif %}</summary>
+    <p class="discret">{% if forcage.trancher %}{% libelle "saisie.forcage.aide_trancher" %}{% else %}{% libelle "saisie.forcage.aide_demander" %}{% endif %}</p>
+    <form method="post" action="{{ ici }}" data-ajax class="formulaire">{% csrf_token %}<input type="hidden" name="langue_saisie" value="{{ langue_interface }}">
+      <label class="titre" for="valeur-forcee">{% libelle "saisie.forcage.valeur" %}{% if forcage.pourcentage %} <span class="discret">{% libelle "saisie.panneau.zero_cent" %}</span>{% endif %}</label>
+      <span class="champ-valeur"><input type="text" id="valeur-forcee" name="valeur_forcee" inputmode="decimal" autocomplete="off"><span class="u">{% unite kpi %}</span></span>
+      <label class="interrupteur"><input type="checkbox" name="na_forcee"><span class="glissiere"></span><span>{% libelle "saisie.panneau.na" %}</span></label>
+      <label class="titre" for="justification-forcage">{% libelle "saisie.forcage.justification" %}</label>
+      <textarea id="justification-forcage" name="justification" rows="3" required placeholder="{% libelle "saisie.forcage.justification_exemple" %}"></textarea>
+      <div class="actions"><button type="submit" name="action" value="forcer">{% if forcage.trancher %}{% libelle "saisie.forcage.forcer_bouton" %}{% else %}{% libelle "saisie.forcage.demander_bouton" %}{% endif %}</button></div>
+    </form>
+  </details>
+  {% endif %}
+</section>
+{% endif %}

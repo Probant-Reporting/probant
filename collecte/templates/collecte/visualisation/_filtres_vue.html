@@ -1,0 +1,67 @@
+{% load collecte %}{# Filtres de la vue : sans script, le bouton « Afficher » envoie le formulaire (adresse partageable) #}
+<button type="button" class="secondaire bouton-filtres-tel" data-ouvrir-filtres aria-haspopup="dialog" aria-controls="filtres-vue">{% icone "filtre" %} <span data-compte-filtres>{% libelle "visu.filtres" %}</span></button>
+<form class="filtres-vue" id="filtres-vue" method="get" data-filtres-vue aria-label="{% libelle 'visu.filtres.vue' %}">
+  <div class="tete-filtres-tel"><h2>{% libelle "visu.filtres" %}</h2><button type="button" class="icone" data-fermer-fenetre aria-label="{% libelle 'visu.filtres.fermer' %}">{% icone "fermer" %}</button></div>
+  <div class="champ-filtre">
+    <label for="f-periode">{% libelle "visu.filtres.periode" %}</label>
+    <select id="f-periode" name="periode">
+      <option value="auto"{% if f.periode.demande == "auto" %} selected{% endif %}>{% libelle "visu.filtres.periode_auto" periode=options.periode_auto %}</option>
+      {% if options.periode_je_reponds_a %}<option value="je_reponds_a"{% if f.periode.demande == "je_reponds_a" %} selected{% endif %}>{% libelle "visu.filtres.periode_je_reponds" periode=options.periode_je_reponds_a %}</option>{% endif %}
+      {% for g in options.periodes %}<optgroup label="{{ g.groupe }}">{% for p in g.periodes %}<option value="{{ p.id }}"{% if f.periode.demande == p.id %} selected{% endif %}>{{ p.libelle }}</option>{% endfor %}</optgroup>{% endfor %}
+    </select>
+  </div>
+  <div class="champ-filtre filtre-optionnel" data-filtre-optionnel="cmp" data-defaut="n1">
+    <label for="f-cmp">{% libelle "visu.filtres.comparer" %}</label>
+    <select id="f-cmp" name="cmp">
+      <option value="n1"{% if f.comparaison.mode == "n1" %} selected{% endif %}>{% libelle "visu.filtres.n1_court" %}</option>
+      <option value="p1"{% if f.comparaison.mode == "p1" %} selected{% endif %}>{% libelle "visu.filtres.p1" %}</option>
+      <option value="aucune"{% if f.comparaison.mode == "aucune" %} selected{% endif %}>{% libelle "visu.filtres.aucune" %}</option>
+    </select>
+  </div>
+  <div class="champ-filtre">
+    {# le sélecteur d'organisation de la Saisie (arbre, niveaux, recherche), comme dans l'Import (uniformisation, lot 3) #}
+    <label for="f-org" id="l-org">{% libelle "visu.filtres.organisation" %}</label>
+    {% if f.org.tout %}{% include "collecte/_selecteur_org_champ.html" with nom="org" id_champ="f-org" id_libelle="l-org" orgs=options.organisations valeur="tout" valeur_tous="tout" libelle_tous_key="visu.filtres.tout_perimetre" %}
+    {% elif options.tout %}{% include "collecte/_selecteur_org_champ.html" with nom="org" id_champ="f-org" id_libelle="l-org" orgs=options.organisations valeur=f.org.id|stringformat:"s" valeur_tous="tout" libelle_tous_key="visu.filtres.tout_perimetre" %}
+    {% else %}{% include "collecte/_selecteur_org_champ.html" with nom="org" id_champ="f-org" id_libelle="l-org" orgs=options.organisations valeur=f.org.id|stringformat:"s" sans_tous=True libelle_tous_key="visu.filtres.tout_perimetre" %}{% endif %}
+  </div>
+  <div class="champ-filtre filtre-optionnel" data-filtre-optionnel="ref" data-defaut="je_reponds_a">
+    <label for="f-ref">{% libelle "visu.filtres.referentiel" %}</label>
+    <select id="f-ref" name="ref">
+      <option value="je_reponds_a"{% if f.referentiel.demande == "je_reponds_a" %} selected{% endif %}>{% if options.je_reponds_a %}{% libelle "visu.filtres.je_reponds_a_ref" referentiel=options.je_reponds_a %}{% else %}{% libelle "visu.filtres.je_reponds_a" %}{% endif %}</option>
+      {% for r in options.referentiels %}<option value="{{ r.code }}"{% if f.referentiel.demande == r.code %} selected{% endif %}>{{ r.nom }}</option>{% endfor %}
+      <option value="tous"{% if f.referentiel.demande == "tous" %} selected{% endif %}>{% libelle "visu.filtres.tous" %}</option>
+    </select>
+  </div>
+  {# Thèmes : étiquette au-dessus, comme les autres filtres (le bouton était différent) #}
+  <div class="champ-filtre filtre-optionnel" data-filtre-optionnel="theme" data-defaut="">
+    <span class="libelle-filtre" id="l-themes">{% libelle "visu.filtres.themes" %}</span>
+    <details class="menu-deroulant choix-themes">
+      <summary class="bouton secondaire" aria-labelledby="l-themes"><span data-themes-choisis>{% if f.themes %}{{ f.themes|length }}{% else %}{% libelle "visu.filtres.themes_tous" %}{% endif %}</span> {% icone "chevron-bas" %}</summary>
+      <fieldset class="menu-liste liste-themes">
+        <legend class="visuellement-cache">{% libelle "visu.filtres.themes" %}</legend>
+        {% for t in options.themes %}<label style="padding-left:{{ t.prof }}em"><input type="checkbox" name="theme" value="{{ t.id }}"{% if t.id in f.themes %} checked{% endif %}> {{ t.nom }}</label>{% empty %}<p class="discret">–</p>{% endfor %}
+      </fieldset>
+    </details>
+  </div>
+  <div class="champ-filtre filtre-optionnel" data-filtre-optionnel="brouillons" data-defaut="0">
+    <label for="f-valeurs">{% libelle "visu.filtres.valeurs" %}</label>
+    <select id="f-valeurs" name="brouillons">
+      <option value="0"{% if f.valeurs != "brouillons" %} selected{% endif %}>{% libelle "visu.filtres.validees" %}</option>
+      <option value="1"{% if f.valeurs == "brouillons" %} selected{% endif %}>{% libelle "visu.filtres.brouillons" %}</option>
+    </select>
+  </div>
+  {% comment %}filtres que l'on ajoute et que l'on retire : Période et Organisation toujours là ; les
+     autres s'affichent quand ils changent quelque chose, ou par « Ajouter un filtre » (visualisation.js){% endcomment %}
+  <details class="menu-deroulant ajouter-filtre" data-ajouter-filtre hidden>
+    <summary class="bouton secondaire">{% icone "plus" %} {% libelle "visu.filtres.ajouter" %}</summary>
+    <div class="menu-liste" data-liste-ajout-filtres></div>
+  </details>
+  <div class="actions-filtres">
+    <button type="submit" data-sans-script>{% libelle "visu.filtres.afficher" %}</button>
+    <a href="?" class="retablir-filtres" data-retablir{% if not f.differents %} hidden{% endif %}>{% libelle "visu.filtres.retablir" %}</a>
+    {% if contexte_visu.vue.id and contexte_visu.vue.modifiable %}{# filtres changés : les enregistrer dans la vue (en lecture), ou les garder dans le brouillon (en modification) #}
+    <button type="button" class="secondaire" data-enregistrer-filtres hidden>{% libelle "visu.filtres.enregistrer" %}</button>
+    <button type="button" class="secondaire" data-garder-filtres hidden>{% libelle "visu.filtres.garder" %}</button>{% endif %}
+  </div>
+</form>

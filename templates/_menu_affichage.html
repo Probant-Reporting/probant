@@ -1,0 +1,7 @@
+{% load collecte %}{% comment %}Menu « Affichage » d'une barre de filtres (DESIGN.md « Filters ») : options qui changent la présentation, pas
+   les chiffres. Paramètres : codes (case « Codes » : montre les codes des KPI) ; options (gabarit des cases propres à la
+   page, inclus après).{% endcomment %}<details class="menu-deroulant menu-affichage"><summary class="bouton secondaire">{% icone "eye" %} {% libelle "commun.filtres.affichage" %}</summary>
+      <div class="menu-liste">
+        {% if codes %}<label class="case-menu" title="{% libelle "saisie.filtre.codes_aide" %}"><input type="checkbox" data-montrer-codes> {% libelle "saisie.filtre.codes" %}</label>{% endif %}
+        {% if options %}{% include options %}{% endif %}
+      </div></details>

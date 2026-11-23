@@ -1,0 +1,83 @@
+# Builds the all-in-one version (portable Python + tool + Start.bat / Start.command): a trial on one computer, for
+# one person, never for a team. Two archives with names that never change, so that a page can link to
+#   https://github.com/<owner>/<repository>/releases/latest/download/probant-windows.zip
+#   https://github.com/<owner>/<repository>/releases/latest/download/probant-mac.zip
+# (probant-mac.zip holds the Python of both Mac processors: Apple and Intel).
+#   release published   the archives are built from the tag of the release and attached to it
+#   run on demand       (Actions > "All-in-one version" > Run workflow) builds and tries the archives; with the tag of
+#                       an existing release in "release_tag", also attaches them to that release (replaces those there)
+name: All-in-one version
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Tag of an existing release to attach the archives to (empty: build and try only)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+# one build at a time for a release; a second run waits instead of cancelling an upload
+concurrency:
+  group: portable-${{ github.event.release.tag_name || inputs.release_tag || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write  # attach the archives to the release (gh release upload)
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # on a manual run with a tag: the code of that release, not the code of the default branch
+          ref: ${{ github.event.release.tag_name || inputs.release_tag || github.ref }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12.10"
+      - name: "Assemble the packages (portable/build_package.py, one recipe for every all-in-one version)"
+        run: |
+          PBS=https://github.com/astral-sh/python-build-standalone/releases/download/20250409
+          mkdir -p runtimes/win runtimes/mac-arm runtimes/mac-intel
+          # each archive is checked against its SHA-256 fingerprint (taken from the SHA256SUMS file of this release):
+          # to change the Python version, take the new fingerprints from the SHA256SUMS file of the new release
+          fetch() { # fetch <file name> <sha256> <folder>
+            curl -sSfL -o "$RUNNER_TEMP/$1" "$PBS/$1"
+            echo "$2  $RUNNER_TEMP/$1" | sha256sum -c -
+            tar -xz -f "$RUNNER_TEMP/$1" -C "$3"
+          }
+          fetch "cpython-3.12.10+20250409-x86_64-pc-windows-msvc-install_only_stripped.tar.gz" 08670ab68f041481b8127b2ea27e01ddf56131e61fcf845f489024fddcd3deec runtimes/win
+          fetch "cpython-3.12.10+20250409-aarch64-apple-darwin-install_only_stripped.tar.gz" 0be1fe0b35a4d3c382141764ef16ed3b8cc2b4620b657f678daa7b7f8df39699 runtimes/mac-arm
+          fetch "cpython-3.12.10+20250409-x86_64-apple-darwin-install_only_stripped.tar.gz" ad3bef94b6054adcf8e0a47886e21b00dfc6a37f22eea229cf0f8725bd0e1023 runtimes/mac-intel
+          # pure Python libraries with exact versions (portable/requirements.txt)
+          python -m pip install --disable-pip-version-check -q --target runtimes/libs -r portable/requirements.txt
+          python portable/build_package.py --out out --libs runtimes/libs \
+            --python-windows runtimes/win/python \
+            --python-mac-arm runtimes/mac-arm/python --python-mac-intel runtimes/mac-intel/python
+      - name: Trial run (migrations and demo with the packaged Python)
+        run: |
+          cd out/Probant-windows
+          export PYTHONUTF8=1 DJANGO_DEBUG=1 DATA_DIR="$PWD/test_data" PYTHONPATH="$PWD/system/libs"
+          mkdir -p test_data
+          system/python/python.exe system/app/manage.py migrate --noinput -v 0
+          system/python/python.exe system/app/manage.py load_demo
+          system/python/python.exe system/app/manage.py check
+          rm -rf test_data
+      - name: Archives with stable names
+        run: |
+          (cd out && 7z a -tzip -bso0 ../probant-windows.zip Probant-windows && 7z a -tzip -bso0 ../probant-mac.zip Probant-mac)
+          ls -l probant-windows.zip probant-mac.zip
+      - name: Attach the archives to the release
+        if: github.event_name == 'release' || inputs.release_tag != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+        run: gh release upload "$TAG" probant-windows.zip probant-mac.zip --clobber --repo "$GITHUB_REPOSITORY"

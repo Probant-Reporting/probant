@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "saisie.choix.titre" %}{% endblock %}
+{% block contenu %}
+{# « Je réponds à » ouvert par son adresse : page complète, même contenu que le panneau #}
+<section class="carte panneau-choix-reponse page-choix-reponse">
+{% include "collecte/_choix_reponse.html" with page_complete=True %}
+</section>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.echanges.nav.listes" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/echanges/_nav.html" %}
+{% if edition %}
+<p class="retour-page"><a href="{% url 'collecte:echanges_listes_page' %}">{% icone "chevron-gauche" %} {% libelle "suivi.echanges.nav.listes" %}</a></p>
+<form method="post" class="carte form-liste-kpi" novalidate>{% csrf_token %}
+  <input type="hidden" name="id" value="{{ edition.id }}">
+  <h2>{% if edition.id %}{% libelle "suivi.echanges.listes.modifier" nom=edition.nom %}{% else %}{% libelle "suivi.echanges.listes.creer_titre" %}{% endif %}</h2>
+  <div class="champs-liste-kpi">
+    <div class="champ"><label for="liste-nom">{% libelle "suivi.echanges.listes.nom" %}</label>
+      {% libelle "suivi.echanges.listes.nom_exemple" as t_exemple %}<input type="text" id="liste-nom" name="nom" value="{{ edition.nom }}" maxlength="100" required placeholder="{{ t_exemple }}"{% if edition.erreur_nom %} aria-invalid="true" aria-describedby="liste-nom-erreur" autofocus{% endif %}>
+      {% if edition.erreur_nom %}{% encart "erreur" id="liste-nom-erreur" role="alert" %}{{ edition.erreur_nom }}{% endencart %}{% endif %}</div>
+    <div class="champ"><label for="liste-desc">{% libelle "suivi.echanges.description" %} <span class="discret normal">{% libelle "suivi.echanges.facultatif" %}</span></label>
+      <input type="text" id="liste-desc" name="description" value="{{ edition.description }}" maxlength="200"></div>
+  </div>
+  {% if user.est_admin %}<label class="case"><input type="checkbox" name="partage" {% if edition.partage %}checked{% endif %}> {% libelle "suivi.echanges.listes.partagee_avec_tous" %} <span class="discret normal">{% libelle "suivi.echanges.listes.partagee_aide" %}</span></label>{% endif %}
+  <h3>{% libelle "suivi.echanges.listes.kpi_de_la_liste" %}</h3>
+  {% if edition.erreur_kpi %}{% encart "erreur" role="alert" %}{{ edition.erreur_kpi }}{% endencart %}{% endif %}
+  {% libelle "suivi.echanges.kpi.tous" as t_tous %}{% include "collecte/echanges/_choix_kpi.html" with libelle_tous=t_tous id="liste" seul=True %}
+  <div class="barre-enregistrement collante">
+    <button type="submit">{% libelle "suivi.echanges.listes.sauvegarder" %}</button>
+    <a class="bouton secondaire" href="{% url 'collecte:echanges_listes_page' %}">{% libelle "commun.annuler" %}</a>
+  </div>
+</form>
+{% else %}
+<div class="tete-exports">
+  <a class="bouton" href="?nouvelle=1">{% icone "plus" %} {% libelle "suivi.echanges.listes.creer" %}</a>
+</div>
+{% if listes %}
+{% libelle "suivi.echanges.nav.listes" as t_listes %}<ul class="liste-exports" aria-label="{{ t_listes }}">
+  {% for x in listes %}
+  <li class="ligne-export">
+    <div class="texte-export">
+      <h2 class="nom-export">{{ x.nom }} <span class="badge-partage{% if not x.partage %} perso{% endif %}">{% if x.partage %}{% libelle "suivi.echanges.badge.partagee" %}{% else %}{% libelle "suivi.echanges.badge.personnelle" %}{% endif %}</span></h2>
+      {% if x.description %}<p class="desc-export">{{ x.description }}</p>{% endif %}
+    </div>
+    <div class="actions-export">
+      {% if x.modifiable %}<a class="lien-action" href="?liste={{ x.pk }}" aria-label="{% libelle "suivi.echanges.listes.modifier_aria" nom=x.nom %}">{% libelle "commun.modifier" %}</a>
+      <form method="post">{# sans question : « Supprimé : X. Annuler » (corbeille) #}{% csrf_token %}
+        <input type="hidden" name="action" value="supprimer"><input type="hidden" name="id" value="{{ x.pk }}">
+        <button type="submit" class="icone-export" title="{% libelle "suivi.echanges.listes.supprimer" %}" aria-label="{% libelle "suivi.echanges.listes.supprimer_aria" nom=x.nom %}">{% icone "supprimer" %}</button></form>{% endif %}
+    </div>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<div class="etat-vide vide-exports">
+  <p>{% libelle_html "suivi.echanges.listes.vide" %}</p>
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

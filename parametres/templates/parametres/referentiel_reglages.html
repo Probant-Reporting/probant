@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.reglages.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% include "parametres/_entete_referentiel.html" %}
+{% libelle "referentiels.portes.composer.couleur" as t_couleur %}{% libelle "referentiels.portes.composer.couleur_selecteur" as t_selecteur %}
+<div class="page-reglages-ref">
+  <form method="post" action="{% url 'parametres:referentiels' %}" class="carte form-reglages-ref">
+    {% csrf_token %}
+    <input type="hidden" name="retour" value="{{ request.path }}">
+    <input type="hidden" name="ref" value="{{ ref.code }}">
+    <h3>{% libelle "referentiels.reglages.identite" %}</h3>
+    <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.nom" %}</span><input type="text" name="nom__{{ ref.code }}" value="{{ ref.nom }}" maxlength="150" required></label>
+    <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.description" %} <span class="discret">{% libelle "referentiels.reglages.facultative" %}</span></span><textarea name="description__{{ ref.code }}" rows="2">{{ ref.description }}</textarea></label>
+    <div class="champs-ligne">
+      <div class="champ"><span class="libelle">{{ t_couleur }}</span>
+        <div class="saisie-couleur"><input type="color" value="{{ ref.couleur }}" data-pipette="couleur__{{ ref.code }}" aria-label="{{ t_selecteur }}">
+          <input type="text" name="couleur__{{ ref.code }}" id="couleur__{{ ref.code }}" value="{{ ref.couleur }}" maxlength="7" pattern="#[0-9A-Fa-f]{6}" class="code" aria-label="{{ t_couleur }}"></div>
+        <span class="aide-champ">{% libelle "referentiels.reglages.couleur_aide" %}</span></div>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.reglages.version" %}</span><input type="text" name="version__{{ ref.code }}" value="{{ ref.version }}" maxlength="20">
+        <span class="aide-champ">{% libelle "referentiels.reglages.version_aide" %}</span></label>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.reglages.date_version" %}</span><input type="date" name="date_version__{{ ref.code }}" value="{{ ref.date_version|date:"Y-m-d" }}">
+        <span class="aide-champ">{% libelle "referentiels.reglages.date_version_aide" %}</span></label>
+    </div>
+    <p class="discret petit">{% libelle "referentiels.reglages.code_debut" %} <span class="id-chip">{{ ref.code }}</span> {% libelle "referentiels.reglages.code_fin" %}</p>
+
+    <h3>{% libelle "referentiels.reglages.collecte" %}</h3>
+    <div class="champs-ligne">
+      <label class="champ"><span class="libelle">{% libelle "referentiels.reglages.frequence" %}</span>
+        <select name="frequence__{{ ref.code }}" {% if ref.nb_campagnes %}disabled{% endif %}>{% for v, l in frequences %}<option value="{{ v }}" {% if ref.frequence == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.debut_exercice" %}</span>
+        <select name="mois_debut__{{ ref.code }}" {% if ref.nb_campagnes %}disabled{% endif %}>{% for n, m in mois %}<option value="{{ n }}" {% if ref.mois_debut == n %}selected{% endif %}>{{ m }}</option>{% endfor %}</select></label>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.ecart" %}</span>
+        <select name="comparaison__{{ ref.code }}">{% for v, l in comparaisons %}<option value="{{ v }}" {% if ref.comparaison == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+    </div>
+    {% if ref.nb_campagnes %}<p class="aide-champ">{% libelle "referentiels.reglages.campagnes_existent" %}</p>{% endif %}
+    <p class="aide-champ">{% libelle "referentiels.reglages.collecte_aide" %}</p>
+    <label class="case-option"><input type="checkbox" name="actif__{{ ref.code }}" {% if ref.actif %}checked{% endif %}>
+      <span><strong>{% libelle "referentiels.reglages.actif" %}</strong><br><span class="discret">{% libelle "referentiels.reglages.actif_aide" %}</span></span></label>
+    <div class="barre-enregistrement"><button type="submit" name="action" value="enregistrer">{% libelle "commun.enregistrer" %}</button></div>
+  </form>
+
+  <aside class="colonne-reglages-ref">
+    <section class="carte">
+      <h3>{% libelle "referentiels.reglages.position" %}</h3>
+      <p class="discret">{% libelle "referentiels.reglages.sur_total" position=position total=nb_refs %}</p>
+      <form method="post" action="{% url 'parametres:referentiels' %}" class="boutons-depart">{% csrf_token %}
+        <input type="hidden" name="retour" value="{{ request.path }}">
+        <button type="submit" name="monter" value="{{ ref.code }}" class="secondaire" {% if position == 1 %}disabled{% endif %}>{% libelle "referentiels.contenu.kpi.monter" %}</button>
+        <button type="submit" name="descendre" value="{{ ref.code }}" class="secondaire" {% if position == nb_refs %}disabled{% endif %}>{% libelle "referentiels.contenu.kpi.descendre" %}</button>
+      </form>
+    </section>
+    <section class="carte">
+      <h3>{% libelle "commun.supprimer" %}</h3>
+      {% if ref.nb_kpi or ref.nb_campagnes %}
+      <p class="discret">{% libelle "referentiels.reglages.suppression_impossible" %}</p>
+      {% else %}
+      <form method="post" action="{% url 'parametres:referentiels' %}">{% csrf_token %}
+        <button type="submit" name="supprimer" value="{{ ref.code }}" class="secondaire danger" data-confirmer="{% libelle "referentiels.reglages.supprimer_confirmer" referentiel=ref %}">{% libelle "referentiels.reglages.supprimer" %}</button></form>
+      {% endif %}
+    </section>
+  </aside>
+</div>
+{% endblock %}

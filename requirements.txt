@@ -1,0 +1,23 @@
+# Packages of the production image, pinned to exact versions: two installations made months apart run the same software.
+# The versions are the ones the test suite passed with (SQLite and PostgreSQL), dependencies included.
+#
+# To update a package:
+#   1. change its version here (and the same version in portable/requirements.txt for Django, openpyxl, whitenoise);
+#   2. python3 -m pip install -r requirements-dev.txt
+#   3. run the suite on SQLite: python3 manage.py test --noinput --parallel 4
+#      and on PostgreSQL: DATABASE_URL=postgres://... python3 manage.py test --noinput
+#   4. commit: the "Tests" workflow (.github/workflows/tests.yml) repeats the checks, and pip-audit lists known
+#      vulnerabilities.
+# Django stays on a long-term support line (5.2): a newer 5.2.x patch release can be taken freely; move to another line
+# only with a full test run and the update rehearsal (qa/migration_rehearsal.py).
+Django==5.2.19
+asgiref==3.13.0
+sqlparse==0.6.1
+openpyxl==3.1.5
+et_xmlfile==2.0.0
+psycopg[binary]==3.3.9
+psycopg-binary==3.3.9
+typing_extensions==4.16.0 ; python_version < "3.13"
+tzdata==2026.6 ; sys_platform == "win32"
+gunicorn==27.0.0
+whitenoise==6.12.0

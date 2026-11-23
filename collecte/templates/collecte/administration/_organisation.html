@@ -1,0 +1,110 @@
+{% load collecte %}
+<div class="panneau-haut"><span class="discret">{% libelle "admin.organisation.panneau" %}</span>{% libelle "admin.fermer_echap" as t_fermer %}<button type="button" class="icone" data-fermer title="{{ t_fermer }}" aria-label="{% libelle "commun.fermer" %}">{% icone "fermer" %}</button></div>
+
+{% if o.pk %}
+<div class="tete-org">
+  <p class="chemin-org">{% for a in o.ancetres reversed %}<span>{{ a.nom }}</span> › {% endfor %}<strong>{{ o.nom }}</strong></p>
+  <h2>{{ o.nom }} {% etiquette_niveau o %}
+    {% if o.actif %}<span class="statut statut-valide">{% libelle "admin.organisation.active" %}</span>{% else %}<span class="statut statut-erreur">{% libelle "admin.organisation.inactive_depuis" date=o.date_desactivation|date_courte|default:"?" %}</span>{% endif %}
+    {% if o.date_ouverture %}<span class="statut">{% libelle "admin.organisation.ouverte_depuis" date=o.date_ouverture|date_courte %}</span>{% endif %}</h2>
+  <div class="chiffres-org">
+    <span>{% libelle_html "admin.organisation.nb_valeurs" n=nb_reponses %}</span>
+    <span>{% libelle_html "admin.organisation.nb_attributions" n=nb_attributions %}</span>
+    <span>{% libelle_html "admin.organisation.nb_rattachees" n=enfants|length %}</span>
+  </div>
+</div>
+{% else %}
+<h2 class="texte-grand mb-8">{% libelle "admin.organisation.nouvelle" %}</h2>
+{% endif %}
+
+{% if succes %}{% encart "succes" %}{{ succes }}{% endencart %}{% endif %}
+{% if erreur %}{% encart "erreur" %}{{ erreur }}{% endencart %}{% endif %}
+{% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+
+<form method="post" action="{% if o.pk %}{% url 'collecte:admin_organisation' o.pk %}{% else %}{% url 'collecte:admin_organisation_nouvelle' %}{% endif %}" data-ajax data-form-org>
+  {% csrf_token %}
+
+  <section class="bloc">
+    <h3><span class="num">1</span> {% libelle "admin.organisation.identite" %}</h3>
+    <div class="champ"><label for="{{ form.nom.id_for_label }}">{% libelle "admin.organisation.nom" %}</label>{{ form.nom }}{% if form.nom.errors %}<div id="err-nom">{{ form.nom.errors }}</div>{% endif %}</div>
+    <div class="champ"><label for="{{ form.code.id_for_label }}">{% libelle "admin.organisation.code" %} <span class="discret">{% libelle "admin.organisation.code_precision" %}</span></label>{{ form.code }}{% if form.code.errors %}<div id="err-code">{{ form.code.errors }}</div>{% endif %}
+      <span class="aide-champ">{{ form.code.help_text }}</span></div>
+    <div class="champ"><label for="{{ form.nom_court.id_for_label }}">{% libelle "admin.organisation.nom_court" %} <span class="discret">{% libelle "admin.facultatif" %}</span></label>{{ form.nom_court }}
+      <span class="aide-champ">{{ form.nom_court.help_text }}</span></div>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num">2</span> {% libelle "admin.organisation.place" %}</h3>
+    <div class="champ"><span class="libelle">{% libelle "admin.organisation.niveau" %}</span>
+      <div class="choix-niveau" role="radiogroup" aria-label="{% libelle "admin.organisation.niveau" %}">
+        {% for n in niveaux %}
+        <label class="niveau-radio niveau-{{ n.code }}"><input type="radio" name="niveau" value="{{ n.code }}" data-rang="{{ n.rang }}" data-nom="{{ n.nom }}" data-dessus="{{ n.dessus }}"{% if n.code == niveau_bas %} data-bas="1"{% endif %} {% if niveau_choisi == n.code %}checked{% endif %} required> {{ n }}</label>
+        {% endfor %}
+      </div>{% if form.niveau.errors %}<div id="err-niveau">{{ form.niveau.errors }}</div>{% endif %}
+    </div>
+    <div class="champ" data-si-parent><label for="id_parent">{% libelle "admin.organisation.rattachee_a" %}</label>
+      <select name="parent" id="id_parent">
+        <option value="">{% libelle "admin.choisir" %}</option>
+        {% for p in parents %}<option value="{{ p.pk }}" data-niveau="{{ p.niveau_id }}" data-rang="{{ p.niveau.rang }}" {% if parent_choisi == p.pk|stringformat:"s" %}selected{% endif %}>{% if p|nom_porte_niveau %}{{ p.nom }}{% else %}{% libelle "admin.organisation.option_parent" nom=p.nom niveau=p.niveau %}{% endif %}{% if p.parent %} · {% libelle "admin.organisation.dans" parent=p.parent.nom %}{% endif %}</option>{% endfor %}
+      </select>{% if form.parent.errors %}<div id="err-parent">{{ form.parent.errors }}</div>{% endif %}
+      <span class="aide-champ" data-aide-parent>{% libelle "admin.organisation.rattachee_aide" %}</span>
+    </div>
+    <div class="champ" data-si-site><label for="{{ form.type_site.id_for_label }}">{% libelle "admin.organisation.type_site" %}</label>{{ form.type_site }}{% if form.type_site.errors %}<div id="err-type_site">{{ form.type_site.errors }}</div>{% endif %}</div>
+    <details class="options-repliables"><summary>{% libelle "admin.organisation.position" %}</summary>
+      <div class="champ">{{ form.rang }}<span class="aide-champ">{{ form.rang.help_text }}</span>{% if form.rang.errors %}<div id="err-rang">{{ form.rang.errors }}</div>{% endif %}</div>
+    </details>
+  </section>
+
+  <section class="bloc">
+    <h3><span class="num">3</span> {% libelle "admin.organisation.collecte" %}</h3>
+    <div class="champ"><label for="{{ form.date_ouverture.id_for_label }}">{% libelle "admin.organisation.date_ouverture" %} <span class="discret">{% libelle "admin.facultatif" %}</span></label>
+      {{ form.date_ouverture }}{% if form.date_ouverture.errors %}<div id="err-date_ouverture">{{ form.date_ouverture.errors }}</div>{% endif %}
+      <span class="aide-champ" id="aide-ouverture">{% libelle "admin.organisation.date_ouverture_aide" %}</span>
+      {% if form.valeurs_avant_ouverture %}<label class="case-option"><input type="checkbox" name="confirmer_ouverture">
+        <span>{% libelle "admin.organisation.confirmer_ouverture" %}</span></label>{% endif %}
+    </div>
+    <label class="case-option"><input type="checkbox" name="actif" {% if form.actif.value %}checked{% endif %}>
+      <span><strong>{% libelle "admin.organisation.collectee" %}</strong><br><span class="discret">{% libelle "admin.organisation.collectee_aide" %}</span></span></label>
+    <div class="champ champ-fermeture" data-si-fermee{% if form.actif.value %} hidden{% endif %}>
+      <label for="{{ form.date_desactivation.id_for_label }}">{% libelle "admin.organisation.date_fermeture" %}</label>
+      {{ form.date_desactivation }}{% if form.date_desactivation.errors %}<div id="err-date_desactivation">{{ form.date_desactivation.errors }}</div>{% endif %}
+      {% encart "info" id="aide-fermeture" %}<p class="mt-0"><strong>{% libelle "admin.organisation.fermeture_consequences" %}</strong></p>
+        <ul>
+          <li>{% libelle "admin.organisation.fermeture_avant" %}</li>
+          <li>{% libelle "admin.organisation.fermeture_apres" %}</li>
+          <li>{% libelle "admin.organisation.fermeture_sans_valeur" %}</li>
+          <li>{% libelle "admin.organisation.fermeture_cloturees" %}</li>
+        </ul>
+        <p class="discret mb-0">{% libelle "admin.organisation.fermeture_vide" %}</p>{% endencart %}
+    </div>
+  </section>
+
+  <div class="barre-enregistrement collante"><button type="submit" name="action" value="enregistrer">{% if o.pk %}{% libelle "admin.organisation.enregistrer_modifs" %}{% else %}{% libelle "admin.organisation.creer" %}{% endif %}</button></div>
+</form>
+
+{% if o.pk %}
+{% if enfants %}
+<section class="bloc">
+  <h3>{% libelle "admin.organisation.rattachees" %}</h3>
+  <div class="liste-enfants">{% for e in enfants %}<a href="{% url 'collecte:admin_organisation' e.pk %}" data-panneau>{% etiquette_niveau e %} {{ e.nom }}{% if not e.actif %} <span class="discret">{% libelle "admin.organisation.inactive" %}</span>{% endif %}</a>{% endfor %}</div>
+</section>
+{% endif %}
+<section class="bloc">
+  <h3>{% libelle "admin.organisation.alias" %}</h3>
+  <p class="aide-champ mt-0">{% libelle "admin.organisation.alias_aide" %}</p>
+  <div class="puces">
+    {% for a in alias %}
+    <form method="post" action="{% url 'collecte:admin_organisation' o.pk %}" data-ajax class="puce">{% csrf_token %}
+      <span>{{ a.libelle }} <span class="discret">· {{ a.source }}</span></span>
+      <input type="hidden" name="alias" value="{{ a.pk }}">{% libelle "admin.organisation.retirer_alias" as t_ra %}{% libelle "admin.organisation.retirer_alias_nom" libelle=a.libelle as t_ran %}<button type="submit" name="action" value="retirer_alias" title="{{ t_ra }}" aria-label="{{ t_ran }}">{% icone "x" %}</button>
+    </form>
+    {% empty %}<span class="discret">{% libelle "admin.organisation.alias_aucun" %}</span>{% endfor %}
+  </div>
+  <form method="post" action="{% url 'collecte:admin_organisation' o.pk %}" data-ajax class="ajout-alias">
+    {% csrf_token %}
+    <div class="champ"><label for="alias-libelle">{% libelle "admin.organisation.alias_libelle" %}</label>{% libelle "admin.organisation.alias_libelle_ex" nom=o.nom as t_ex1 %}<input type="text" id="alias-libelle" name="libelle" placeholder="{{ t_ex1 }}"></div>
+    <div class="champ"><label for="alias-source">{% libelle "admin.organisation.alias_source" %}</label>{% libelle "admin.organisation.alias_source_ex" as t_ex2 %}<input type="text" id="alias-source" name="source" placeholder="{{ t_ex2 }}"></div>
+    <button type="submit" name="action" value="ajouter_alias" class="secondaire">{% libelle "commun.ajouter" %}</button>
+  </form>
+</section>
+{% endif %}

@@ -1,0 +1,10 @@
+# Libraries of the all-in-one version (Windows and Mac): pure Python only, installed with "pip install --target" by
+# .github/workflows/portable.yml. No PostgreSQL driver and no gunicorn (this version uses SQLite and runserver).
+# Keep the versions equal to requirements.txt (same Django, openpyxl and whitenoise, with their dependencies).
+Django==5.2.19
+asgiref==3.13.0
+sqlparse==0.6.1
+openpyxl==3.1.5
+et_xmlfile==2.0.0
+whitenoise==6.12.0
+tzdata==2026.6

@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.catalogue.titre" %}{% endblock %}
+{% block contenu %}
+{% libelle "referentiels.catalogue.direct" as t_direct %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Barre de filtres, au-dessus des deux colonnes. Le référentiel n'est plus une rangée d'onglets :
+c'est un champ de filtre (deux niveaux d'onglets au plus). Référentiel et état rechargent la page (data-aller-option) ; type et
+traduction filtrent dans la page. « Nouveau KPI » : action de la page, au bout de la barre. Plus de phrase d'introduction
+(tri des textes : elle répétait les colonnes).{% endcomment %}
+<div class="barre-filtres">
+  {% libelle "referentiels.catalogue.recherche" as t_rech %}{% include "_recherche.html" with placeholder=t_rech %}
+  <div class="champ-filtre"><label for="filtre-ref-catalogue">{% libelle "referentiels.catalogue.filtre_referentiel" %}</label>
+    <select id="filtre-ref-catalogue" data-panneau-filtre data-aller-option>
+      <option value="" data-url="?actifs={{ actifs }}">{% libelle "commun.tous" %}</option>
+      {% for r in referentiels_filtre %}<option value="{{ r.code }}" data-url="?ref={{ r.code|urlencode }}&amp;actifs={{ actifs }}"{% if ref and r.code == ref.code %} selected{% endif %}>{{ r }}</option>{% endfor %}
+      <option value="hors" data-url="?hors=1&amp;actifs={{ actifs }}" data-nb="{{ nb_hors }}"{% if hors %} selected{% endif %}>{% libelle "referentiels.catalogue.hors_referentiel" %}</option>
+    </select></div>
+  <div class="champ-filtre"><label for="filtre-type">{% libelle "referentiels.catalogue.type_aria" %}</label>
+    <select id="filtre-type" data-panneau-filtre data-multiple><option value="">{% libelle "commun.tous" %}</option>
+      {% for t in types %}<option value="{{ t.code }}" data-nb="{{ t.nb }}">{{ t }}</option>{% endfor %}</select></div>
+  {% if langues_a_traduire %}<div class="champ-filtre"><label for="filtre-traduction">{% libelle "referentiels.catalogue.filtre_a_traduire" %}</label>
+    <select id="filtre-traduction" data-panneau-filtre><option value="">{% libelle "referentiels.catalogue.sans_filtre_traduction" %}</option>
+      {% for lg, n in langues_a_traduire %}<option value="{{ lg.code }}" data-nb="{{ n }}">{{ lg.libelle }}</option>{% endfor %}</select></div>{% endif %}
+  <div class="champ-filtre"><label for="filtre-actifs">{% libelle "referentiels.catalogue.filtre_etat" %}</label>
+    <select id="filtre-actifs" data-panneau-filtre data-aller-option data-defaut="1">
+      <option value="1" data-url="?actifs=1{% if ref %}&amp;ref={{ ref.code|urlencode }}{% elif hors %}&amp;hors=1{% endif %}" {% if actifs == "1" %}selected{% endif %}>{% libelle "referentiels.catalogue.kpi_actifs" %}</option>
+      <option value="0" data-url="?actifs=0{% if ref %}&amp;ref={{ ref.code|urlencode }}{% elif hors %}&amp;hors=1{% endif %}" data-nb="{{ compteurs.inactifs }}" {% if actifs == "0" %}selected{% endif %}>{% libelle "referentiels.catalogue.actifs_et_inactifs" %}</option>
+    </select></div>
+  <div class="filtres-droite">
+    <button type="button" class="secondaire" data-replier>{% libelle "referentiels.catalogue.tout_replier" %}</button>
+    <a class="bouton" href="{% url 'collecte:referentiel_kpi_nouveau' %}" data-panneau>{% icone "plus" %} {% libelle "referentiels.contenu.nouveau_kpi" %}</a>
+  </div>
+  {% include "_etat_filtres.html" %}
+</div>
+
+<div class="page-referentiel">
+  <aside class="sommaire-themes" aria-label="{% libelle "referentiels.catalogue.themes" %}">
+    {% if not entetes_groupes %}<div class="titre-sommaire">{% if ref %}{% libelle "referentiels.catalogue.themes_ref" referentiel=ref %}{% else %}{% libelle "referentiels.catalogue.themes" %}{% endif %}</div>{% endif %}
+    {% for r, titre, themes in sommaire %}
+    {% if entetes_groupes %}<div class="titre-sommaire referentiel-sommaire">{% if r %}<span class="pastille-ref {{ r.code|classe_referentiel }}"></span>{% endif %}{{ titre }}</div>{% endif %}
+    {% for i, theme, n in themes %}<a href="#theme-{{ i }}" data-aller-theme="{{ i }}"><span>{{ theme }}</span><span class="nb-theme">{{ n }}</span></a>{% endfor %}
+    {% endfor %}
+  </aside>
+
+  <div class="contenu-referentiel">
+    <p class="legende-structure chapeau">{% libelle "referentiels.catalogue.ouvrir_fiche" %}
+      {% if ref %}{% libelle "referentiels.catalogue.ranger" %} <a href="{% url 'parametres:referentiel_contenu' ref.code %}">{% libelle "referentiels.catalogue.contenu_de" referentiel=ref %}</a>.
+      {% elif hors %}{% libelle "referentiels.catalogue.hors_aide" %}
+      {% else %}{% libelle "referentiels.catalogue.une_fois" %}{% endif %}</p>
+
+    <p id="annonce-filtres" class="visuellement-cache" role="status" aria-live="polite"></p>
+    <div id="liste" data-rafraichir {% if ouvrir %}data-ouvrir="{% url 'collecte:referentiel_kpi' ouvrir %}{% if ouvrir_traduire %}?traduire=1{% endif %}"{% endif %}>
+    {% libelle "referentiels.catalogue.ajouter_ligne" as t_ajouter %}
+    {% for r, titre, nb_groupe, themes in groupes %}
+    <section class="groupe-referentiel" data-groupe-ref>
+    {% if entetes_groupes %}<h2 class="entete-referentiel">{% if r %}<span class="pastille-ref {{ r.code|classe_referentiel }}"></span>{% endif %}{{ titre }} <span class="compte-groupe">{{ nb_groupe }} KPI</span>
+      {% if r %}<a class="lien-contenu" href="{% url 'parametres:referentiel_contenu' r.code %}">{% libelle "referentiels.catalogue.voir_contenu" %}</a>{% endif %}</h2>{% endif %}
+    {% for i, theme, sous_sections in themes %}
+    <details class="section section-ref" open id="theme-{{ i }}">
+      <summary>{{ theme }} <span class="compte-section"></span></summary>
+      <table class="cellules kpis">
+        <colgroup><col class="l-100"><col><col class="mq-xs l-86"><col class="mq-s l-96"><col class="mq-m l-96"><col class="mq-m l-120"><col class="mq-m l-118"><col class="mq-m l-118"><col class="mq-s l-96"><col class="l-44"></colgroup>
+        <thead><tr><th>ID</th><th>{% libelle "referentiels.catalogue.col_indicateur" %}</th><th class="mq-xs">{% libelle "referentiels.catalogue.type_aria" %}</th><th class="mq-s">{% libelle "referentiels.catalogue.col_niveau" %}</th><th class="mq-m">{% libelle "referentiels.catalogue.col_agregation" %}</th><th class="mq-m">{% libelle "referentiels.catalogue.col_unite" %}</th><th class="mq-m" title="{% libelle "referentiels.catalogue.sources_titre" %}">{% libelle "referentiels.catalogue.col_sources" %}</th><th class="mq-m" title="{% libelle "referentiels.catalogue.utilisations_titre" %}">{% libelle "referentiels.catalogue.col_utilisations" %}</th><th class="mq-s">{% libelle "referentiels.catalogue.col_preuve" %}</th><th><span class="visuellement-cache">{{ t_ajouter }}</span></th></tr></thead>
+        {% for sous_theme, theme_id, kpis in sous_sections %}
+        <tbody data-groupe {% if ref %}data-theme="{{ theme_id }}"{% endif %}>
+          {% if sous_theme or ref and not kpis %}<tr class="sous-titre"><th colspan="10">{{ sous_theme|default:t_direct }} <span class="discret">· {{ kpis|length }}</span>{% if ref and not kpis %} <span class="discret">{% libelle "referentiels.catalogue.vide" %}</span>{% endif %}</th></tr>{% endif %}
+          {% for k in kpis %}
+          <tr class="ligne{% if not k.actif %} inactive{% endif %}" data-id="{{ k.code }}" data-type="{{ k.type_saisie_id }}" data-a-traduire="{{ k.a_traduire|join:' ' }}" tabindex="0" aria-label="{% libelle "referentiels.catalogue.ligne_aria" code=k.code nom=k.nom %}" data-url="{% url 'collecte:referentiel_kpi' k.code %}" data-statut=""
+              data-texte="{{ k.code|lower }} {{ k.nom|lower }} {{ k.libelle|lower }} {{ k.formule|lower }}">
+            <td><span class="id-chip">{{ k.code }}</span></td>
+            <td class="ind" title="{{ k.nom }}"><div class="nom">{{ k.nom }}</div>{% calcul_clair k as t_calcul %}{% if t_calcul %}<div class="calcul-clair" title="{{ t_calcul }}"><span aria-hidden="true">=</span> <span class="visually-hidden">{% libelle "referentiels.calcul.mot" %}</span>{{ t_calcul }}</div>{% endif %}{% if not ref and k.refs|length > 1 %}{% for r in k.refs %}{% etiquette_referentiel r %} {% endfor %}{% endif %}{% if k.element and not k.element.obligatoire %}<span class="facultatif">{% libelle "referentiels.contenu.kpi.facultatif" %}</span>{% endif %}{% if not k.actif %}<span class="etat etat-inactif">{% libelle "referentiels.entete.inactif" %}</span>{% endif %}{% if k.a_traduire %} <span class="a-traduire" title="{% libelle "referentiels.catalogue.a_traduire_titre" %}">{% libelle "referentiels.catalogue.a_traduire" langues=k.a_traduire|liste|upper %}</span>{% endif %}</td>
+            <td class="mq-xs">{% etiquette_type k %}</td>
+            <td class="mq-s">{% etiquette_niveau k %}</td>
+            <td class="mq-m">{% if k.methode_agregation == "Aucune" %}<span class="vide">—</span>{% else %}{{ k|choix:"methode_agregation" }}{% endif %}</td>
+            <td class="unite mq-m">{% if not k.est_numerique %}<span class="discret">{{ k.type_reponse }}</span>{% elif k.symbole %}{{ k.symbole }}{% else %}<span class="vide">—</span>{% endif %}</td>
+            <td class="mq-m">{% if k.nb_sources %}<details class="menu-deroulant menu-liens-kpi"><summary class="lien-kpi" aria-label="{% libelle "referentiels.calcul.sources_menu" n=k.nb_sources %}">{{ k.nb_sources }} KPI</summary>
+              <div class="menu-liste">{% for code, nom in k.menu_sources %}<a href="{% url 'collecte:referentiel_kpi' code %}" data-panneau><span class="id-chip">{{ code }}</span> {{ nom }}</a>{% endfor %}</div></details>{% else %}<span class="vide">—</span>{% endif %}</td>
+            <td class="mq-m">{% if k.nb_utilisations %}<details class="menu-deroulant menu-liens-kpi"><summary class="lien-kpi utilise" aria-label="{% libelle "referentiels.calcul.utilisations_menu" n=k.nb_utilisations %}">{{ k.nb_utilisations }} KPI</summary>
+              <div class="menu-liste">{% for code, nom in k.menu_utilisations %}<a href="{% url 'collecte:referentiel_kpi' code %}" data-panneau><span class="id-chip">{{ code }}</span> {{ nom }}</a>{% endfor %}</div></details>{% else %}<span class="vide">—</span>{% endif %}</td>
+            <td class="mq-s">{% if k.preuve_obligatoire %}<span class="case-preuve cochee" role="img" title="{% libelle "referentiels.catalogue.preuve_obligatoire_titre" %}" aria-label="{% libelle "referentiels.catalogue.preuve_obligatoire" %}">{% icone "coche" %}</span>{% else %}<span class="case-preuve" role="img" title="{% libelle "referentiels.catalogue.preuve_facultative" %}" aria-label="{% libelle "referentiels.catalogue.preuve_facultative" %}"></span>{% endif %}</td>
+            <td class="ajout-ligne">{% if k.url_ajout %}<button type="button" class="icone" data-ajout-kpi="{{ k.url_ajout }}" aria-haspopup="true" aria-expanded="false" title="{{ t_ajouter }}" aria-label="{% libelle "referentiels.catalogue.ajouter_ligne_aria" code=k.code %}">{% icone "plus" %}</button>{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        {% endfor %}
+      </table>
+    </details>
+    {% endfor %}
+    </section>
+    {% endfor %}
+    <template id="menu-ajout-kpi"><div class="menu-liste menu-ajout-kpi" role="group" aria-label="{{ t_ajouter }}">
+      <a href="#" data-position="avant" data-panneau>{% libelle "referentiels.catalogue.ajouter_au_dessus" %}</a>
+      <a href="#" data-position="apres" data-panneau>{% libelle "referentiels.catalogue.ajouter_en_dessous" %}</a></div></template>
+    <p class="etat-vide" id="aucun-resultat" hidden>{% libelle "referentiels.catalogue.aucun_resultat" %}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

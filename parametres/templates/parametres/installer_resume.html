@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.installer.resume.titre" nom=p.nom %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p class="retour-referentiels"><a href="{% url 'parametres:installer_kpi' f.code %}">{% libelle "referentiels.installer.resume.retour" %}</a></p>
+<div class="tete-installation">
+  <h2 class="titre-installation"><span class="pastille-ref grande" style="--c-ref:{{ p.referentiel.couleur }}" aria-hidden="true"></span> {{ p.nom }}</h2>
+  {% include "parametres/_etapes_installation.html" %}
+</div>
+{% libelle "referentiels.vide" as t_vide %}
+{% include "parametres/_installer_documents_source.html" with documents=p.documents_affiches detaille=True %}
+<form method="post" class="carte resume-installation" data-chargement data-installer-une-fois>
+  {% csrf_token %}
+  {% if analyse.erreur %}{% encart "erreur" role="alert" %}{{ analyse.erreur }}{% endencart %}{% endif %}
+  <h3>{% libelle "referentiels.installer.resume.resume" %}</h3>
+  <ul class="phrases-installation">
+    {% if existant %}
+    <li>{% if nouvelle_version %}{% libelle_html "referentiels.installer.resume.ajout_version" n=nb_installes existant=existant version=p.version %}{% else %}{% libelle_html "referentiels.installer.resume.ajout" n=nb_installes existant=existant %}{% endif %}</li>
+    {% else %}
+    <li>{% libelle "referentiels.installer.resume.themes" n=nb_themes as t_themes %}{% libelle_html "referentiels.installer.resume.installes" n=nb_installes nom=valeurs.nom themes=t_themes %}</li>
+    {% endif %}
+    {% if ajoutes %}
+    <li>{% libelle_html "referentiels.installer.resume.ajoutes_auto" n=ajoutes|length %}
+      {% for code, par in ajoutes %}<span class="id-chip">{{ code }}</span> <span class="discret">{% libelle "referentiels.installer.resume.utilise_par" liste=par|liste %}</span>{% if not forloop.last %}, {% endif %}{% endfor %}.
+      <a href="{% url 'parametres:installer_kpi' f.code %}">{% libelle "referentiels.installer.resume.revenir_choix" %}</a></li>
+    {% endif %}
+    {% if reutilises %}<li>{% libelle "referentiels.installer.resume.reutilises" n=reutilises|length %}</li>{% endif %}
+    {% if montants %}<li class="monnaie-modele">{% libelle "admin.monnaies.installer" monnaie=monnaie_affichee %}
+      {% if analyse.unites_gardees %}{% libelle "admin.monnaies.gardees" n=analyse.unites_gardees|length liste=analyse.unites_gardees|joindre:", " %}{% endif %}
+      <a href="{% url 'parametres:referentiel' %}?section=unites#monnaie-reference">{% libelle "admin.monnaies.lien_reglage" %}</a></li>{% endif %}
+    <li class="phrase-niveaux">{% if phrase_niveaux %}{{ phrase_niveaux }}
+      {% if detail_niveaux %}<span class="detail-niveaux">{{ detail_niveaux }}.</span>{% endif %}
+      {% else %}{% libelle "referentiels.installer.resume.niveaux_gardes" %}{% endif %}
+      {% libelle "referentiels.installer.resume.niveaux_changer" %}</li>
+    {% if arbre_libre %}<li class="phrase-arbre">{% libelle_html "referentiels.installer.resume.arbre_libre" niveaux=niveaux_chaine %}
+      <a href="{{ url_niveaux }}">{% libelle "referentiels.installer.resume.arbre_lien" %}</a>{% libelle "referentiels.installer.resume.arbre_suite" %}</li>{% endif %}
+  </ul>
+
+  {% if not existant %}
+  <div class="champs-installation">
+    <label class="champ"><span class="libelle">{% libelle "referentiels.installer.resume.nom_referentiel" %}</span><input type="text" name="nom" value="{{ valeurs.nom }}" maxlength="150" required></label>
+    <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.frequence" %}</span><select name="frequence">{% for v, l in frequences %}<option value="{{ v }}" {% if valeurs.frequence == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+  </div>
+  <details class="options-repliables"><summary>{% libelle "referentiels.portes.composer.plus_reglages" %}</summary>
+    <div class="champs-ligne">
+      <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.debut_exercice" %}</span><select name="mois_debut">{% for n, m in mois %}<option value="{{ n }}" {% if valeurs.mois_debut == n %}selected{% endif %}>{{ m }}</option>{% endfor %}</select></label>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.installer.resume.code" %}</span><input type="text" name="code" value="{{ valeurs.code }}" maxlength="30" pattern="[A-Za-z0-9_\-]{1,30}" class="code-court"></label>
+    </div>
+  </details>
+  {% endif %}
+
+  {% if a_voir or reglages_crees or regles %}
+  <details class="detail-installation"{% if a_voir %} open{% endif %}><summary>{% libelle "referentiels.installer.resume.voir_detail" %}</summary>
+    {% if a_voir %}
+    <p class="discret">{% libelle "referentiels.installer.resume.conflits_aide" %}</p>
+    <ul class="liste-conflits">
+      {% for l in a_voir %}
+      <li><span class="id-chip">{{ l.code }}</span> {{ l.nom }}
+        {% if l.statut == "rejet" %}<span class="motif-rejet">{{ l.motif }}</span>{% endif %}
+        {% if l.options %}<select name="kpi:{{ l.code }}" aria-label="{% libelle "referentiels.installer.resume.choix_pour" code=l.code %}">{% for v, lib in l.options %}<option value="{{ v }}" {% if v == l.choix %}selected{% endif %}>{{ lib }}</option>{% endfor %}</select>
+          {% if l.choix == "renommer" %}<label class="nouveau-code">{% libelle "referentiels.installer.resume.nouveau_code" %} <input type="text" name="code:{{ l.code }}" value="{{ l.nouveau_code }}" maxlength="30" class="code-court"></label>{% endif %}{% endif %}
+        {% for lib, avant, apres in l.differences|slice:":4" %}<div class="diff"><span class="diff-champ">{{ lib }}</span> <span class="diff-avant">{{ avant|default:t_vide|truncatechars:50 }}</span> → <strong>{{ apres|default:t_vide|truncatechars:50 }}</strong></div>{% endfor %}</li>
+      {% endfor %}
+    </ul>
+    <p><button type="submit" name="action" value="apercu" class="secondaire">{% libelle "referentiels.installer.resume.maj_resume" %}</button></p>
+    {% endif %}
+    {% if reglages_crees %}<p>{% libelle "referentiels.installer.resume.crees_outil" %} {% for r in reglages_crees %}<span class="puce-reglage cree">{{ r.libelle }}</span>{% endfor %}</p>{% endif %}
+    {% if regles %}<p>{% libelle "referentiels.installer.resume.regles" %} {% for r in regles %}{{ r.nom_final }}{% if r.statut == "rejet" %} <span class="motif-rejet">({{ r.motif }})</span>{% endif %}{% if not forloop.last %} ; {% endif %}{% endfor %}.</p>{% endif %}
+  </details>
+  {% endif %}
+
+  {% if options_depuis|length > 1 %}{# « Demandé depuis » des KPI ajoutés à un référentiel qui a des campagnes #}
+  <div class="champ"><label for="depuis-modele">{% libelle "referentiels.apercu.depuis" %}</label>
+    <select name="depuis" id="depuis-modele" aria-describedby="depuis-modele-aide">{% for v, l in options_depuis %}<option value="{{ v }}"{% if v == depuis_choisi %} selected{% endif %}>{{ l }}</option>{% endfor %}</select>
+    <span class="aide-champ" id="depuis-modele-aide">{% libelle "referentiels.depuis.aide" %}</span></div>
+  {% endif %}
+  <div class="barre-enregistrement collante">
+    {% comment %}Barre d'enregistrement unique (lot 3), même ordre qu'à l'étape des KPI : l'action principale à gauche, puis
+       « Revenir » et « Annuler » ; « Revenir » est un lien (comme « retour » côté serveur) : la touche Entrée dans un champ
+       garde « Installer » pour bouton par défaut.{% endcomment %}
+    <button type="submit" name="action" value="installer">{% if existant %}{% libelle "referentiels.installer.resume.ajouter_au_referentiel" %}{% else %}{% libelle "referentiels.installer.resume.installer" %}{% endif %}</button>
+    <a class="bouton secondaire" href="{% url 'parametres:installer_kpi' f.code %}">{% libelle "referentiels.installer.resume.revenir_kpi" %}</a>
+    <a class="bouton secondaire" href="{% url 'parametres:installer_modeles' %}">{% libelle "commun.annuler" %}</a>
+  </div>
+</form>
+{% endblock %}
+{% block scripts %}
+<script nonce="{% jeton_csp %}">
+(function () {  // double clic sur « Installer » : un seul envoi
+  var form = document.querySelector("[data-installer-une-fois]"), envoye = false, bouton = null, texte = "";
+  if (!form) return;
+  form.addEventListener("submit", function (e) {
+    if (!e.submitter || e.submitter.value !== "installer") return;
+    if (envoye) { e.preventDefault(); return; }
+    envoye = true;
+    bouton = e.submitter;
+    texte = bouton.textContent;
+    bouton.setAttribute("aria-disabled", "true");
+    bouton.textContent = lib("referentiels.js.installation_en_cours");
+  });
+  window.addEventListener("pageshow", function () {  // retour arrière : le bouton redevient utilisable
+    envoye = false;
+    if (bouton) { bouton.removeAttribute("aria-disabled"); bouton.textContent = texte; }
+  });
+})();
+</script>
+{% endblock %}

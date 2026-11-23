@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{# pas d'introduction (tri des textes) : elle répétait le nom des onglets #}
+
+{% include "collecte/administration/_a_traiter.html" with points=a_traiter id_titre="titre-a-traiter" montrer_rien=True %}
+
+<section class="carte rubriques-admin" aria-labelledby="titre-rubriques">
+  <h2 id="titre-rubriques">{% libelle "admin.accueil.rubriques" %}</h2>
+  <ul class="liste-rubriques">
+    <li><a href="{% url 'collecte:admin_organisations' %}"><span class="libelle-rubrique">{% libelle "admin.nav.organisations" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.accueil.orgs" n=orgs.total %}{% if orgs.inactives %}, {% libelle "admin.accueil.orgs_inactives" n=orgs.inactives %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'collecte:admin_comptes' %}"><span class="libelle-rubrique">{% libelle "admin.nav.comptes" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.accueil.comptes" n=comptes.total %}{% if comptes.inactifs %}, {% libelle "admin.accueil.comptes_desactives" n=comptes.inactifs %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+    <li class="avec-action"><a href="{% url 'parametres:referentiels' %}"><span class="libelle-rubrique">{% libelle "admin.nav.referentiels" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.accueil.referentiels" n=nb_referentiels %} · {% libelle "admin.accueil.kpi_actifs" n=nb_kpi %}</span>{% icone "chevron-droite" %}</a>
+      <a class="bouton compact action-rubrique" href="{% url 'parametres:referentiel_nouveau' %}">{% icone "plus" %} {% libelle "admin.accueil.ajouter_referentiel" %}</a></li>
+    <li><a href="{% url 'collecte:admin_attributions' %}"><span class="libelle-rubrique">{% libelle "admin.nav.attributions" %}</span>
+      <span class="chiffre-rubrique">{% if sans_spoc %}{% libelle "admin.accueil.sans_spoc" n=sans_spoc %}{% elif ouvertes %}{% libelle "admin.accueil.tous_spoc" %}{% else %}{% libelle "admin.accueil.qui_saisit" %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'collecte:admin_campagnes' %}"><span class="libelle-rubrique">{% libelle "admin.nav.campagnes" %}</span>
+      <span class="chiffre-rubrique">{% if ouvertes|length > 1 %}<span class="icone-statut-campagne" aria-hidden="true">{% icone "crayon" %}</span> {% libelle "admin.accueil.campagnes_ouvertes" nombre=ouvertes|length liste=liste_ouvertes %}{% elif ouverte %}<span class="icone-statut-campagne" aria-hidden="true">{% icone "crayon" %}</span> {% if ouverte.periode.annuelle %}{% if ouverte.date_fin_saisie %}{% libelle "admin.accueil.ouvert_jusqu" nom=ouverte.nom_complet_affiche date=ouverte.date_fin_saisie|date_courte %}{% else %}{% libelle "admin.accueil.ouvert" nom=ouverte.nom_complet_affiche %}{% endif %}{% else %}{% if ouverte.date_fin_saisie %}{% libelle "admin.accueil.ouverte_jusqu" nom=ouverte.nom_complet_affiche date=ouverte.date_fin_saisie|date_courte %}{% else %}{% libelle "admin.accueil.ouverte" nom=ouverte.nom_complet_affiche %}{% endif %}{% endif %}{% elif revue %}<span class="icone-statut-campagne fermee" aria-hidden="true">{% icone "crayon" %}</span> {% libelle "admin.accueil.en_revue" nom=revue.nom_complet_affiche %}{% else %}{% libelle "admin.accueil.aucune_ouverte" %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'parametres:identite' %}"><span class="libelle-rubrique">{% libelle "admin.nav.parametres" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.accueil.langues" liste=langues_texte %} · {% if smtp %}{% libelle "admin.accueil.emails_actifs" %}{% else %}{% libelle "admin.accueil.emails_inactifs" %}{% endif %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'collecte:admin_fichiers' %}"><span class="libelle-rubrique">{% libelle "admin.nav.fichiers" %}</span>
+      <span class="chiffre-rubrique">{% if sauvegarde.active %}{% if sauvegarde.derniere %}{% libelle "admin.accueil.sauvegarde_derniere" date=sauvegarde.derniere|date_courte %}{% else %}{% libelle "admin.accueil.sauvegarde_auto" %}{% endif %}{% else %}{% libelle "admin.accueil.sauvegarde_desactivee" %}{% endif %} · {% libelle "admin.accueil.fichiers_suite" %}</span>{% icone "chevron-droite" %}</a></li>
+    <li><a href="{% url 'collecte:admin_journal' %}"><span class="libelle-rubrique">{% libelle "admin.nav.journal" %}</span>
+      <span class="chiffre-rubrique">{% libelle "admin.accueil.journal" n=nb_journal %}</span>{% icone "chevron-droite" %}</a></li>
+  </ul>
+{# l'aide, en bas du bloc qu'elle explique #}
+<details class="aide-repliable aide-rubriques">
+  <summary>{% libelle "admin.accueil.aide_titre" %}</summary>
+  <dl>
+    <dt>{% libelle "admin.nav.organisations" %}</dt><dd>{% libelle "admin.accueil.aide.organisations" %}</dd>
+    <dt>{% libelle "admin.nav.comptes" %}</dt><dd>{% libelle "admin.accueil.aide.comptes" %}</dd>
+    <dt>{% libelle "admin.nav.referentiels" %}</dt><dd>{% libelle "admin.accueil.aide.referentiels" %}</dd>
+    <dt>{% libelle "admin.nav.attributions" %}</dt><dd>{% libelle "admin.accueil.aide.attributions" %}</dd>
+    <dt>{% libelle "admin.nav.campagnes" %}</dt><dd>{% libelle "admin.accueil.aide.campagnes" %}</dd>
+    <dt>{% libelle "admin.nav.parametres" %}</dt><dd>{% libelle "admin.accueil.aide.parametres" %}</dd>
+    <dt>{% libelle "admin.nav.fichiers" %}</dt><dd>{% libelle "admin.accueil.aide.fichiers" %}</dd>
+    <dt>{% libelle "admin.nav.journal" %}</dt><dd>{% libelle "admin.accueil.aide.journal" %}</dd>
+    <dt>{% libelle "admin.accueil.mode_expert" %}</dt><dd>{% libelle "admin.accueil.aide.mode_expert" %}
+      <a class="lien-action" href="{% url 'admin:index' %}">{% libelle "admin.accueil.ouvrir_expert" %}</a></dd>
+  </dl>
+</details>
+</section>
+
+{% endblock %}

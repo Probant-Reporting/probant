@@ -1,0 +1,12 @@
+{% load collecte %}{# « Je réponds à » dans une page (formulaire GET) : Référentiel (s'il y en a plusieurs) puis Période de ce référentiel. #}
+{% choix_periodes groupes_campagnes campagne as choix %}
+<span class="choix-ref-periode">
+  {% if choix.refs|length > 1 %}<label>{% libelle "saisie.choix.referentiel" %}
+    <select name="ref" data-envoi-changement>
+      {% for r in choix.refs %}<option value="{{ r.code }}" {% if r.pk == campagne.referentiel_id %}selected{% endif %}>{{ r }}</option>{% endfor %}
+    </select></label>{% endif %}
+  <label>{% if choix.refs|length > 1 %}{% libelle "saisie.choix.periode" %}{% else %}{{ campagne.referentiel }}{% endif %}
+    <select name="campagne" data-envoi-changement>
+      {% for c in choix.periodes %}<option value="{{ c.pk }}" {% if c.pk == campagne.pk %}selected{% endif %}>{{ c.periode }}{% if c.statut != "ouverte" %} ({{ c|choix_phrase:"statut" }}){% endif %}</option>{% endfor %}
+    </select></label>
+</span>

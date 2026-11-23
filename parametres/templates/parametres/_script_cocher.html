@@ -1,0 +1,118 @@
+{% load collecte %}{% comment %}Cases à cocher par thème (page d'un ensemble de la bibliothèque, « Choisir les KPI » d'un référentiel) :
+compteur, case de thème, recherche, « Tout cocher », sources ajoutées quand même.{% endcomment %}
+<script nonce="{% jeton_csp %}">
+(function () {
+  var form = document.querySelector("[data-cocher]");
+  if (!form) return;
+  var cases = Array.prototype.slice.call(form.querySelectorAll("input[data-kpi]"));
+  var parCode = {};
+  cases.forEach(function (c) { parCode[c.value] = c; });
+  var annonce = form.querySelector("[data-annonce]");
+  var dernierMessage = "";
+
+  // fermeture des formules : les KPI cochés, puis leurs sources (même règle que le serveur)
+  function retenus() {
+    var vus = {}, pile = [];
+    cases.forEach(function (c) { if (c.checked) { vus[c.value] = true; pile.push(c.value); } });
+    var par = {};
+    while (pile.length) {
+      var code = pile.pop(), c = parCode[code];
+      (c.dataset.sources || "").split(" ").forEach(function (s) {
+        if (!s || !parCode[s]) return;
+        if (!parCode[s].checked) { (par[s] = par[s] || []).push(code); }
+        if (!vus[s]) { vus[s] = true; pile.push(s); }
+      });
+    }
+    return par;
+  }
+
+  function maj() {
+    var par = retenus(), nb = 0, existants = 0, presents = 0, ajoutes = [];
+    cases.forEach(function (c) {
+      var note = c.closest("[data-ligne]").querySelector("[data-note-ajout]");
+      if (c.checked) { nb += 1; if (c.hasAttribute("data-existant")) existants += 1; if (c.hasAttribute("data-present")) presents += 1; }
+      if (!c.checked && par[c.value]) {
+        note.textContent = lib("referentiels.js.ajoute_quand_meme", { liste: par[c.value].sort().join(", ") });
+        note.hidden = false;
+        ajoutes.push(c.value);
+      } else { note.hidden = true; note.textContent = ""; }
+    });
+    form.querySelectorAll("[data-theme]").forEach(function (t) {
+      var dedans = t.querySelectorAll("input[data-kpi]"), n = 0;
+      dedans.forEach(function (c) { if (c.checked) n += 1; });
+      var caseT = t.querySelector(":scope > legend [data-case-theme]");
+      if (caseT) {
+        caseT.checked = n === dedans.length && n > 0;
+        caseT.indeterminate = n > 0 && n < dedans.length;
+        caseT.disabled = Array.prototype.every.call(dedans, function (c) { return c.disabled; });
+      }
+      var compte = t.querySelector(":scope > legend [data-compte-theme]");
+      if (compte) compte.textContent = n + " / " + dedans.length;
+    });
+    var compteur = form.querySelector("[data-nb-coches]");
+    compteur.textContent = nb;
+    compteur.nextSibling.nodeValue = " " + lib("referentiels.js.coches_suite", { n: nb, total: cases.length });
+    form.querySelector("[data-nb-existants-texte]").textContent = ", " + lib("referentiels.js.dont_existants", { nombre: existants });
+    form.querySelector("[data-nb-existants-texte]").hidden = !existants;
+    var aucun = nb - presents <= 0 && !form.hasAttribute("data-sans-ajout");
+    form.querySelector("[data-continuer]").disabled = aucun;
+    form.querySelector("[data-message-zero]").hidden = !aucun;
+    var message = ajoutes.length ? lib("referentiels.js.ajoutes_annonce", { n: ajoutes.length }) : "";
+    if (message !== dernierMessage) { annonce.textContent = message; dernierMessage = message; }
+  }
+
+  form.addEventListener("change", function (e) {
+    var t = e.target;
+    if (t.hasAttribute("data-case-theme")) {
+      var fs = t.closest("[data-theme]");
+      fs.querySelectorAll("input[data-kpi]").forEach(function (c) { if (!c.disabled) c.checked = t.checked; });
+    }
+    maj();
+  });
+  form.querySelectorAll("[data-tout-kpi]").forEach(function (b) {
+    b.addEventListener("click", function (e) {
+      e.preventDefault();
+      var oui = b.dataset.toutKpi === "1";
+      cases.forEach(function (c) { if (!c.disabled && !c.closest("[data-ligne]").hidden) c.checked = oui; });
+      maj();
+    });
+  });
+  form.querySelectorAll("[data-replier]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      var corps = document.getElementById(b.getAttribute("aria-controls"));
+      var ouvert = b.getAttribute("aria-expanded") === "true";
+      corps.hidden = ouvert;
+      b.setAttribute("aria-expanded", ouvert ? "false" : "true");
+      b.querySelector("[data-replier-texte]").textContent = ouvert ? lib("referentiels.js.deplier") : lib("referentiels.js.replier");
+    });
+  });
+  // téléphone : thèmes repliés sauf le premier
+  if (window.matchMedia("(max-width: 600px)").matches) {
+    form.querySelectorAll(".arbre-coche > [data-theme]").forEach(function (t, i) {
+      if (i === 0) return;
+      var b = t.querySelector(":scope > legend [data-replier]");
+      if (b) b.click();
+    });
+  }
+  var recherche = form.querySelector("[data-recherche-coche]");
+  recherche.addEventListener("input", function () {
+    var q = recherche.value.trim().toLowerCase(), visibles = 0;
+    form.querySelectorAll("[data-ligne]").forEach(function (l) {
+      var ok = !q || l.dataset.texte.indexOf(q) !== -1;
+      l.hidden = !ok;
+      if (ok) visibles += 1;
+    });
+    form.querySelectorAll("[data-theme]").forEach(function (t) {
+      var reste = Array.prototype.some.call(t.querySelectorAll("[data-ligne]"), function (l) { return !l.hidden; });
+      t.hidden = !reste;
+      if (q && reste) {
+        var corps = t.querySelector(":scope > .corps-theme-coche"), b = t.querySelector(":scope > legend [data-replier]");
+        if (corps && corps.hidden && b) b.click();
+      }
+    });
+    form.querySelector("[data-aucun-resultat]").hidden = visibles > 0;
+  });
+  recherche.addEventListener("keydown", function (e) { if (e.key === "Enter") e.preventDefault(); });
+  maj();
+})();
+</script>

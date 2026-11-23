@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.titre" as t_admin %}{{ titre_page|default:t_admin }}{% endblock %}
+{% block contenu %}
+{% libelle "admin.titre" as t_admin %}<h1 class="visually-hidden">{{ titre_page|default:t_admin }}</h1>
+{% if retour %}<p><a href="{{ retour.0 }}">← {{ retour.1 }}</a></p>{% else %}<p><a href="{% url 'collecte:admin_accueil' %}">{% libelle "admin.retour" %}</a></p>{% endif %}
+<div class="page-cellule" data-conteneur>{% include gabarit %}</div>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% load collecte %}
+{% comment %}Trois façons d'ajouter un référentiel : page « Ajouter un référentiel », état vide de Référentiels, assistant (étape 5).
+   L'une sous l'autre, repliables : la bibliothèque ouverte, « Composer » ouvert après une erreur.{% endcomment %}
+<div class="trois-portes">
+  <details class="carte porte" id="porte-bibliotheque"{% if not post %} open{% endif %}>
+    <summary><h3 id="titre-porte-1">{% libelle "referentiels.portes.bibliotheque.titre" %} <span class="recommande">{% libelle "referentiels.portes.bibliotheque.recommande" %}</span></h3><span class="aide-porte">{% libelle "referentiels.portes.bibliotheque.aide" %}</span></summary>
+    <ul class="liste-modeles-courte">
+      {% for f in fournis %}
+      <li><a href="{% url 'parametres:installer_kpi' f.code %}?{% if dans_assistant %}depuis=mise_en_place&amp;{% endif %}version=0" style="--c-ref:{{ f.paquet.referentiel.couleur }}">
+        <span class="pastille-ref" aria-hidden="true"></span>
+        <span>{{ f.paquet.nom }}{% if f.installe %}<span class="etat-fourni installe">{% libelle "referentiels.portes.installe" %}</span>{% endif %}</span>
+        <span class="chiffre-modele">{{ f.nb_kpi }} KPI</span></a></li>
+      {% endfor %}
+    </ul>
+    <div class="bas-porte"><a href="{% url 'parametres:installer_modeles' %}{% if dans_assistant %}?depuis=mise_en_place{% endif %}">{% libelle "referentiels.portes.bibliotheque.voir_tous" %}</a></div>
+  </details>
+
+  <details class="carte porte" id="porte-composer"{% if post %} open{% endif %}>
+    <summary><h3 id="titre-porte-2">{% libelle "referentiels.portes.composer.titre" %}</h3><span class="aide-porte">{% libelle "referentiels.portes.composer.aide" %}</span></summary>
+    <form method="post" action="{% url 'parametres:referentiel_nouveau' %}" class="form-depart">
+      {% csrf_token %}{% if dans_assistant %}<input type="hidden" name="depuis" value="mise_en_place">{% endif %}
+      {% libelle "referentiels.portes.composer.nom_exemple" as t_exemple %}{% libelle "referentiels.portes.composer.code_exemple" as t_code_ex %}
+      <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.nom" %}</span><input type="text" name="nom" value="{{ post.nom }}" placeholder="{{ t_exemple }}" maxlength="150" required></label>
+      <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.frequence" %}</span><select name="frequence">{% for v, l in frequences %}<option value="{{ v }}" {% if post.frequence == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+      <details class="options-repliables"><summary>{% libelle "referentiels.portes.composer.plus_reglages" %}</summary>
+        <div class="champs-ligne">
+          <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.debut_exercice" %}</span><select name="mois_debut">{% for n, m in mois %}<option value="{{ n }}" {% if post.mois_debut == n|stringformat:"s" %}selected{% endif %}>{{ m }}</option>{% endfor %}</select></label>
+          <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.ecart" %}</span><select name="comparaison">{% for v, l in comparaisons %}<option value="{{ v }}" {% if post.comparaison == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></label>
+          <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.code" %}</span><input type="text" name="code" value="{{ post.code }}" placeholder="{{ t_code_ex }}" maxlength="30" pattern="[A-Za-z0-9_\-]{1,30}"></label>
+        </div>
+        {% libelle "referentiels.portes.composer.couleur_selecteur" as t_selecteur %}{% libelle "referentiels.portes.composer.couleur" as t_couleur %}
+        <div class="champ"><span class="libelle">{{ t_couleur }}</span>
+          <div class="saisie-couleur"><input type="color" value="{{ post.couleur|default:couleur_suivante|default:'#1F5FAD' }}" data-pipette="couleur_nouveau" aria-label="{{ t_selecteur }}">{# libelle-ok : couleur par défaut (code hexadécimal) #}
+            <input type="text" name="couleur" id="couleur_nouveau" value="{{ post.couleur|default:couleur_suivante|default:'#1F5FAD' }}" maxlength="7" class="code" aria-label="{{ t_couleur }}"></div></div>{# libelle-ok : couleur par défaut (code hexadécimal) #}
+        <label class="champ"><span class="libelle">{% libelle "referentiels.portes.composer.description" %}</span><input type="text" name="description" value="{{ post.description }}"></label>
+      </details>
+      <div class="bas-porte">
+        <button type="submit" name="composer" value="1">{% libelle "referentiels.portes.composer.creer_choisir" %}</button>
+        {% if dans_assistant %}<button type="submit" name="action" value="zero" class="lien" formaction="{% url 'parametres:mise_en_place_etape' 5 %}">{% libelle "referentiels.portes.composer.creer_vide" %}</button>
+        {% else %}<button type="submit" name="action" value="ajouter" class="lien">{% libelle "referentiels.portes.composer.creer_vide" %}</button>{% endif %}
+      </div>
+    </form>
+  </details>
+
+  <details class="carte porte" id="porte-importer">
+    <summary><h3 id="titre-porte-3">{% libelle "referentiels.portes.importer.titre" %}</h3><span class="aide-porte">{% libelle "referentiels.portes.importer.aide" %}</span></summary>
+    <form method="post" action="{% url 'parametres:paquet_importer' %}" enctype="multipart/form-data" class="form-depart depot-preuve" data-chargement>
+      {% csrf_token %}{% if dans_assistant %}<input type="hidden" name="depuis" value="mise_en_place">{% endif %}
+      {% libelle "referentiels.portes.importer.fichier_aria" as t_fichier %}{% libelle "referentiels.portes.importer.modele_titre" as t_modele %}
+      <label class="zone-depot"><input type="file" name="fichier" accept=".xlsx,.xlsm,.json" required aria-label="{{ t_fichier }}" data-depot>
+        <span class="zone-depot-texte">{% libelle_html "referentiels.portes.importer.choisir" %}<span class="discret">{% libelle "referentiels.portes.importer.formats" %}</span></span></label>
+      <div class="bas-porte"><button type="submit" name="action" value="verifier">{% libelle "referentiels.portes.importer.verifier" %}</button>
+        <a href="{% url 'parametres:paquet_modele' %}" data-telechargement title="{{ t_modele }}">{% libelle "referentiels.portes.importer.modele" %}</a></div>
+    </form>
+  </details>
+</div>

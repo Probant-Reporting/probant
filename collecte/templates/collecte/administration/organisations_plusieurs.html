@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.organisations_plusieurs.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_organisations' %}">{% libelle "admin.organisations_plusieurs.retour" %}</a></p>
+<form method="post" class="carte form-mep page-plusieurs">
+  {% csrf_token %}
+  <h2>{% libelle "admin.organisations_plusieurs.titre_h2" %}</h2>
+  <p class="discret">{% with d=niveaux|last %}{% libelle_html "admin.organisations_plusieurs.aide" niveaux=noms_niveaux bas=d.nom %}
+    {% libelle "referentiels.mep.organisation.date_ouverture_syntaxe" niveau=d.nom %}{% endwith %}</p>
+  {% if erreurs_arbre %}{% encart "erreur" role="alert" %}{% for e in erreurs_arbre %}<p>{{ e }}</p>{% endfor %}{% endencart %}{% endif %}
+  {% libelle "admin.nav.organisations" as t_org %}<textarea name="arbre" rows="12" class="code saisie-arbre" aria-label="{{ t_org }}" aria-describedby="aide-limite-arbre" placeholder="{{ exemple_arbre }}">{{ texte_arbre }}</textarea>
+  <p class="discret" id="aide-limite-arbre">{% libelle "referentiels.mep.arbre.limite_aide" maximum=limite_arbre %}</p>
+  {% if noeuds_lus and not erreurs_arbre %}
+  <div class="apercu-arbre-lu">
+    <strong>{% libelle "admin.organisations_plusieurs.lues" n=noeuds_lus|length %}</strong>
+    <ul class="arbre-mep">{% for x in noeuds_lus %}<li style="--prof:{{ x.prof }}"><span class="niveau niveau-{{ x.niveau.code }}">{{ x.niveau.nom }}</span> {{ x.nom }}{% if x.ouverture and not x.existe %} <span class="discret">{% libelle "admin.organisation.ouverte_depuis" date=x.ouverture|date_courte %}</span>{% endif %}{% if x.ouverture_parent and not x.existe %} <span class="discret">{% libelle "referentiels.mep.organisation.ouverte_avec_parent" date=x.ouverture_parent.0|date_courte parent=x.ouverture_parent.1 %}</span>{% endif %}{% if x.existe %} <span class="discret">{% libelle "admin.organisations_plusieurs.existe" %}</span>{% endif %}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <div class="barre-enregistrement">
+    {% if noeuds_lus and not erreurs_arbre %}<button type="submit" name="action" value="creer">{% libelle "admin.organisations_plusieurs.creer" %}</button>{% endif %}
+    <button type="submit" name="action" value="apercu" class="secondaire">{% libelle "admin.organisations_plusieurs.apercu" %}</button>
+  </div>
+</form>
+{% endblock %}

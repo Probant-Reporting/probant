@@ -1,0 +1,14 @@
+{% load collecte %}
+{# Rubrique « Source documents » d'un modèle de la bibliothèque : les documents dont il est tiré (titre, éditeur, version, date du document, jour de consultation). Reçoit « documents » (paquet.documents_affiches) ; rien si la liste est vide. #}
+{% if documents %}
+<details class="documents-source">
+  <summary>{% libelle "referentiels.documents.titre_n" n=documents|length %}</summary>
+  {% if detaille %}<p class="discret petit">{% libelle "referentiels.documents.chapeau" %}</p>{% endif %}
+  <ul>
+    {% for d in documents %}
+    <li><a href="{{ d.url }}" target="_blank" rel="noopener noreferrer">{{ d.titre }} {% icone "externe" %}</a>
+      <span class="discret petit">{% if d.date_texte %}{% libelle "referentiels.documents.detail" editeur=d.editeur version=d.version date=d.date_texte consulte=d.consulte_texte %}{% else %}{% libelle "referentiels.documents.detail_sans_date" editeur=d.editeur version=d.version consulte=d.consulte_texte %}{% endif %}</span></li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}

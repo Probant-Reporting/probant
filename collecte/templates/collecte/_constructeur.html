@@ -1,0 +1,24 @@
+{% load collecte %}{% comment %}Constructeur de formule (fiche KPI, règles de cohérence). Paramètres : champ (champ texte de la formule) ;
+   exemple (aide sous le champ texte : un exemple de formule, pour la fiche KPI).{% endcomment %}<div class="constructeur" data-constructeur data-kpis-url="{% url 'collecte:referentiel_kpis_json' %}">
+  <div class="jetons" data-jetons aria-live="polite"><span class="discret">{% libelle "saisie.formule.lecture" %}</span></div>
+  <div class="ajout-kpi">
+    <div class="recherche-kpi">
+      <input type="search" data-recherche-kpi placeholder="{% libelle "saisie.constructeur.ajouter_placeholder" %}" aria-label="{% libelle "saisie.fiche.ajouter_kpi_formule" %}" autocomplete="off">
+      <ul class="suggestions-kpi" data-suggestions hidden></ul>
+    </div>
+    <select data-decalage aria-label="{% libelle "saisie.constructeur.periode_aria" %}">
+      <option value="N">{% libelle "saisie.constructeur.meme_periode" %}</option><option value="N-1">{% libelle "saisie.constructeur.annee_derniere" %}</option><option value="P-1">{% libelle "saisie.constructeur.periode_precedente" %}</option>
+    </select>
+  </div>
+  <div class="clavier-formule" role="group" aria-label="{% libelle "saisie.constructeur.operateurs" %}">
+    <button type="button" data-op="+" title="{% libelle "saisie.fiche.op.plus" %}">+</button><button type="button" data-op="-" title="{% libelle "saisie.fiche.op.moins" %}">−</button>
+    <button type="button" data-op="*" title="{% libelle "saisie.fiche.op.multiplier" %}">×</button><button type="button" data-op="/" title="{% libelle "saisie.fiche.op.diviser" %}">÷</button>
+    <button type="button" data-op="(" title="{% libelle "saisie.fiche.op.ouvrir" %}">(</button><button type="button" data-op=")" title="{% libelle "saisie.fiche.op.fermer" %}">)</button>
+    <span class="nombre-formule"><input type="text" inputmode="decimal" data-nombre placeholder="{% libelle "saisie.constructeur.nombre_placeholder" %}" aria-label="{% libelle "saisie.constructeur.nombre_aria" %}"><button type="button" data-ajout-nombre>{% libelle "commun.ajouter" %}</button></span>
+    <button type="button" class="effacer" data-retour title="{% libelle "saisie.constructeur.retirer_dernier" %}">⌫</button>
+    <button type="button" class="effacer" data-vider title="{% libelle "saisie.fiche.tout_effacer" %}">{% libelle "saisie.constructeur.effacer" %}</button>
+  </div>
+  <details class="mode-texte"><summary>{% libelle "saisie.constructeur.modifier_texte" %}</summary>
+    {# libelle-ok : exemple de formule #}{{ champ }}{% if exemple %}<span class="aide-champ">{% libelle "saisie.fiche.formule_exemple" %} <span class="code">[DEC-01] / [DEC-02@N-1] * 100</span></span>{% endif %}</details>
+  {{ champ.errors }}
+</div>

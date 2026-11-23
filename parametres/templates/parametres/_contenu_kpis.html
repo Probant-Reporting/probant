@@ -1,0 +1,19 @@
+{% load collecte %}
+{% libelle "referentiels.contenu.kpi.glisser" as t_glisser %}{% libelle "referentiels.contenu.kpi.monter" as t_monter %}{% libelle "referentiels.contenu.kpi.descendre" as t_descendre %}{% libelle "referentiels.contenu.kpi.facultatif_titre" as t_fac_titre %}{% libelle "referentiels.contenu.kpi.facultatif" as t_fac %}{% libelle "referentiels.contenu.kpi.inactif" as t_inactif %}{% libelle "referentiels.contenu.kpi.retirer_titre" as t_retirer %}
+<table class="kpis-theme">
+  {% for e in elements %}{% with k=e.kpi %}
+  <tr class="ligne{% if not k.actif %} inactive{% endif %}" draggable="true" data-element="{{ k.code }}" data-depuis-refus="{{ e.depuis_refus }}" data-url="{% url 'collecte:referentiel_kpi' k.code %}" tabindex="0"
+      data-texte="{{ k.code|lower }} {{ k.nom|lower }}" aria-label="{% libelle "referentiels.contenu.kpi.ligne_aria" nom=k.nom %}">
+    <td class="case"><input type="checkbox" data-coche value="{{ k.code }}" aria-label="{% libelle "referentiels.contenu.kpi.cocher" code=k.code %}"></td>
+    <td class="poignee" title="{{ t_glisser }}">⠿</td>
+    <td class="ranger-doigt"><span class="fleches"><button type="button" class="icone" data-ranger="haut" aria-label="{% libelle "referentiels.contenu.kpi.monter_code" code=k.code %}" title="{{ t_monter }}">{% icone "chevron-haut" %}</button><button type="button" class="icone" data-ranger="bas" aria-label="{% libelle "referentiels.contenu.kpi.descendre_code" code=k.code %}" title="{{ t_descendre }}">{% icone "chevron-bas" %}</button></span></td>
+    <td class="code-kpi"><span class="id-chip">{{ k.code }}</span></td>
+    <td class="nom">{{ k.nom }}{% calcul_clair k as t_calcul %}{% if not e.obligatoire %} <span class="facultatif" title="{{ t_fac_titre }}">{{ t_fac }}</span>{% endif %}{% if not k.actif %} <span class="etat etat-inactif">{{ t_inactif }}</span>{% endif %}{% if t_calcul %}<div class="calcul-clair" title="{{ t_calcul }}"><span aria-hidden="true">=</span> <span class="visually-hidden">{% libelle "referentiels.calcul.mot" %}</span>{{ t_calcul }}</div>{% endif %}</td>
+    <td class="mq-xs">{% etiquette_type k %}</td>
+    <td class="mq-s">{% etiquette_niveau k %}</td>
+    <td class="mq-m unite">{{ k.symbole|default:"—" }}</td>
+    <td class="depuis"><button type="button" class="lien depuis-kpi" data-depuis-ligne="{{ k.code }}" title="{% libelle "referentiels.contenu.kpi.depuis_titre" depuis=e.depuis_phrase %}" aria-label="{% libelle "referentiels.contenu.kpi.depuis_aria" code=k.code depuis=e.depuis_texte %}">{{ e.depuis_texte }}</button></td>
+    <td class="retirer"><button type="button" class="icone" data-retirer="{{ k.code }}" title="{{ t_retirer }}" aria-label="{% libelle "referentiels.contenu.kpi.retirer_code" code=k.code %}">{% icone "fermer" %}</button></td>
+  </tr>
+  {% endwith %}{% endfor %}
+</table>

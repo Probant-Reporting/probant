@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Administration › Preuves à supprimer (collecte/conservation.py) : les preuves des KPI sensibles dont la période est finie
+depuis plus longtemps que la durée de conservation réglée (Paramètres › Hébergement), campagne clôturée. Filtres par le serveur
+(comme l'Historique) ; suppression réelle (ligne et fichier), une par une ou en groupe, après confirmation. Aucune suppression
+automatique.{% endcomment %}
+{% block titre %}{% libelle "admin.preuves.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_journal' %}">{% icone "chevron-gauche" %} {% libelle "admin.supprimes.retour" %}</a></p>
+<h2>{% libelle "admin.preuves.titre" %}{% if total %} <span class="discret normal texte-mini">{{ total }}</span>{% endif %}</h2>
+
+{% if not mois %}
+{# page sans rien à montrer : l'état de page vide sous le titre de la page (pas de carte ni de second titre) #}
+{% libelle "admin.preuves.sans_duree" as t_sd %}{% libelle "admin.preuves.sans_duree_phrase" as t_sdp %}{% libelle "admin.preuves.regler" as t_reg %}
+{% url 'parametres:hebergement' as url_reglage %}{% include "collecte/_vide.html" with titre=t_sd phrase=t_sdp url=url_reglage|add:"#reglage-conservation" action=t_reg %}
+{% else %}
+<p class="aide-champ remonte">{% libelle "admin.preuves.aide" n=mois %} <a href="{% url 'parametres:hebergement' %}#reglage-conservation">{% libelle "admin.preuves.regler_duree" %}</a></p>
+
+{% if total %}
+<form method="get" class="barre-filtres">{# filtres appliqués par le serveur, à la fermeture du panneau #}
+  <div class="champ-filtre"><label for="recherche-preuves">{% libelle "commun.filtres.recherche" %}</label>
+    <input type="search" id="recherche-preuves" name="q" value="{{ q }}" {% libelle "admin.preuves.recherche" as t_ph %}placeholder="{{ t_ph }}"></div>
+  <div class="champ-filtre"><label for="filtre-kpi-preuves">{% libelle "admin.preuves.col.kpi" %}</label>
+    <select id="filtre-kpi-preuves" name="kpi" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ kpis_choisis|join:"," }}"><option value="">{% libelle "commun.tous" %}</option>
+      {% for v, t, n in choix_kpis %}<option value="{{ v }}" data-nb="{{ n|stringformat:"d" }}"{% if v in kpis_choisis %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="champ-filtre"><label for="filtre-org-preuves">{% libelle "admin.preuves.col.organisation" %}</label>
+    <select id="filtre-org-preuves" name="org" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ orgs_choisies|join:"," }}"><option value="">{% libelle "commun.tous" %}</option>
+      {% for v, t, n in choix_orgs %}<option value="{{ v }}" data-nb="{{ n|stringformat:"d" }}"{% if v in orgs_choisies %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <div class="champ-filtre"><label for="filtre-campagne-preuves">{% libelle "admin.preuves.col.campagne" %}</label>
+    <select id="filtre-campagne-preuves" name="campagne" data-panneau-filtre data-multiple data-envoyer data-valeurs="{{ camps_choisies|join:"," }}"><option value="">{% libelle "commun.tous" %}</option>
+      {% for v, t, n in choix_camps %}<option value="{{ v }}" data-nb="{{ n|stringformat:"d" }}"{% if v in camps_choisies %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></div>
+  <noscript><button type="submit" class="secondaire">{% libelle "commun.filtrer" %}</button></noscript>
+  <p class="etat-filtres" data-serveur>{% if filtre %}<span role="status">{{ compte }}</span>
+    <a class="lien-effacer" href="{% url 'collecte:admin_preuves' %}">{% icone "x" %} {% libelle "commun.filtres.effacer_tout" %}</a>{% endif %}</p>
+</form>
+{% endif %}
+
+{% if lignes %}
+{# « Supprimer » d'une ligne : formulaire à part (la liste est un formulaire de cases à cocher) #}
+<form method="post" id="form-une" action="{% url 'collecte:admin_preuves' %}">{% csrf_token %}</form>
+<form method="post" data-cases action="{% url 'collecte:admin_preuves' %}">{% csrf_token %}
+  {% libelle "admin.preuves.tableau_aria" as t_tab %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_tab }}">
+  <table class="carte-table table-preuves" id="table-preuves" data-triable>
+    <thead><tr><th class="case"><input type="checkbox" data-tout-cocher aria-label="{% libelle "admin.preuves.tout_cocher" %}"></th>
+      <th data-tri="texte" data-tri-col="kpi">{% libelle "admin.preuves.col.kpi" %}</th>
+      <th class="mq-s" data-tri="texte" data-tri-col="organisation">{% libelle "admin.preuves.col.organisation" %}</th>
+      <th class="mq-m">{% libelle "admin.preuves.col.campagne" %}</th>
+      <th>{% libelle "admin.preuves.col.fichier" %}</th>
+      <th class="mq-m" data-tri="date" data-tri-col="depot">{% libelle "admin.preuves.col.depose" %}</th>
+      <th data-tri="date" data-tri-col="echeance" aria-sort="ascending">{% libelle "admin.preuves.col.depuis" %}</th>
+      <th><span class="visuellement-cache">{% libelle "admin.preuves.col.actions" %}</span></th></tr></thead>
+    {% for l in lignes %}
+    <tr>
+      <td class="case"><input type="checkbox" name="preuves" value="{{ l.preuve.pk }}" data-case {% libelle "admin.preuves.choisir_aria" fichier=l.preuve.nom_fichier as t_ch %}aria-label="{{ t_ch }}"></td>
+      <td data-tri="{{ l.kpi.nom }}"><b>{{ l.kpi.nom }}</b><br><span class="discret">{{ l.kpi.code }}</span>
+        <span class="discret sous-org">{{ l.organisation.nom }}</span></td>
+      <td class="mq-s" data-tri="{{ l.organisation.nom }}">{{ l.organisation.nom }}</td>
+      <td class="mq-m">{{ l.campagne.nom_complet_affiche }}</td>
+      <td><a href="{% url 'collecte:preuve' l.preuve.pk %}" target="_blank" rel="noopener">{{ l.preuve.nom_fichier }}</a></td>
+      <td class="mq-m" data-tri="{{ l.preuve.date_depot|date:'c' }}">{{ l.preuve.date_depot|date_courte }}</td>
+      <td data-tri="{{ l.echeance|date:'c' }}">{{ l.echeance|date_courte }}<br><span class="discret">{% libelle "admin.preuves.jours" n=l.jours %}</span></td>
+      <td class="action-ligne">{% libelle "admin.preuves.supprimer_aria" fichier=l.preuve.nom_fichier as t_sa %}{% libelle "admin.preuves.confirmer_une" fichier=l.preuve.nom_fichier kpi=l.kpi.nom organisation=l.organisation.nom sauvegardes=sauvegardes n=1 as t_cu %}
+        <button type="submit" form="form-une" name="preuves" value="{{ l.preuve.pk }}" class="lien danger" aria-label="{{ t_sa }}" data-confirmer="{{ t_cu }}" data-confirmer-bouton="{% libelle "admin.preuves.supprimer" %}">{% icone "supprimer" %} {% libelle "admin.preuves.supprimer" %}</button></td>
+    </tr>
+    {% endfor %}
+  </table></div>
+  {% if coupe %}{% encart "info" %}{% libelle "admin.preuves.coupe" n=max_lignes total=nb_lignes %}{% endencart %}{% endif %}
+  <div class="barre-enregistrement">
+    {% libelle "admin.preuves.confirmer_un" sauvegardes=sauvegardes n=1 as t_c1 %}{% libelle "admin.preuves.confirmer_plusieurs" sauvegardes=sauvegardes n=2 nombre="{n}" as t_cn %}
+    <button type="submit" class="danger" disabled data-confirmer-un="{{ t_c1 }}" data-confirmer-plusieurs="{{ t_cn }}" data-confirmer-bouton="{% libelle "admin.preuves.supprimer" %}">{% icone "supprimer" %} {% libelle "admin.preuves.supprimer_choisies" %}</button>
+    <span class="etat-barre" data-compte-cases>{% libelle "admin.preuves.nb_choisies" n=0 %}</span>
+  </div>
+</form>
+{% elif total %}
+<p class="etat-vide" id="aucun-resultat">{% libelle "admin.preuves.aucun" %}</p>
+{% else %}
+{% libelle "admin.preuves.vide" n=mois as t_vide %}{% libelle "admin.preuves.vide_phrase" as t_vp %}{% include "collecte/_vide.html" with titre=t_vide phrase=t_vp compact=True %}
+{% endif %}
+{# rappel des sauvegardes déjà faites : discret, sous la liste, sans répéter l'écran #}
+<p class="aide-champ" id="note-sauvegardes">{% libelle "admin.preuves.sauvegardes_note" %}</p>
+{% endif %}
+{% endblock %}

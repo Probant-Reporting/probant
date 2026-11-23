@@ -1,0 +1,5 @@
+{% load collecte %}<div id="liste" tabindex="-1"{% if url_reste %} data-url-reste="{{ url_reste }}"{% endif %}>
+{% include "collecte/_sections_corps.html" %}
+<p class="etat-vide" id="aucun-resultat" hidden>{% libelle "saisie.aucun_resultat" %}</p>
+</div>
+{% if admin %}{% include "collecte/_choix_spoc.html" %}{% endif %}

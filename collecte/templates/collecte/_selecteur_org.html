@@ -1,0 +1,36 @@
+{% load collecte %}{% comment %}Sélecteur d'organisation de la Saisie, commun à ses deux vues (les deux boutons
+« Une organisation à la fois » / « Tout ce qui m'est attribué » réunis dans ce sélecteur). En tête de liste, « Tout ce qui
+m'est attribué » (le flux, page pour_moi ; pas pour l'auditeur, en lecture seule) ; puis l'arbre des organisations, chacune
+ouvre la vue d'une organisation. ``flux`` : vrai sur la page « Tout ce qui m'est attribué ».{% endcomment %}
+<details class="selecteur-org" id="choix-org">
+<summary>
+  <span class="visually-hidden">{% libelle "saisie.org.changer" %}</span>
+  {% if flux %}<span class="pictogramme-tous" aria-hidden="true">{% icone "flux" %}</span>
+  <span class="org-actuelle"><strong>{% libelle "saisie.vues.flux" %}</strong><span class="discret">{% libelle "saisie.org.tout_attribue_aide" %}</span></span>
+  {% else %}{% etiquette_niveau org %}
+  <span class="org-actuelle"><strong>{{ org.nom }}</strong><span class="discret">{% libelle "saisie.org.niveau_haut" as niveau_haut %}{{ org|chemin|default:niveau_haut }}</span></span>{% endif %}
+  <span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span>
+</summary>
+<div class="org-liste">
+  {% libelle "saisie.org.rechercher" as t_rech_org %}<input type="search" placeholder="{{ t_rech_org }}" aria-label="{{ t_rech_org }}" data-recherche-org>
+  <div class="legende">{% for n in niveaux_arbre %}{% etiquette_niveau n.code %}{% endfor %}
+    <span class="discret ml-auto">{% libelle "saisie.org.legende_validees" %}</span><span class="discret legende-alerte">{% icone "alerte" %} {% libelle "saisie.org.legende_alertes" %}</span></div>
+  <ul id="liste-orgs" data-rafraichir>
+    {% if not user.lecture_seule %}<li class="prof-0 choix-tout-attribue" data-texte="{% libelle "saisie.vues.flux" as t_flux %}{{ t_flux|lower }}">
+      <a href="{% url 'collecte:pour_moi' %}" class="{% if flux %}actuelle{% endif %}"{% if flux %} aria-current="page"{% endif %}><span class="trait"></span>{% icone "flux" %}<span class="nom-org">{{ t_flux }}</span></a>
+    </li>{% endif %}
+    {% for o, total, valides, alertes in orgs %}
+    <li class="prof-{{ o.prof }} niv-{{ o.niveau_id }}" style="--prof:{{ o.prof }}" data-texte="{{ o.nom|lower }} {{ o.niveau|lower }}">
+      <a href="{% url 'collecte:saisie' %}?org={{ o.id }}&amp;campagne={{ campagne.pk }}" class="{% if not flux and o == org %}actuelle{% endif %}" title="{{ o|chemin }}{% if o.parent %} › {% endif %}{{ o.nom }}">
+        <span class="trait"></span>
+        {% etiquette_niveau o %}
+        <span class="nom-org">{{ o.nom }}</span>
+        {% if total %}<span class="mini-barre"><span style="width:{% widthratio valides total 100 %}%"></span></span><span class="compte">{{ valides }} / {{ total }}</span>
+        {% else %}<span class="compte">{% libelle "saisie.org.agregats" %}</span>{% endif %}
+        <span class="place-alerte">{% if alertes %}<span class="badge-alerte" title="{% libelle "saisie.alertes.a_traiter" n=alertes as t_alertes %}{{ t_alertes }}">{% icone "alerte" %} {{ alertes }}<span class="visuellement-cache"> {% libelle "saisie.alertes.suffixe" n=alertes %}</span></span>{% endif %}</span>
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+  </details>

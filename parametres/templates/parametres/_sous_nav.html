@@ -1,0 +1,27 @@
+{% load collecte %}{% comment %}Paramètres, sur téléphone (sous 560 px) : comme les rubriques de l'administration, le script replie
+leurs pages derrière le bouton « Page : <actuelle> » (menu compact) ; sans script, elles restent affichées. Les trois onglets
+des référentiels tiennent sur deux lignes au plus : ils restent affichés.{% endcomment %}{% if rubrique == "referentiels" %}
+{% libelle "admin.sous_nav.ref_info" as t_ri %}{% libelle "admin.sous_nav.catalogue_info" as t_ci %}{% libelle "admin.sous_nav.unites_info" as t_ui %}{% libelle "admin.sous_nav.ref_titre" as t_rt %}<nav class="sous-onglets petits onglets-parametres" aria-label="{{ t_rt }}">
+  <a href="{% url 'parametres:referentiels' %}"{% if sous_rubrique == 'referentiels' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'referentiels' %}actif{% endif %}" title="{{ t_ri }}">{% libelle "admin.sous_nav.referentiels" %}</a>
+  <a href="{% url 'collecte:referentiel' %}"{% if sous_rubrique == 'kpi' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'kpi' %}actif{% endif %}" title="{{ t_ci }}">{% libelle "admin.sous_nav.catalogue" %}</a>
+  <a href="{% url 'parametres:referentiel' %}"{% if sous_rubrique == 'referentiel' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'referentiel' %}actif{% endif %}" title="{{ t_ui }}">{% libelle "admin.sous_nav.unites" %}</a>
+</nav>
+{% else %}
+{% if not sous_rubrique %}{% libelle "admin.sous_nav.identite" as t_page %}{% elif sous_rubrique == 'niveaux' %}{% libelle "admin.sous_nav.niveaux" as t_page %}{% elif sous_rubrique == 'langues' %}{% libelle "admin.sous_nav.langues" as t_page %}{% elif sous_rubrique == 'seuils' %}{% libelle "admin.sous_nav.seuils" as t_page %}{% elif sous_rubrique == 'visualisation' %}{% libelle "visu.parametres.onglet" as t_page %}{% elif sous_rubrique == 'hebergement' %}{% libelle "admin.sous_nav.hebergement" as t_page %}{% elif sous_rubrique == 'sante' %}{% libelle "admin.sous_nav.sante" as t_page %}{% elif sous_rubrique == 'assistants' %}{% libelle "admin.sous_nav.assistants" as t_page %}{% elif sous_rubrique == 'ia' %}{% libelle "admin.sous_nav.ia" as t_page %}{% elif sous_rubrique == 'espaces' %}{% libelle "espaces.onglet" as t_page %}{% endif %}
+{% libelle "admin.sous_nav.param_titre" as t_pt %}<div class="menu-compact" data-menu-compact>
+  <button type="button" class="bouton-menu-compact secondaire" aria-expanded="false" aria-controls="pages-parametres" hidden>{% if t_page %}{% libelle "admin.sous_nav.page_actuelle" page=t_page %}{% else %}{{ t_pt }}{% endif %} {% icone "chevron-down" %}</button>
+<nav class="sous-onglets petits onglets-parametres" id="pages-parametres" aria-label="{{ t_pt }}">
+  <a href="{% url 'parametres:identite' %}"{% if not sous_rubrique %} aria-current="page"{% endif %} class="{% if not sous_rubrique %}actif{% endif %}">{% libelle "admin.sous_nav.identite" %}</a>
+  <a href="{% url 'parametres:niveaux' %}"{% if sous_rubrique == 'niveaux' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'niveaux' %}actif{% endif %}">{% libelle "admin.sous_nav.niveaux" %}</a>
+  <a href="{% url 'parametres:langues' %}"{% if sous_rubrique == 'langues' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'langues' %}actif{% endif %}">{% libelle "admin.sous_nav.langues" %}</a>
+  <a href="{% url 'parametres:seuils' %}"{% if sous_rubrique == 'seuils' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'seuils' %}actif{% endif %}">{% libelle "admin.sous_nav.seuils" %}</a>
+  <a href="{% url 'parametres:visualisation' %}"{% if sous_rubrique == 'visualisation' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'visualisation' %}actif{% endif %}">{% libelle "visu.parametres.onglet" %}</a>
+  <a href="{% url 'parametres:hebergement' %}"{% if sous_rubrique == 'hebergement' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'hebergement' %}actif{% endif %}">{% libelle "admin.sous_nav.hebergement" %}</a>
+  <a href="{% url 'parametres:sante_installation' %}"{% if sous_rubrique == 'sante' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'sante' %}actif{% endif %}">{% libelle "admin.sous_nav.sante" %}</a>
+  <a href="{% url 'serveur_mcp:reglages' %}"{% if sous_rubrique == 'assistants' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'assistants' %}actif{% endif %}">{% libelle "admin.sous_nav.assistants" %}</a>
+  {% if ia_permise %}<a href="{% url 'parametres:ia' %}"{% if sous_rubrique == 'ia' %} aria-current="page"{% endif %} class="{% if sous_rubrique == 'ia' %}actif{% endif %}">{% libelle "admin.sous_nav.ia" %}</a>{% endif %}
+  {% include "espaces/_onglet.html" %}
+  {% if mise_en_place %}<a href="{{ mise_en_place.url }}" class="lien-mise-en-place" {% libelle "admin.sous_nav.mise_en_place_info" as t_mp %}title="{{ t_mp }}">{% libelle "admin.sous_nav.mise_en_place" %}</a>{% endif %}
+</nav>
+</div>
+{% endif %}

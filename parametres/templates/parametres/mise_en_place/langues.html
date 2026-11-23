@@ -1,0 +1,40 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.langues.intro" reference=reference %}</p>{% endblock %}
+{% block etape %}
+<form method="post" class="carte form-mep" id="f-langues">
+  {% csrf_token %}
+  {% libelle "referentiels.mep.langues.reference_fixe" as t_fixe %}
+  <table class="table-mep">
+    <thead><tr><th>{% libelle "referentiels.mep.langues.col_langue" %}</th><th>{% libelle "referentiels.mep.langues.col_libelle" %}</th><th class="centre">{% libelle "referentiels.mep.langues.col_active" %}</th><th class="centre">{% libelle "referentiels.mep.langues.col_defaut" %}</th></tr></thead>
+    {% for lg in langues %}
+    <tr><td><span class="id-chip">{{ lg.code }}</span>{% if lg.code == code_reference %} <span class="facultatif">{% libelle "referentiels.mep.langues.reference" %}</span>{% endif %}</td>
+      <td><input type="text" name="libelle__{{ lg.code }}" value="{{ lg.libelle }}" maxlength="40" aria-label="{% libelle "referentiels.mep.langues.aria_libelle" code=lg.code %}"></td>
+      <td class="centre"><input type="checkbox" name="active__{{ lg.code }}" {% if lg.active or lg.code == code_reference %}checked{% endif %} {% if lg.code == code_reference %}disabled title="{{ t_fixe }}"{% endif %} aria-label="{% libelle "referentiels.mep.langues.aria_active" nom_langue=lg.libelle %}"></td>
+      <td class="centre"><input type="radio" name="defaut" value="{{ lg.code }}" {% if lg.code == defaut %}checked{% endif %} aria-label="{% libelle "referentiels.mep.langues.aria_defaut" nom_langue=lg.libelle %}"></td></tr>
+    {% endfor %}
+  </table>
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+<form method="post" class="ajout-reglable carte form-mep">
+  {% csrf_token %}
+  <span class="libelle pleine-ligne">{% libelle "referentiels.mep.langues.ajouter_titre" %}</span>
+  {% if suggestions %}<label class="champ"><span class="libelle">{% libelle "referentiels.mep.langues.proposee" %}</span>
+    <select name="code" data-remplir-libelle>
+      <option value="">{% libelle "referentiels.mep.langues.choisir" %}</option>{% for c, lib in suggestions %}<option value="{{ c }}" data-libelle="{{ lib }}">{{ lib }} ({{ c }})</option>{% endfor %}</select></label>{% endif %}
+  {% libelle "referentiels.mep.langues.code_exemple" as t_code_ex %}{% libelle "referentiels.mep.langues.libelle_exemple" as t_lib_ex %}
+  <label class="champ"><span class="libelle">{% libelle "referentiels.mep.langues.ou_code" %}</span><input type="text" name="code_libre" maxlength="10" placeholder="{{ t_code_ex }}" data-vider-code></label>
+  <label class="champ"><span class="libelle">{% libelle "referentiels.mep.langues.col_libelle" %}</span><input type="text" name="libelle" maxlength="40" placeholder="{{ t_lib_ex }}"></label>
+  <button type="submit" name="action" value="ajouter" class="secondaire">{% libelle "referentiels.mep.langues.ajouter" %}</button>
+</form>
+{% endblock %}
+{% block apercu %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.langues.apercu_compte" %}</strong>
+  <label class="discret">{% libelle "referentiels.mep.langues.apercu_langue_contenus" %}</label>
+  {% libelle "referentiels.mep.langues.apercu_select_aria" as t_aria %}
+  <select disabled class="faux-select" aria-label="{{ t_aria }}"><option>{% libelle "referentiels.mep.langues.apercu_installation" nom_langue=defaut_libelle %}</option></select>
+  <ul class="liste-mep">{% for lg in langues %}{% if lg.active or lg.code == code_reference %}<li>{{ lg.libelle }}</li>{% endif %}{% endfor %}</ul>
+</div>
+<p class="discret">{% libelle "referentiels.mep.langues.apercu_aide" %}</p>
+{% endblock %}

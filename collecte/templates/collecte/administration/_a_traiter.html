@@ -1,0 +1,17 @@
+{% load collecte %}{% comment %}Liste « À traiter » : le même bloc dans le Tableau de bord et l'Administration (DESIGN.md).
+Carte blanche, titre avec compteur, une ligne par sujet (icône orange, titre en gras, détail), lien d'action à droite.
+Paramètres : points (collecte/a_traiter.py), id_titre, bouton_relance (tableau de bord : « Préparer la relance… » dans l'en-tête),
+montrer_rien (Administration : « Rien à traiter » quand la liste est vide).{% endcomment %}
+<section class="carte a-traiter" aria-labelledby="{{ id_titre }}">
+  <div class="tete-a-traiter"><h2 id="{{ id_titre }}">{% libelle "admin.accueil.a_traiter" %}{% if points %} <span class="compteur-titre">{{ points|length }}</span>{% endif %}</h2>{% if bouton_relance %}{% if smtp %}<a class="bouton" href="{% url 'collecte:relances' %}?campagne={{ campagne.pk }}">{% libelle "suivi.tdb.relancer" %}</a>{% else %}<a class="bouton secondaire" href="{% url 'collecte:relances' %}?campagne={{ campagne.pk }}">{% libelle "suivi.tdb.preparer_relance" %}</a>{% endif %}{% endif %}</div>
+  {% if points %}
+  <ul class="liste-a-traiter">
+    {% for t in points %}
+    <li>{% icone "alerte" %}<span><b>{{ t.titre }}</b><span class="discret"> · {{ t.detail }}</span></span>
+      {% if t.action %}<a class="lien-action" href="{{ t.url }}"{% if t.sur_place %} data-voir-retards{% endif %}>{{ t.action }}</a>{% endif %}</li>
+    {% endfor %}
+  </ul>
+  {% elif montrer_rien %}
+  <p class="rien-a-traiter">{% icone "coche" %}<span>{% libelle "admin.accueil.rien" %}</span></p>
+  {% endif %}
+</section>

@@ -1,0 +1,2 @@
+{% load collecte %}{# option propre aux Attributions du menu « Affichage » (_menu_affichage.html) #}
+{% libelle "admin.attributions.calcules_aide" as t_ca %}<label class="case-menu" title="{{ t_ca }}"><input type="checkbox" data-aller="?niveau={{ niveau }}&amp;calcules={% if calcules %}0{% else %}1{% endif %}{% if personne %}&amp;personne={{ personne }}{% endif %}"{% if calcules %} checked{% endif %}> {% libelle "admin.attributions.calcules_case" %}</label>

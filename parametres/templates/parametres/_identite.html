@@ -1,0 +1,136 @@
+{% load collecte %}{# Identité de l'installation : page Paramètres › Identité et étape 2 de l'assistant « Mise en place ». #}
+  <div class="colonne-identite">
+    {% if form.errors %}{% encart "erreur" %}{% for e in form.non_field_errors %}{{ e }} {% empty %}{% libelle "admin.identite.verifier_champs" %}{% endfor %}{% endencart %}{% endif %}
+    {% comment %}Structure et logo : champs sans phrase d'aide, le simulateur montre où va chaque texte (bandeau du haut,
+    pastille sans logo, page de connexion) et suit la frappe.{% endcomment %}
+    <section class="bloc">
+      <h2>{% libelle "admin.identite.structure" %}</h2>
+      <div class="structure-identite">
+        <div>
+          <div class="deux-colonnes">
+            {% include "collecte/administration/_champ.html" with champ=form.nom %}
+            {% include "collecte/administration/_champ.html" with champ=form.titre %}
+            {% include "collecte/administration/_champ.html" with champ=form.sous_titre %}
+            {% include "collecte/administration/_champ.html" with champ=form.sigle %}
+            {% include "collecte/administration/_champ.html" with champ=form.contact %}
+          </div>
+          <span class="libelle-formule">{% libelle "admin.identite.logo" %}</span>
+          <div class="ligne-logo">
+            <div class="logo-actuel">{% if form.instance.logo %}{% libelle "admin.identite.logo_actuel" as t_la %}<img src="{% url 'parametres:logo' %}?v={{ form.instance.date_maj|date:'U' }}" alt="{{ t_la }}">{% else %}<span class="logo-defaut" data-sigle-apercu>{{ form.instance.sigle }}</span>{% endif %}</div>
+            <div class="depot-preuve etire">
+              <label class="zone-depot"><input type="file" name="logo" accept=".png,.jpg,.jpeg,.webp,image/png,image/jpeg,image/webp" data-depot aria-label="{% libelle "admin.identite.logo" %}">
+                <span class="zone-depot-texte">{% libelle_html "admin.identite.choisir_logo" %}<span class="discret">{% libelle "admin.identite.logo_formats" %}</span></span></label>
+              {% if form.logo.errors %}{% encart "erreur" %}{{ form.logo.errors|join:" " }}{% endencart %}{% endif %}
+            </div>
+            {% if form.instance.logo %}{% libelle "admin.identite.supprimer_logo_confirmer" as t_sl %}<button type="submit" name="supprimer_logo" value="on" class="lien supprimer-logo"
+              data-confirmer="{{ t_sl }}">{% libelle "admin.identite.supprimer_logo" %}</button>{% endif %}
+          </div>
+          {% if not assistant %}<span class="aide-champ">{% libelle "admin.identite.langues_aide" %} <a href="{% url 'parametres:langues' %}">{% libelle "admin.identite.langues_lien" %}</a>.</span>{% endif %}
+        </div>
+        <div class="simulateur-identite" role="group" aria-labelledby="titre-simulateur">
+          <h3 id="titre-simulateur">{% libelle "admin.identite.apercu" %}{% if assistant %} <span class="discret normal">{% libelle "admin.identite.apercu_aide" %}</span>{% endif %}</h3>
+          <div class="apercu-identite" data-apercu style="{{ couleurs_css }}">
+            <div class="ap-entete">
+              <span class="ap-logo">{% if form.instance.logo %}<img src="{% url 'parametres:logo' %}?v={{ form.instance.date_maj|date:'U' }}" alt="">{% else %}<span data-sigle-apercu>{{ form.instance.sigle }}</span>{% endif %}</span>
+              <span class="ap-titre"><b data-titre-apercu>{{ form.instance.titre }}</b><span data-sous-titre-apercu>{{ form.instance.sous_titre }}</span></span>
+            </div>
+            <dl class="ap-reperes">
+{% if form.instance.logo %}              <div><dt>{% libelle "admin.identite.simu.sans_logo" %}</dt><dd><span class="ap-pastille" data-sigle-apercu>{{ form.instance.sigle }}</span></dd></div>{% endif %}
+                            <div><dt>{% libelle "admin.identite.simu.connexion" %}</dt><dd>{% libelle "admin.identite.simu.contactez" %} <b data-contact-apercu>{{ form.instance.contact }}</b></dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    {% comment %}Couleurs : palettes, quatre couleurs de base et aperçu (clair, sombre) dans le même bloc ; les mesures de
+    contraste sont dans un volet, résumées par deux pastilles toujours visibles.{% endcomment %}
+    <section class="bloc">
+      <h2>{% libelle "admin.identite.couleurs" %}</h2>
+      {% libelle "admin.identite.palettes" as t_pal %}
+      <div class="palettes" role="radiogroup" aria-label="{{ t_pal }}">
+        {% for code, nom, nuancier, p in palettes %}
+        <label class="palette-choix"><input type="radio" name="palette" value="{{ code }}" {% if form.palette.value == code %}checked{% endif %}
+            data-principale="{{ p.principale }}" data-accent="{{ p.accent }}" data-fond="{{ p.fond }}" data-texte="{{ p.texte }}">
+          <span class="nuancier" style="background:{{ nuancier.0 }}">{% for c in nuancier|slice:"1:" %}<i style="background:{{ c }}"></i>{% endfor %}</span>
+          <strong>{{ nom }}</strong>{% if p.enregistree and not assistant %}
+          <button type="submit" name="action" value="supprimer_palette:{{ code }}" class="supprimer-palette" formnovalidate
+            {% libelle "admin.identite.supprimer_palette_titre" nom=nom as t_spt %}{% libelle "admin.identite.supprimer_palette_label" nom=nom as t_spl %}{% libelle "admin.identite.supprimer_palette_confirmer" nom=nom as t_spc %}title="{{ t_spt }}" aria-label="{{ t_spl }}" data-confirmer="{{ t_spc }}">{% icone "fermer" %}</button>{% endif %}</label>
+        {% endfor %}
+        <label class="palette-choix palette-perso"><input type="radio" name="palette" value="perso" {% if form.palette.value == "perso" %}checked{% endif %}>
+          <span class="nuancier nuancier-perso">{% icone "crayon" %}</span><strong>{% libelle "admin.identite.personnalisee" %}</strong></label>
+      </div>
+      <div class="couleurs-et-apercu">
+        <div class="couleurs-base">
+          {% libelle "admin.identite.aide_principale" as t_c1 %}{% include "parametres/_couleur.html" with champ=form.couleur_principale aide=t_c1 cle="principale" %}
+          {% libelle "admin.identite.aide_accent" as t_c2 %}{% include "parametres/_couleur.html" with champ=form.couleur_accent aide=t_c2 cle="accent" %}
+          {% libelle "admin.identite.aide_fond" as t_c3 %}{% include "parametres/_couleur.html" with champ=form.couleur_fond aide=t_c3 cle="fond" %}
+          {% libelle "admin.identite.aide_texte" as t_c4 %}{% include "parametres/_couleur.html" with champ=form.couleur_texte aide=t_c4 cle="texte" %}
+        </div>
+        <figure class="apparence-apercu"><figcaption>{% libelle "admin.identite.apparence_claire" %}</figcaption>
+          {% include "parametres/_apercu_identite.html" with attribut="data-apercu" css=couleurs_css %}</figure>
+        <figure class="apparence-apercu"><figcaption>{% libelle "admin.identite.apparence_sombre" %}</figcaption>
+          {% include "parametres/_apercu_identite.html" with attribut="data-apercu-sombre" css=css_sombre %}</figure>
+      </div>
+      <p class="encart encart-avertissement" data-alerte-contraste {% if contraste_ok and contraste_sombre_ok %}hidden{% endif %}><strong class="encart-titre">{% libelle "admin.identite.alerte_contraste" seuil=seuil %}</strong></p>
+      <details class="lisibilite"{% if not contraste_ok or not contraste_sombre_ok %} open{% endif %}>
+        <summary><span class="titre-lisibilite">{% libelle "admin.identite.lisibilite" %}</span>
+          <span class="bilan-contraste {% if contraste_ok %}ok{% else %}ko{% endif %}" data-bilan="clair">{% libelle "admin.identite.bilan_clair" %} <b><span data-bilan-ok>{{ bilan_clair }}</span>/{{ controles|length }}</b></span>
+          <span class="bilan-contraste {% if contraste_sombre_ok %}ok{% else %}ko{% endif %}" data-bilan="sombre">{% libelle "admin.identite.bilan_sombre" %} <b><span data-bilan-ok>{{ bilan_sombre }}</span>/{{ controles_sombres|length }}</b></span></summary>
+        <p class="aide-champ">{% libelle_html "admin.identite.lisibilite_aide" seuil=seuil %}</p>
+        <div class="lisibilite-colonnes">
+          <div>
+            <h3 id="titre-controles-clairs">{% libelle "admin.identite.apparence_claire" %}</h3>
+            <ul class="controles-contraste" data-controles aria-labelledby="titre-controles-clairs">
+              {% for c in controles %}<li class="{% if c.ok %}ok{% else %}ko{% endif %}"><span>{{ c.libelle }}</span><b>{{ c.rapport }}</b></li>{% endfor %}
+            </ul>
+          </div>
+          <div>
+            {# mêmes contrôles pour l'apparence sombre (tirée des mêmes couleurs, parametres/couleurs.py, gamme_sombre) #}
+            <h3>{% libelle "admin.identite.apparence_sombre" %}</h3>
+            {% libelle "admin.identite.lisibilite_sombre" as t_ls %}
+            <ul class="controles-contraste" data-controles-sombres aria-label="{{ t_ls }}">
+              {% for c in controles_sombres %}<li class="{% if c.ok %}ok{% else %}ko{% endif %}"><span>{{ c.libelle }}</span><b>{{ c.rapport }}</b></li>{% endfor %}
+            </ul>
+          </div>
+        </div>
+        <ul class="adaptations-couleurs" data-adaptations {% if not adaptations %}hidden{% endif %}>{% for a in adaptations %}<li>{{ a }}</li>{% endfor %}</ul>
+        <details class="aide-repliable aide-suppression"><summary>{% libelle "admin.identite.wcag_titre" %}</summary>
+          <p>{% libelle "admin.identite.wcag" %}</p></details>
+      </details>
+      {% if not assistant %}
+      <details class="enregistrer-palette"{% if form.palette.value == "perso" %} open{% endif %}><summary>{% libelle "admin.identite.enregistrer_palette_titre" %}</summary>
+        <div class="ligne-enregistrer-palette">
+          <input type="text" name="nom_palette" {% libelle "admin.identite.nom_palette_ex" as t_np %}{% libelle "admin.identite.nom_palette" as t_nl %}maxlength="40" placeholder="{{ t_np }}" aria-label="{{ t_nl }}">
+          <button type="submit" name="action" value="enregistrer_palette" class="secondaire">{% libelle "admin.identite.enregistrer_palette" %}</button>
+        </div>
+        <p class="aide-champ m-0 mt-4">{% libelle "admin.identite.palette_aide" %}</p>
+      </details>
+      {% endif %}
+    </section>
+    {% if not assistant and form_viz %}{# Visualisation : couleurs des séries des graphiques (vide : la palette fournie) #}
+    <section class="bloc couleurs-graphiques" id="couleurs-graphiques" data-couleurs-graphiques data-seuil="{{ seuil_viz }}" data-defaut="{{ viz_defaut }}">
+      <h2>{% libelle "visu.couleurs.titre" %}</h2>
+      <p class="aide-champ remonte">{% libelle "visu.couleurs.aide" %}</p>
+      <p class="etat-palette-viz">{% if viz_regle %}{% libelle "visu.couleurs.reglees" %}{% else %}{% libelle "visu.couleurs.par_defaut" %}{% endif %}</p>
+      {% if form_viz.errors %}{% encart "erreur" %}{% libelle "visu.couleurs.erreur" %}{% endencart %}{% endif %}
+      <div class="couleurs-viz">
+        {% for champ, c in champs_viz %}{% libelle "visu.couleurs.serie" n=forloop.counter as nom %}{% include "parametres/_couleur_viz.html" with champ=champ c=c nom=nom %}{% endfor %}
+        {% libelle "visu.couleurs.autres" as nom %}{% include "parametres/_couleur_viz.html" with champ=champ_viz_autres.0 c=champ_viz_autres.1 nom=nom %}
+      </div>
+      <div class="apercu-viz" aria-hidden="true">{% for champ, c in champs_viz %}<span class="barre-viz" data-barre-viz="{{ champ.id_for_label }}" style="background: {{ champ.value }}; height: {% widthratio forloop.revcounter 8 100 %}%"></span>{% endfor %}<span class="barre-viz" data-barre-viz="{{ champ_viz_autres.0.id_for_label }}" style="background: {{ champ_viz_autres.0.value }}; height: 10%"></span></div>
+      <p class="encart encart-avertissement" data-alerte-viz{% if not viz_claires %} hidden{% endif %}><strong class="encart-titre">{% libelle "visu.couleurs.alerte" %}</strong></p>
+      {% if viz_regle %}<button type="submit" name="action" value="couleurs_graphiques_defaut" class="secondaire" formnovalidate>{% libelle "visu.couleurs.defaut" %}</button>{% endif %}
+    </section>
+    {% endif %}
+    {% if not assistant and form.texte_confidentialite %}{# texte de l'entreprise, ajouté à la page « Données et confidentialité » (Markdown) #}
+    <section class="bloc" id="texte-confidentialite">
+      <h2>{% libelle "admin.identite.confidentialite.titre" %}</h2>
+      <p class="aide-champ remonte">{% libelle "admin.identite.confidentialite.aide" %} <a href="{% url 'collecte:confidentialite' %}">{% libelle "admin.identite.confidentialite.voir" %}</a></p>
+      {% include "collecte/administration/_champ.html" with champ=form.texte_confidentialite %}
+      <span class="visually-hidden" id="aide-texte-confidentialite">{% libelle "admin.identite.confidentialite.markdown" %}</span>
+    </section>
+    {% endif %}
+    {% if not assistant %}<div class="barre-enregistrement collante"><button type="submit">{% libelle "admin.identite.enregistrer" %}</button>
+      <span class="etat-barre">{% libelle "admin.identite.enregistrer_aide" %}</span></div>{% endif %}
+  </div>

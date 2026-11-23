@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.traductions_import.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+<p>{% if langue %}<a href="{% url 'parametres:traductions' langue.code %}">{% libelle "admin.traductions_import.retour_langue" nom_langue=langue.libelle %}</a>{% else %}<a href="{% url 'parametres:langues' %}">{% libelle "admin.traductions.retour" %}</a>{% endif %}</p>
+<h1 class="texte-grand">{% libelle "admin.traductions_import.titre" %}</h1>
+<p class="discret">{% libelle "admin.traductions_import.fichier" nom=nom_fichier %}</p>
+{% if total %}
+<form method="post" action="{% url 'parametres:traductions_import' code %}">{% csrf_token %}
+  <div class="barre-enregistrement"><button type="submit" name="action" value="appliquer">{% libelle "admin.traductions_import.enregistrer" n=total %}</button>
+    <a class="bouton secondaire" href="{% if langue %}{% url 'parametres:traductions' langue.code %}{% else %}{% url 'parametres:langues' %}{% endif %}">{% libelle "commun.annuler" %}</a></div>
+</form>
+{% endif %}
+{% for a in analyses %}
+<details class="bloc import-langue"{% if a.changements %} open{% endif %}>
+  <summary><strong>{{ a.libelle }}</strong> <span class="code-langue">{{ a.code|upper }}</span></summary>
+  <div class="bilan-import">
+    <span>{% libelle_html "admin.traductions_import.a_enregistrer" n=a.changements|length %}</span>
+    <span>{% libelle "admin.traductions_import.identiques" n=a.inchanges %}</span>
+    <span>{% libelle "admin.traductions_import.vides" n=a.vides %}</span>
+    {% if a.inconnues %}<span class="alerte-texte">{% libelle "admin.traductions_import.inconnues" n=a.inconnues %}</span>{% endif %}
+    {% if a.alertes %}<span class="alerte-texte">{% libelle "admin.traductions_import.alertes" n=a.alertes %}</span>{% endif %}
+  </div>
+  {% if a.changements %}
+  <table class="carte-table table-apercu table-traductions">
+    <thead><tr><th>{% libelle "admin.traductions_import.col.element" %}</th><th>{% libelle "admin.traductions_import.col.depart" %}</th><th>{% libelle "admin.traductions_import.col.traduction" %}</th></tr></thead>
+    <tbody>{% for c in a.changements|slice:limite %}<tr>
+      <td class="discret">{{ c.quoi }}{% if c.alerte %}<br><span class="alerte-texte">{{ c.alerte }}</span>{% endif %}</td>
+      <td>{{ c.source|truncatechars:300 }}</td>
+      <td>{% if c.avant %}<del class="discret">{{ c.avant|truncatechars:200 }}</del><br>{% endif %}<strong>{{ c.apres|truncatechars:300 }}</strong></td></tr>{% endfor %}
+    </tbody>
+  </table>
+  {% if a.changements|length > limite %}<p class="discret">{% libelle "admin.traductions_import.limite" limite=limite total=a.changements|length %}</p>{% endif %}
+  {% endif %}
+</details>
+{% endfor %}
+{% if not total %}{% encart "succes" %}{% libelle "admin.traductions_import.aucun" %}{% endencart %}{% endif %}
+{% endblock %}

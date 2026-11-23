@@ -1,0 +1,61 @@
+{% load collecte %}
+<div class="carte" id="resume" data-rafraichir>
+  {# Ce qui reste à faire (views._bandeau) : six états ; « Tout est fait » seulement quand tout le périmètre est fini #}
+  {% with b=bandeau jours=campagne.date_fin_saisie|jours_restants %}
+  {% if not tous and b.code %}
+  {% if b.code == "fini" %}
+  <div class="tout-fait" role="status" data-etat="fini" data-annonce="{{ b.annonce }}">
+    <span class="tout-fait-icone">{% icone "coche" %}</span>
+    <p>{% libelle_html "saisie.resume.fini.titre" %} {% if b.nb_orgs_fini > 1 %}{% libelle "saisie.resume.fini.orgs" n=etat.valide total=etat.total organisations=b.nb_orgs_fini periode=campagne.periode %}{% elif b.nb_orgs_fini %}{% libelle "saisie.resume.fini.une_org" n=etat.valide total=etat.total periode=campagne.periode %}{% else %}{% libelle "saisie.resume.fini.sans_org" n=etat.valide total=etat.total periode=campagne.periode %}{% endif %}{% if campagne.date_fin_saisie and jours is not None and jours >= 0 and not lecture_seule %} {% libelle "saisie.resume.fini.modifiable" date=campagne.date_fin_saisie|date_longue %}{% endif %}</p>
+  </div>
+  {% elif b.code == "fermee" %}
+  <div class="a-faire saisie-fermee" data-etat="fermee" data-annonce="{{ b.annonce }}">
+    <p class="a-faire-texte"><span class="icone-etat" aria-hidden="true">{% icone "cadenas" %}</span> {% if b.prefixe_org %}<span class="a-faire-org">{% libelle "saisie.resume.org_prefixe" organisation=b.org.nom %}</span> {% if user.lecture_seule %}{% libelle_html "saisie.resume.fermee.org_lecture" %}{% else %}{% libelle_html "saisie.resume.fermee.org_fermee" %}{% endif %} {% else %}{% if user.lecture_seule %}{% libelle_html "saisie.resume.fermee.lecture" %}{% else %}{% libelle_html "saisie.resume.fermee.fermee" %}{% endif %} {% endif %}{% if b.fermees.valeurs %}{% if b.fermees_orgs %}{% libelle "saisie.n.organisations" n=b.fermees_orgs as t_orgs_valeurs %}{% libelle_html "saisie.resume.fermee.valeurs_orgs" n=b.fermees.valeurs organisations=t_orgs_valeurs %}{% else %}{% libelle_html "saisie.resume.fermee.valeurs" n=b.fermees.valeurs %}{% endif %}{% endif %}{% if b.fermees.valeurs and b.fermees.alertes %} · {% endif %}{% if b.fermees.alertes %}{% if b.fermees_orgs_alertes %}{% libelle "saisie.n.organisations" n=b.fermees_orgs_alertes as t_orgs_alertes %}{% libelle_html "saisie.resume.fermee.alertes_orgs" n=b.fermees.alertes organisations=t_orgs_alertes %}{% else %}{% libelle_html "saisie.resume.fermee.alertes" n=b.fermees.alertes %}{% endif %}{% endif %}{% if not b.fermees.valeurs and not b.fermees.alertes %}{% if b.fermees.total %}{% libelle "saisie.resume.toutes_validees" %}{% else %}{% libelle "saisie.resume.rien_ici" %}{% endif %}{% endif %}.
+      {% if b.ligne_ailleurs %}<span class="a-faire-aide">{{ b.ligne_ailleurs }}</span>{% endif %}</p>
+    {% if b.fermees.alertes and not user.lecture_seule %}<a class="bouton" href="{% url 'collecte:coherence' %}?campagne={{ campagne.pk }}&amp;statut=a_traiter{% if b.prefixe_org %}&amp;org={{ b.org.id }}{% endif %}" data-justifier>{% libelle "saisie.resume.justifier" %}</a>{% endif %}
+  </div>
+  {% else %}
+  <div class="a-faire" data-etat="{{ b.code }}" data-annonce="{{ b.annonce }}">
+    {% if b.code == "ici" %}
+    {# les nombres (à saisir, brouillons, alertes) ne sont pas répétés ici : les pastilles cliquables plus bas les portent #}
+    <p class="a-faire-texte">{% if b.perimetre %}<span class="a-faire-org">{% libelle "saisie.resume.org_prefixe" organisation=b.org.nom %}</span> {% libelle "saisie.resume.ici.en_cours_org" %}{% else %}{% libelle "saisie.resume.ici.en_cours" %}{% endif %}{% if campagne.date_fin_saisie %}
+      · {% libelle "saisie.resume.fin_saisie" date=campagne.date_fin_saisie|date_longue %}{% if jours is not None and jours >= 0 %} <span class="discret">({% if jours == 0 %}{% libelle "saisie.resume.aujourdhui" %}{% elif jours == 1 %}{% libelle "saisie.resume.demain" %}{% else %}{% libelle "saisie.resume.dans_jours" n=jours %}{% endif %})</span>{% endif %}{% endif %}
+      {% if b.ligne_ailleurs %}<span class="a-faire-aide">{{ b.ligne_ailleurs }}</span>{% endif %}</p>
+    <a class="bouton" href="#liste" data-commencer>{% if compteur.valide or compteur.brouillon %}{% libelle "saisie.resume.continuer" %}{% else %}{% libelle "saisie.resume.commencer" %}{% endif %}</a>
+    {% elif b.code == "alertes_ici" %}{# tout est saisi ici, mais une alerte de cohérence attend une explication #}
+    <p class="a-faire-texte">{% if b.perimetre %}<span class="a-faire-org">{% libelle "saisie.resume.org_prefixe" organisation=b.org.nom %}</span> {% if b.ici.total %}{% libelle "saisie.resume.alertes_ici.tout_saisi_min" %} · {% endif %}{% elif b.ici.total %}{% libelle "saisie.resume.alertes_ici.tout_saisi_maj" %} · {% endif %}{% libelle_html "saisie.resume.alertes_ici.alertes" n=b.ici.alertes %}
+      <span class="a-faire-aide">{% libelle "saisie.resume.alertes_ici.aide" n=b.ici.alertes %}</span>
+      {% if b.ligne_ailleurs %}<span class="a-faire-aide">{{ b.ligne_ailleurs }}</span>{% endif %}</p>
+    {% comment %}ouvre la première ligne en alerte de la liste, sans quitter la saisie ; sans JavaScript (ou sans ligne en
+       alerte affichée), la page Cohérence filtrée sur ce qui reste à traiter ici{% endcomment %}
+    <a class="bouton" href="{% url 'collecte:coherence' %}?campagne={{ campagne.pk }}&amp;statut=a_traiter{% if b.perimetre %}&amp;org={{ b.org.id }}{% endif %}" data-justifier>{% libelle "saisie.resume.justifier" %}</a>
+    {% else %}{# fini ici (ou rien à saisir ici), il reste quelque chose ailleurs dans le périmètre #}
+    <p class="a-faire-texte"><span class="a-faire-org">{% libelle "saisie.resume.org_prefixe" organisation=b.org.nom %}</span> {% if b.ici.total %}{% libelle "saisie.resume.plus_rien" %}{% else %}{% libelle "saisie.resume.rien_ici" %}{% endif %}.
+      {% if b.code == "ailleurs" %}{% libelle "saisie.n.organisations" n=b.ailleurs.nb_orgs_valeurs as t_orgs_valeurs %}{% libelle_html "saisie.resume.ailleurs.valeurs" n=b.ailleurs.valeurs organisations=t_orgs_valeurs %}{% if b.ailleurs.alertes %} {% libelle "saisie.n.organisations" n=b.ailleurs.nb_orgs_alertes as t_orgs_alertes %}{% libelle_html "saisie.resume.ailleurs.et_alertes" n=b.ailleurs.alertes organisations=t_orgs_alertes %}{% endif %}.
+      {% else %}{% libelle "saisie.n.organisations" n=b.ailleurs.nb_orgs_alertes as t_orgs_alertes %}{% libelle_html "saisie.resume.ailleurs.alertes" n=b.ailleurs.alertes organisations=t_orgs_alertes %}.{% endif %}</p>
+    {% if b.suivante %}<a class="bouton" href="?org={{ b.suivante.id }}&amp;campagne={{ campagne.pk }}">{% libelle "saisie.resume.aller_a" organisation=b.suivante.nom %}</a>
+    {% else %}<a class="bouton" href="{% url 'collecte:coherence' %}?campagne={{ campagne.pk }}&amp;statut=a_traiter">{% libelle "saisie.resume.justifier" %}</a>{# alertes sur une organisation absente du sélecteur (inactive) #}{% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+  {% endif %}
+  {% endwith %}
+  {# Chiffres clés de la Saisie : une barre, et sa légende qui porte les chiffres et sert de filtre #}
+  <div class="progression" title="{% libelle "saisie.resume.progression" valide=compteur.valide brouillon=compteur.brouillon total=compteur.total %}">
+    <span class="p-valide" style="width:{{ compteur|largeur:'valide'|stringformat:'s' }}%"></span>
+    <span class="p-brouillon" style="width:{{ compteur|largeur:'brouillon'|stringformat:'s' }}%"></span>
+  </div>
+  <div class="pastilles legende-filtre" role="group" aria-label="{% libelle "saisie.resume.pastilles" %}">
+    {# aria-pressed : chiffre choisi (tenu à jour par appliquerFiltres, _app/05_filtres.js) #}
+    <button type="button" class="pastille actif" data-filtre-statut="" aria-pressed="true"><b>{{ compteur.total }}</b> {% libelle "saisie.resume.pastille.total" %}</button>
+    <button type="button" class="pastille" data-filtre-statut="valide" aria-pressed="false"><span class="point p-valide"></span><b>{{ compteur.valide }}</b> {% libelle "choix.reponse.statut.valide" %}</button>
+    <button type="button" class="pastille" data-filtre-statut="brouillon" aria-pressed="false"><span class="point p-brouillon"></span><b>{{ compteur.brouillon }}</b> {% libelle "choix.reponse.statut.brouillon" %}</button>
+    <button type="button" class="pastille" data-filtre-statut="a_saisir" aria-pressed="false"><span class="point p-a-saisir"></span><b>{{ compteur.a_saisir }}</b> {% libelle "choix.reponse.statut.a_saisir" %}</button>
+    {% if nb_alertes %}<button type="button" class="pastille pastille-alerte" data-filtre-statut="alerte" aria-pressed="false" title="{% libelle "saisie.resume.pastille.coherence_titre" n=nb_alertes as t_coherence %}{{ t_coherence }}"><span class="triangle">{% icone "alerte" %}</span><b>{{ nb_alertes }}</b> {% libelle "saisie.resume.pastille.coherence" %}</button>{% endif %}
+    {% if not lecture_seule and campagne %}<a class="lien-excel ml-auto" href="{% url 'collecte:echanges_importer' %}{% if org and not tous %}?org={{ org.id }}{% endif %}">{% icone "telecharger" %} {% libelle "saisie.resume.importer" %}</a>{% endif %}
+    <span class="discret{% if lecture_seule or not campagne %} ml-auto{% endif %}">{% libelle "saisie.resume.taux" taux=compteur.taux %}{% if campagne.date_fin_saisie and tous %} · {% libelle "saisie.resume.fin_saisie" date=campagne.date_fin_saisie|date_courte %}{% endif %}</span>
+  </div>
+</div>
+{# nombre de lignes affichées, annoncé seulement quand la personne filtre (hors de #resume, relu après chaque enregistrement) #}
+<p id="annonce-filtres" class="visuellement-cache" role="status" aria-live="polite"></p>
+{% comment %}un seul message de lecture seule : le résumé « fermée » le dit déjà (« Lecture seule : … »){% endcomment %}{% if user.lecture_seule %}{% if tous or bandeau.code != "fermee" %}{% encart "info" classe="mt-12" %}{% libelle "saisie.resume.compte_lecture" role=user|choix_phrase:"role" %}{% endencart %}{% endif %}{% elif lecture_seule %}{% encart "info" classe="mt-12" %}{{ campagne.motif_lecture_seule }}{% endencart %}{% endif %}

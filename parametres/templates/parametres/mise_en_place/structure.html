@@ -1,0 +1,12 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.structure.intro" %}</p>{% endblock %}
+{% block etape %}
+<form method="post" enctype="multipart/form-data" data-identite data-apercu-url="{% url 'parametres:apercu' %}">
+  {% csrf_token %}
+  {# même mise en page que Paramètres › Identité : simulateur et aperçus dans les blocs, sans colonne latérale #}
+  <div class="page-identite sans-cote">{% include "parametres/_identite.html" with assistant=True %}</div>
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% endblock %}
+{% block colonne_apercu %}{% endblock %}

@@ -1,0 +1,3 @@
+{% load collecte %}{% comment %}Champ « Rechercher » d'une barre de filtres (.barre-filtres, DESIGN.md « Filters »), toujours le premier.
+   Paramètre : placeholder (texte déjà traduit, propre à la page). Filtré par le script des pages (#recherche).{% endcomment %}<div class="champ-filtre"><label for="recherche">{% libelle "commun.filtres.recherche" %}</label>
+    <input type="search" id="recherche" placeholder="{{ placeholder }}"></div>

@@ -1,0 +1,69 @@
+{% extends "parametres/mise_en_place/_cadre.html" %}
+{% load collecte %}
+{% block intro %}<p>{% libelle "referentiels.mep.organisation.intro" %}</p>{% endblock %}
+{% block etape %}
+<section class="carte form-mep">
+  <h3><span class="num">1</span> {% libelle "referentiels.mep.organisation.niveaux_titre" %}</h3>
+  {% if niveaux_figes %}
+  <p>{% for n in niveaux %}<span class="niveau niveau-{{ n.code }}">{{ n.nom }}</span>{% if not forloop.last %} › {% endif %}{% endfor %}</p>
+  <p class="discret">{% libelle "referentiels.mep.organisation.figes" %}
+    <a href="{% url 'parametres:niveaux' %}">{% libelle "referentiels.mep.organisation.figes_lien" %}</a>.</p>
+  {% else %}
+  <form method="post" class="choix-niveaux">
+    {% csrf_token %}
+    {% for cle, libelle, defs in modeles_niveaux %}
+    <label class="case modele-niveaux"><input type="radio" name="modele" value="{{ cle }}" {% if cle == modele_actuel %}checked{% endif %}> {{ libelle }}</label>
+    {% endfor %}
+    {% libelle "referentiels.mep.organisation.niveaux_aria" as t_aria %}{% libelle "referentiels.mep.organisation.niveaux_exemple" as t_exemple %}
+    <label class="case modele-niveaux"><input type="radio" name="modele" value="perso" {% if not modele_actuel %}checked{% endif %}> {% libelle "referentiels.mep.organisation.autres_niveaux" %}</label>
+    <textarea name="niveaux_libres" rows="4" class="code" aria-label="{{ t_aria }}" placeholder="{{ t_exemple }}">{{ niveaux_libres }}</textarea>
+    <span class="aide-champ">{% libelle "referentiels.mep.organisation.niveaux_aide" %}</span>
+    <div><button type="submit" name="action" value="niveaux" class="{% if niveaux_confirmes %}secondaire{% endif %}">{% libelle "referentiels.mep.organisation.appliquer" %}</button>
+      <span class="discret">{% libelle "referentiels.mep.organisation.actuellement" liste=niveaux_chaine %}</span>
+      {% if niveaux_confirmes %}<span class="etat-fait">{% icone "coche" %} {% libelle "referentiels.mep.organisation.confirmes" %}</span>{% endif %}</div>
+    {% if not niveaux_confirmes %}{% encart "avertissement" id="niveaux-a-confirmer" %}{% libelle "referentiels.mep.organisation.a_confirmer_aide" %}{% endencart %}{% endif %}
+  </form>
+  {% endif %}
+</section>
+
+<form method="post" class="carte form-mep">
+  {% csrf_token %}
+  <h3><span class="num">2</span> {% libelle "referentiels.mep.organisation.organisations_titre" %}</h3>
+  <p class="discret remonte">{% with d=niveaux|last %}{% libelle_html "referentiels.mep.organisation.saisie_rapide" niveau=d.nom niveaux=niveaux_liste %}{% endwith %}
+    <a href="{% url 'collecte:admin_fichiers' %}">{% libelle "referentiels.mep.organisation.config_complete" %}</a> {% libelle "referentiels.mep.organisation.config_suite" %}
+    {% with d=niveaux|last %}{% libelle "referentiels.mep.organisation.date_ouverture_syntaxe" niveau=d.nom %}{% endwith %}</p>
+  {% if erreurs_arbre %}{% encart "erreur" role="alert" %}{% for e in erreurs_arbre %}<p>{{ e }}</p>{% endfor %}{% endencart %}{% endif %}
+  {% libelle "referentiels.mep.organisation.arbre_aria" as t_arbre %}
+  <textarea name="arbre" rows="9" class="code saisie-arbre" aria-label="{{ t_arbre }}" aria-describedby="aide-limite-arbre" placeholder="{{ exemple_arbre }}">{{ texte_arbre }}</textarea>
+  <p class="discret" id="aide-limite-arbre">{% libelle "referentiels.mep.arbre.limite_aide" maximum=limite_arbre %}</p>
+  {% if noeuds_lus and not erreurs_arbre %}
+  <div class="apercu-arbre-lu">
+    <strong>{% libelle "referentiels.mep.organisation.lues" n=noeuds_lus|length %}</strong>
+    <ul class="arbre-mep">{% for x in noeuds_lus %}<li style="--prof:{{ x.prof }}"><span class="niveau niveau-{{ x.niveau.code }}">{{ x.niveau.nom }}</span> {{ x.nom }}{% if x.ouverture and not x.existe %} <span class="discret">{% libelle "admin.organisation.ouverte_depuis" date=x.ouverture|date_courte %}</span>{% endif %}{% if x.ouverture_parent and not x.existe %} <span class="discret">{% libelle "referentiels.mep.organisation.ouverte_avec_parent" date=x.ouverture_parent.0|date_courte parent=x.ouverture_parent.1 %}</span>{% endif %}{% if x.existe %} <span class="discret">{% libelle "referentiels.mep.organisation.existe_deja" %}</span>{% endif %}</li>{% endfor %}</ul>
+  </div>
+  {% endif %}
+  <div class="actions-arbre">
+    <button type="submit" name="action" value="apercu" class="secondaire">{% libelle "referentiels.mep.apercu" %}</button>
+    <button type="submit" name="action" value="creer" class="secondaire">{% libelle "referentiels.mep.organisation.creer" %}</button>
+  </div>
+  {% if orgs %}
+  <p class="discret mb-4">{% libelle "referentiels.mep.organisation.deja" n=orgs|length %}
+    (<a href="{% url 'collecte:admin_organisations' %}">{% libelle "referentiels.mep.organisation.deja_lien" %}</a>).</p>
+  {% endif %}
+  {% include "parametres/mise_en_place/_boutons.html" %}
+</form>
+{% endblock %}
+{% block apercu %}
+<div class="mini-carte">
+  <strong>{% libelle "referentiels.mep.organisation.apercu_titre" %}</strong>
+  {% if orgs %}
+  <ul class="arbre-mep">{% for o in orgs|slice:":18" %}<li style="--prof:{{ o.prof }}"><span class="niveau niveau-{{ o.niveau_id }}">{{ o.niveau.nom }}</span> {{ o.nom }}</li>{% endfor %}</ul>
+  {% if orgs|length > 18 %}<span class="discret">{% libelle "referentiels.mep.organisation.et_autres" nombre=orgs|length|add:"-18" %}</span>{% endif %}
+  {% elif noeuds_lus %}
+  <ul class="arbre-mep">{% for x in noeuds_lus|slice:":18" %}<li style="--prof:{{ x.prof }}"><span class="niveau niveau-{{ x.niveau.code }}">{{ x.niveau.nom }}</span> {{ x.nom }}</li>{% endfor %}</ul>
+  {% else %}
+  <p class="discret">{% libelle "referentiels.mep.organisation.arbre_ici" %}</p>
+  {% endif %}
+</div>
+<p class="discret">{% libelle "referentiels.mep.organisation.apercu_aide" %}</p>
+{% endblock %}

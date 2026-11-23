@@ -1,0 +1,12 @@
+{% load collecte %}{# Sans script : les tableaux de données des visuels, rendus par le serveur à partir des mêmes données #}
+<noscript>
+  <div class="grille-vue sans-script">
+    {% for v in noscript %}
+    <section class="carte visuel l-12" aria-labelledby="ns-{{ v.id }}">
+      <h2 id="ns-{{ v.id }}">{{ v.titre }}</h2>
+      {% if v.sous_titre %}<p class="sous-titre-visuel">{{ v.sous_titre }}</p>{% endif %}
+      {% if v.etat != "ok" %}<p class="message-visuel">{{ v.message }}</p>{% else %}{% include "collecte/visualisation/_tableau_donnees.html" with t=v.tableau titre=v.titre %}{% endif %}
+    </section>
+    {% endfor %}
+  </div>
+</noscript>

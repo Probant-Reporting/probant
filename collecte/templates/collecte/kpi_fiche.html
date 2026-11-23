@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% if kpi.pk %}{% libelle "saisie.kpi.titre" code=kpi.code %}{% else %}{% libelle "saisie.kpi.nouveau" %}{% endif %}{% endblock %}
+{% block contenu %}
+<h1 class="visually-hidden">{% if kpi.pk %}{% libelle "saisie.kpi.titre" code=kpi.code %} – {{ kpi.nom }}{% else %}{% libelle "saisie.kpi.nouveau" %}{% endif %}</h1>
+<p><a href="{% url 'collecte:referentiel' %}">{% libelle "saisie.kpi.retour" %}</a></p>
+<div class="page-cellule" data-conteneur>{% include "collecte/_kpi_fiche.html" %}</div>
+{% endblock %}

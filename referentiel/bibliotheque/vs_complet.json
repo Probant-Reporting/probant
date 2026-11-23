@@ -1,0 +1,2630 @@
+{
+ "referentiel": {
+  "code": "VS_COMPLET",
+  "identifiant": "53d7f1b0-e1d4-5fb8-8dae-62bdc3e4d9c6",
+  "nom": {
+   "fr": "Norme volontaire VS (ex-VSME) – module complet",
+   "en": "Voluntary Standard VS (formerly VSME) – Comprehensive Module"
+  },
+  "description": {
+   "fr": "Informations C1 à C9 de la norme volontaire européenne, à ajouter au module de base (option B du classeur officiel de l'EFRAG) : stratégie, cibles climat, risques climatiques, effectifs, droits humains, revenus sensibles, mixité. C1, C3, C4, le taux de rotation (C5), C6 et C7 sont en grande partie facultatifs pour les entreprises de 10 salariés au plus (réponse N/A).",
+   "en": "Disclosures C1 to C9 of the European Voluntary Standard, added to the Basic Module (option B of EFRAG's official workbook): strategy, climate targets, climate risks, workforce, human rights, sensitive revenues, gender diversity. C1, C3, C4, the turnover rate (C5), C6 and C7 are largely voluntary for companies with 10 employees or less (answer N/A)."
+  },
+  "thematique": {
+   "fr": "Normes de reporting",
+   "en": "Reporting standards"
+  },
+  "couleur": "#7A4A0B",
+  "frequence": "annee",
+  "mois_debut": 1,
+  "comparaison": "N-1",
+  "version": "1.1",
+  "date_version": "2026-11-18",
+  "origine": "fourni"
+ },
+ "langue_reference": "fr",
+ "langues": [
+  {
+   "code": "fr",
+   "libelle": "Français"
+  },
+  {
+   "code": "en",
+   "libelle": "English"
+  }
+ ],
+ "niveaux": [],
+ "unites": [
+  {
+   "code": "tCO2e",
+   "symbole": {
+    "fr": "tCO2e",
+    "en": "tCO2e"
+   },
+   "libelle": {
+    "fr": "tonne équivalent CO2",
+    "en": "tonne of CO2 equivalent"
+   },
+   "entier": false,
+   "decimales": 1,
+   "famille": "Émissions"
+  },
+  {
+   "code": "€",
+   "symbole": {
+    "fr": "€",
+    "en": "€"
+   },
+   "libelle": {
+    "fr": "euro",
+    "en": "euro"
+   },
+   "entier": false,
+   "decimales": 0,
+   "famille": "Monnaie"
+  },
+  {
+   "code": "salariés",
+   "symbole": {
+    "fr": "salariés",
+    "en": "employees"
+   },
+   "libelle": {
+    "fr": "salariés",
+    "en": "employees"
+   },
+   "entier": true,
+   "decimales": 0,
+   "famille": "Effectif"
+  },
+  {
+   "code": "personnes",
+   "symbole": {
+    "fr": "personnes",
+    "en": "people"
+   },
+   "libelle": {
+    "fr": "personnes",
+    "en": "people"
+   },
+   "entier": true,
+   "decimales": 0,
+   "famille": "Comptage"
+  },
+  {
+   "code": "année",
+   "symbole": {
+    "fr": "année",
+    "en": "year"
+   },
+   "libelle": {
+    "fr": "année",
+    "en": "year"
+   },
+   "entier": true,
+   "decimales": 0,
+   "famille": "Durée"
+  }
+ ],
+ "types_saisie": [
+  {
+   "code": "Saisi",
+   "libelle": {
+    "fr": "Saisi",
+    "en": "Input"
+   },
+   "abrege": {
+    "fr": "Saisie",
+    "en": "Input"
+   },
+   "couleur": "#5A6B85",
+   "comportement": "saisie"
+  }
+ ],
+ "types_reponse": [
+  {
+   "code": "Numérique",
+   "libelle": {
+    "fr": "Numérique",
+    "en": "Number"
+   },
+   "format": "nombre",
+   "valeurs": {}
+  },
+  {
+   "code": "OuiNon",
+   "libelle": {
+    "fr": "Oui / non",
+    "en": "Yes / no"
+   },
+   "format": "oui_non",
+   "valeurs": {
+    "en": [
+     "Yes",
+     "No"
+    ]
+   }
+  },
+  {
+   "code": "Texte",
+   "libelle": {
+    "fr": "Texte rédigé",
+    "en": "Written text"
+   },
+   "format": "texte",
+   "valeurs": {}
+  },
+  {
+   "code": "VS-CATEGORIE-S3",
+   "libelle": {
+    "fr": "Catégorie du scope 3",
+    "en": "Scope 3 category"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "1. Biens et services achetés",
+     "2. Biens d'investissement",
+     "3. Activités relevant des secteurs des combustibles et de l’énergie (non incluses dans les scopes 1 et 2)",
+     "4. Transport et distribution en amont",
+     "5. Déchets produits lors de l’exploitation",
+     "6. Voyages d’affaires",
+     "7. Déplacements domicile-travail des salariés",
+     "8. Actifs loués en amont",
+     "9. Acheminement en aval",
+     "10. Transformation des produits vendus",
+     "11. Utilisation des produits vendus",
+     "12. Traitement en fin de vie des produits vendus",
+     "13. Actifs loués en aval",
+     "14. Franchises",
+     "15. Investissements"
+    ],
+    "en": [
+     "1. Purchased Goods and Services",
+     "2. Capital Goods",
+     "3. Fuel- and Energy-Related Activities (Not Included in Scope 1 or Scope 2)",
+     "4. Upstream Transportation and Distribution",
+     "5. Waste Generated in Operations",
+     "6. Business Travel",
+     "7. Employee Commuting",
+     "8. Upstream Leased Assets",
+     "9. Downstream Transportation and Distribution",
+     "10. Processing of Sold Products",
+     "11. Use of Sold Products",
+     "12. End-of-Life Treatment of Sold Products",
+     "13. Downstream Leased Assets",
+     "14. Franchises",
+     "15. Investments"
+    ]
+   }
+  },
+  {
+   "code": "VS-TAB-CIBLES-S3",
+   "libelle": {
+    "fr": "Cibles du scope 3 par catégorie",
+    "en": "Scope 3 targets by category"
+   },
+   "format": "tableau",
+   "valeurs": {},
+   "colonnes": [
+    {
+     "code": "categorie",
+     "libelle": {
+      "fr": "Catégorie",
+      "en": "Category"
+     },
+     "type": "liste",
+     "liste": "VS-CATEGORIE-S3"
+    },
+    {
+     "code": "reference",
+     "libelle": {
+      "fr": "Émissions de l'année de référence",
+      "en": "Base-year emissions"
+     },
+     "type": "nombre",
+     "unite": "tCO2e"
+    },
+    {
+     "code": "cible",
+     "libelle": {
+      "fr": "Émissions visées l'année cible",
+      "en": "Target-year emissions"
+     },
+     "type": "nombre",
+     "unite": "tCO2e"
+    }
+   ]
+  },
+  {
+   "code": "VS-STATUT-PLAN",
+   "libelle": {
+    "fr": "Statut du plan de transition",
+    "en": "Status of the transition plan"
+   },
+   "format": "liste",
+   "valeurs": {
+    "fr": [
+     "L'adoption d'un plan de transition est prévue",
+     "Un plan de transition a déjà été adopté",
+     "Aucun plan de transition n'est en place ni prévu"
+    ],
+    "en": [
+     "Adoption of a transition plan is planned in the future",
+     "A transition plan has already been adopted",
+     "A transition plan is not in place and it is not planned to be adopted"
+    ]
+   }
+  }
+ ],
+ "categories": [
+  {
+   "code": "description",
+   "libelle": {
+    "fr": "Description",
+    "en": "Description"
+   },
+   "ordre": 1,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_inclure",
+   "libelle": {
+    "fr": "À inclure",
+    "en": "Include"
+   },
+   "ordre": 2,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "a_exclure",
+   "libelle": {
+    "fr": "À exclure",
+    "en": "Exclude"
+   },
+   "ordre": 3,
+   "affichee": true,
+   "obligatoire": false
+  },
+  {
+   "code": "source",
+   "libelle": {
+    "fr": "Source des données",
+    "en": "Data source"
+   },
+   "ordre": 4,
+   "affichee": true,
+   "obligatoire": false
+  }
+ ],
+ "champs": [],
+ "themes": [
+  {
+   "code": "C1",
+   "parent": "",
+   "nom": {
+    "fr": "C1 – Stratégie et modèle d'affaires",
+    "en": "C1 – Strategy and business model"
+   },
+   "ordre": 1
+  },
+  {
+   "code": "C2",
+   "parent": "",
+   "nom": {
+    "fr": "C2 – Description des pratiques, politiques et initiatives",
+    "en": "C2 – Description of practices, policies and initiatives"
+   },
+   "ordre": 2
+  },
+  {
+   "code": "C3",
+   "parent": "",
+   "nom": {
+    "fr": "C3 – Cibles de réduction et transition climatique",
+    "en": "C3 – GHG reduction targets and climate transition"
+   },
+   "ordre": 3
+  },
+  {
+   "code": "C4",
+   "parent": "",
+   "nom": {
+    "fr": "C4 – Risques climatiques",
+    "en": "C4 – Climate risks"
+   },
+   "ordre": 4
+  },
+  {
+   "code": "C5",
+   "parent": "",
+   "nom": {
+    "fr": "C5 – Caractéristiques complémentaires des effectifs",
+    "en": "C5 – Additional workforce characteristics"
+   },
+   "ordre": 5
+  },
+  {
+   "code": "C6",
+   "parent": "",
+   "nom": {
+    "fr": "C6 – Politiques en matière de droits humains",
+    "en": "C6 – Human rights policies and processes"
+   },
+   "ordre": 6
+  },
+  {
+   "code": "C7",
+   "parent": "",
+   "nom": {
+    "fr": "C7 – Incidents relatifs aux droits humains",
+    "en": "C7 – Human rights incidents"
+   },
+   "ordre": 7
+  },
+  {
+   "code": "C8",
+   "parent": "",
+   "nom": {
+    "fr": "C8 – Revenus de certaines activités",
+    "en": "C8 – Revenues from certain activities"
+   },
+   "ordre": 8
+  },
+  {
+   "code": "C9",
+   "parent": "",
+   "nom": {
+    "fr": "C9 – Mixité de l'organe de gouvernance",
+    "en": "C9 – Gender diversity of the governance body"
+   },
+   "ordre": 9
+  }
+ ],
+ "kpis": [
+  {
+   "code": "STR-PRODUITS",
+   "libelle": {
+    "fr": "Principaux groupes de produits et services",
+    "en": "Significant groups of products and services"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les principaux groupes de produits et de services proposés. Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Describe the significant groups of products and services offered. Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C1",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "STR-MARCHES",
+   "libelle": {
+    "fr": "Principaux marchés",
+    "en": "Significant markets"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les principaux marchés (par exemple entre entreprises, commerce de gros, de détail, pays). Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Describe the significant markets (for example business-to-business, wholesale, retail, countries). Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C1",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "STR-RELATIONS",
+   "libelle": {
+    "fr": "Principales relations d'affaires",
+    "en": "Main business relationships"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les principales relations d'affaires (fournisseurs clés et leur nombre estimé, secteurs et pays, clients, canaux de distribution). Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Describe the main business relationships (key suppliers and their estimated number, sectors and countries, customers, distribution channels). Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C1",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "STR-ENJEUX",
+   "libelle": {
+    "fr": "Éléments de la stratégie liés à la durabilité",
+    "en": "Strategy elements related to sustainability"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "La stratégie comporte-t-elle des éléments clés liés à des enjeux de durabilité ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Does the strategy have key elements related to sustainability issues? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C1",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "STR-ENJEUX-DESC",
+   "libelle": {
+    "fr": "Description des éléments de la stratégie liés à la durabilité",
+    "en": "Description of the strategy elements related to sustainability"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire ces éléments clés de la stratégie."
+    },
+    "en": {
+     "description": "Describe these key elements of the strategy."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C1",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-C2-DESC",
+   "libelle": {
+    "fr": "Description des pratiques, politiques et initiatives",
+    "en": "Description of practices, policies and initiatives"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Brève description des pratiques, politiques et initiatives déclarées en B2 ; préciser si elles couvrent aussi les fournisseurs ou les clients."
+    },
+    "en": {
+     "description": "Short description of the practices, policies and initiatives reported in B2; say whether they also cover suppliers or customers."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C2",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-C2-CIBLES",
+   "libelle": {
+    "fr": "Description des cibles liées aux politiques",
+    "en": "Description of the targets related to policies"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les cibles fixées pour ces politiques."
+    },
+    "en": {
+     "description": "Describe the targets set for these policies."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C2",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-C2-RESPONSABLE",
+   "libelle": {
+    "fr": "Responsable de plus haut niveau des pratiques et politiques",
+    "en": "Most senior level accountable for practices and policies"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Personne ou organe de plus haut niveau responsable de la mise en œuvre (facultatif)."
+    },
+    "en": {
+     "description": "Most senior person or body accountable for implementation (optional)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C2",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-CIBLES",
+   "libelle": {
+    "fr": "Cibles de réduction des émissions de gaz à effet de serre",
+    "en": "Greenhouse gas reduction targets"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle fixé des cibles de réduction de ses émissions (scopes 1 et 2, et 3 le cas échéant) ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Has the company set reduction targets for its emissions (scopes 1 and 2, and 3 if any)? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-ANNEE-REF",
+   "libelle": {
+    "fr": "Année de référence des cibles",
+    "en": "Base year of the targets"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "année",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Année de référence des cibles de réduction.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Base year of the reduction targets.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-ANNEE-CIBLE",
+   "libelle": {
+    "fr": "Année cible",
+    "en": "Target year"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "année",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Année à laquelle les cibles doivent être atteintes.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Year by which the targets must be met.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S1-REF",
+   "libelle": {
+    "fr": "Scope 1 de l'année de référence",
+    "en": "Scope 1 in the base year"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 1 de l'année de référence.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Scope 1 emissions in the base year.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S1-CIBLE",
+   "libelle": {
+    "fr": "Cible du scope 1",
+    "en": "Scope 1 target"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 1 visées pour l'année cible.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Scope 1 emissions targeted for the target year.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S2-LB-REF",
+   "libelle": {
+    "fr": "Scope 2 (localisation) de l'année de référence",
+    "en": "Scope 2 (location-based) in the base year"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 2, méthode localisation, de l'année de référence.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Location-based scope 2 emissions in the base year.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S2-LB-CIBLE",
+   "libelle": {
+    "fr": "Cible du scope 2 (localisation)",
+    "en": "Scope 2 (location-based) target"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 2, méthode localisation, visées pour l'année cible.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Location-based scope 2 emissions targeted for the target year.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S2-MB-REF",
+   "libelle": {
+    "fr": "Scope 2 (marché) de l'année de référence",
+    "en": "Scope 2 (market-based) in the base year"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 2, méthode marché, de l'année de référence (facultatif).",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Market-based scope 2 emissions in the base year (optional).",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S2-MB-CIBLE",
+   "libelle": {
+    "fr": "Cible du scope 2 (marché)",
+    "en": "Scope 2 (market-based) target"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "tCO2e",
+   "decimales": 1,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Émissions du scope 2, méthode marché, visées pour l'année cible (facultatif).",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Market-based scope 2 emissions targeted for the target year (optional).",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-S3-CIBLES",
+   "libelle": {
+    "fr": "Cibles du scope 3 par catégorie",
+    "en": "Scope 3 targets by category"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "VS-TAB-CIBLES-S3",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Si l'entreprise s'est fixé des cibles pour le scope 3 : une ligne par catégorie, avec les émissions de l'année de référence et celles visées pour l'année cible.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "If the company has set scope 3 targets: one row per category, with the base-year emissions and those targeted for the target year.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 10,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-ACTIONS",
+   "libelle": {
+    "fr": "Principales actions pour atteindre les cibles",
+    "en": "Main actions to achieve the targets"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Lister les principales actions prévues pour atteindre les cibles."
+    },
+    "en": {
+     "description": "List the main actions planned to achieve the targets."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 11,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-PLAN-STATUT",
+   "libelle": {
+    "fr": "Statut du plan de transition",
+    "en": "Status of the transition plan"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "VS-STATUT-PLAN",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un plan de transition pour l'atténuation du changement climatique est-il adopté, prévu ou ni l'un ni l'autre ? L'année prévue d'adoption se saisit à part. Qui répond : dans la norme volontaire VS, une entreprise d'un secteur à fort impact climatique (C3 §54-55) ; dans les ESRS, toute entreprise, un plan adopté étant un plan qui contient les principales caractéristiques de l'E1-1 §12(a) (E1-1 §13)."
+    },
+    "en": {
+     "description": "Is a transition plan for climate change mitigation adopted, planned, or neither? The planned year of adoption is entered separately. Who answers: in the Voluntary Standard VS, a company in a high climate impact sector (C3 §54-55); in the ESRS, every company, an adopted plan being one that includes the key features of E1-1 §12(a) (E1-1 §13)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 12,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-PLAN-DESC",
+   "libelle": {
+    "fr": "Description du plan de transition",
+    "en": "Description of the transition plan"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire le plan de transition et comment il réduit les émissions (facultatif)."
+    },
+    "en": {
+     "description": "Describe the transition plan and how it reduces emissions (optional)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 13,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-PLAN-ANNEE",
+   "libelle": {
+    "fr": "Année prévue d'adoption du plan de transition",
+    "en": "Planned year of adoption of the transition plan"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "année",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Si le plan n'est pas encore adopté : année prévue de son adoption.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "If the plan is not adopted yet: year planned for its adoption.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 14,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-PLAN-MOIS",
+   "libelle": {
+    "fr": "Mois prévu d'adoption du plan de transition",
+    "en": "Planned month of adoption of the transition plan"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Mois (1 à 12), avec l'année ci-dessus.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Month (1 to 12), with the year above.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 15,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GES-PLAN-JOUR",
+   "libelle": {
+    "fr": "Jour prévu d'adoption du plan de transition",
+    "en": "Planned day of adoption of the transition plan"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Jour (1 à 31), avec le mois et l'année ci-dessus.",
+     "source": "Stratégie climat ou plan de transition, bilan des émissions de l'année de référence."
+    },
+    "en": {
+     "description": "Day (1 to 31), with the month and year above.",
+     "source": "Climate strategy or transition plan, base-year emissions inventory."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C3",
+    "ordre": 16,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-RISQUES",
+   "libelle": {
+    "fr": "Aléas et événements de transition climatiques identifiés",
+    "en": "Climate hazards and transition events identified"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle identifié des aléas climatiques et des événements liés à la transition climatique ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Has the company identified climate-related hazards and transition events? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-ALEAS",
+   "libelle": {
+    "fr": "Aléas climatiques et événements de transition",
+    "en": "Climate hazards and transition events"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les aléas climatiques et les événements liés à la transition climatique."
+    },
+    "en": {
+     "description": "Describe the climate-related hazards and transition events."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-EXPOSITION",
+   "libelle": {
+    "fr": "Évaluation de l'exposition et de la sensibilité",
+    "en": "Assessment of exposure and sensitivity"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Comment l'entreprise a évalué l'exposition et la sensibilité de ses actifs, activités et chaîne de valeur."
+    },
+    "en": {
+     "description": "How the company assessed the exposure and sensitivity of its assets, activities and value chain."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-HORIZONS",
+   "libelle": {
+    "fr": "Horizons temporels des aléas et événements",
+    "en": "Time horizons of the hazards and events"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Court terme : 1 an ; moyen terme : 2 à 5 ans ; long terme : plus de 5 ans."
+    },
+    "en": {
+     "description": "Short term: 1 year; medium term: 2 to 5 years; long term: more than 5 years."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-ADAPTATION",
+   "libelle": {
+    "fr": "Actions d'adaptation au changement climatique",
+    "en": "Climate change adaptation actions"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle entrepris des actions d'adaptation pour ces aléas et événements ?"
+    },
+    "en": {
+     "description": "Has the company taken adaptation actions for these hazards and events?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "CLI-EFFETS",
+   "libelle": {
+    "fr": "Effets financiers potentiels des risques climatiques",
+    "en": "Potential financial effects of climate risks"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Effets négatifs potentiels sur les performances financières ou les activités, à court, moyen ou long terme (facultatif)."
+    },
+    "en": {
+     "description": "Potential adverse effects on financial performance or operations, in the short, medium or long term (optional)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C4",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-DEPARTS-CDI",
+   "libelle": {
+    "fr": "Départs de salariés en CDI",
+    "en": "Leavers on permanent contracts"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Salariés en CDI ayant quitté l'entreprise pendant la période (démission, licenciement, retraite, décès en service), en nombre de personnes.",
+     "source": "Système d'information RH."
+    },
+    "en": {
+     "description": "Employees on permanent contracts who left during the period (resignation, dismissal, retirement, death in service), as a headcount.",
+     "source": "HR information system."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   }
+  },
+  {
+   "code": "SOC-EFFECTIF-DEBUT",
+   "libelle": {
+    "fr": "Effectif au début de la période",
+    "en": "Headcount at the start of the period"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Seulement la première année suivie dans l'outil : salariés inscrits à l'effectif au début de la période. Les années suivantes, l'effectif de fin de l'exercice précédent sert de point de départ au taux de rotation.",
+     "source": "Système d'information RH."
+    },
+    "en": {
+     "description": "Only for the first year tracked in the tool: employees on the payroll at the start of the period. In the following years, the headcount at the end of the previous year is the starting point of the turnover rate.",
+     "source": "HR information system."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-MANAGERS-FEMMES",
+   "libelle": {
+    "fr": "Femmes au niveau de la direction",
+    "en": "Women at management level"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Femmes au niveau de la direction, en fin de période (facultatif).",
+     "source": "Système d'information RH."
+    },
+    "en": {
+     "description": "Women at management level, at period end (optional).",
+     "source": "HR information system."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": false
+   }
+  },
+  {
+   "code": "SOC-MANAGERS-HOMMES",
+   "libelle": {
+    "fr": "Hommes au niveau de la direction",
+    "en": "Men at management level"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "salariés",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Hommes au niveau de la direction, en fin de période (facultatif).",
+     "source": "Système d'information RH."
+    },
+    "en": {
+     "description": "Men at management level, at period end (optional).",
+     "source": "HR information system."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": false
+   }
+  },
+  {
+   "code": "SOC-INDEPENDANTS",
+   "libelle": {
+    "fr": "Indépendants travaillant exclusivement pour l'entreprise",
+    "en": "Self-employed working exclusively for the company"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "personnes",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Travailleurs indépendants sans salarié qui travaillent exclusivement pour l'entreprise (facultatif).",
+     "source": "Achats, contrats de prestation."
+    },
+    "en": {
+     "description": "Self-employed workers without employees working exclusively for the company (optional).",
+     "source": "Purchasing, service contracts."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": false
+   }
+  },
+  {
+   "code": "SOC-INTERIMAIRES",
+   "libelle": {
+    "fr": "Intérimaires",
+    "en": "Temporary agency workers"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "personnes",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Travailleurs temporaires mis à disposition par des entreprises de travail temporaire (facultatif).",
+     "source": "Factures des agences d'intérim."
+    },
+    "en": {
+     "description": "Temporary workers provided by employment agencies (optional).",
+     "source": "Temporary agency invoices."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C5",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": false
+   }
+  },
+  {
+   "code": "SOC-CODE-CONDUITE",
+   "libelle": {
+    "fr": "Code de conduite ou politique des droits humains",
+    "en": "Code of conduct or human rights policy"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle un code de conduite ou une politique en matière de droits humains pour son personnel ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Does the company have a code of conduct or human rights policy for its own workforce? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-ENFANTS",
+   "libelle": {
+    "fr": "Code de conduite : travail des enfants",
+    "en": "Code of conduct: child labour"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : travail des enfants ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: child labour?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-FORCE",
+   "libelle": {
+    "fr": "Code de conduite : travail forcé",
+    "en": "Code of conduct: forced labour"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : travail forcé ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: forced labour?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-TRAITE",
+   "libelle": {
+    "fr": "Code de conduite : traite des êtres humains",
+    "en": "Code of conduct: human trafficking"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : traite des êtres humains ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: human trafficking?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-DISCRIMINATION",
+   "libelle": {
+    "fr": "Code de conduite : discrimination",
+    "en": "Code of conduct: discrimination"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : discrimination ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: discrimination?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-ACCIDENTS",
+   "libelle": {
+    "fr": "Code de conduite : prévention des accidents",
+    "en": "Code of conduct: accident prevention"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : prévention des accidents ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: accident prevention?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-AUTRE",
+   "libelle": {
+    "fr": "Code de conduite : autre sujet",
+    "en": "Code of conduct: other topic"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Le code de conduite ou la politique couvre-t-il : autre sujet ?"
+    },
+    "en": {
+     "description": "Does the code of conduct or policy cover: other topic?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-CODE-AUTRE-DESC",
+   "libelle": {
+    "fr": "Autres sujets couverts par le code de conduite",
+    "en": "Other topics covered by the code of conduct"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Préciser les autres sujets couverts."
+    },
+    "en": {
+     "description": "Specify the other topics covered."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-PLAINTES",
+   "libelle": {
+    "fr": "Mécanisme de traitement des plaintes du personnel",
+    "en": "Complaints-handling mechanism for the workforce"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise dispose-t-elle d'un mécanisme de traitement des plaintes pour son personnel ?"
+    },
+    "en": {
+     "description": "Does the company have a complaints-handling mechanism for its own workforce?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C6",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENTS",
+   "libelle": {
+    "fr": "Incidents confirmés au sein du personnel",
+    "en": "Confirmed incidents in the own workforce"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Y a-t-il eu des incidents confirmés (établis par une juridiction, l'OCDE ou une autorité) au sein du personnel ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Were there confirmed incidents (established by a court, the OECD or an authority) in the own workforce? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-ENFANTS",
+   "libelle": {
+    "fr": "Incident confirmé : travail des enfants",
+    "en": "Confirmed incident: child labour"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un incident confirmé porte-t-il sur : travail des enfants ?"
+    },
+    "en": {
+     "description": "Does a confirmed incident relate to: child labour?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-FORCE",
+   "libelle": {
+    "fr": "Incident confirmé : travail forcé",
+    "en": "Confirmed incident: forced labour"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un incident confirmé porte-t-il sur : travail forcé ?"
+    },
+    "en": {
+     "description": "Does a confirmed incident relate to: forced labour?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-TRAITE",
+   "libelle": {
+    "fr": "Incident confirmé : traite des êtres humains",
+    "en": "Confirmed incident: human trafficking"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un incident confirmé porte-t-il sur : traite des êtres humains ?"
+    },
+    "en": {
+     "description": "Does a confirmed incident relate to: human trafficking?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-DISCRIMINATION",
+   "libelle": {
+    "fr": "Incident confirmé : discrimination",
+    "en": "Confirmed incident: discrimination"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un incident confirmé porte-t-il sur : discrimination ?"
+    },
+    "en": {
+     "description": "Does a confirmed incident relate to: discrimination?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-AUTRE",
+   "libelle": {
+    "fr": "Incident confirmé : autre droit de l'homme",
+    "en": "Confirmed incident: other human right"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Un incident confirmé porte-t-il sur : autre droit de l'homme ?"
+    },
+    "en": {
+     "description": "Does a confirmed incident relate to: other human right?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENT-AUTRE-DESC",
+   "libelle": {
+    "fr": "Autres droits humains concernés par les incidents",
+    "en": "Other human rights concerned by the incidents"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Préciser les autres droits humains concernés."
+    },
+    "en": {
+     "description": "Specify the other human rights concerned."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENTS-ACTIONS",
+   "libelle": {
+    "fr": "Actions menées après les incidents confirmés",
+    "en": "Actions taken after the confirmed incidents"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Décrire les actions menées (facultatif)."
+    },
+    "en": {
+     "description": "Describe the actions taken (optional)."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 8,
+    "libelle": {},
+    "obligatoire": false
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENTS-CHAINE",
+   "libelle": {
+    "fr": "Incidents confirmés dans la chaîne de valeur",
+    "en": "Confirmed incidents in the value chain"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle connaissance d'incidents confirmés pendant la période impliquant des travailleurs de la chaîne de valeur, des communautés affectées, des consommateurs ou des utilisateurs finaux ? Facultatif pour une entreprise de 10 salariés au plus : elle peut répondre N/A."
+    },
+    "en": {
+     "description": "Is the company aware of confirmed incidents during the period involving value chain workers, affected communities, consumers or end-users? Voluntary for a company with 10 employees or less: it can answer N/A."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 9,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "SOC-INCIDENTS-CHAINE-DESC",
+   "libelle": {
+    "fr": "Description des incidents dans la chaîne de valeur",
+    "en": "Description of the incidents in the value chain"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Texte",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Aucune",
+   "agregation_temps": "aucune",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Préciser ces incidents."
+    },
+    "en": {
+     "description": "Specify these incidents."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C7",
+    "ordre": 10,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-SECTEURS",
+   "libelle": {
+    "fr": "Revenus de certaines activités",
+    "en": "Revenues from certain activities"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise tire-t-elle des revenus d'une des activités ci-dessous (armes interdites, tabac, combustibles fossiles, produits chimiques) ?"
+    },
+    "en": {
+     "description": "Does the company derive revenues from one of the activities below (prohibited weapons, tobacco, fossil fuels, chemicals)?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-ARMES",
+   "libelle": {
+    "fr": "Revenus des armes interdites",
+    "en": "Revenue from prohibited weapons"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Mines antipersonnel, armes à sous-munitions, armes chimiques et biologiques.",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Anti-personnel mines, cluster munitions, chemical and biological weapons.",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-TABAC",
+   "libelle": {
+    "fr": "Revenus du tabac",
+    "en": "Revenue from tobacco"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Culture et production de tabac.",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Cultivation and production of tobacco.",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-CHARBON",
+   "libelle": {
+    "fr": "Revenus du charbon",
+    "en": "Revenue from coal"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Activités liées au charbon.",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Coal-related activities.",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 4,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-PETROLE",
+   "libelle": {
+    "fr": "Revenus du pétrole",
+    "en": "Revenue from oil"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Activités liées au pétrole.",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Oil-related activities.",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 5,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-GAZ",
+   "libelle": {
+    "fr": "Revenus du gaz",
+    "en": "Revenue from gas"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Activités liées au gaz.",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Gas-related activities.",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 6,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-REV-CHIMIE",
+   "libelle": {
+    "fr": "Revenus de la production de produits chimiques",
+    "en": "Revenue from chemicals production"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "€",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "somme",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Fabrication de pesticides et d'autres produits agrochimiques (groupe NACE 20.2).",
+     "source": "Comptabilité."
+    },
+    "en": {
+     "description": "Manufacture of pesticides and other agrochemical products (NACE group 20.2).",
+     "source": "Accounting."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C8",
+    "ordre": 7,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-ORGANE",
+   "libelle": {
+    "fr": "Organe de gouvernance en place",
+    "en": "Governance body in place"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "OuiNon",
+   "unite": "",
+   "decimales": 0,
+   "methode_agregation": "Décompte",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "L'entreprise a-t-elle un organe de gouvernance (conseil d'administration, conseil de surveillance) ?"
+    },
+    "en": {
+     "description": "Does the company have a governance body (board of directors, supervisory board)?"
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C9",
+    "ordre": 1,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-CA-FEMMES",
+   "libelle": {
+    "fr": "Femmes membres de l'organe de gouvernance",
+    "en": "Female members of the governance body"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "personnes",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Femmes membres de l'organe de gouvernance en fin de période.",
+     "source": "Statuts, procès-verbaux, registre des mandataires sociaux."
+    },
+    "en": {
+     "description": "Female members of the governance body at period end.",
+     "source": "Articles of association, minutes, register of directors."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C9",
+    "ordre": 2,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  },
+  {
+   "code": "GOV-CA-HOMMES",
+   "libelle": {
+    "fr": "Hommes membres de l'organe de gouvernance",
+    "en": "Male members of the governance body"
+   },
+   "type_saisie": "Saisi",
+   "type_reponse": "Numérique",
+   "unite": "personnes",
+   "decimales": 0,
+   "methode_agregation": "Somme",
+   "agregation_temps": "derniere",
+   "formule": "",
+   "preuve_obligatoire": false,
+   "confidentialite": "Non sensible",
+   "actif": true,
+   "descriptions": {
+    "fr": {
+     "description": "Hommes membres de l'organe de gouvernance en fin de période.",
+     "source": "Statuts, procès-verbaux, registre des mandataires sociaux."
+    },
+    "en": {
+     "description": "Male members of the governance body at period end.",
+     "source": "Articles of association, minutes, register of directors."
+    }
+   },
+   "champs": {},
+   "element": {
+    "theme": "C9",
+    "ordre": 3,
+    "libelle": {},
+    "obligatoire": true
+   },
+   "niveau_conseille": "haut"
+  }
+ ],
+ "regles": [],
+ "exporte_le": "",
+ "exporte_de": "Bibliothèque de l'outil",
+ "documents": [
+  {
+   "titre": "Commission Delegated Regulation (EU) 2026/1560 (Voluntary Standard VS)",
+   "editeur": "European Commission",
+   "version": "OJ L, 21 September 2026",
+   "date": "2026-07-03",
+   "url": "http://data.europa.eu/eli/reg_del/2026/1560/oj",
+   "consulte_le": "2026-11-13",
+   "licence": "EU law: reuse allowed with acknowledgement of the source (Commission Decision 2011/833/EU)"
+  },
+  {
+   "titre": "Voluntary Standard: standard for voluntary use (EFRAG Knowledge Hub, interactive text)",
+   "editeur": "EFRAG",
+   "version": "Official Journal publication of 21 September 2026",
+   "date": "2026-09-21",
+   "url": "https://knowledgehub.efrag.org/interactive/voluntary-standard/standard-for-voluntary-use",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; the standard is paraphrased here, never reproduced"
+  },
+  {
+   "titre": "Voluntary Standard: non-mandatory EFRAG guidance (EFRAG Knowledge Hub, interactive text)",
+   "editeur": "EFRAG",
+   "version": "2026 EFRAG guidance",
+   "date": "2026",
+   "url": "https://knowledgehub.efrag.org/eng/interactive/voluntary-standard-non-mandatory-efrag-guidance/voluntary-standard-non-mandatory-efrag-guidance/2026-efrag-guidance",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; the guidance is paraphrased here, never reproduced"
+  },
+  {
+   "titre": "EFRAG VS Digital Template (workbook)",
+   "editeur": "EFRAG",
+   "version": "2.0.0, taxonomy 2026-10-16",
+   "date": "2026-11-04",
+   "url": "https://xbrl.efrag.org/downloads/vsme/",
+   "consulte_le": "2026-11-13",
+   "licence": "MIT, (c) 2025 EFRAG"
+  },
+  {
+   "titre": "VS Digital Template and XBRL Taxonomy: Explanatory Note",
+   "editeur": "EFRAG",
+   "version": "4 November 2026",
+   "date": "2026-11-04",
+   "url": "https://xbrl.efrag.org/downloads/vsme/",
+   "consulte_le": "2026-11-18",
+   "licence": "(c) EFRAG; read for reference, not redistributed"
+  }
+ ]
+}

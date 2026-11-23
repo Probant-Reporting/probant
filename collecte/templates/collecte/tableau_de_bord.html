@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.tdb.titre" %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "suivi.tdb.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+  <noscript><form class="flex gap-8 aligne-centre" method="get">{% include "collecte/_choix_campagne.html" %}</form></noscript>
+</div>
+{% include "collecte/_vues_tdb.html" %}
+
+{# 1. État de la campagne : un verdict (dans les temps ou en retard), puis des chiffres qui mènent à l'action #}
+<section class="carte bilan-tdb" aria-labelledby="titre-bilan">
+  <h2 id="titre-bilan" class="visuellement-cache">{% libelle "suivi.tdb.bilan.titre" %}</h2>
+  <div class="verdict-tdb{% if verdict %} verdict-{{ verdict.code }}{% endif %}">
+    <p class="phrase-verdict">{% if verdict.code == "retard" %}{% icone "alerte" %} <strong>{% libelle "suivi.tdb.verdict.retard" n=verdict.points %}</strong>
+      {% elif verdict.code == "a_temps" %}{% icone "coche" %} <strong>{% libelle "suivi.tdb.verdict.a_temps" %}</strong>
+      {% else %}<strong>{% libelle "suivi.tdb.verdict.taux" taux=total.taux|pct %}</strong>{% endif %}{# pas d'espace avant « : » en anglais et en espagnol (le français la porte dans son texte) #}{% if verdict %}<span class="detail-verdict">{% libelle "suivi.tdb.verdict.detail" taux=taux_verdict|pct attendu=attendu|pct %}</span>{% endif %}</p>
+    <span class="barre-repere" title="{% if attendu is not None %}{% libelle "suivi.tdb.barre.detail_attendu" valide=total.valide brouillon=total.brouillon a_saisir=total.a_saisir attendu=attendu %}{% else %}{% libelle "suivi.tdb.barre.detail" valide=total.valide brouillon=total.brouillon a_saisir=total.a_saisir %}{% endif %}">
+      <span class="progression"><span class="p-valide" style="width:{{ total|largeur:'valide'|stringformat:'s' }}%"></span><span class="p-brouillon" style="width:{{ total|largeur:'brouillon'|stringformat:'s' }}%"></span></span>
+      {% if attendu is not None %}<span class="repere-attendu" style="left:{{ attendu }}%"></span>{% endif %}</span>
+    <span class="discret">{% libelle "suivi.tdb.taux.sur" n=total.valide total=total.total %}{% if attendu is not None and not verdict %} · {% libelle "suivi.tdb.taux.attendu" attendu=attendu|pct %}{% endif %}</span>
+    {% if facultatifs.total %}<p class="discret facultatifs-tdb">{% libelle "suivi.tdb.facultatifs" valide=facultatifs.valide total=facultatifs.total %} <span class="texte-mini">{% libelle "suivi.tdb.facultatifs.note" %}</span></p>{% endif %}
+  </div>
+  <ul class="tuiles-tdb">
+    <li class="tuile-tdb echeance{% if jours_depasses %} depassee{% endif %}">
+    {% if campagne.statut == "ouverte" %}
+      {% if jours is None %}<span class="libelle-chiffre">{% libelle "suivi.tdb.echeance.fin_saisie" %}</span><span class="grand">—</span><span class="discret">{% libelle "suivi.tdb.echeance.pas_de_date" %}</span>
+      {% elif jours_depasses %}<span class="libelle-chiffre">{% icone "alerte" %} {% libelle "suivi.tdb.echeance.depassee" %}</span><span class="grand">{{ jours_depasses|entier }}</span><span class="discret">{% libelle "suivi.tdb.echeance.retard" n=jours_depasses %} <span class="discret">· {% libelle "suivi.tdb.echeance.fin_le" date=campagne.date_fin_saisie|date_longue %}</span></span>
+      {% elif jours == 0 %}<span class="libelle-chiffre">{% libelle "suivi.tdb.echeance.restants" %}</span><span class="grand">0</span><span class="discret">{% libelle "suivi.tdb.echeance.dernier_jour" %}</span>
+      {% else %}<span class="libelle-chiffre">{% libelle "suivi.tdb.echeance.restants" %}</span><span class="grand">{{ jours|entier }}</span><span class="discret">{% libelle "suivi.tdb.echeance.fin_saisie_le" date=campagne.date_fin_saisie|date_longue %}</span>{% endif %}
+    {% else %}
+      <span class="libelle-chiffre">{% libelle "suivi.tdb.echeance.campagne" %}</span><span class="grand texte-statut">{{ campagne|choix:"statut" }}</span>
+      <span class="discret">{% if campagne.statut == "preparation" %}{% libelle "suivi.tdb.echeance.preparation" %}{% elif campagne.statut == "revue" %}{% libelle "suivi.tdb.echeance.revue" %}{% else %}{% libelle "suivi.tdb.echeance.figee" %}{% endif %}</span>
+    {% endif %}</li>
+    {% for code, n in tuiles %}
+    <li class="tuile-tdb{% if code == "retards" and n %} a-surveiller{% endif %}">{% if code == "retards" %}{% if n %}<a href="#detail-tdb" data-voir-retards>{% endif %}<span class="libelle-chiffre">{% if n %}{% icone "alerte" %} {% endif %}{% libelle "suivi.tdb.orgs_en_retard" %}</span><span class="grand">{{ n|entier }}</span>{% if n %}<span class="lien-tuile">{% libelle "suivi.tdb.tuile.voir_orgs" %}</span></a>{% endif %}
+      {% else %}{% if lien_saisie and n %}<a href="{{ lien_saisie }}?campagne={{ campagne.pk }}&amp;statut={{ code }}">{% endif %}<span class="libelle-chiffre"><span class="point p-{% if code == "brouillon" %}brouillon{% else %}a-saisir{% endif %}"></span>{% if code == "brouillon" %}{% libelle "suivi.tdb.brouillons_a_valider" %}{% else %}{% libelle "suivi.tdb.a_saisir" %}{% endif %}</span><span class="grand">{{ n|entier }}</span>{% if lien_saisie and n %}<span class="lien-tuile">{% libelle "suivi.tdb.tuile.voir_saisie" %}</span></a>{% endif %}{% endif %}</li>
+    {% endfor %}
+  </ul>
+</section>
+
+{# 2. Ce qui demande une action, et seulement cela : chaque ligne avec son lien #}
+{% if a_faire %}
+{% include "collecte/administration/_a_traiter.html" with points=a_faire id_titre="titre-a-faire" bouton_relance=peut_relancer %}
+{% elif peut_relancer %}<p class="relance-seule">{% if peut_relancer %}{% if smtp %}<a class="bouton" href="{% url 'collecte:relances' %}?campagne={{ campagne.pk }}">{% libelle "suivi.tdb.relancer" %}</a>{% else %}<a class="bouton secondaire" href="{% url 'collecte:relances' %}?campagne={{ campagne.pk }}">{% libelle "suivi.tdb.preparer_relance" %}</a>{% endif %}{% endif %}</p>
+{% endif %}
+
+{% if not total.total %}
+<div class="carte">{% libelle "suivi.tdb.aucune_case" %}</div>
+{% endif %}
+
+<div class="grille-tdb">
+{% if total.total %}
+{# 3. Le détail du taux, en onglets (sans JavaScript : toutes les parties l'une sous l'autre) #}
+<section class="carte detail-tdb" id="detail-tdb" aria-labelledby="titre-detail" data-onglets-tdb>
+  <h2 id="titre-detail" class="visuellement-cache">{% libelle "suivi.tdb.detail.titre" %}</h2>
+  <div class="entete-detail-tdb">
+    <div class="sous-onglets onglets-tdb" role="tablist" aria-label="{% libelle "suivi.tdb.onglets.aria" %}" hidden>
+      <button type="button" role="tab" id="onglet-organisations" aria-controls="panneau-organisations" aria-selected="true">{% libelle "suivi.tdb.onglet.organisations" %}</button>
+      {% if user.role != "contributeur" or user.est_admin %}<button type="button" role="tab" id="onglet-spoc" aria-controls="panneau-spoc" aria-selected="false" tabindex="-1">{% libelle "suivi.tdb.onglet.spoc" %}</button>{% endif %}
+      <button type="button" role="tab" id="onglet-themes" aria-controls="panneau-themes" aria-selected="false" tabindex="-1">{% libelle "suivi.tdb.onglet.themes" %}</button>
+      {% if avancement|length > 1 %}<button type="button" role="tab" id="onglet-campagnes" aria-controls="panneau-campagnes" aria-selected="false" tabindex="-1">{% libelle "suivi.tdb.onglet.campagnes" %}</button>{% endif %}
+    </div>
+    <div class="outils-tdb">
+      <span id="libelle-tri" class="discret">{% libelle "suivi.tdb.tri.titre" %}</span>
+      <nav class="segments" aria-labelledby="libelle-tri">
+        <a href="?campagne={{ campagne.pk }}" data-garder-onglet{% if tri != "taux" %} class="actif" aria-current="true"{% endif %}>{% libelle "suivi.tdb.tri.arbre" %}</a>
+        <a href="?campagne={{ campagne.pk }}&amp;tri=taux" data-garder-onglet{% if tri == "taux" %} class="actif" aria-current="true"{% endif %}>{% libelle "suivi.tdb.tri.taux" %}</a>
+      </nav>
+    </div>
+  </div>
+  <div class="note-tdb">
+    <p class="legende discret"><span class="point p-valide"></span>{% libelle "suivi.tdb.legende.valide" %} <span class="point p-brouillon"></span>{% libelle "suivi.tdb.legende.brouillon" %} <span class="point p-a-saisir"></span>{% libelle "suivi.tdb.legende.a_saisir" %}{% if voit_retards and attendu is not None %} <span class="repere-legende" aria-hidden="true"></span>{% libelle "suivi.tdb.legende.attendu" %}{% endif %}</p>
+    <details class="aide-repliable note-methode"><summary>{% libelle "suivi.tdb.methode.titre" %}</summary>
+      <p class="discret">{% if user.est_admin %}{% libelle "suivi.tdb.methode.perimetre_admin" %}{% else %}{% libelle "suivi.tdb.methode.perimetre_autre" %}{% endif %}
+        {% libelle "suivi.tdb.methode.taux" %}{% if voit_retards and attendu is not None %} {% libelle "suivi.tdb.methode.retard" tolerance=tolerance attendu=attendu %}{% endif %}</p>
+    </details>
+  </div>
+
+  <div class="panneau-tdb" role="tabpanel" id="panneau-organisations" aria-labelledby="onglet-organisations">
+    <h3 class="titre-panneau-tdb">{% libelle "suivi.tdb.par_org.titre" %}</h3>
+    <div class="outils-panneau-tdb">
+      <p class="discret m-0">{% if user.role == "contributeur" and not user.est_admin %}{% libelle "suivi.tdb.par_org.aide_contributeur" %}{% else %}{% libelle "suivi.tdb.par_org.aide" %}{% endif %}</p>
+      <span class="flex gap-8 aligne-centre ml-auto">
+        {% if voit_retards and retards %}<label class="filtre-retard case-barre" hidden><input type="checkbox" data-filtre-retard> {% libelle "suivi.tdb.filtre.retard" %}</label>{% endif %}
+        {% if tri != "taux" %}<button type="button" class="icone" data-arbre-tout="ouvrir" data-cible="table-orgs" hidden>{% libelle "suivi.conso.tout_deplier" %}</button>
+        <button type="button" class="icone" data-arbre-tout="fermer" data-cible="table-orgs" hidden>{% libelle "suivi.conso.tout_replier" %}</button>{% endif %}
+      </span>
+    </div>
+    {# colonnes triables (_app/13_tableaux.js) : dans l'arbre, à l'intérieur de chaque niveau ; « par taux », la liste à plat #}
+    {# sur téléphone, le tableau défile dans son cadre, jamais la page #}{% libelle "suivi.tdb.par_org.titre" as t_po %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_po }}">
+    <table class="tdb table-orgs-tdb" id="table-orgs" data-arbre-table data-arbre-ouvert="1" data-triable{% if tri != "taux" %} data-tri-arbre{% endif %}>
+      <thead><tr><th data-tri="texte" data-tri-col="organisation">{% libelle "suivi.tdb.col.organisation" %}</th><th class="mq-xs l-30p">{% libelle "suivi.tdb.col.progression" %}</th>{% include "collecte/_entetes_barre.html" %}</tr></thead>
+      <tbody>
+      {% for o, c, x in arbre %}
+      <tr data-org="{{ o.id }}"{% if x.parent_id %} data-parent="{{ x.parent_id }}"{% endif %} data-prof="{{ x.prof }}"{% if x.retard %} class="en-retard" data-retard="1"{% endif %}{% if x.dessous %} data-dessous="{{ x.dessous }}"{% endif %}>
+        <td class="retrait-arbre" data-tri="{{ o.nom }}" style="--prof:{% if tri == 'taux' %}0{% else %}{{ x.prof }}{% endif %}">
+          <span class="nom-ligne-tdb">{% if x.enfants %}<button type="button" class="deplier-conso" aria-expanded="true" data-deplier="{{ o.id }}" aria-label="{% libelle "suivi.conso.deplier" nom=o.nom %}"><span class="chevron" aria-hidden="true">{% icone "chevron-bas" %}</span></button>{% elif tri != "taux" %}<span class="place-chevron" aria-hidden="true"></span>{% endif %}
+          {% etiquette_niveau o %}
+          {% if x.parent %}{% libelle "suivi.tdb.detail.ensemble" taux=c.taux as t_ens %}{% if x.propre %}{% libelle "suivi.tdb.detail.propres" n=x.propre.valide valide=x.propre.valide total=x.propre.total as t_propres %}{% endif %}{% endif %}
+          {% if user.est_lecteur %}<span class="nom-org"{% if x.parent %} title="{{ t_ens }}{% if x.propre %} · {{ t_propres }}{% endif %}"{% endif %}>{{ o.nom }}</span>{% else %}<a class="nom-org lien-discret" href="{% url 'collecte:saisie' %}?org={{ o.id }}"{% if x.parent %} title="{{ t_ens }}{% if x.propre %} · {{ t_propres }}{% endif %}"{% endif %}>{{ o.nom }}</a>{% endif %}
+          {% if x.retard %}<span class="badge-alerte">{% icone "alerte" %} {% if x.parent %}{% libelle "suivi.tdb.badge.retard_propres" %}{% else %}{% libelle "suivi.tdb.badge.retard" %}{% endif %}</span>{% endif %}</span>
+          {% if x.parent and x.retard and x.propre or x.dessous %}<span class="detail-org">{% if x.parent and x.retard and x.propre %}{{ t_propres }}{% endif %}{% if x.parent and x.retard and x.propre and x.dessous %} · {% endif %}{% if x.dessous %}<span class="retard-dessous">{% icone "alerte" %} {% libelle "suivi.tdb.detail.dessous" n=x.dessous %}</span>{% endif %}</span>{% endif %}</td>
+        {% if voit_retards %}{% include "collecte/_barre.html" with repere=attendu %}{% else %}{% include "collecte/_barre.html" with repere="" %}{% endif %}</tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="etat-vide vide-retard" data-vide-retard hidden>{% libelle "suivi.tdb.filtre.aucun" %}</p>
+  </div>
+
+  {% if user.role != "contributeur" or user.est_admin %}
+  <div class="panneau-tdb" role="tabpanel" id="panneau-spoc" aria-labelledby="onglet-spoc">
+    <h3 class="titre-panneau-tdb">{% libelle "suivi.tdb.spoc.titre" %}</h3>
+    <table class="tdb" id="table-spoc" data-triable>
+      <thead><tr><th data-tri="texte" data-tri-col="personne">{% libelle "suivi.tdb.col.personne" %}</th><th class="mq-m"><span class="visuellement-cache">{% libelle "suivi.tdb.col.email" %}</span></th><th class="mq-xs l-30p">{% libelle "suivi.tdb.col.progression" %}</th>{% include "collecte/_entetes_barre.html" %}{% if user.est_admin %}<th><span class="visuellement-cache">{% libelle "suivi.tdb.attribuer" %}</span></th>{% endif %}</tr></thead>
+      {% for u, c in par_spoc %}
+      <tr{% if not u %} class="sans-spoc"{% endif %}><td data-tri="{% if u %}{{ u }}{% endif %}">{% if u %}<span class="flex-inline gap-8 aligne-centre">{% avatar u %} {{ u }}</span>{% else %}<strong class="texte-sans-spoc">{% icone "alerte" %} {% libelle "suivi.tdb.sans_spoc.ligne" %}</strong>{% endif %}</td><td class="discret mq-m">{% if u %}{{ u.email }}{% else %}{% libelle "suivi.tdb.sans_spoc.aide" %}{% endif %}</td>
+        {% include "collecte/_barre.html" with repere="" %}{% if user.est_admin %}<td class="action-ligne">{% if not u and c.a_saisir|add:c.brouillon %}<a class="lien-action" href="{% url 'collecte:admin_attributions' %}">{% libelle "suivi.tdb.attribuer" %}</a>{% endif %}</td>{% endif %}</tr>
+      {% endfor %}
+    </table>
+  </div>
+  {% endif %}
+
+  <div class="panneau-tdb" role="tabpanel" id="panneau-themes" aria-labelledby="onglet-themes">
+    <h3 class="titre-panneau-tdb">{% libelle "suivi.tdb.theme.titre" %}</h3>
+    <table class="tdb" id="table-themes" data-triable>
+      <thead><tr><th data-tri="texte" data-tri-col="theme">{% libelle "suivi.tdb.col.theme" %}</th><th class="mq-xs l-30p">{% libelle "suivi.tdb.col.progression" %}</th>{% include "collecte/_entetes_barre.html" %}</tr></thead>
+      {% for t, c in par_theme %}<tr><td>{{ t }}</td>{% include "collecte/_barre.html" with repere="" %}</tr>{% endfor %}
+    </table>
+  </div>
+
+  {% if avancement|length > 1 %}
+  <div class="panneau-tdb" role="tabpanel" id="panneau-campagnes" aria-labelledby="onglet-campagnes">
+    <h3 class="titre-panneau-tdb">{% libelle "suivi.tdb.campagnes.titre" %}</h3>
+    <p class="discret">{% libelle "suivi.tdb.campagnes.aide" %}</p>
+    <table class="tdb">
+      <thead><tr><th>{% libelle "suivi.tdb.col.campagne" %}</th><th class="mq-m">{% libelle "suivi.tdb.col.statut" %}</th><th class="mq-xs l-30p">{% libelle "suivi.tdb.col.progression" %}</th><th class="nombre">{% libelle "suivi.tdb.col.validees" %}</th><th class="nombre mq-s">{% libelle "suivi.tdb.col.brouillons" %}</th><th class="nombre mq-s">{% libelle "suivi.tdb.col.a_saisir" %}</th><th class="nombre">{% libelle "suivi.tdb.col.taux" %}</th></tr></thead>
+      {% for camp, c in avancement %}<tr{% if camp.pk == campagne.pk %} class="ligne-courante"{% endif %}><td>{% if camp.pk == campagne.pk %}{% etiquette_referentiel camp.referentiel %} <strong>{{ camp.periode }}</strong> <span class="discret">{% libelle "suivi.tdb.campagnes.affiche" %}</span>{% else %}{% libelle "suivi.tdb.campagnes.afficher" referentiel=camp.referentiel periode=camp.periode as t_afficher %}<a href="?campagne={{ camp.pk }}" class="lien-campagne" title="{{ t_afficher }}">{% etiquette_referentiel camp.referentiel %} {{ camp.periode }}</a>{% endif %}</td>
+        <td class="mq-m">{% include "collecte/administration/_statut_campagne.html" with c=camp %}</td>{% include "collecte/_barre.html" with repere="" %}</tr>{% endfor %}
+    </table>
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+{# « À relancer » retiré : la page Relances, ouverte par « Préparer la relance… », donne le détail par personne #}
+</div>
+{% endblock %}

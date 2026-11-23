@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.copie.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% include "parametres/_entete_referentiel.html" %}
+<div class="page-reglages-ref">
+  <form method="post" class="carte form-reglages-ref">
+    {% csrf_token %}
+    <h3>{% libelle "referentiels.copie.titre" referentiel=ref %}</h3>
+    <p class="discret mt-0">{% libelle "referentiels.copie.explication" %}</p>
+    {% if erreur %}{% encart "erreur" role="alert" %}{{ erreur }}{% endencart %}{% endif %}
+    <label class="champ"><span class="libelle">{% libelle "referentiels.copie.nom" %}</span>
+      <input type="text" name="nom" value="{{ nom_copie }}" maxlength="150" required></label>
+    <label class="champ"><span class="libelle">{% libelle "referentiels.copie.code" %} <span class="discret">{% libelle "admin.facultatif" %}</span></span>
+      <input type="text" name="code" maxlength="30" class="code" aria-describedby="aide-code-copie">
+      <span class="aide-champ" id="aide-code-copie">{% libelle "referentiels.copie.code_aide" %}</span></label>
+    {% if exercices %}
+    <label class="champ"><span class="libelle">{% libelle "referentiels.copie.campagnes" %} <span class="discret">{% libelle "admin.facultatif" %}</span></span>
+      <input type="text" name="campagnes_des" value="{{ exercice }}" inputmode="numeric" maxlength="4" size="6" class="code" aria-describedby="aide-campagnes-copie">
+      <span class="aide-champ" id="aide-campagnes-copie">{% libelle "referentiels.copie.campagnes_aide" liste=exercices|join:", " %}</span></label>
+    {% endif %}
+    {% if ref.actif %}
+    <label class="case-option"><input type="checkbox" name="desactiver" aria-describedby="aide-desactiver-copie">
+      <span>{% libelle "referentiels.copie.desactiver" referentiel=ref %}<br>
+        <span class="discret" id="aide-desactiver-copie">{% libelle "referentiels.copie.desactiver_aide" %}</span></span></label>
+    {% endif %}
+    <div class="barre-enregistrement"><button type="submit">{% libelle "referentiels.copie.bouton" %}</button>
+      <a class="bouton secondaire" href="{% url 'parametres:referentiel_contenu' ref.code %}">{% libelle "commun.annuler" %}</a></div>
+  </form>
+</div>
+{% endblock %}

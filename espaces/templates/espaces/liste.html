@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "espaces.liste.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Titre d'abord, puis deux phrases courtes : ce qu'est un espace, comment en changer.{% endcomment %}
+<div class="entete-page entete-espaces"><h2 class="texte-grand m-0">{% libelle "espaces.liste.titre" %}</h2><span class="espace"></span>
+  <a class="bouton" href="{% url 'espaces:nouveau' %}">{% icone "plus" %} {% libelle "espaces.liste.nouveau" %}</a></div>
+<p class="intro-page">{% libelle "espaces.liste.aide" %}<br>{% libelle "espaces.liste.aide_bouton" %}</p>
+<table class="carte-table tableau-espaces">
+  <thead><tr><th scope="col">{% libelle "espaces.liste.nom" %}</th><th scope="col">{% libelle "espaces.liste.adresse" %}</th>
+    <th scope="col" class="mq-s">{% libelle "espaces.liste.comptes" %}</th><th scope="col" class="mq-m">{% libelle "espaces.liste.cree" %}</th>
+    <th scope="col">{% libelle "espaces.liste.etat" %}</th><th scope="col">{% libelle "espaces.liste.actions" %}</th></tr></thead>
+  <tbody>{% for l in lignes %}
+  <tr>
+    <td><strong>{{ l.e.nom }}</strong>{% if l.e.principal %}<br><span class="discret">{% libelle "espaces.liste.principal" %}</span>{% endif %}</td>
+    <td><code>{{ l.adresse }}</code></td>
+    <td class="mq-s">{{ l.comptes }}</td>
+    <td class="mq-m">{{ l.e.cree_le|date_courte }}</td>
+    <td>{# « Actif » s'écrit comme dans Comptes : point et mot #}<span class="etat {% if l.e.etat == "actif" %}etat-actif{% else %}etat-inactif{% endif %}">{{ l.etat }}</span></td>
+    <td><div class="actions-espace">
+      {% if l.url %}<a href="{{ l.url }}">{% libelle "espaces.liste.ouvrir" %}</a>{% endif %}
+      <details class="renommer-espace"><summary>{% libelle "espaces.liste.renommer" %}</summary>
+        <form method="post">{% csrf_token %}<input type="hidden" name="code" value="{{ l.e.code }}"><input type="hidden" name="action" value="renommer">
+          <label for="nom-{{ l.e.code }}">{% libelle "espaces.liste.nouveau_nom" nom=l.e.nom %}</label>
+          <input type="text" id="nom-{{ l.e.code }}" name="nom" value="{{ l.e.nom }}" maxlength="80" required> <button type="submit">{% libelle "espaces.liste.renommer" %}</button></form></details>
+      {% if not l.e.principal %}<form method="post" class="en-ligne">{% csrf_token %}<input type="hidden" name="code" value="{{ l.e.code }}">
+        {% if l.e.etat == "actif" %}<button type="submit" name="action" value="archiver" class="lien" data-confirmer="{% libelle 'espaces.liste.archiver_confirmer' nom=l.e.nom %}">{% libelle "espaces.liste.archiver" %}</button>
+        {% elif l.e.etat == "archive" %}<button type="submit" name="action" value="reactiver" class="lien">{% libelle "espaces.liste.reactiver" %}</button>
+        {% else %}<button type="submit" name="action" value="reprendre">{% libelle "espaces.liste.reprendre" %}</button>{% endif %}</form>{% endif %}
+    </div></td>
+  </tr>{% endfor %}</tbody>
+</table>
+<p class="intro-page">{% libelle "espaces.liste.sauvegardes" %}</p>
+
+<h2 class="texte-grand" id="personnes">{% libelle "espaces.personnes.titre" %}</h2>
+<p class="intro-page">{% libelle "espaces.personnes.aide" %}<br>{% libelle "espaces.personnes.aide_droits" %}</p>
+<div class="defile-x"><table class="carte-table tableau-personnes">
+  <thead><tr><th scope="col">{% libelle "espaces.personnes.personne" %}</th>{% for e in espaces_colonnes %}<th scope="col">{{ e.nom }}</th>{% endfor %}
+    <th scope="col">{% libelle "espaces.personnes.gestionnaire" %}</th><th scope="col">{% libelle "espaces.personnes.connexion" %}</th></tr></thead>
+  <tbody>{% for p in personnes %}
+  <tr>
+    <td><strong>{{ p.c.first_name }} {{ p.c.last_name }}</strong><br><span class="discret">{{ p.c.email }}</span></td>
+    {% for r in p.roles %}<td>{% if r %}{{ r }}{% else %}<span class="discret" aria-label="{% libelle 'espaces.personnes.sans_acces' %}">—</span>{% endif %}</td>{% endfor %}
+    <td><form method="post" class="en-ligne">{% csrf_token %}<input type="hidden" name="action" value="gestionnaire"><input type="hidden" name="compte" value="{{ p.c.pk }}">
+      <input type="hidden" name="valeur" value="{% if p.c.gestionnaire %}0{% else %}1{% endif %}">
+      {% if p.c.gestionnaire %}<b>{% libelle "espaces.personnes.oui" %}</b>{% else %}<span>{% libelle "espaces.personnes.non" %}</span>{% endif %}
+      <button type="submit" class="lien" aria-label="{% if p.c.gestionnaire %}{% libelle 'espaces.personnes.retirer' nom=p.c.email %}{% else %}{% libelle 'espaces.personnes.nommer' nom=p.c.email %}{% endif %}">{% if p.c.gestionnaire %}{% libelle "espaces.personnes.action_retirer" %}{% else %}{% libelle "espaces.personnes.action_nommer" %}{% endif %}</button></form></td>
+    <td><form method="post" class="en-ligne">{% csrf_token %}<input type="hidden" name="action" value="bloquer"><input type="hidden" name="compte" value="{{ p.c.pk }}">
+      <input type="hidden" name="valeur" value="{% if p.c.actif %}1{% else %}0{% endif %}">
+      {% if p.c.actif %}<span>{% libelle "espaces.personnes.permise" %}</span> <button type="submit" class="lien" aria-label="{% libelle 'espaces.personnes.bloquer_nom' nom=p.c.email %}" data-confirmer="{% libelle 'espaces.personnes.bloquer_confirmer' nom=p.c.email %}">{% libelle "espaces.personnes.bloquer" %}</button>
+      {% else %}<b>{% libelle "espaces.personnes.bloquee" %}</b> <button type="submit" class="lien" aria-label="{% libelle 'espaces.personnes.debloquer_nom' nom=p.c.email %}">{% libelle "espaces.personnes.debloquer" %}</button>{% endif %}</form></td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+<style nonce="{% jeton_csp %}">
+  .entete-espaces { margin-bottom: 6px; }
+  .tableau-espaces + .intro-page { margin-top: 12px; }
+  .tableau-espaces .actions-espace { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+  .tableau-espaces form.en-ligne { display: inline; margin: 0; }
+  .renommer-espace summary { cursor: pointer; color: var(--principale); }
+  .renommer-espace form { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; }
+  .renommer-espace label { flex-basis: 100%; font-size: var(--taille-mini); }
+  .defile-x { overflow-x: auto; }
+  .tableau-personnes td, .tableau-personnes th { white-space: nowrap; }
+  .tableau-personnes button.lien { margin-left: 8px; min-height: 24px; }
+</style>
+{% endblock %}

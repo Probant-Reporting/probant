@@ -1,0 +1,8 @@
+# Names stored in the database of the demo that stay as stored, shown as they are: they are data, not interface text. One text per line;
+# read by languages.js unless --data gives another file. Only the French spelling of the demo.
+# The names of the levels and of the types that the tool installs (Site, Saisie, Saisi, Calcul, Calculé, Facteur d'émission,
+# Oui / non, Texte rédigé…) are no longer listed: they have a translation in the seven languages (parametres/0036), shown in
+# every language that the installation turned on (Administration > Settings > Languages). languages.js turns on the languages of the
+# run first and puts the settings back at the end (--keep-languages: no change); a language that is off shows the default language, by design.
+# What is left: the CODE of the level "Site", shown in the table of the levels (a code is never translated).
+Site

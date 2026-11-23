@@ -1,0 +1,57 @@
+{% load collecte %}{# Mon compte › Assistants (MCP) : jetons personnels de la personne dans cet espace (serveur_mcp/vues.py, docs/mcp.md) #}
+<section class="carte carte-assistants" id="assistants" aria-labelledby="titre-assistants">
+  <h2 id="titre-assistants">{% libelle "mcp.compte.titre" %}</h2>
+  <p class="aide-champ remonte">{% libelle "mcp.compte.aide" %}</p>
+  {% if not mcp.actif %}
+  <p class="discret m-0">{% libelle "mcp.compte.eteint" %}</p>
+  {% else %}
+  {% if user.lecture_seule %}<p class="discret">{% libelle "mcp.compte.lecture_seule" %}</p>{% elif not mcp.ecriture %}<p class="discret">{% libelle "mcp.compte.ecriture_eteinte" %}</p>{% endif %}
+  {% if mcp.nouveau %}{# montré une seule fois, dans la réponse à la création : gardé nulle part en clair #}
+  {% libelle "mcp.compte.copie" as t_copie %}{% libelle "mcp.compte.copier" as t_copier %}
+  <div class="encart encart-succes nouveau-jeton" data-zone-copie>{# focus sur le titre à l'arrivée ; « Copié » annoncé par la zone aria-live (le jeton, lui, n'est jamais lu d'office) #}
+    <h3 id="titre-nouveau-jeton" tabindex="-1" data-focus-initial>{% libelle "mcp.compte.nouveau_titre" %}</h3>
+    <p class="visuellement-cache" role="status" aria-live="polite" data-annonce-copie></p>
+    <p>{% libelle "mcp.compte.nouveau_aide" date=mcp.nouveau.objet.expire_le|date_courte %}</p>
+    <div class="champ"><span class="libelle">{% libelle "mcp.compte.jeton" %}</span>
+      <div class="ligne-copie"><code id="jeton-nouveau" class="code-copie">{{ mcp.nouveau.jeton }}</code>
+        <button type="button" class="secondaire" data-copier="#jeton-nouveau" data-copier-annonce="{{ t_copie }}">{% icone "copy" %} {{ t_copier }}</button></div></div>
+    <div class="champ"><span class="libelle">{% libelle "mcp.compte.adresse" %}</span>
+      <div class="ligne-copie"><code id="adresse-mcp" class="code-copie">{{ mcp.adresse }}</code>
+        <button type="button" class="secondaire" data-copier="#adresse-mcp" data-copier-annonce="{{ t_copie }}">{% icone "copy" %} {{ t_copier }}</button></div></div>
+    <details class="config-assistant">
+      <summary>{% libelle "mcp.compte.config" %}</summary>
+      <p class="aide-champ">{% libelle "mcp.compte.config_code" %}</p>
+      <div class="ligne-copie"><pre id="config-code" class="code-copie">{{ mcp.nouveau.config_code }}</pre>
+        <button type="button" class="secondaire" data-copier="#config-code" data-copier-annonce="{{ t_copie }}">{% icone "copy" %} {{ t_copier }}</button></div>
+      <p class="aide-champ">{% libelle "mcp.compte.config_aide" %}</p>
+      <div class="ligne-copie"><pre id="config-desktop" class="code-copie">{{ mcp.nouveau.config_desktop }}</pre>
+        <button type="button" class="secondaire" data-copier="#config-desktop" data-copier-annonce="{{ t_copie }}">{% icone "copy" %} {{ t_copier }}</button></div>
+    </details>
+  </div>
+  {% endif %}
+  <form method="post" action="{% url 'collecte:mon_compte' %}#assistants" class="formulaire-jeton">{% csrf_token %}
+    <input type="hidden" name="action" value="jeton_creer">
+    {% if mcp.erreur %}{% encart "erreur" role="alert" %}{{ mcp.erreur }}{% endencart %}{% endif %}
+    <div class="champ"><label for="jeton-nom">{% libelle "mcp.compte.nom" %}</label>
+      <input type="text" id="jeton-nom" name="nom" maxlength="80" required value="{{ mcp.nom|default:'' }}" aria-describedby="aide-jeton-nom">
+      <p class="aide-champ" id="aide-jeton-nom">{% libelle "mcp.compte.nom_aide" %}</p></div>
+    <div class="champ"><label for="jeton-jours">{% libelle "mcp.compte.duree" %}</label>
+      <select id="jeton-jours" name="jours">{% for d in mcp.durees %}<option value="{{ d }}"{% if d == mcp.duree_defaut %} selected{% endif %}>{% libelle "mcp.compte.jours" n=d %}</option>{% endfor %}</select></div>
+    <div class="barre-enregistrement"><button type="submit">{% icone "plus" %} {% libelle "mcp.compte.creer" %}</button>
+      <span class="discret">{% libelle "mcp.compte.max" max=mcp.max %}</span></div>
+  </form>
+  <h3>{% libelle "mcp.compte.liste" %}</h3>
+  {% if mcp.jetons %}
+  <div class="defile-x"><table class="carte-table table-jetons">
+    <thead><tr><th>{% libelle "mcp.col.nom" %}</th><th>{% libelle "mcp.col.expire" %}</th><th class="mq-s">{% libelle "mcp.col.utilise" %}</th><th><span class="visuellement-cache">{% libelle "mcp.col.actions" %}</span></th></tr></thead>
+    <tbody>{% for j in mcp.jetons %}
+    <tr><td>{{ j.nom }}<br><code class="discret" title="{% libelle "mcp.col.debut" %}">{{ j.debut }}…</code></td><td>{{ j.expire_le|date_courte }}</td>
+      <td class="mq-s">{% if j.derniere_utilisation %}{{ j.derniere_utilisation|date_heure_courte }}{% else %}<span class="discret">{% libelle "mcp.jamais" %}</span>{% endif %}</td>
+      <td class="action-ligne">{% libelle "mcp.revoquer_confirmer" nom=j.nom as t_conf %}{% libelle "mcp.revoquer_nom" nom=j.nom as t_rev %}
+        <form method="post" action="{% url 'collecte:mon_compte' %}" data-confirmer="{{ t_conf }}">{% csrf_token %}<input type="hidden" name="action" value="jeton_revoquer"><input type="hidden" name="jeton" value="{{ j.pk }}">
+          <button type="submit" class="lien lien-danger" aria-label="{{ t_rev }}">{% libelle "mcp.revoquer" %}</button></form></td></tr>
+    {% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="discret m-0">{% libelle "mcp.compte.aucun" %}</p>{% endif %}
+  {% endif %}
+</section>

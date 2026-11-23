@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "referentiels.liste.titre_page" referentiel=ref %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% include "parametres/_entete_referentiel.html" %}
+<div class="page-reglages-ref">
+  <form method="post" class="carte form-reglages-ref">
+    {% csrf_token %}
+    <h3>{% libelle "referentiels.liste.titre" referentiel=ref %}</h3>
+    <p class="discret mt-0">{% libelle "referentiels.liste.explication" %}</p>
+    {% if erreur %}{% encart "erreur" role="alert" %}{{ erreur }}{% endencart %}{% endif %}
+    <label class="champ"><span class="libelle">{% libelle "referentiels.liste.codes" %}</span>
+      <textarea name="codes" rows="8" class="code" aria-describedby="aide-codes-liste" required>{{ texte }}</textarea>
+      <span class="aide-champ" id="aide-codes-liste">{% libelle "referentiels.liste.codes_aide" %}</span></label>
+    <fieldset class="champ"><legend class="libelle">{% libelle "referentiels.liste.que_faire" %}</legend>
+      <label class="case-option"><input type="radio" name="mode" value="retirer"{% if mode != "garder" %} checked{% endif %}>
+        <span>{% libelle "referentiels.liste.mode_retirer" referentiel=ref %}</span></label>
+      <label class="case-option"><input type="radio" name="mode" value="garder"{% if mode == "garder" %} checked{% endif %}>
+        <span>{% libelle "referentiels.liste.mode_garder" referentiel=ref %}</span></label>
+    </fieldset>
+    {% if apercu %}
+    <div class="carte apercu-liste" role="status">
+      <h4>{% libelle "referentiels.liste.apercu_titre" %}</h4>
+      <p>{% libelle "referentiels.liste.lus" n=apercu.n_liste %}</p>
+      {% if apercu.a_retirer %}
+      <p><b>{% libelle "referentiels.liste.a_retirer" n=apercu.a_retirer|length referentiel=ref %}</b> {% libelle "referentiels.liste.restent" n=apercu.restent %}</p>
+      <details><summary>{% libelle "referentiels.liste.voir" %}</summary>
+        <ul class="liste-codes">{% for e in apercu.a_retirer %}<li><span class="id-chip">{{ e.kpi_id }}</span> {{ e.kpi }}</li>{% endfor %}</ul></details>
+      {% else %}<p>{% libelle "referentiels.liste.rien" %}</p>{% endif %}
+      {% if apercu.absents %}<p class="discret">{% libelle "referentiels.liste.absents" n=apercu.absents|length liste=apercu.absents|slice:":20"|join:", " %}{% if apercu.absents|length > 20 %} …{% endif %}</p>{% endif %}
+    </div>
+    {% endif %}
+    <div class="barre-enregistrement collante">
+      {% if apercu and apercu.a_retirer %}<button type="submit" name="action" value="confirmer">{% libelle "referentiels.liste.confirmer" n=apercu.a_retirer|length %}</button>
+      <button type="submit" name="action" value="apercu" class="secondaire">{% libelle "referentiels.liste.apercu" %}</button>
+      {% else %}<button type="submit" name="action" value="apercu">{% libelle "referentiels.liste.apercu" %}</button>{% endif %}
+      <a class="bouton secondaire" href="{% url 'parametres:referentiel_contenu' ref.code %}">{% libelle "commun.annuler" %}</a></div>
+  </form>
+</div>
+{% endblock %}

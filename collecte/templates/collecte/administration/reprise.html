@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.reprise.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<p class="retour-page"><a href="{% url 'collecte:admin_fichiers' %}">{% icone "chevron-gauche" %} {% libelle "admin.nav.fichiers" %}</a></p>
+<h2 class="titre-rubrique">{% libelle "admin.fichiers.reprise" %}</h2>
+<p class="intro-page">{% libelle "admin.reprise.intro" %}</p>
+<div class="tete-reprise">
+  <span></span>
+  {% if etat.chemin %}<form method="post">{% csrf_token %}<button type="submit" name="action" value="recommencer" class="lien">{% libelle "admin.reprise.recommencer" %}</button></form>{% endif %}
+</div>
+{% libelle "admin.reprise.etapes" as t_et %}<ol class="etapes-numerotees etapes-reprise" aria-label="{{ t_et }}">
+  {% for code, libelle in etapes %}
+  <li class="{% if forloop.counter0 < rang %}faite{% elif forloop.counter0 == rang %}actuelle{% endif %}"{% if forloop.counter0 == rang %} aria-current="step"{% endif %}>
+    {% if forloop.counter0 < rang and etat.chemin %}<a href="?etape={{ code }}"><span class="num" aria-hidden="true">{% icone "coche" %}</span>{{ libelle }}</a>
+    {% else %}<span><span class="num" aria-hidden="true">{% if forloop.counter0 < rang %}{% icone "coche" %}{% else %}{{ forloop.counter }}{% endif %}</span>{{ libelle }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ol>
+
+{% if etape == "fichier" %}
+{% comment %}Reprise, écran 1 (idée retenue) : montrer d'abord quel format fonctionne, avec ce qui est
+toléré, pour que la personne voie si son fichier peut passer ; sinon, un modèle d'adaptation déjà rempli avec ses KPI et
+ses organisations. Les exemples ont l'en-tête teinté des tableaux de l'outil.{% endcomment %}
+<section class="carte format-reprise" aria-labelledby="titre-format">
+  <h2 id="titre-format">{% libelle "admin.reprise.format.titre" %}</h2>
+  <p>{% libelle "admin.reprise.format.aide" %}</p>
+  <div class="formats-reprise">
+    <figure class="format-accepte"><figcaption><strong>{% libelle "admin.reprise.forme.longue" %}</strong><span class="discret">{% libelle "admin.reprise.format.longue" %}</span></figcaption>
+      <table class="exemple-format"><thead><tr><th>KPI</th><th>{% libelle "admin.reprise.role.organisation" %}</th><th>{% libelle "admin.reprise.format.annee" %}</th><th class="num">{% libelle "admin.reprise.role.valeur" %}</th></tr></thead>
+        <tbody><tr><td>{% libelle "admin.reprise.format.ex_elec" %}</td><td>{% libelle "admin.reprise.format.ex_org1" %}</td><td>2024</td><td class="num">1 250</td></tr><tr><td>{% libelle "admin.reprise.format.ex_elec" %}</td><td>{% libelle "admin.reprise.format.ex_org2" %}</td><td>2024</td><td class="num">480</td></tr></tbody></table></figure>
+    <figure class="format-accepte"><figcaption><strong>{% libelle "admin.reprise.forme.organisations" %}</strong><span class="discret">{% libelle "admin.reprise.format.organisations" %}</span></figcaption>
+      <table class="exemple-format"><thead><tr><th>KPI</th><th class="num">{% libelle "admin.reprise.format.ex_org1" %}</th><th class="num">{% libelle "admin.reprise.format.ex_org2" %}</th><th class="num">{% libelle "admin.reprise.format.ex_org3" %}</th></tr></thead>
+        <tbody><tr><td>{% libelle "admin.reprise.format.ex_elec" %}</td><td class="num">1 250</td><td class="num">480</td><td class="num">310</td></tr><tr><td>{% libelle "admin.reprise.format.ex_gaz" %}</td><td class="num">640</td><td class="num">90</td><td class="num">120</td></tr></tbody></table></figure>
+    <figure class="format-accepte"><figcaption><strong>{% libelle "admin.reprise.forme.annees" %}</strong><span class="discret">{% libelle "admin.reprise.format.annees" %}</span></figcaption>
+      <table class="exemple-format"><thead><tr><th>KPI</th><th>{% libelle "admin.reprise.role.organisation" %}</th><th class="num">2023</th><th class="num">2024</th></tr></thead>
+        <tbody><tr><td>{% libelle "admin.reprise.format.ex_elec" %}</td><td>{% libelle "admin.reprise.format.ex_org1" %}</td><td class="num">1 190</td><td class="num">1 250</td></tr><tr><td>{% libelle "admin.reprise.format.ex_gaz" %}</td><td>{% libelle "admin.reprise.format.ex_org1" %}</td><td class="num">700</td><td class="num">640</td></tr></tbody></table></figure>
+  </div>
+  <div class="tolerances-reprise">
+    <div><h3>{% libelle "admin.reprise.format.accepte" %}</h3>
+      <ul class="liste-verif"><li class="ok">{% icone "coche" %}<span>{% libelle "admin.reprise.format.ok_1" %}</span></li><li class="ok">{% icone "coche" %}<span>{% libelle "admin.reprise.format.ok_2" %}</span></li><li class="ok">{% icone "coche" %}<span>{% libelle "admin.reprise.format.ok_3" %}</span></li><li class="ok">{% icone "coche" %}<span>{% libelle "admin.reprise.format.ok_4" %}</span></li><li class="ok">{% icone "coche" %}<span>{% libelle "admin.reprise.format.ok_5" %}</span></li></ul></div>
+    <div><h3>{% libelle "admin.reprise.format.refuse" %}</h3>
+      <ul class="liste-verif"><li class="non">{% icone "x" %}<span>{% libelle "admin.reprise.format.non_1" %}</span></li><li class="non">{% icone "x" %}<span>{% libelle "admin.reprise.format.non_2" %}</span></li><li class="non">{% icone "x" %}<span>{% libelle "admin.reprise.format.non_3" %}</span></li><li class="non">{% icone "x" %}<span>{% libelle "admin.reprise.format.non_4" %}</span></li></ul></div>
+  </div>
+</section>
+<div class="portes-reprise">
+  <section class="carte porte-reprise principale" aria-labelledby="titre-porte-depot">
+    <h3 id="titre-porte-depot">{% libelle "admin.reprise.porte.depot_titre" %}</h3>
+    <p class="discret">{% libelle "admin.reprise.porte.depot_aide" %}</p>
+    <form method="post" enctype="multipart/form-data" class="formulaire-etape depot-preuve" data-chargement>
+      {% csrf_token %}
+      <label class="zone-depot"><input type="file" name="fichier" accept=".xlsx,.xlsm,.csv,.txt" {% libelle "admin.reprise.fichier_ancien" as t_fa %}required aria-label="{{ t_fa }}" data-depot>
+        <span class="zone-depot-texte">{% libelle_html "admin.fichiers.choisir_fichier" %}<span class="discret">{% libelle "admin.reprise.formats" %}</span></span></label>
+      {% if profils %}<label>{% libelle "admin.reprise.profil" %} <span class="discret">{% libelle "admin.reprise.profil_aide" %}</span>
+        <select name="profil"><option value="">{% libelle "admin.reprise.profil_aucun" %}</option>{% for p in profils %}<option value="{{ p.pk }}">{{ p.nom }} · {{ p.source }}</option>{% endfor %}</select></label>{% endif %}
+      <details class="options-repliables"><summary>{% libelle "admin.reprise.autres_options" %}</summary>
+        <label>{% libelle "admin.reprise.systeme" %} <span class="discret">{% libelle "admin.reprise.systeme_aide" %}</span>
+          <input type="text" name="source" list="sources-reprise" maxlength="100" value="{{ r.source }}" required></label>
+        <datalist id="sources-reprise">{% for s in sources %}<option value="{{ s }}">{% endfor %}</datalist>
+      </details>
+      <div><button type="submit" name="action" value="deposer">{% libelle "admin.reprise.porte.depot_bouton" %}</button></div>
+    </form>
+  </section>
+  <section class="carte porte-reprise" aria-labelledby="titre-porte-modele">
+    <h3 id="titre-porte-modele">{% libelle "admin.reprise.porte.modele_titre" %}</h3>
+    <p class="discret">{% libelle "admin.reprise.porte.modele_aide" %}</p>
+    <ol class="etapes-modele"><li>{% libelle "admin.reprise.porte.modele_1" %}</li><li>{% libelle "admin.reprise.porte.modele_2" %}</li><li>{% libelle "admin.reprise.porte.modele_3" %}</li></ol>
+    <form method="get" class="formulaire-etape" data-telechargement-form>
+      <input type="hidden" name="modele" value="1">
+      <label>{% libelle "admin.reprise.porte.annees" %} <span class="discret">{% libelle "admin.reprise.porte.annees_aide" %}</span>
+        <input type="text" name="annees" value="{{ annees_proposees }}" maxlength="60" inputmode="numeric"></label>
+      <div><button type="submit" class="secondaire">{% icone "telecharger" %} {% libelle "admin.reprise.porte.modele_bouton" %}</button></div>
+    </form>
+  </section>
+</div>
+<p class="discret mt-12">{% libelle "admin.reprise.format_outil" %} <a href="{% url 'collecte:echanges_importer' %}">{% libelle "admin.reprise.lien_importer" %}</a>.</p>
+{% if profils %}<details class="carte bon-a-savoir"><summary>{% libelle "admin.reprise.profils" %} <span class="discret">{{ profils|length }}</span></summary>
+  {% for p in profils %}
+  <div class="ligne-profil"><div><strong>{{ p.nom }}</strong> <span class="discret">· {{ p.source }} · {{ p.date_maj|date_courte }}</span></div>
+    {% libelle "admin.reprise.supprimer_profil_confirmer" nom=p.nom as t_sp %}<form method="post" data-confirmer="{{ t_sp }}">{% csrf_token %}
+      <input type="hidden" name="profil" value="{{ p.pk }}">{% libelle "commun.supprimer" as t_suppr %}<button type="submit" name="action" value="supprimer_profil" class="icone bouton-corbeille" title="{{ t_suppr }}" aria-label="{{ t_suppr }} : {{ p.nom }}">{% icone "supprimer" %}</button></form></div>
+  {% endfor %}
+</details>{% endif %}
+
+{% elif etape == "colonnes" %}
+<form method="post" class="carte formulaire-reprise" data-actualiser-auto>
+  {% csrf_token %}
+  {% comment %}Reprise, écran 2 : le verdict d'abord (repris tel quel, des points à régler, non reconnu),
+  trois chiffres, puis ce que l'outil a trouvé point par point. Les réglages détaillés sont repliés sous « Corriger la lecture ».{% endcomment %}
+  {% with v=verification %}
+  <h2>{% libelle "admin.reprise.verif.titre" %}</h2>
+  <p class="discret">{{ etat.nom }}{% if onglets|length > 1 %} · {% libelle "admin.reprise.verif.onglet" onglet=r.onglet %}{% endif %} · {% libelle "admin.reprise.nb_lignes" n=nb_lignes %} · {% libelle "admin.fichiers.rien_enregistre" %}</p>
+  <div class="verdict-reprise verdict-{{ v.verdict }}" role="status">
+    <span class="icone-verdict" aria-hidden="true">{% if v.verdict == "ok" %}{% icone "coche" %}{% elif v.verdict == "points" %}{% icone "alerte" %}{% else %}{% icone "x" %}{% endif %}</span>
+    <div><strong>{% if v.verdict == "ok" %}{% libelle "admin.reprise.verif.verdict_ok" %}{% elif v.verdict == "points" %}{% libelle "admin.reprise.verif.verdict_points" %}{% else %}{% libelle "admin.reprise.verif.verdict_non" %}{% endif %}</strong>
+      <span>{% if v.verdict == "non" %}{% libelle "admin.reprise.verif.suite_non" %}{% else %}{% libelle "admin.reprise.verif.modele_reconnu" forme=v.forme %}{% endif %}</span></div>
+  </div>
+  {% if v.verdict != "non" %}<div class="tuiles-verif">
+    <div class="tuile{% if v.nb_kpi_reconnus < v.nb_kpi %} tuile-attention{% endif %}"><b>{{ v.nb_kpi_reconnus }}<small> / {{ v.nb_kpi }}</small></b><span>{% libelle "admin.reprise.verif.tuile_kpi" %}</span></div>
+    <div class="tuile{% if v.nb_org_reconnues < v.nb_org %} tuile-attention{% endif %}"><b>{{ v.nb_org_reconnues }}<small> / {{ v.nb_org }}</small></b><span>{% libelle "admin.reprise.verif.tuile_org" %}</span></div>
+    <div class="tuile"><b>{{ v.nb_valeurs }}</b><span>{% libelle "admin.reprise.verif.tuile_valeurs" %}</span></div>
+  </div>{% endif %}
+  <dl class="points-verif">
+    {% for niveau, titre, detail in v.points %}<div class="point-verif {{ niveau }}"><dt><span class="marque-verif" aria-hidden="true">{% if niveau == "ok" %}{% icone "coche" %}{% elif niveau == "attention" %}{% icone "alerte" %}{% else %}{% icone "x" %}{% endif %}</span>{{ titre }}</dt><dd>{{ detail }}</dd></div>{% endfor %}
+  </dl>
+  {% if v.reste_a_relier %}<p class="discret">{% libelle "admin.reprise.verif.suite_relier" n=v.reste_a_relier %}</p>{% endif %}
+  <div class="barre-enregistrement">
+    <button type="submit" name="action" value="suivant"{% if v.verdict == "non" %} disabled{% endif %}>{% libelle "admin.reprise.verif.continuer" %}</button>
+    <a class="bouton secondaire" href="?modele=1" data-telechargement>{% icone "telecharger" %} {% libelle "admin.reprise.porte.modele_bouton" %}</a>
+    <span class="etat-barre">{% libelle "admin.reprise.verif.voie_sure" %}</span>
+  </div>
+  <details class="options-repliables corriger-lecture"{% if v.verdict == "non" or ouvrir_reglages %} open{% endif %}><summary>{% libelle "admin.reprise.verif.corriger" %}</summary>
+  {% endwith %}
+  <div class="ligne-reglages">
+    {% if onglets|length > 1 %}<label>{% libelle "admin.reprise.onglet" %} <select name="onglet" data-auto>{% for o in onglets %}<option {% if o == r.onglet %}selected{% endif %}>{{ o }}</option>{% endfor %}</select></label>{% endif %}
+    <label>{% libelle "admin.reprise.ligne_entetes" %} <input type="number" name="entete" min="1" max="{{ nb_lignes }}" value="{{ r.entete|add:1 }}" data-auto class="champ-court"></label>
+  </div>
+  {% libelle "admin.reprise.debut_fichier" as t_df %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_df }}">
+    <table class="carte-table table-apercu-fichier"><tbody>
+      {% for n, cellules, est_entete in apercu %}<tr class="{% if est_entete %}ligne-entete{% elif n <= r.entete %}ligne-ignoree{% endif %}">
+        <th scope="row" class="discret">{{ n }}</th>{% for c in cellules %}<td>{{ c|truncatechars:40 }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table>
+  </div>
+  <p class="aide-champ">{% libelle "admin.reprise.surbrillance" %}</p>
+
+  <fieldset class="bloc-reprise">
+    <legend>{% libelle "admin.reprise.forme" %}</legend>
+    <div class="cartes-choix formes-reprise">
+      {% for code, libelle, aide in formes %}
+      <label class="carte-choix"><input type="radio" name="forme" value="{{ code }}" {% if r.forme == code %}checked{% endif %} data-auto>
+        <strong>{{ libelle }}</strong><span class="discret">{{ aide }}</span></label>
+      {% endfor %}
+    </div>
+  </fieldset>
+
+  <fieldset class="bloc-reprise">
+    <legend>{% libelle "admin.reprise.roles" %}</legend>
+    <div class="grille-roles">
+      {% for role, libelle, choisi in roles %}
+      <label>{{ libelle }}{% if role == "unite" or role == "commentaire" %} <span class="discret">{% libelle "admin.facultatif" %}</span>{% endif %}
+        <select name="role_{{ role }}"><option value="">—</option>{% for t in tetes %}<option {% if t == choisi %}selected{% endif %}>{{ t }}</option>{% endfor %}</select></label>
+      {% endfor %}
+    </div>
+    <div class="grille-roles">
+      {% if r.forme != "organisations" %}<label>{% libelle "admin.reprise.org_fixe" %} <span class="discret">{% libelle "admin.reprise.org_fixe_aide" %}</span>
+        <select name="org_fixe"><option value="">—</option>{% for o in orgs %}<option value="{{ o.id }}" {% if r.fixes.organisation == o.id %}selected{% endif %}>{{ o.nom }} · {% nom_niveau o %}</option>{% endfor %}</select></label>{% endif %}
+      {% if r.forme != "annees" %}<label>{% libelle "admin.reprise.annee_fixe" %} <span class="discret">{% libelle "admin.reprise.annee_fixe_aide" %}</span>
+        <input type="text" name="periode_fixe" value="{{ r.fixes.periode|default:'' }}" maxlength="20"></label>{% endif %}
+      {% if a_des_dates %}<label>{% libelle "admin.reprise.date_designe" %}
+        <select name="dates"><option value="exercice" {% if r.dates == "exercice" %}selected{% endif %}>{% libelle "admin.reprise.date_exercice" %}</option>
+          <option value="mois" {% if r.dates == "mois" %}selected{% endif %}>{% libelle "admin.reprise.date_mois" %}</option></select></label>{% endif %}
+    </div>
+  </fieldset>
+
+  {% if sens_valeurs %}
+  <fieldset class="bloc-reprise">
+    <legend>{% libelle "admin.reprise.colonnes_valeurs" %} <span class="discret">{% libelle "admin.reprise.colonnes_valeurs_sens" sens=sens_valeurs %}</span></legend>
+    {% comment %} : des dizaines de colonnes en puces colorées, c'était trop intense. Des cases à
+    cocher sobres, en colonnes, avec « Toutes les colonnes » en tête (static : _app.js, data-groupe-cases).{% endcomment %}
+    {% if valeurs %}<div data-groupe-cases>
+      <label class="case toutes-cases"><input type="checkbox" data-toutes-cases hidden> <strong>{% libelle "admin.reprise.toutes_colonnes" n=valeurs|length %}</strong></label>
+      <div class="cases-colonnes">
+        {% for t, garde in valeurs %}<label class="case"><input type="checkbox" name="valeurs" value="{{ t }}" {% if garde %}checked{% endif %}> <span>{{ t }}</span></label>{% endfor %}
+      </div>
+    </div>{% else %}<p class="discret">{% libelle "admin.reprise.aucune_colonne" %}</p>{% endif %}
+  </fieldset>
+  {% endif %}
+  <p class="actions-lecture"><button type="submit" name="action" value="actualiser" class="secondaire">{% libelle "admin.reprise.verif.reverifier" %}</button>
+    <span class="discret">{% libelle "admin.reprise.actualiser_aide" %}</span></p>
+  </details>
+</form>
+
+{% elif etape == "correspondances" %}
+<form method="post" class="carte formulaire-reprise">
+  {% csrf_token %}
+  <h2>{% libelle "admin.reprise.relier_titre" %}</h2>
+  <p class="discret">{% libelle "admin.reprise.nb_lues" n=nb_elements %} {% libelle "admin.reprise.relier_aide" source=r.source %}</p>
+  <h3>KPI <span class="discret">{{ kpis|length }}</span></h3>
+  {% if ia_reprise %}<div class="ia-barre"><button type="button" class="secondaire compact ia-bouton" data-ia-reprise="{% url 'collecte:admin_reprise_ia' %}" aria-controls="ia-reprise-etat" hidden>{% icone "sparkles" %}<span>{% libelle "admin.ia.reprise.bouton" %}</span></button>
+    <div id="ia-reprise-etat" class="ia-etat-zone"></div></div>{% endif %}
+  <input type="hidden" name="nb_kpi" value="{{ kpis|length }}">
+  <datalist id="kpis-outil">{% for k in tous_kpis %}<option value="{{ k.code }} – {{ k.nom|truncatechars:90 }}">{% endfor %}</datalist>
+  {% libelle "admin.reprise.corr_kpi" as t_ck %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_ck }}">
+  <table class="carte-table table-correspondances">
+    <thead><tr><th scope="col">{% libelle "admin.reprise.col.ancien" %}</th><th scope="col">{% libelle "admin.reprise.col.valeurs" %}</th><th scope="col">{% libelle "admin.reprise.col.kpi_outil" %}</th><th scope="col">{% libelle "admin.reprise.col.ignorer" %}</th><th scope="col">{% libelle "admin.reprise.col.proposition" %}</th></tr></thead>
+    <tbody>{% for p in kpis %}
+      <tr class="{% if not p.sur %}a-verifier{% endif %}">
+        <td><input type="hidden" name="lib_kpi_{{ forloop.counter0 }}" value="{{ p.libelle }}"><strong>{{ p.libelle }}</strong>{% if p.exemple %}<br><span class="discret">{{ p.exemple }}</span>{% endif %}</td>
+        <td>{{ p.nb }}</td>
+        <td>{% libelle "admin.reprise.kpi_pour" libelle=p.libelle as t_kp %}{% libelle "admin.reprise.chercher_kpi" as t_ch %}<input type="text" name="kpi_{{ forloop.counter0 }}" list="kpis-outil" value="{{ p.affiche }}" aria-label="{{ t_kp }}" placeholder="{{ t_ch }}"></td>
+        <td>{% libelle "admin.reprise.ignorer_libelle" libelle=p.libelle as t_ig %}<input type="checkbox" name="ignorer_kpi_{{ forloop.counter0 }}" {% if p.ignorer %}checked{% endif %} aria-label="{{ t_ig }}"></td>
+        <td><span class="etiquette-proposition{% if not p.sur %} a-verifier{% endif %}">{{ p.comment }}</span></td>
+      </tr>{% empty %}<tr><td colspan="5" class="discret">{% libelle "admin.reprise.aucun_kpi_lu" %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <h3>{% libelle "admin.nav.organisations" %} <span class="discret">{{ orgs_prop|length }}</span></h3>
+  <input type="hidden" name="nb_org" value="{{ orgs_prop|length }}">
+  {% libelle "admin.reprise.corr_org" as t_co %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_co }}">
+  <table class="carte-table table-correspondances">
+    <thead><tr><th scope="col">{% libelle "admin.reprise.col.ancien" %}</th><th scope="col">{% libelle "admin.reprise.col.valeurs" %}</th><th scope="col">{% libelle "admin.reprise.col.org_outil" %}</th><th scope="col">{% libelle "admin.reprise.col.ignorer" %}</th><th scope="col">{% libelle "admin.reprise.col.proposition" %}</th></tr></thead>
+    <tbody>{% for p in orgs_prop %}
+      <tr class="{% if not p.sur %}a-verifier{% endif %}">
+        <td><input type="hidden" name="lib_org_{{ forloop.counter0 }}" value="{{ p.libelle }}"><strong>{{ p.libelle }}</strong></td>
+        <td>{{ p.nb }}</td>
+        <td>{% libelle "admin.reprise.org_pour" libelle=p.libelle as t_op %}<select name="org_{{ forloop.counter0 }}" aria-label="{{ t_op }}"><option value="">{% libelle "admin.reprise.a_choisir" %}</option>
+          {% for o in orgs %}<option value="{{ o.id }}" {% if p.cible == o.id|stringformat:"s" %}selected{% endif %}>{{ o.nom }} · {% nom_niveau o %}</option>{% endfor %}</select></td>
+        <td>{% libelle "admin.reprise.ignorer_libelle" libelle=p.libelle as t_ig %}<input type="checkbox" name="ignorer_org_{{ forloop.counter0 }}" {% if p.ignorer %}checked{% endif %} aria-label="{{ t_ig }}"></td>
+        <td><span class="etiquette-proposition{% if not p.sur %} a-verifier{% endif %}">{{ p.comment }}</span></td>
+      </tr>{% empty %}<tr><td colspan="5" class="discret">{% libelle "admin.reprise.aucune_org_lue" %}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="aide-champ">{% libelle "admin.reprise.orange" %}</p>
+  <div class="barre-enregistrement">
+    <button type="submit" name="action" value="suivant">{% libelle "admin.reprise.memoriser_continuer" %}</button>
+    <button type="submit" name="action" value="memoriser" class="secondaire">{% libelle "admin.reprise.memoriser" %}</button>
+  </div>
+</form>
+
+{% elif etape == "unites" %}
+<form method="post" class="carte formulaire-reprise">
+  {% csrf_token %}
+  <h2>{% libelle "admin.reprise.unites_titre" %}</h2>
+  <input type="hidden" name="nb_unites" value="{{ unites|length }}">
+  {% if unites %}
+  <p class="discret">{% libelle "admin.reprise.unites_aide" %}</p>
+  {% libelle "admin.reprise.conversions" as t_cu %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_cu }}">
+  <table class="carte-table">
+    <thead><tr><th scope="col">KPI</th><th scope="col">{% libelle "admin.reprise.col.unite_fichier" %}</th><th scope="col">{% libelle "admin.reprise.col.unite_kpi" %}</th><th scope="col">{% libelle "admin.reprise.col.facteur" %}</th></tr></thead>
+    <tbody>{% for cle, k, unite, facteur in unites %}
+      <tr><td><span class="id-chip">{{ k.code }}</span> {{ k.nom|truncatechars:70 }}<input type="hidden" name="cle_unite_{{ forloop.counter0 }}" value="{{ cle }}"></td>
+        <td>{{ unite }}</td><td>{{ k.symbole }}</td>
+        <td>{% libelle "admin.reprise.facteur_de" de=unite vers=k.symbole as t_fc %}{% libelle "admin.reprise.a_saisir" as t_as %}<input type="text" name="facteur_{{ forloop.counter0 }}" value="{{ facteur }}" inputmode="decimal" class="champ-court" aria-label="{{ t_fc }}"{% if not facteur %} placeholder="{{ t_as }}"{% endif %}>
+          <span class="discret">1 {{ unite }} = {{ facteur|default:"?" }} {{ k.symbole }}</span></td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="discret">{% libelle "admin.reprise.aucune_conversion" %}</p>{% endif %}
+  {% if pourcents %}
+  <h3>{% libelle "admin.reprise.pourcentages" %}</h3>
+  <p class="discret">{% libelle "admin.reprise.pourcentages_aide" %}</p>
+  <table class="carte-table">
+    <thead><tr><th scope="col">KPI</th><th scope="col">{% libelle "admin.reprise.col.exemples" %}</th><th scope="col">{% libelle "admin.reprise.col.lecture" %}</th></tr></thead>
+    <tbody>{% for k, lecture, exemples in pourcents %}
+      <tr><td><span class="id-chip">{{ k.code }}</span> {{ k.nom|truncatechars:70 }}</td><td>{{ exemples }}</td>
+        <td>{% libelle "admin.reprise.lecture_pct" kpi=k.code as t_lp %}<select name="pct_{{ k.code }}" aria-label="{{ t_lp }}">
+          <option value="fraction" {% if lecture == "fraction" %}selected{% endif %}>{% libelle "admin.reprise.pct_fraction" %}</option>
+          <option value="cent" {% if lecture == "cent" %}selected{% endif %}>{% libelle "admin.reprise.pct_cent" %}</option></select></td></tr>{% endfor %}</tbody>
+  </table>
+  {% endif %}
+  <div class="barre-enregistrement"><button type="submit" name="action" value="suivant">{% libelle "admin.reprise.voir_apercu" %}</button></div>
+</form>
+
+{% elif etape == "apercu" %}
+<section class="carte apercu-import">
+  <h2>{% libelle "admin.fichiers.apercu_titre" %}</h2>
+  <p class="discret">{{ etat.nom }} · {% libelle "admin.reprise.apercu_lues" n=transformation.nb_elements %}{% if transformation.ignorees %}, {% libelle "admin.reprise.apercu_ecartees" n=transformation.ignorees %}{% endif %} · {% libelle "admin.fichiers.rien_enregistre" %}</p>
+  <div class="tuiles-import">
+    {% for code, libelle, n in analyse.comptes %}<div class="tuile tuile-{{ code }}{% if not n %} zero{% endif %}"><b>{{ n }}</b><span>{{ libelle }}</span></div>{% endfor %}
+  </div>
+  {% if analyse.campagnes_a_creer %}{% encart "avertissement" %}{% libelle "admin.reprise.campagnes_creees" n=analyse.campagnes_a_creer|length liste=analyse.campagnes_a_creer|liste %}{% endencart %}{% endif %}
+  {% with lectures=analyse.lectures_nombres %}{% if lectures %}{% encart "info" compact=True %}{% for t in lectures %}{{ t }}{% if not forloop.last %} {% endif %}{% endfor %}{% endencart %}{% endif %}{% endwith %}
+  {% if analyse.ambigus %}{% encart "avertissement" compact=True %}{% libelle_html "suivi.echanges.importer.apercu.ambigus" n=analyse.ambigus %}{% endencart %}{% endif %}
+  {% with lignes=analyse.apercu %}{% if lignes %}
+  {% libelle "admin.reprise.lignes_apercu" as t_la %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_la }}">
+  <table class="carte-table table-apercu">
+    <colgroup><col class="l-120"><col class="l-110"><col><col class="l-150"><col class="l-90"><col class="l-120"><col class="l-120"><col class="l-26p"></colgroup>
+    <thead><tr><th scope="col">{% libelle "admin.reprise.col.origine" %}</th><th scope="col">{% libelle "admin.fichiers.col.action" %}</th><th scope="col">KPI</th><th scope="col">{% libelle "admin.reprise.col.organisation" %}</th><th scope="col">{% libelle "admin.reprise.col.periode" %}</th><th scope="col">{% libelle "admin.reprise.col.avant" %}</th><th scope="col">{% libelle "admin.reprise.col.apres" %}</th><th scope="col">{% libelle "admin.reprise.col.remarque" %}</th></tr></thead>
+    {% for l in lignes %}
+    <tr class="action-{{ l.action }}"><td class="discret">{{ l.repere }}</td>
+      <td><span class="etiquette-action etiquette-{{ l.action }}">{% if l.action == "creer" %}{% libelle "admin.fichiers.action.creer" %}{% elif l.action == "modifier" %}{% libelle "admin.fichiers.action.modifier" %}{% else %}{% libelle "admin.fichiers.action.rejet" %}{% endif %}</span></td>
+      <td><span class="id-chip">{{ l.kpi_id|truncatechars:30 }}</span> {{ l.kpi.nom|default:""|truncatechars:60 }}</td><td>{{ l.org.nom|default:l.organisation }}</td><td>{{ l.periode|default:"—" }}</td>
+      <td class="discret">{{ l.avant }}</td><td><strong>{{ l.apres }}</strong></td><td class="retour-ligne">{{ l.motif }}{% if l.ambigu %} <span class="ecart-fort">{{ l.ambigu }}</span>{% endif %}</td></tr>
+    {% endfor %}
+  </table></div>
+  {% else %}<p class="discret">{% libelle "admin.reprise.rien_a_importer" %}</p>{% endif %}{% endwith %}
+  <form method="post" class="barre-enregistrement collante" data-chargement>{% csrf_token %}
+    {% with n=analyse.a_ecrire|length %}<button type="submit" name="action" value="importer" {% if not n %}disabled{% endif %}>{% if n %}{% libelle "admin.reprise.importer_valeurs" n=n %}{% else %}{% libelle "commun.rien_a_importer" %}{% endif %}</button>{% endwith %}
+    {% if nb_rejets %}<a class="bouton secondaire" href="?etape=apercu&amp;rejets=1" data-telechargement>{% libelle "admin.reprise.telecharger_rejets" nombre=nb_rejets %}</a>{% endif %}
+    <span class="etat-barre">{% libelle "admin.reprise.exercices_clotures" %}</span>
+  </form>
+</section>
+<section class="carte">
+  <h2>{% libelle "admin.reprise.enregistrer_reglages" %}</h2>
+  <p class="discret">{% libelle "admin.reprise.profil_explication" source=r.source %}</p>
+  <form method="post" class="ligne-reglages">{% csrf_token %}
+    <label>{% libelle "admin.reprise.nom_profil" %} {% libelle "admin.reprise.nom_profil_ex" as t_np %}<input type="text" name="nom_profil" maxlength="100" value="{{ profil.nom|default:'' }}" placeholder="{{ t_np }}"></label>
+    {% if profil %}<label class="case"><input type="checkbox" name="mettre_a_jour" checked> {% libelle "admin.reprise.mettre_a_jour" nom=profil.nom %}</label>{% endif %}
+    <button type="submit" name="action" value="profil" class="secondaire">{% libelle "admin.reprise.enregistrer_profil" %}</button>
+  </form>
+</section>
+
+{% elif etape == "resultat" %}
+<section class="carte resultat-import">
+  <h2>{% libelle "admin.reprise.terminee" nom=etat.nom %}</h2>
+  {% encart "succes" %}{% libelle_html "admin.reprise.ecrites" n=resultat.ecrites %}{% if resultat.campagnes %}, {% libelle "admin.reprise.campagnes_resultat" n=resultat.campagnes|length liste=resultat.campagnes|liste %}{% endif %}. {% libelle "admin.reprise.a_jour" %}{% endencart %}
+  {% if resultat.avertissements %}<div class="points-attention"><strong class="pa-titre">{% libelle "admin.reprise.a_verifier" %} <span class="discret">{{ resultat.avertissements|length }}</span></strong>
+    {% for m in resultat.avertissements %}<div class="pa-point pa-alerte"><span class="pa-pastille"></span><span class="pa-texte"><span class="pa-detail">{{ m }}</span></span></div>{% endfor %}</div>{% endif %}
+  <p>{% if resultat.rejets %}<a class="bouton" href="{% url 'collecte:echanges_rejets' %}" data-telechargement>{% libelle "admin.reprise.telecharger_rejets" nombre=resultat.rejets %}</a>
+    <span class="discret">{% libelle "admin.reprise.a_corriger" %} <a href="{% url 'collecte:echanges_importer' %}">{% libelle "admin.reprise.lien_importer" %}</a>.</span>{% endif %}</p>
+  <p><a class="bouton secondaire" href="{% url 'collecte:echanges_exporter' %}?nouveau=1&amp;depart=powerbi">{% libelle "admin.reprise.exporter_historique" %}</a>
+    <a class="bouton secondaire" href="{% url 'collecte:admin_journal' %}">{% libelle "admin.reprise.voir_journal" %}</a>
+    <a href="?etape=apercu">{% libelle "admin.reprise.revenir_apercu" %}</a></p>
+</section>
+{% endif %}
+{% endblock %}

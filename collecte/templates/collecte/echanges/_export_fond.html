@@ -1,0 +1,25 @@
+{% load collecte tz %}{# une ligne de « Fichiers volumineux » (Mes exports) : rendue par la page et par l'état lu toutes les 3 s #}
+<li class="ligne-export ligne-export-fond"{% if t.active %} data-suivi-export="{% url 'collecte:echanges_export_etat' t.pk %}"{% endif %}>
+  <div class="texte-export">
+    <h3 class="nom-export">{{ t.titre_affiche }}</h3>
+    {% if t.active %}
+    {% libelle "suivi.echanges.exports.fond.aria" nom=t.titre_affiche as t_aria %}
+    <div class="chargement-barre indeterminee export-fond-barre" role="progressbar" aria-label="{{ t_aria }}"><span></span></div>
+    <p class="resume-export">{% if t.statut == "attente" %}{% libelle "suivi.echanges.exports.fond.attente" %}{% else %}{% libelle "suivi.echanges.exports.fond.en_cours" heure=t.debut|date:"H:i" %}{% endif %}</p>
+    {% elif t.statut == "pret" %}
+    <p class="resume-export">{% if t.taille < 1048576 %}{% libelle "suivi.echanges.exports.fond.pret_ko" ko=t.taille|ko date=t.expire_le|localtime|date_longue %}{% else %}{% libelle "suivi.echanges.exports.fond.pret" mo=t.taille|mo date=t.expire_le|localtime|date_longue %}{% endif %}</p>
+    {% elif t.statut == "vide" %}
+    <p class="resume-export">{{ t.erreur }}</p>
+    {% elif t.statut == "interrompue" %}
+    <p class="resume-export texte-erreur">{% libelle "suivi.echanges.exports.fond.interrompu" %}</p>
+    {% else %}
+    <p class="resume-export texte-erreur">{% libelle "suivi.echanges.exports.fond.echec" %}</p>
+    {% if t.erreur %}<p class="resume-export retour-ligne">{{ t.erreur }}</p>{% endif %}
+    {% endif %}
+  </div>
+  {% if t.statut == "pret" %}
+  <div class="actions-export">
+    <a class="bouton secondaire" href="{% url 'collecte:echanges_export_fichier' t.pk %}" data-telechargement aria-label="{% libelle "suivi.echanges.exports.fond.telecharger_aria" nom=t.titre_affiche %}">{% icone "telecharger" %} {% libelle "suivi.echanges.telecharger" %}</a>
+  </div>
+  {% endif %}
+</li>

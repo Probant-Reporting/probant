@@ -1,0 +1,7 @@
+{% load collecte %}
+<div class="boutons-mep">
+  {% if etape.numero > 2 %}<a class="bouton secondaire" href="{% url 'parametres:mise_en_place_etape' etape.numero|add:'-1' %}">{% libelle "referentiels.mep.precedent" %}</a>{% endif %}
+  <span class="espace"></span>
+  {% if etape.passer %}{% libelle "referentiels.mep.passer_titre" as t_passer %}<button type="submit" name="action" value="passer" class="secondaire" formnovalidate title="{{ t_passer }}">{% libelle "referentiels.mep.passer" %}</button>{% endif %}
+  <button type="submit" name="action" value="suivant">{% if etape.numero == etapes|length %}{% libelle "referentiels.mep.terminer" %}{% else %}{% libelle "referentiels.mep.enregistrer_continuer" as t_suite %}{{ libelle_suivant|default:t_suite }} ›{% endif %}</button>
+</div>

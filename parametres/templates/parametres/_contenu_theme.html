@@ -1,0 +1,29 @@
+{% load collecte %}{% with t=n.theme %}
+<section class="bloc-theme prof-{{ n.prof }}" data-zone="{{ t.pk }}" data-texte="{{ t.nom|lower }}">
+  <div class="tete-theme" draggable="true" data-theme="{{ t.pk }}">
+    <span class="poignee" title="{% libelle "referentiels.contenu.theme.glisser" %}" aria-hidden="true">⠿</span>
+    <button type="button" class="replier-theme" aria-expanded="true" aria-label="{% libelle "referentiels.contenu.theme.replier" theme=t %}">{% icone "chevron-bas" %}</button>
+    <button type="button" class="nom-theme" data-renommer="{{ t.pk }}" title="{% libelle "referentiels.contenu.theme.renommer" %}">{{ t }}</button>
+    <span class="nb">{{ n.nb }} KPI</span>
+    <span class="actions-theme">
+      <a href="{% url 'collecte:referentiel_kpi_nouveau' %}?place={{ cible.code }}|{{ t.pk }}" data-panneau title="{% libelle "referentiels.contenu.theme.nouveau_kpi_dans" theme=t %}">{% libelle "referentiels.contenu.theme.plus_kpi" %}</a>
+      <button type="button" class="lien" data-sous-theme="{{ t.pk }}">{% libelle "referentiels.contenu.theme.plus_sous_theme" %}</button>
+      {# le menu unique de l'outil (lot 3) : celui du « … » de la Visualisation ; « Supprimer » en dernier #}
+      <details class="menu-deroulant menu-theme"><summary class="bouton-menu" aria-label="{% libelle "referentiels.contenu.theme.autres_actions" theme=t %}">{% icone "plus-actions" %}</summary>
+        <div class="menu-liste">
+          <button type="button" data-renommer="{{ t.pk }}">{% libelle "referentiels.contenu.theme.renommer" %}</button>
+          <button type="button" data-theme-action="theme_monter" data-id="{{ t.pk }}">{% libelle "referentiels.contenu.kpi.monter" %}</button>
+          <button type="button" data-theme-action="theme_descendre" data-id="{{ t.pk }}">{% libelle "referentiels.contenu.kpi.descendre" %}</button>
+          <label>{% libelle "referentiels.contenu.ranger_dans" %} <select data-theme-parent="{{ t.pk }}"><option value="">—</option><option value="racine">{% libelle "referentiels.contenu.theme.premier_niveau" %}</option>{% for v, l in options_themes %}{% if v != t.pk|stringformat:"s" %}<option value="{{ v }}">{{ l }}</option>{% endif %}{% endfor %}</select></label>
+          <button type="button" data-theme-action="theme_supprimer" data-id="{{ t.pk }}" {% if n.nb or n.enfants %}disabled title="{% libelle "referentiels.contenu.theme.vider_d_abord" %}"{% else %}data-confirmer="{% libelle "referentiels.contenu.theme.supprimer_confirmer" theme=t %}"{% endif %} class="supprimer-menu">{% icone "supprimer" %} {% libelle "commun.supprimer" %}</button>
+        </div>
+      </details>
+    </span>
+  </div>
+  <div class="corps-theme">
+    {% if n.elements %}{% include "parametres/_contenu_kpis.html" with elements=n.elements %}
+    {% elif not n.enfants %}<p class="vide-theme">{% libelle "referentiels.contenu.theme.vide" %}</p>{% endif %}
+    {% for n in n.enfants %}{% include "parametres/_contenu_theme.html" %}{% endfor %}
+  </div>
+</section>
+{% endwith %}

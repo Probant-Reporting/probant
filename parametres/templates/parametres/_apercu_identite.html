@@ -1,0 +1,16 @@
+{% load collecte %}{# aperçu de l'identité dans une apparence (claire ou sombre) : ses couleurs en style (gamme calculée) #}
+    <div class="apercu-identite" {{ attribut }} style="{{ css }}">
+      <div class="ap-entete">
+        <span class="ap-logo">{% if form.instance.logo %}<img src="{% url 'parametres:logo' %}?v={{ form.instance.date_maj|date:'U' }}" alt="">{% else %}<span data-sigle-apercu>{{ form.instance.sigle }}</span>{% endif %}</span>
+        <span class="ap-titre"><b data-titre-apercu>{{ form.instance.titre }}</b><span data-sous-titre-apercu>{{ form.instance.sous_titre }}</span></span>
+        <span class="ap-onglet actif">{% libelle "admin.identite.apercu_onglet" %}</span>
+      </div>
+      <div class="ap-corps">
+        <div class="ap-carte">
+          <strong>{% libelle "admin.identite.apercu_kpi" %}</strong>
+          <p>{% libelle "admin.identite.apercu_definition" %} <a href="#" data-lien-inerte>{% libelle "admin.identite.apercu_voir_definition" %}</a></p>
+          <div class="ap-ligne">{% if type_saisie %}{% etiquette_type type_saisie %}{% else %}<span class="ap-badge">{% libelle "admin.identite.apercu_onglet" %}</span>{% endif %}<span class="ap-statut">{% libelle "admin.identite.apercu_valide" %}</span><span class="ap-erreur">{% libelle "admin.identite.apercu_bloque" %}</span></div>
+          <div class="ap-ligne"><span class="ap-bouton">{% libelle "commun.valider" %}</span><span class="ap-bouton secondaire">{% libelle "admin.identite.apercu_brouillon" %}</span></div>
+        </div>
+      </div>
+    </div>

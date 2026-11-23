@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.hebergement.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% if restauree %}{% encart "succes" data_param_unique="restauree" %}{% libelle "admin.hebergement.restauree" nom=restauree %}{% endencart %}{% endif %}
+
+{% comment %}Une seule colonne, dans l'ordre de ce qu'un administrateur cherche : état, sauvegardes,
+e-mails, contrôle des données, éléments supprimés, puis le volet « Pour l'IT » en dernier bloc.{% endcomment %}
+<div class="page-hebergement">
+  <section class="bloc bilan-hebergement" aria-labelledby="titre-etat">
+    <h2 id="titre-etat">{% libelle "admin.hebergement.etat.titre" %}</h2>
+    {% if bilan.ok %}<p class="bilan-ok">{% icone "coche" %}<span>{% if not bilan.points %}<strong>{% libelle "admin.hebergement.etat.tout_va_bien" %}</strong> {% endif %}{{ bilan.ok|join:" " }}</span></p>{% endif %}
+    {% if bilan.points %}
+    <ul class="bilan-points" aria-label="{% libelle "admin.hebergement.etat.a_traiter" %}">
+      {% for pt in bilan.points %}{% encart "avertissement" compact=True balise="li" %}{{ pt.texte }} <a href="#{{ pt.ancre }}">{{ pt.lien }}</a>{% endencart %}{% endfor %}
+    </ul>
+    {% endif %}
+    <p class="m-0 mt-12"><a href="{% url 'parametres:sante_installation' %}">{% libelle "admin.hebergement.etat.lien_sante" %}</a></p>
+  </section>
+
+  <section class="bloc" id="sauvegarde-automatique">
+    <h2>{% libelle "admin.hebergement.auto" %}</h2>
+    <form method="post" class="reglages-sauvegarde">{% csrf_token %}
+      <label class="case-option"><input type="checkbox" name="sauvegarde_auto" {% if reglages.instance.sauvegarde_auto %}checked{% endif %}><span>{% libelle "admin.hebergement.activee" %}</span></label>
+      <label class="champ"><span class="libelle">{% libelle "admin.hebergement.frequence" %}</span>{{ reglages.sauvegarde_frequence }}</label>
+      <label class="champ"><span class="libelle">{% libelle "admin.hebergement.heure" %}</span>{{ reglages.sauvegarde_heure }}</label>
+      <label class="champ"><span class="libelle">{% libelle "admin.hebergement.nombre" %}</span>{{ reglages.sauvegarde_conserver }}</label>
+      <div class="barre-enregistrement"><button type="submit" name="action" value="reglages_sauvegarde">{% libelle "commun.enregistrer" %}</button></div>
+    </form>
+    {% for f in reglages %}{% for e in f.errors %}{% encart "erreur" %}{% libelle "admin.hebergement.erreur_champ" champ=f.label|capfirst erreur=e %}{% endencart %}{% endfor %}{% endfor %}
+    <p class="aide-champ">{% libelle "admin.hebergement.auto_aide" %}</p>
+    <p class="aide-champ">{% libelle_html "admin.hebergement.auto_copie" %}</p>
+    <p class="aide-champ" id="aide-preuves-sauvegardes">{% libelle "admin.hebergement.preuves_sauvegardes" %}</p>
+  </section>
+
+  <section class="bloc" id="sauvegarder-maintenant">
+    <h2>{% libelle "admin.hebergement.maintenant" %}</h2>
+    <p class="aide-champ remonte">{% libelle_html "admin.hebergement.maintenant_aide" %}</p>
+    <form method="post">{% csrf_token %}
+      <button type="submit" name="action" value="sauvegarder">{% icone "telecharger" %} {% libelle "admin.hebergement.creer_telecharger" %}</button>
+    </form>
+    {% if telecharger %}<a href="{% url 'parametres:sauvegarde_telecharger' telecharger %}" data-telecharger-auto hidden>{% libelle "commun.telecharger" %}</a>{% endif %}
+    <details class="aide-repliable"><summary>{% libelle "admin.hebergement.contenu_titre" %}</summary>
+      <div class="contenu-sauvegarde">
+        <div><h3>{% icone "coche" %} {% libelle "admin.hebergement.contient" %}</h3><ul>{% for c in contenu %}<li>{{ c }}</li>{% endfor %}</ul></div>
+        <div><h3>{% icone "fermer" %} {% libelle "admin.hebergement.ne_contient_pas" %}</h3><ul>{% for c in hors_contenu %}<li>{{ c }}</li>{% endfor %}</ul></div>
+      </div>
+    </details>
+  </section>
+
+  <section class="bloc" id="sauvegardes-disponibles">
+    <h2>{% libelle "admin.hebergement.disponibles" %} {% if archives %}<span class="discret normal texte-mini">{{ archives|length }} · {{ taille_totale }}</span>{% endif %}</h2>
+      {% if archives %}
+      <table class="table-mep table-sauvegardes">
+        <thead><tr><th>{% libelle "admin.hebergement.col.date" %}</th><th>{% libelle "admin.hebergement.col.origine" %}</th><th>{% libelle "admin.hebergement.col.taille" %}</th><th><span class="visuellement-cache">{% libelle "admin.hebergement.col.actions" %}</span></th></tr></thead>
+        {% for a in archives|slice:":40" %}
+        <tr><td>{{ a.date|date_heure_courte }}</td>
+          <td>{% if a.motif == "auto" %}{% libelle "admin.hebergement.motif.auto" %}{% elif a.motif == "manuelle" %}{% libelle "admin.hebergement.motif.manuelle" %}{% elif a.motif == "before-update" %}{% libelle "admin.hebergement.motif.avant_mise_a_jour" %}{% elif a.motif == "before-restore" %}{% libelle "admin.hebergement.motif.avant_restauration" %}{% elif a.motif == "uploaded" %}{% libelle "admin.hebergement.motif.deposee" %}{% elif a.motif %}{{ a.motif }}{% else %}{% libelle "admin.hebergement.motif.commande" %}{% endif %}</td>
+          <td>{{ a.taille_texte }}</td>
+          <td><span class="actions-sauvegarde"> <a href="{% url 'parametres:sauvegarde_telecharger' a.nom %}">{% libelle "commun.telecharger" %}</a>
+            <a href="{% url 'parametres:sauvegarde_restaurer' a.nom %}" class="lien-danger">{% libelle "admin.hebergement.restaurer" %}</a></span></td></tr>
+        {% endfor %}
+      </table>
+      {% else %}<p class="discret">{% libelle "admin.hebergement.aucune_sauvegarde" %}</p>{% endif %}
+      <details class="aide-repliable"><summary>{% libelle "admin.hebergement.depuis_zip" %}</summary>
+        <form method="post" action="{% url 'parametres:sauvegarde_deposer' %}" enctype="multipart/form-data" class="depot-sauvegarde">{% csrf_token %}
+          <input type="file" name="fichier" accept=".zip" {% libelle "admin.hebergement.fichier_sauvegarde" as t_fs %}required aria-label="{{ t_fs }}">
+          <button type="submit" class="secondaire">{% libelle "admin.fichiers.verifier" %}</button>
+        </form>
+        <p class="aide-champ">{% libelle "admin.hebergement.depuis_zip_aide" %}</p>
+      </details>
+      <details class="aide-repliable"><summary>{% libelle "admin.hebergement.historique" nombre=restaurations|length %}</summary>
+        {% if restaurations %}
+        {% libelle "admin.hebergement.ligne_commande" as t_cli %}<table class="table-mep">
+          <thead><tr><th>{% libelle "admin.hebergement.hist.restauree" %}</th><th>{% libelle "admin.hebergement.hist.retour" %}</th><th>{% libelle "admin.hebergement.hist.par" %}</th><th>{% libelle "admin.hebergement.hist.avant" %}</th></tr></thead>
+          {% for r in restaurations %}<tr><td>{{ r.date|date_heure_courte }}</td><td>{{ r.date_sauvegarde_texte }} <span class="discret">(v{{ r.version }})</span></td>
+            <td>{{ r.par|default:t_cli }}</td><td class="discret">{{ r.avant|default:"—" }}</td></tr>{% endfor %}
+        </table>
+        {% else %}<p class="discret">{% libelle "admin.hebergement.aucune_restauration" %}</p>{% endif %}
+        <p class="aide-champ">{% libelle "admin.hebergement.hist_aide" fichier="restaurations.jsonl" %}</p>
+      </details>
+  </section>
+
+  <section class="bloc" id="emails">
+    <h2>{% libelle "admin.hebergement.emails" %}</h2>
+    {% if smtp.configure %}
+      {% libelle "admin.hebergement.smtp_aucun" as t_aucun %}{% encart "succes" %}{% libelle_html "admin.hebergement.envoi_actif" %}{% endencart %}
+      <table class="table-mep">
+        <tr><th>{% libelle "admin.hebergement.smtp_serveur" %}</th><td>{{ smtp.hote }}:{{ smtp.port }} ({{ smtp.securite }})</td></tr>
+        {% if smtp.utilisateur is not None %}<tr><th>{% libelle "admin.hebergement.smtp_identifiant" %}</th><td>{{ smtp.utilisateur|default:t_aucun }}</td></tr>{% endif %}
+        <tr><th>{% libelle "admin.hebergement.smtp_expediteur" %}</th><td>{{ smtp.expediteur }}</td></tr>
+      </table>
+      <p class="aide-champ">{% libelle "admin.hebergement.verifier" %}</p>
+    {% else %}
+    <div class="encart encart-avertissement" role="status">
+        <p class="encart-titre">{% libelle "admin.hebergement.emails_inactif_titre" %}</p>
+        <p>{% libelle "admin.hebergement.emails_inactif" %}</p>
+</div>
+    <h3>{% libelle "admin.hebergement.pour_activer" %}</h3>
+    <ol class="etapes-emails">
+      <li>{% libelle "admin.hebergement.etape_1" %}</li>
+      <li>{% libelle "admin.hebergement.etape_2" %}</li>
+      <li>{% libelle "admin.hebergement.etape_3" %}</li>
+    </ol>
+    <details class="aide-repliable"><summary>{% libelle "admin.hebergement.message_it_titre" %}</summary>
+      {% libelle "admin.hebergement.message_it_label" as t_mi %}<pre class="commande" tabindex="0" aria-label="{{ t_mi }}">{% libelle "admin.hebergement.message_it" %}</pre>
+    </details>
+    {% endif %}
+    <form method="post" class="test-email">{% csrf_token %}
+      {% include "collecte/administration/_champ.html" with champ=form.destinataire %}
+      <button type="submit" name="action" value="tester_email" class="secondaire">{% libelle "admin.hebergement.tester" %}</button>
+    </form>
+    {% if not smtp.configure %}<p class="aide-champ">{% libelle "admin.hebergement.tester_aide" %}</p>{% endif %}
+  </section>
+
+  <section class="bloc" id="controle-donnees">
+    <h2>{% libelle "admin.controle.titre" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.controle.aide" heure=controle.heure %}</p>
+      {% if controle.etat == "never" %}<p class="discret">{% libelle "admin.controle.jamais" %}. {% libelle "admin.controle.jamais_aide" heure=controle.heure %}</p>
+      {% else %}
+      <p><strong>{% libelle "admin.controle.dernier" date=controle.date|date_courte heure=controle.date|date:"H:i" %}</strong>{% if controle.secondes is not None %} <span class="discret">({{ controle.secondes }} s)</span>{% endif %}</p>
+      {% if controle.etat == "late" %}{% encart "avertissement" compact=True role="status" %}{% libelle "admin.controle.retard_aide" %}{% endencart %}{% endif %}
+      {% if not controle.erreurs and not controle.avertissements %}{% encart "succes" %}{% libelle "admin.controle.ok" %}{% endencart %}{% endif %}
+      {% if controle.constats %}
+      <table class="table-mep table-controle">
+        <thead><tr><th>{% libelle "admin.controle.col.gravite" %}</th><th>{% libelle "admin.controle.col.constat" %}</th></tr></thead>
+        {% for c in controle.constats %}
+        <tr><td><span class="pastille-controle {{ c.severity }}">{% if c.severity == "error" %}{% libelle "admin.controle.gravite.error" %}{% elif c.severity == "warning" %}{% libelle "admin.controle.gravite.warning" %}{% else %}{% libelle "admin.controle.gravite.info" %}{% endif %}</span></td>
+          <td>{{ c.titre }}{% if c.deja %} <span class="discret">{% libelle "admin.controle.deja" %}</span>{% endif %}
+            {% if c.examples %}<details class="aide-repliable"><summary>{% libelle "admin.controle.exemples" %}</summary>
+              <ul class="exemples-controle">{% for e in c.examples %}<li><code>{{ e }}</code></li>{% endfor %}</ul>
+              {% if c.reste %}<p class="discret">{% libelle "admin.controle.et_autres" n=c.reste %}</p>{% endif %}
+            </details>{% endif %}</td></tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+      {% endif %}
+    <form method="post" class="lancer-controle">{% csrf_token %}
+      <button type="submit" name="action" value="controler" class="secondaire">{% libelle "admin.controle.lancer" %}</button>
+      <span class="aide-champ">{% libelle "admin.controle.lancer_aide" %}</span>
+    </form>
+  </section>
+
+    <section class="bloc" id="reglage-corbeille">{# délai de la corbeille (collecte/corbeille.py) : purge et limite de restauration #}
+      <h2>{% libelle "admin.hebergement.corbeille.titre" %}</h2>
+      <form method="post" class="reglages-sauvegarde">{% csrf_token %}
+        <label class="champ"><span class="libelle">{% libelle "admin.hebergement.corbeille.jours" %}</span>{{ corbeille.corbeille_jours }}</label>
+        <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_corbeille">{% libelle "commun.enregistrer" %}</button></div>
+      </form>
+      {% for e in corbeille.corbeille_jours.errors %}{% encart "erreur" %}{% libelle "admin.hebergement.erreur_champ" champ=corbeille.corbeille_jours.label|capfirst erreur=e %}{% endencart %}{% endfor %}
+      <p class="aide-champ" id="aide-corbeille">{% libelle "admin.hebergement.corbeille.aide" n=corbeille.instance.corbeille_jours %}</p>
+      <p class="m-0"><a href="{% url 'collecte:admin_supprimes' %}">{% libelle "admin.supprimes.lien" n=nb_supprimes %}</a></p>
+    </section>
+
+    <section class="bloc" id="reglage-connexions">{# durée de l'historique des connexions (referentiel/historique_connexions.py) #}
+      <h2>{% libelle "admin.hebergement.connexions.titre" %}</h2>
+      <form method="post" class="reglages-sauvegarde">{% csrf_token %}
+        <label class="champ"><span class="libelle">{% libelle "admin.hebergement.connexions.jours" %}</span>{{ connexions.connexions_jours }}</label>
+        <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_connexions">{% libelle "commun.enregistrer" %}</button></div>
+      </form>
+      {% for e in connexions.connexions_jours.errors %}{% encart "erreur" %}{% libelle "admin.hebergement.erreur_champ" champ=connexions.connexions_jours.label|capfirst erreur=e %}{% endencart %}{% endfor %}
+      <p class="aide-champ" id="aide-connexions">{% libelle "admin.hebergement.connexions.aide" n=connexions.instance.connexions_jours %}</p>
+      <p class="m-0"><a href="{% url 'collecte:admin_connexions' %}">{% libelle "admin.connexions.lien" %}</a></p>
+    </section>
+
+    <section class="bloc" id="reglage-conservation">{# durée de conservation des preuves des KPI sensibles (collecte/conservation.py) #}
+      <h2>{% libelle "admin.hebergement.conservation.titre" %}</h2>
+      <form method="post" class="reglages-sauvegarde">{% csrf_token %}
+        <label class="champ"><span class="libelle">{% libelle "admin.hebergement.conservation.mois" %}</span>{{ conservation.preuves_sensibles_mois }}</label>
+        <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_conservation">{% libelle "commun.enregistrer" %}</button></div>
+      </form>
+      {% for e in conservation.preuves_sensibles_mois.errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+      <p class="aide-champ" id="aide-conservation">{% libelle "admin.hebergement.conservation.aide" %}</p>
+      <p class="m-0"><a href="{% url 'collecte:admin_preuves' %}">{% libelle "admin.preuves.lien" n=nb_preuves %}</a></p>
+    </section>
+
+    <section class="bloc" id="reglage-exports-fond">{# gros exports fabriqués en arrière-plan (collecte/exports_arriere_plan.py) #}
+      <h2>{% libelle "admin.hebergement.exports_fond.titre" %}</h2>
+      <form method="post" class="reglages-sauvegarde">{% csrf_token %}
+        {# une saisie refusée : son message sous le champ, relié par aria-describedby (B7) #}
+        {% for f in exports_fond %}<div class="champ{% if f.errors %} en-erreur{% endif %}">
+          <label class="libelle" for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+          {% if f.errors %}<span class="erreur-champ" id="erreur-{{ f.name }}">{{ f.errors|join:" " }}</span>{% endif %}
+        </div>{% endfor %}
+        <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_exports_fond">{% libelle "commun.enregistrer" %}</button></div>
+      </form>
+      <p class="aide-champ" id="aide-exports-fond">{% libelle "admin.hebergement.exports_fond.aide" %}</p>
+    </section>
+
+  {% comment %}« Pour l'IT » : dans le flux de la page, replié (l'administrateur n'en a pas besoin au quotidien).{% endcomment %}
+  <details class="bloc volet-it" id="pour-it">
+    <summary><strong>{% libelle "admin.hebergement.it" %}</strong> <span class="discret">{% libelle "admin.hebergement.it_resume" %}</span></summary>
+    <table class="table-mep infos-hebergement">
+      {% for libelle, valeur in infos %}<tr><th scope="row">{{ libelle }}</th><td>{{ valeur }}</td></tr>{% endfor %}
+      {% if dossier_sauvegardes %}<tr><th scope="row">{% libelle "admin.hebergement.dossier" %}</th><td><code>{{ dossier_sauvegardes }}</code></td></tr>{% endif %}
+    </table>
+    <h3>{% libelle "admin.hebergement.it_sauvegardes" %}</h3>
+    <p class="aide-champ">{% libelle_html "admin.hebergement.it_planificateur" %}</p>
+    <p class="aide-champ">{% libelle "admin.hebergement.it_restauration" %}</p>
+      {% libelle "admin.hebergement.it_commandes" as t_cm %}<pre class="commande" tabindex="0" aria-label="{{ t_cm }}">docker compose exec web python manage.py restore {{ archives.0.nom|default:"backup-YYYYMMDD-HHMMSS.zip" }}{# libelle-ok : commande technique #}
+docker compose restart web</pre>{# libelle-ok : commande technique #}
+    <h3>{% libelle "admin.hebergement.it_smtp" %}</h3>
+    <p class="aide-champ">{% libelle_html "admin.hebergement.it_smtp_aide" %}</p>
+    <h3>{% libelle "admin.hebergement.it_controle" %}</h3>
+    <p class="aide-champ">{% libelle "admin.controle.it" fichier=controle.fichier %}</p>
+    <h3>{% libelle "admin.hebergement.it_supervision" %}</h3>
+    <p class="aide-champ"><a href="{% url 'parametres:sante' %}">/sante/</a> {# libelle-ok : adresse technique #}{% libelle_html "admin.hebergement.it_supervision_aide" %}</p>
+  </details>
+</div>
+{% endblock %}

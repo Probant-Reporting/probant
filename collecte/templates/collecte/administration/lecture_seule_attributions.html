@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% comment %}Comptes en lecture seule qui ont encore des attributions (créées avant la, « N4 ») :
+rien n'est retiré en silence à la mise à jour ; l'administrateur les retire ici, compte par compte ou tous.{% endcomment %}
+{% block titre %}{{ titre_page }}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+<h2>{{ titre_page }}</h2>
+<p class="intro-page">{% libelle "admin.lecture_seule_attributions.intro" %}</p>
+<p><a href="{% url 'collecte:admin_remplacer' %}">{% libelle "admin.attributions.remplacer" %}</a></p>
+{% if comptes %}
+<section class="bloc">
+  <div class="defile-x"><table class="carte-table">
+    <thead><tr><th scope="col">{% libelle "admin.lecture_seule_attributions.compte" %}</th><th scope="col">{% libelle "admin.lecture_seule_attributions.role" %}</th>
+      <th scope="col">{% libelle "admin.lecture_seule_attributions.contributeur" %}</th><th scope="col">{% libelle "admin.lecture_seule_attributions.validateur" %}</th>
+      <th scope="col"><span class="visuellement-cache">{% libelle "admin.formules.action" %}</span></th></tr></thead>
+    <tbody>
+    {% for u, nc, nv in comptes %}
+      <tr><td><strong>{{ u }}</strong><br><span class="discret">{{ u.email }}</span>{% if not u.is_active %} <span class="discret">{% libelle "admin.remplacer.desactive" %}</span>{% endif %}</td>
+        <td><span class="role role-{{ u.role }}">{{ u|choix:"role" }}</span></td>
+        <td>{{ nc }}</td><td>{{ nv }}</td>
+        <td class="action-ligne"><form method="post">{% csrf_token %}<input type="hidden" name="compte" value="{{ u.pk }}">
+          {% libelle "admin.lecture_seule_attributions.confirmer_un" nom=u n=nc|add:nv as t_c %}{% libelle "admin.lecture_seule_attributions.retirer_aria" nom=u as t_aria %}
+          <button type="submit" class="secondaire" data-confirmer="{{ t_c }}" aria-label="{{ t_aria }}">{% libelle "admin.lecture_seule_attributions.retirer" %}</button></form></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  <p class="aide-champ">{% libelle "admin.lecture_seule_attributions.consequence" %}</p>
+  {% if comptes|length > 1 %}
+  <form method="post">{% csrf_token %}<input type="hidden" name="compte" value="tous">
+    {% libelle "admin.lecture_seule_attributions.confirmer_tous" n=comptes|length as t_c %}
+    <div class="barre-enregistrement"><button type="submit" data-confirmer="{{ t_c }}">{% libelle "admin.lecture_seule_attributions.retirer_tous" n=comptes|length %}</button></div></form>
+  {% endif %}
+</section>
+{% else %}{% encart "succes" %}{% libelle "admin.lecture_seule_attributions.aucun" %}{% endencart %}{% endif %}
+{% endblock %}

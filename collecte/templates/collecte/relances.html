@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "suivi.relances.titre" %}{% endblock %}
+{% block contenu %}
+<div class="entete-page">
+  <h1>{% libelle "suivi.relances.titre" %}<span class="tiret-titre"> –</span> {% include "collecte/_titre_campagne.html" %}</h1>
+  <div class="flex gap-8 aligne-bas passe-ligne">{# période : « Je réponds à », barre du haut ; formulaire gardé sans JavaScript #}
+    <noscript><form class="flex gap-8 aligne-bas" method="get">{% include "collecte/_choix_campagne.html" %}</form></noscript>
+    <a class="bouton secondaire" href="{% url 'collecte:tableau_de_bord' %}">{% libelle "suivi.relances.retour_tdb" %}</a></div>
+</div>
+{% if not smtp %}
+<div class="encart encart-avertissement" role="status">
+    <p class="encart-titre">{% libelle "suivi.relances.sans_smtp.titre" %}</p>
+    <p>{% libelle "suivi.relances.sans_smtp.aide" %}{% if instance_relances.relance_auto %} {% libelle "suivi.relances.sans_smtp.auto_sautees" %}{% endif %}
+      {% if user.est_admin %}{% libelle "suivi.relances.sans_smtp.it_admin" %} <a href="{% url 'parametres:hebergement' %}">{% libelle "suivi.relances.sans_smtp.lien_hebergement" %}</a>.{% else %}{% libelle "suivi.relances.sans_smtp.it_autre" %}{% endif %}</p>
+</div>
+{% endif %}
+<p class="intro-page">{% if smtp %}{% if user.est_admin %}{% libelle "suivi.relances.intro.email" %}{% else %}{% libelle "suivi.relances.intro.email_perimetre" %}{% endif %}{% else %}{% if user.est_admin %}{% libelle "suivi.relances.intro.message" %}{% else %}{% libelle "suivi.relances.intro.message_perimetre" %}{% endif %}{% endif %}</p>
+
+{% if ouvertes|length > 1 and campagne in ouvertes %}
+<form method="get" class="carte portee-relances">
+  <fieldset><legend>{% libelle "suivi.relances.portee.titre" %}</legend>
+    <label class="puce"><input type="radio" name="portee" value="toutes" {% if portee == "toutes" %}checked{% endif %} data-envoi-changement>
+      <span>{% libelle "suivi.relances.portee.toutes" %}{% for c in ouvertes %} {% etiquette_referentiel c.referentiel %} {{ c.periode }}{% endfor %}</span></label>
+    <label class="puce"><input type="radio" name="portee" value="campagne" {% if portee == "campagne" %}checked{% endif %} data-envoi-changement>
+      <span>{% libelle "suivi.relances.portee.seulement" %} {% etiquette_referentiel campagne.referentiel %} {{ campagne.periode }}</span></label>
+  </fieldset>
+  <p class="discret">{% libelle "suivi.relances.portee.aide" %}</p>
+</form>
+{% endif %}
+<div class="page-relances">
+  <div>
+    <section class="carte">
+      <h2>{% libelle "suivi.relances.a_relancer.titre" %} <span class="discret normal texte-petit">{% libelle "suivi.relances.a_relancer.nb_personnes" n=liste|length %} · {% libelle "suivi.relances.a_relancer.nb_indicateurs" n=total %}</span></h2>
+      {% if not ouverte %}{% encart "avertissement" %}{% if campagne %}{% libelle "suivi.relances.alerte.fermee" periode=campagne.periode statut=campagne|choix_phrase:"statut" %}{% else %}{% libelle "suivi.relances.alerte.aucune_campagne" %}{% endif %}
+        {% if ouvertes %}{% libelle "suivi.relances.alerte.saisie_ouverte" %}{% for c in ouvertes %} <a href="?campagne={{ c.pk }}">{{ c.referentiel }} · {{ c.periode }}</a>{% if not forloop.last %},{% endif %}{% endfor %}.{% else %}{% libelle "suivi.relances.alerte.aucune_ouverte" %}{% endif %}
+        {% libelle "suivi.relances.alerte.historique" %}{% endencart %}
+      {% elif not liste and sans_spoc %}{% include "collecte/_restes_sans_spoc.html" with n=sans_spoc %}
+      {% elif not liste %}{% encart "succes" %}{% libelle "suivi.relances.rien" %}{% endencart %}
+      {% else %}
+      {% if presel and smtp %}{% encart "info" %}{% if presel.email %}{% if nb_coches < liste|length %}{% libelle "suivi.relances.presel.personne_autres" personne=presel %}{% else %}{% libelle "suivi.relances.presel.personne" personne=presel %}{% endif %}{% else %}{% if nb_coches < liste|length %}{% libelle "suivi.relances.presel.org_autres" organisation=presel.nom %}{% else %}{% libelle "suivi.relances.presel.org" organisation=presel.nom %}{% endif %}{% endif %}{% endencart %}{% endif %}
+      {# « Marquer relancé » : formulaire à part (les boutons des lignes y renvoient par form=), la liste pouvant être elle-même un formulaire #}
+      <form method="post" id="form-marquer">{% csrf_token %}<input type="hidden" name="portee" value="{{ portee }}"><input type="hidden" name="action" value="marquer"></form>
+      {% if smtp %}<form method="post" data-cases>{% csrf_token %}<input type="hidden" name="portee" value="{{ portee }}">{% endif %}
+        {% libelle "suivi.relances.a_relancer.titre" as t_ar %}<div class="defile-x" tabindex="0" role="region" aria-label="{{ t_ar }}">{# téléphone : défile dans son cadre #}
+        <table class="tdb table-relances" id="table-relances" data-triable>{# colonnes triables (_app/13_tableaux.js) #}
+          <thead><tr>{% if smtp %}<th class="case"><input type="checkbox" data-tout-cocher{% if nb_coches == liste|length %} checked{% endif %} aria-label="{% libelle "suivi.relances.tout_cocher" %}"></th>{% endif %}<th data-tri="texte" data-tri-col="personne">{% libelle "suivi.relances.col.personne" %}</th>
+            <th class="mq-s">{% libelle "suivi.relances.col.organisations" %}</th>{% if cibles|length > 1 %}<th class="mq-m">{% libelle "suivi.relances.col.referentiels" %}</th>{% endif %}<th class="nombre" data-tri="nombre" data-tri-col="a_saisir">{% libelle "suivi.relances.col.a_saisir" %}</th><th class="nombre" data-tri="nombre" data-tri-col="brouillons">{% libelle "suivi.relances.col.brouillons" %}</th><th class="mq-xs" data-tri="date" data-tri-col="derniere">{% libelle "suivi.relances.col.derniere_relance" %}</th><th><span class="visuellement-cache">{% libelle "suivi.relances.col.actions" %}</span></th></tr></thead>
+          {% for af in liste %}
+          <tr id="relance-{{ af.personne.pk }}"{% if apercu.0.personne.pk == af.personne.pk %} class="choisie"{% endif %}>
+            {% if smtp %}<td class="case"><input type="checkbox" name="personnes" value="{{ af.personne.pk }}" data-case{% if af.coche %} checked{% endif %} aria-label="{% libelle "suivi.relances.relancer_aria" personne=af.personne %}"></td>{% endif %}
+            <td data-tri="{{ af.personne }}"><b>{{ af.personne }}</b><br><span class="discret">{% if af.personne.email_joignable %}{{ af.personne.email }}{% else %}{% libelle "suivi.relances.sans_adresse" %}{% endif %}</span>
+              <span class="derniere-sous discret">{% if af.derniere %}{% if af.derniere.automatique %}{% libelle "suivi.relances.derniere.sous_auto" date=af.derniere.date|date_heure_courte %}{% else %}{% libelle "suivi.relances.derniere.sous" date=af.derniere.date|date_heure_courte %}{% endif %}{% else %}{% libelle "suivi.relances.derniere.sous_aucune" %}{% endif %}</span></td>
+            <td class="mq-s discret">{% include "collecte/_plus_orgs.html" with orgs=af.organisations %}</td>
+            {% if cibles|length > 1 %}<td class="mq-m">{% for ref in af.referentiels %}{% etiquette_referentiel ref %} {% endfor %}</td>{% endif %}
+            <td class="nombre" data-tri="{{ af.a_saisir|stringformat:'s' }}">{{ af.a_saisir|entier }}</td><td class="nombre" data-tri="{{ af.brouillons|stringformat:'s' }}">{{ af.brouillons|entier }}</td>
+            <td class="mq-xs discret" data-tri="{% if af.derniere %}{{ af.derniere.date|date:'c' }}{% endif %}">{% if af.derniere %}{% if af.derniere.automatique %}{% libelle "suivi.relances.derniere.date_auto" date=af.derniere.date|date_heure_courte %}{% else %}{{ af.derniere.date|date_heure_courte }}{% endif %}{% else %}—{% endif %}</td>
+            <td class="action-ligne"><a class="lien-action" href="?campagne={{ campagne.pk }}&amp;portee={{ portee }}{% if request.GET.org %}&amp;org={{ request.GET.org|urlencode }}{% elif request.GET.personne %}&amp;personne={{ request.GET.personne|urlencode }}{% endif %}&amp;apercu={{ af.personne.pk }}#apercu"{% if apercu.0.personne.pk == af.personne.pk %} aria-current="true"{% endif %}
+              aria-label="{% if smtp %}{% libelle "suivi.relances.apercu_aria" personne=af.personne %}{% else %}{% libelle "suivi.relances.ecrire_a" personne=af.personne %}{% endif %}">{% if smtp %}{% libelle "suivi.relances.apercu" %}{% else %}{% libelle "suivi.relances.ecrire" %}{% endif %}</a>
+              <button type="submit" form="form-marquer" name="personne" value="{{ af.personne.pk }}" class="lien marquer-relance"
+                title="{% libelle "suivi.relances.marquer.aide" %}" aria-label="{% libelle "suivi.relances.marquer.aria" personne=af.personne %}">{% libelle "suivi.relances.marquer" %}</button></td></tr>
+          {% endfor %}
+        </table></div>
+      {% if smtp %}
+        <div class="barre-enregistrement">
+          <button type="submit" name="action" value="envoyer" data-confirmer="{% libelle "suivi.relances.confirmer_envoi" n=nb_coches %}" data-confirmer-nombre>{% libelle "suivi.relances.envoyer" %}</button>
+          <button type="submit" name="action" value="essai" class="secondaire" title="{% libelle "suivi.relances.essai.aide" %}">{% libelle "suivi.relances.essai" %}</button>
+          <span class="etat-barre" data-compte-cases>{% libelle "suivi.relances.nb_coches" n=nb_coches %}</span>
+        </div>
+      </form>
+      {% endif %}
+      {% endif %}
+    </section>
+
+    {% if apercu %}
+    <section class="carte mt-16" id="apercu" aria-labelledby="titre-apercu">
+      <h2 id="titre-apercu">{% if smtp %}{% libelle "suivi.relances.apercu_titre" personne=apercu.0.personne %}{% else %}{% libelle "suivi.relances.ecrire_a" personne=apercu.0.personne %}{% endif %}</h2>
+      {% if smtp %}
+      <p class="discret remonte">{% libelle_html "suivi.relances.apercu_entete" email=apercu.0.personne.email_joignable objet=apercu.1 %}</p>
+      {% else %}
+      <dl class="ecrire-a">
+        <div><dt>{% libelle "suivi.relances.ecrire.a" %}</dt><dd>{% if apercu.0.personne.email_joignable %}<span id="ecrire-adresse">{{ apercu.0.personne.email }}</span>
+          {% libelle "suivi.relances.copie.adresse_annonce" as t_adresse_copiee %}<button type="button" class="lien" data-copier="#ecrire-adresse" data-copier-annonce="{{ t_adresse_copiee }}">{% libelle "suivi.relances.copie.adresse" %}</button>
+          {% else %}<span class="etat-a-justifier">{% libelle "suivi.relances.sans_adresse" %}</span>{% if user.est_admin %} {% libelle "suivi.relances.completer_dans" %} <a href="{% url 'collecte:admin_comptes' %}">{% libelle "suivi.relances.lien_comptes" %}</a>{% endif %}{% endif %}</dd></div>
+        <div><dt>{% libelle "suivi.relances.ecrire.objet" %}</dt><dd><span id="ecrire-objet">{{ apercu.1 }}</span>
+          {% libelle "suivi.relances.copie.objet_annonce" as t_objet_copie %}<button type="button" class="lien" data-copier="#ecrire-objet" data-copier-annonce="{{ t_objet_copie }}">{% libelle "suivi.relances.copie.objet" %}</button></dd></div>
+      </dl>
+      {% endif %}
+      <pre class="message-relance" id="ecrire-message" tabindex="0" aria-label="{% libelle "suivi.relances.texte_message" %}">{{ apercu.2 }}</pre>
+      <p class="discret texte-petit">{% if langue_du_compte %}{% libelle "suivi.relances.langue_apercu" personne=apercu.0.personne nom_langue=langue_apercu %}{% else %}{% libelle "suivi.relances.langue_apercu_installation" personne=apercu.0.personne nom_langue=langue_apercu %}{% endif %}</p>
+      {% if not smtp %}
+      <div class="actions-arbre">
+        {% libelle "suivi.relances.copie.message_annonce" as t_message_copie %}<button type="button" data-copier="#ecrire-message" data-copier-annonce="{{ t_message_copie }}">{% libelle "suivi.relances.copie.message" %}</button>
+        {% if messagerie %}<a class="bouton secondaire" href="{{ messagerie }}">{% libelle "suivi.relances.ouvrir_messagerie" %}</a>{% endif %}
+      </div>
+      {% if not messagerie and apercu.0.personne.email_joignable %}<p class="discret">{% libelle "suivi.relances.message_trop_long" %}</p>{% endif %}
+      {% endif %}
+    </section>
+    {% endif %}
+
+    <section class="carte mt-16" id="historique">
+      <h2>{% libelle "suivi.relances.historique.titre" %}</h2>
+      {% if historique %}
+      <table class="tdb">
+        <thead><tr><th>{% libelle "suivi.relances.historique.date" %}</th><th>{% libelle "suivi.relances.historique.destinataire" %}</th><th class="mq-s">{% libelle "suivi.relances.historique.par" %}</th><th class="nombre">{% libelle "suivi.relances.historique.indicateurs" %}</th><th>{% libelle "suivi.relances.historique.etat" %}</th></tr></thead>
+        {% for r in historique %}
+        <tr{% if r.pk in nouvelles %} class="nouvelle"{% endif %}><td>{{ r.date|date_heure_courte }}{% if r.pk in nouvelles %} <span class="etiquette-instant">{% libelle "suivi.relances.historique.instant" %}</span>{% endif %}</td><td>{{ r.destinataire }}</td><td class="mq-s">{% if r.envoyee_par %}{{ r.envoyee_par }}{% else %}{% libelle "suivi.relances.historique.automatique" %}{% endif %}</td>
+          <td class="nombre">{{ r.nombre|entier }}</td><td>{% if r.statut == "echec" %}<span class="statut a_saisir" title="{% libelle "suivi.relances.historique.echec_aide" cause=r.erreur|cause_echec %}">{% libelle "suivi.relances.historique.echec" %}</span>{% elif r.statut == "manuelle" %}{% libelle "suivi.relances.historique.manuelle" %}
+            {% if user.est_admin or r.envoyee_par_id == user.pk %}<form method="post" class="en-ligne">{% csrf_token %}<input type="hidden" name="portee" value="{{ portee }}"><input type="hidden" name="relance" value="{{ r.pk }}">
+              <button type="submit" name="action" value="annuler_marque" class="lien annuler-marque" aria-label="{% libelle "suivi.relances.historique.annuler_aria" destinataire=r.destinataire %}">{% libelle "commun.annuler" %}</button></form>{% endif %}{% else %}{% libelle "suivi.relances.historique.envoyee" %}{% endif %}</td></tr>
+        {% endfor %}
+      </table>
+      {% else %}<p class="discret">{% if cibles|length > 1 %}{% libelle "suivi.relances.historique.vide_campagnes" %}{% else %}{% libelle "suivi.relances.historique.vide_periode" %}{% endif %}</p>{% endif %}
+    </section>
+  </div>
+
+  <aside>
+    <section class="carte">
+      <h2>{% libelle "suivi.relances.auto.titre" %}</h2>
+      {% if instance_relances.relance_auto %}
+      <p>{% libelle_html "suivi.relances.auto.activees" n=nb_jours_auto jours=instance_relances.relance_jours|cut:" " %}</p>
+      {% if not smtp %}<p class="etat-a-justifier">{% icone "alerte" %} {% libelle "suivi.relances.auto.sautees" %}</p>{% endif %}
+      {% if prochaines %}<ul class="liste-mep">{% for jour, c in prochaines %}<li>{{ jour|date_courte }} – {{ c.titre }}</li>{% endfor %}</ul>{% endif %}
+      {% else %}<p class="discret">{% if user.est_admin %}{% if smtp %}{% libelle "suivi.relances.auto.desactivees_admin" %}{% else %}{% libelle "suivi.relances.auto.desactivees_admin_sans_smtp" %}{% endif %}{% else %}{% libelle "suivi.relances.auto.desactivees" %}{% endif %}</p>{% endif %}
+    </section>
+    {% if user.est_admin %}
+    <section class="carte mt-16" aria-labelledby="titre-modele">
+      <h2 id="titre-modele">{% libelle "suivi.relances.modele.titre" %}</h2>
+      <details class="aide-repliable modele-relance"{% if not modele_replie %} open{% endif %}>
+      <summary>{% libelle "suivi.relances.modele.resume" %}</summary>
+      <form method="post" class="formulaire">{% csrf_token %}
+        {% for e in form.non_field_errors %}{% encart "erreur" %}{{ e }}{% endencart %}{% endfor %}
+        {% include "collecte/administration/_champ.html" with champ=form.sujet %}
+        {% include "collecte/administration/_champ.html" with champ=form.message %}
+        {% if form.langues %}<fieldset class="relance-langues"><legend>{% libelle "suivi.relances.form.langues_titre" %}</legend>
+          <p class="discret">{% libelle "suivi.relances.form.langues_aide" %}</p>
+          {% for l in form.langues %}<details class="aide-repliable relance-langue"{% if l.sujet.errors or l.message.errors %} open{% endif %}>
+            <summary lang="{{ l.code }}">{{ l.nom|capfirst }}{% if l.rempli %} <span class="etiquette-reglee">{% libelle "suivi.relances.form.rempli" %}</span>{% endif %}</summary>
+            {% include "collecte/administration/_champ.html" with champ=l.sujet %}
+            {% include "collecte/administration/_champ.html" with champ=l.message %}
+          </details>{% endfor %}
+        </fieldset>{% endif %}
+        <details class="aide-repliable"><summary>{% libelle "suivi.relances.modele.variables" %}</summary>
+          <ul class="liste-mep">{% for v, aide in variables %}<li><code>{{ "{" }}{{ v }}{{ "}" }}</code> {{ aide }}</li>{% endfor %}</ul></details>
+        <label class="case-option"><input type="checkbox" name="relance_auto" {% if form.relance_auto.value %}checked{% endif %}><span>{{ form.relance_auto.label }}</span></label>
+        {% include "collecte/administration/_champ.html" with champ=form.relance_jours %}
+        <div class="barre-enregistrement"><button type="submit" name="action" value="modele">{% libelle "commun.enregistrer" %}</button>
+          <button type="submit" name="action" value="modele_defaut" class="secondaire" formnovalidate
+            data-confirmer="{% libelle "suivi.relances.modele.texte_fourni_confirmer" %}" data-confirmer-bouton="{% libelle "suivi.relances.modele.texte_fourni_bouton" %}">{% libelle "suivi.relances.modele.texte_fourni" %}</button></div>
+      </form>
+      </details>
+    </section>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

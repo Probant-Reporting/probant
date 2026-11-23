@@ -1,0 +1,11 @@
+{% load collecte %}{# Vue automatique d'un KPI : sa définition et son mode de calcul, sous les visuels #}
+<section class="carte definition-visu" id="definition" aria-labelledby="t-definition">
+  <h2 id="t-definition">{% libelle "visu.definition.titre" %} <span class="id-chip">{{ kpi_defini.code }}</span></h2>
+  {% for c, texte in definition %}<p>{% if not forloop.first or definition|length > 1 %}<strong>{{ c }}.</strong> {% endif %}{{ texte|linebreaksbr }}</p>{% empty %}<p class="discret">{% libelle "visu.definition.vide" %}</p>{% endfor %}
+  <dl class="mode-calcul">
+    <div><dt>{% libelle "visu.definition.type" %}</dt><dd>{{ kpi_defini.type_saisie }}{% if kpi_defini.est_calcule and kpi_defini.formule %} : <code>{{ kpi_defini.formule }}</code>{% endif %}</dd></div>
+    <div><dt>{% libelle "visu.definition.format" %}</dt><dd>{{ kpi_defini.type_reponse }}{% if kpi_defini.symbole %} · {{ kpi_defini.symbole }}{% endif %}</dd></div>
+    <div><dt>{% libelle "visu.definition.niveau" %}</dt><dd>{{ kpi_defini.granularite }}</dd></div>
+    <div><dt>{% libelle "visu.definition.dessus" %}</dt><dd>{% if kpi_defini.methode_agregation == "Somme" %}{% libelle "visu.definition.somme" %}{% elif kpi_defini.methode_agregation == "Formule" %}{% libelle "visu.definition.formule" %}{% elif kpi_defini.methode_agregation == "Décompte" %}{% libelle "visu.definition.decompte" %}{% else %}{% libelle "visu.definition.aucune" %}{% endif %}</dd></div>
+  </dl>
+</section>

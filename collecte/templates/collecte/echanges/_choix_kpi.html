@@ -1,0 +1,66 @@
+{% load collecte %}{% comment %}Choix des KPI (export, fichier à remplir, Consolidation) : ck = vues_echanges._choix_kpi ; libelle_tous, id ; seul :
+   cases seules (onglet Listes de KPI) ; themes_choix : [(thème, libellé, n)], premier mode « Un thème » à la place de
+   « Tous » (Consolidation, ck.themes_ids : thèmes cochés) ; sans_sauvegarde : pas de « Sauvegarder cette liste » (lecteur){% endcomment %}
+<div class="choix-kpi" data-choix-kpi data-url-listes="{% url 'collecte:echanges_listes' %}">
+  <div class="puces-choix" role="radiogroup" aria-label="{% libelle "suivi.echanges.kpi.groupe" %}"{% if seul %} hidden{% endif %}>
+    {% if themes_choix %}<label class="puce"><input type="radio" name="choix_kpi" value="theme" {% if ck.mode == "theme" %}checked{% endif %}><span>{% libelle "suivi.echanges.kpi.un_theme" %}</span></label>
+    {% else %}<label class="puce"><input type="radio" name="choix_kpi" value="tous" {% if ck.mode == "tous" %}checked{% endif %}><span>{{ libelle_tous }}</span></label>{% endif %}
+    <label class="puce" data-puce-liste><input type="radio" name="choix_kpi" value="liste" {% if ck.mode == "liste" %}checked{% endif %}><span>{% libelle "suivi.echanges.kpi.liste_sauvegardee" %}</span></label>
+    <label class="puce"><input type="radio" name="choix_kpi" value="choix" {% if ck.mode == "choix" %}checked{% endif %}><span>{% libelle "suivi.echanges.kpi.choisir" %}</span></label>
+  </div>
+  {% if themes_choix %}<div class="si-theme">{# thèmes : liste cherchable, plusieurs cases #}
+    {% libelle "suivi.echanges.kpi.chercher_theme" as t_ch_theme %}<input type="search" class="recherche-themes" placeholder="{{ t_ch_theme }}" aria-label="{{ t_ch_theme }}" data-recherche-themes>
+    <fieldset class="liste-themes" data-liste-themes><legend class="visuellement-cache">{% libelle "suivi.echanges.kpi.un_theme" %}</legend>
+      {% for t, nom, n in themes_choix %}<label data-texte="{{ nom|lower }}"><input type="checkbox" name="theme" value="{{ t.id }}"{% if t.id in ck.themes_ids %} checked{% endif %}> {{ nom }} <span class="discret">({{ n }})</span></label>{% endfor %}
+    </fieldset>
+  </div>{% endif %}
+  <div class="si-liste">
+    <label for="{{ id }}-liste" class="visuellement-cache">{% libelle "suivi.echanges.kpi.liste_etiquette" %}</label>
+    <p class="discret" data-aucune-liste{% if ck.listes %} hidden{% endif %}>{% libelle "suivi.echanges.kpi.aucune_liste" %}{% if not user.est_lecteur %} <a class="lien-action" href="{% url 'collecte:echanges_listes_page' %}">{% libelle "suivi.echanges.kpi.toutes_listes" %}</a>{% endif %}</p>
+    <select name="selection" id="{{ id }}-liste" data-liste-kpi{% if not ck.listes %} hidden{% endif %}>
+      {% for x in ck.listes %}<option value="{{ x.pk }}" data-nom="{{ x.nom }}" data-kpis="{{ x.codes }}" data-modifiable="{{ x.modifiable|yesno:'1,' }}" {% if ck.selection == x.pk|stringformat:"s" %}selected{% endif %}>{% if x.partage %}{% libelle "suivi.echanges.kpi.option_partagee" nom=x.nom n=x.nb %}{% else %}{% libelle "suivi.echanges.kpi.option" nom=x.nom n=x.nb %}{% endif %}</option>{% endfor %}
+    </select>
+    <button type="button" class="lien" data-modifier-liste{% if not ck.listes %} hidden{% endif %}>{% libelle "suivi.echanges.kpi.modifier_liste" %}</button>
+    {# supprimer une liste : seulement dans l'onglet Listes de KPI #}
+    {% if not user.est_lecteur %}{# le lecteur n'a pas Import / Export : pas de lien vers une page refusée (403) #}<a class="lien-action" href="{% url 'collecte:echanges_listes_page' %}" data-toutes-listes{% if not ck.listes %} hidden{% endif %}>{% libelle "suivi.echanges.kpi.toutes_listes" %}</a>{% endif %}
+  </div>
+  <div class="si-choix">
+    <div class="outils-choix-kpi">
+      {% libelle "suivi.echanges.kpi.chercher" as t_chercher %}<input type="search" data-recherche-kpi placeholder="{{ t_chercher }}" aria-label="{{ t_chercher }}">
+      <button type="button" class="puce-action" data-cocher-kpi="1">{% libelle "suivi.echanges.kpi.cocher_affiches" %}</button>
+      <button type="button" class="puce-action" data-cocher-kpi="0">{% libelle "suivi.echanges.kpi.decocher_affiches" %}</button>
+      <span class="compte-kpi" data-compte-kpi aria-live="polite"></span>
+    </div>
+    {# coller une liste de codes (une colonne copiée d'Excel) au lieu de cocher un à un ; copier les codes cochés #}
+    <details class="coller-codes" data-coller-codes>
+      <summary>{% libelle "suivi.echanges.kpi.coller" %}</summary>
+      <label for="{{ id }}-codes" class="aide-champ">{% libelle "suivi.echanges.kpi.coller_aide" %}</label>
+      <textarea id="{{ id }}-codes" rows="3" data-codes-colles spellcheck="false"></textarea>
+      <div class="ligne-coller">
+        <button type="button" class="secondaire" data-cocher-codes>{% libelle "suivi.echanges.kpi.coller_bouton" %}</button>
+        <button type="button" class="lien" data-copier-codes>{% libelle "suivi.echanges.kpi.copier_codes" %}</button>
+      </div>
+      <p class="aide-champ" data-codes-resultat role="status" aria-live="polite"></p>
+    </details>
+    <div class="liste-choix-kpi" tabindex="-1">
+      {% for titre, kpis in ck.groupes %}
+      <fieldset class="groupe-kpi" data-groupe-kpi>
+        <legend><label><input type="checkbox" data-tout-groupe> {{ titre }} <span class="discret">{{ kpis|length }}</span></label></legend>
+        {% for k in kpis %}<label class="kpi-choix" data-refs=" {{ k.refs }} " data-texte="{{ k.code|lower }} {{ k.nom|lower }} {{ titre|lower }}"><input type="checkbox" name="kpis" value="{{ k.code }}" {% if k.code in ck.choisis %}checked{% endif %}> <span class="id-chip">{{ k.code }}</span> <span>{{ k.nom }}</span></label>
+        {% endfor %}
+      </fieldset>
+      {% empty %}
+      <p class="discret">{% libelle "suivi.echanges.kpi.aucun_a_choisir" %}</p>
+      {% endfor %}
+      <p class="discret aucun-kpi" data-aucun-kpi hidden>{% libelle "suivi.echanges.kpi.aucun_correspond" %}</p>
+    </div>
+    <div class="garder-liste"{% if seul or sans_sauvegarde %} hidden{% endif %}>
+      <label for="{{ id }}-nom-liste">{% libelle "suivi.echanges.kpi.sauvegarder_dans_liste" %} <span class="discret normal">{% libelle "suivi.echanges.kpi.sauvegarder_precision" %}</span></label>
+      <div class="ligne-garder">
+        {% libelle "suivi.echanges.kpi.nom_liste_exemple" as t_nom_liste %}<input type="text" id="{{ id }}-nom-liste" data-nom-liste maxlength="100" placeholder="{{ t_nom_liste }}">
+        {% if user.est_admin %}<label class="case"><input type="checkbox" data-partage-liste> {% libelle "suivi.echanges.listes.partagee_avec_tous" %}</label>{% endif %}
+        <button type="button" class="secondaire" data-garder-liste>{% libelle "suivi.echanges.kpi.sauvegarder_liste" %}</button>
+      </div>
+    </div>
+  </div>
+</div>

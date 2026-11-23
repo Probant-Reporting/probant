@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.comptes.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+
+{# chiffres sur une ligne, sans grosses pastilles ; l'explication des mots de passe est dans la fiche #}
+<p class="resume-comptes"><strong>{{ nb_actifs }}</strong> {% libelle "admin.comptes.actifs" %}
+  <span class="sep" aria-hidden="true">·</span> <span{% if nb_en_attente %} class="attention"{% endif %}><strong>{{ nb_en_attente }}</strong> {% libelle "admin.comptes.en_attente" %}</span>
+  <span class="sep" aria-hidden="true">·</span> <strong>{{ nb_inactifs }}</strong> {% libelle "admin.comptes.desactives" n=nb_inactifs %}</p>
+
+{# barre de filtres : recherche, rôle (plusieurs à la fois, avec leur nombre), état ; actions à droite #}
+<div class="barre-filtres">
+  {% libelle "admin.comptes.recherche_placeholder" as t_ph %}{% include "_recherche.html" with placeholder=t_ph %}
+  <div class="champ-filtre"><label for="filtre-role">{% libelle "admin.comptes.col.role" %}</label>
+    <select id="filtre-role" data-panneau-filtre data-multiple data-attribut="role"><option value="">{% libelle "commun.tous" %}</option>
+      {% for code, libelle, n in par_role %}<option value="{{ code }}" data-nb="{{ n }}">{{ libelle }}</option>{% endfor %}</select></div>
+  <div class="champ-filtre"><label for="filtre-etat-compte">{% libelle "admin.comptes.col.etat" %}</label>
+    <select id="filtre-etat-compte" data-panneau-filtre data-attribut="actif"><option value="">{% libelle "commun.tous" %}</option>
+      <option value="1" data-nb="{{ nb_actifs }}">{% libelle "admin.comptes.filtre_actifs" %}</option>
+      <option value="0" data-nb="{{ nb_inactifs }}">{% libelle "admin.comptes.filtre_desactives" %}</option></select></div>
+  <div class="filtres-droite">
+    <a class="bouton secondaire" href="{% url 'collecte:admin_connexions' %}">{% icone "menu-historique" %} {% libelle "admin.connexions.lien" %}</a>
+    <a class="bouton secondaire" href="{% url 'collecte:admin_comptes_plusieurs' %}">{% icone "plus" %} {% libelle "admin.comptes.plusieurs" %}</a>
+    <a class="bouton" href="{% url 'collecte:admin_compte_nouveau' %}" data-panneau>{% icone "plus" %} {% libelle "admin.comptes.nouveau" %}</a>
+  </div>
+  {% include "_etat_filtres.html" %}
+</div>
+
+<div id="liste" data-rafraichir>
+<table class="carte-table table-comptes" id="table-comptes" data-triable>{# colonnes triables (_app/13_tableaux.js) #}
+  <colgroup><col class="l-176"><col><col class="mq-m l-14p"><col class="mq-m l-190"><col class="mq-s l-210"><col class="mq-xs l-110"></colgroup>
+  <thead><tr><th data-tri="texte" data-tri-col="role">{% libelle "admin.comptes.col.role" %}</th><th data-tri="texte" data-tri-col="personne">{% libelle "admin.comptes.col.personne" %}</th><th class="mq-m">{% libelle "admin.comptes.col.equipe" %}</th><th class="mq-m">{% libelle "admin.comptes.col.attributions" %}</th><th class="mq-s" data-tri="date" data-tri-col="connexion">{% libelle "admin.comptes.col.connexion" %}</th><th class="mq-xs">{% libelle "admin.comptes.col.etat" %}</th></tr></thead>
+  {% for u in comptes %}
+  <tr class="ligne{% if not u.is_active %} inactive{% endif %}" tabindex="0" {% libelle "admin.comptes.ouvrir_ligne" nom=u as t_o %}aria-label="{{ t_o }}" data-url="{% url 'collecte:admin_compte' u.pk %}" data-statut=""
+      data-role="{{ u.role }}" data-actif="{{ u.is_active|yesno:'1,0' }}"
+      data-texte="{{ u|lower }} {{ u.email|lower }} {{ u.equipe|lower }} {{ u|choix:"role"|lower }}">
+    <td data-tri="{{ u|choix:"role" }}"><span class="role role-{{ u.role }}">{{ u|choix:"role" }}</span></td>
+    <td data-tri="{{ u }}"><span class="personne">{% avatar u %}<span><span class="nom-personne">{{ u }}</span><span class="discret">{{ u.email }}</span>{% if not u.email_joignable %}<span class="connexion attente">{% libelle "admin.comptes.email_a_completer" %}</span>{% endif %}</span></span></td>
+    <td class="mq-m">{{ u.equipe|default:"—" }}</td>
+    <td class="mq-m attributions-compte">{# SPOC et validation : même police #}{% if u.nb_contrib %}<a href="{% url 'collecte:admin_attributions' %}?role=contributeur&amp;personne={{ u.pk }}">{% libelle "admin.comptes.spoc_de" n=u.nb_contrib %}</a>{% endif %}{% if u.nb_contrib and u.nb_valid %}<br>{% endif %}{% if u.nb_valid %}<a href="{% url 'collecte:admin_attributions' %}?role=validateur&amp;personne={{ u.pk }}">{% libelle "admin.comptes.valide" n=u.nb_valid %}</a>{% endif %}{% if not u.nb_contrib and not u.nb_valid %}<span class="vide">—</span>{% endif %}</td>
+    <td class="mq-s" data-tri="{% if u.is_active and u.last_login and not u.doit_changer_mdp %}{{ u.last_login|date:'c' }}{% endif %}">{% if not u.is_active %}<span class="discret">—</span>
+      {% elif u.doit_changer_mdp %}{% libelle "admin.comptes.attente_titre" as t_a %}<span class="connexion attente" title="{{ t_a }}">{% libelle "admin.comptes.attente" %}</span>
+      {% elif u.last_login %}<span class="connexion">{% libelle "admin.comptes.connecte_le" date=u.last_login|date_courte heure=u.last_login|date:"H:i" %}</span>
+      {% else %}<span class="connexion attente">{% libelle "admin.comptes.jamais" %}</span>{% endif %}</td>
+    <td class="mq-xs">{% if u.is_active %}<span class="etat etat-actif">{% libelle "admin.comptes.actif" %}</span>{% else %}<span class="etat etat-inactif">{% libelle "admin.comptes.inactif" %}</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+<p class="etat-vide" id="aucun-resultat" hidden>{% libelle "admin.comptes.aucun" %}</p>
+</div>
+{% endblock %}
