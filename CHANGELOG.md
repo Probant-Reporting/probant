@@ -2,6 +2,24 @@
 
 Each version has the same three parts: `Highlights`, `For IT`, and `Security`. The newest version is first.
 
+## 1.0.1 — 2026-11-25
+
+### Highlights
+
+- All-in-one version (Windows, Mac): the window shows each step of the start (loading the program, the database, the
+  demo data, starting the tool), with a line that moves: a bar with the share done, the elapsed time, and a turning
+  sign. A slow first start no longer looks stuck. The browser opens when the tool is ready.
+- All-in-one version, demo: the final message lists one demo account per role (`admin`, `validateur`, `contributeur`,
+  `lecteur`, `auditeur`) with their shared password. Log out to try another account.
+
+### For IT
+
+- No migration, no new setting. Docker and Clever Cloud installations do not change.
+
+### Security
+
+- No change.
+
 ## 1.0.0 — 2026-11-23
 
 First public version of Probant, a tool to collect indicators (KPIs) and to support audits. You configure it for any

@@ -49,7 +49,10 @@ Pour lancer la version tout-en-un :
 5. Double-cliquez sur `Start.bat`. Sur un Mac, double-cliquez sur `Start.command`. Le premier démarrage demande ce
    que vous voulez essayer : la démo (Exemplia, une société fictive avec ses données) ou un outil vide (vous mettez en
    place votre propre structure).
-6. Démo : connectez-vous avec le compte `admin` et le mot de passe `demo-probant-2026`. Outil vide : l'assistant de
+   La fenêtre montre chaque étape du démarrage avec une ligne qui avance (barre, part faite, temps écoulé) : le premier
+   démarrage prend quelques minutes, les suivants moins. Le navigateur s'ouvre quand l'outil est prêt.
+6. Démo : la fenêtre liste un compte par rôle (`admin`, `validateur`, `contributeur`, `lecteur`, `auditeur`), tous
+   avec le mot de passe `demo-probant-2026`. Déconnectez-vous pour essayer un autre compte. Outil vide : l'assistant de
    mise en place s'ouvre, et sa première étape crée votre compte administrateur.
 
 L'outil garde vos essais dans le dossier `data`.

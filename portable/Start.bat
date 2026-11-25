@@ -4,5 +4,6 @@ chcp 65001 >nul
 cd /d "%~dp0"
 set "PYTHONUTF8=1"
 set "PYTHONPATH=%~dp0system\libs"
+echo Starting Probant, please wait (the first start takes a few minutes)...
 "%~dp0system\python\python.exe" "%~dp0system\launch.py"
 pause

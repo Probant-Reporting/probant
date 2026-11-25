@@ -4,6 +4,7 @@ import io
 from decimal import Decimal
 from unittest import mock
 
+from django.conf import settings
 from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.utils import timezone
@@ -148,7 +149,7 @@ class ContenuDossierTests(AvecDossier):
     def test_a_lire_version_date_perimetre_et_filtres(self):
         wb = self.classeur_de(self.auditeur)
         texte = "\n".join(str(c.value) for r in wb["Read me"].iter_rows() for c in r if c.value is not None)
-        for attendu in ("Audit file", "Tool version", "1.0.0", "Exported on", "auditeur@exemple.test", "Years", "2026",
+        for attendu in ("Audit file", "Tool version", settings.VERSION, "Exported on", "auditeur@exemple.test", "Years", "2026",
                         "Organisation", "Read only", "Alerts", "Evidence sheet", "History sheet"):
             self.assertIn(attendu, texte)
 

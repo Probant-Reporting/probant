@@ -8,9 +8,11 @@ https://github.com/Probant-Reporting/probant/blob/main/docs/installation.md
 2. Double-click Start.bat (Windows) or Start.command (Mac). A window opens, then the browser opens.
    First start: the window asks what you want to try. Type 1 for the demo (Exemplia, a fictitious company with
    its data) or 2 for an empty tool (you set up your own structure with the setup wizard), then Enter.
-   The preparation takes a few minutes.
-3. Demo: the login and password are shown in the window. Empty tool: the setup wizard opens, and its first step
-   creates your administrator account.
+   The window shows each step of the start, with a line that moves (bar, share done, elapsed time): the first
+   start takes a few minutes, the next ones less. The browser opens when the tool is ready.
+3. Demo: the window lists one account per role (admin, validateur, contributeur, lecteur, auditeur), all with the
+   password demo-probant-2026. Log out to try another account. Empty tool: the setup wizard opens, and its first
+   step creates your administrator account.
 4. To stop: close the window.
 
 Folders
