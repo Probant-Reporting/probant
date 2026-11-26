@@ -26,6 +26,15 @@ class Connexion(LoginView):
 
     authentication_form = FormulaireConnexion
 
+    def get_context_data(self, **kwargs):
+        from connexion_entreprise import regles
+
+        contexte = super().get_context_data(**kwargs)
+        r = regles.reglage()
+        # bouton du compte d'entreprise (docs/single_sign_on.md) : seulement allumée et réglée ; libellé choisi ou par défaut
+        contexte["connexion_entreprise"] = {"libelle": r.libelle_bouton} if regles.active(r) else None
+        return contexte
+
     def form_valid(self, form):
         user = form.get_user()
         code = form.espace_ailleurs
@@ -54,7 +63,9 @@ def pas_d_acces(request, compte_id):
 def _exiger_gestionnaire(request):
     from django.core.exceptions import PermissionDenied
 
-    if not request.user.is_authenticated or not Compte.objects.filter(pk=request.user.pk, gestionnaire=True, actif=True).exists():
+    from .comptes import est_gestionnaire
+
+    if not est_gestionnaire(request.user):
         raise PermissionDenied(libelle("espaces.erreur.reserve"))
 
 

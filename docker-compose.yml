@@ -2,13 +2,16 @@
 # Settings in the .env file (template: .env.example). Full guide: docs/installation.md
 #
 #   default             : the tool alone, SQLite database, http://server:8000
-#   "https" profile     : + Caddy, automatic certificate for DOMAIN (COMPOSE_PROFILES=https in .env)
+#   "https" profile     : + Caddy, automatic certificate for DOMAIN (COMPOSE_PROFILES=https in .env), or the
+#                         certificate of the company (HTTPS_CERTIFICATE=files, folder certificates/https)
 #   "postgres" profile  : + PostgreSQL (DATABASE_URL=postgres://probant:...@db:5432/probant in .env)
 #
 # Variables: English names (.env.example); the former French names of older .env files
 # (PORT_HTTP, DOMAINE, POSTGRES_MOT_DE_PASSE…) are still read as a fallback. The whole .env is passed to the tool,
 # which accepts either name itself.
 # The volumes are named after the project: probant_donnees, probant_postgres, probant_caddy_data, probant_caddy_config.
+# Folder certificates/ of the installation (never in a backup of the tool): ca/ = authorities added for outgoing
+# connections, https/ = certificate and private key of the HTTPS address (Caddy only). docs/installation.md, "Company network".
 name: probant
 
 services:
@@ -23,11 +26,17 @@ services:
     env_file:
       - path: .env
         required: false
+    environment:
+      # certificate authorities added by the IT (./install.sh --ca-cert, folder certificates/ca): joined with those of
+      # the system for every outgoing connection of the tool (email server, HTTPS). Empty folder: nothing changes.
+      EXTRA_CA_CERTS: /etc/probant/ca
     ports:
       - "${HTTP_PORT:-${PORT_HTTP:-8000}}:8000"
     volumes:
       # volume name kept as is ("donnees"): renaming it would leave existing installations with an empty volume
       - donnees:/data
+      # read only; the HTTPS certificate and its key (certificates/https) never go into this container
+      - ./certificates/ca:/etc/probant/ca:ro
     depends_on:
       db:
         condition: service_healthy
@@ -43,12 +52,16 @@ services:
     environment:
       DOMAIN: ${DOMAIN:-${DOMAINE:-}}
       CADDY_MAX_SIZE: ${CADDY_MAX_SIZE:-${CADDY_TAILLE_MAX:-50MB}}
+      # HTTPS_CERTIFICATE=files in .env: the certificate and the key of the folder certificates/https, given by the IT
+      # (./install.sh --cert --key), never Let's Encrypt. Empty: automatic certificate.
+      CADDY_TLS: ${HTTPS_CERTIFICATE:+tls /etc/probant/https/certificate.pem /etc/probant/https/key.pem}
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp"
     volumes:
       - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./certificates/https:/etc/probant/https:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

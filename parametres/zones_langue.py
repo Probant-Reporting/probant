@@ -21,6 +21,7 @@ ZONES = {
         "collecte/templates/collecte/mon_compte.html", "collecte/templates/collecte/_supprimes.html", "collecte/templates/collecte/donnees_confidentialite.html", "collecte/templates/collecte/aide.html",
         "collecte/compte.py", "collecte/visite_guidee.py", "collecte/confidentialite.py", "referentiel/connexion.py", "parametres/contexte.py", "parametres/langues.py",
         "parametres/libelles.py", "parametres/zones_langue.py", "collecte/vues_langue.py",
+        "connexion_entreprise/flux.py",  # connexion par le compte d'entreprise : messages de la page de connexion
     )),
     "saisie": ("Saisie (ses deux vues), panneau de saisie, fiche KPI, Cohérence, Historique", ("saisie.",), (
         "collecte/templates/collecte/saisie.html", "collecte/templates/collecte/pour_moi.html",
@@ -59,6 +60,8 @@ ZONES = {
         "parametres/templates/parametres/_menu_fichier_traductions.html",
         "parametres/templates/parametres/niveaux.html", "parametres/templates/parametres/seuils.html",
         "parametres/templates/parametres/_champ_seuil.html", "parametres/templates/parametres/hebergement.html",
+        "parametres/templates/parametres/_emails.html", "parametres/templates/parametres/_mise_a_jour_auto.html",
+        "parametres/templates/parametres/copie_externe.html",
         "parametres/templates/parametres/sante_installation.html", "parametres/sante_installation.py",
         "parametres/templates/parametres/restauration.html", "parametres/templates/parametres/visualisation.html",
         "parametres/templates/parametres/_unites.html", "parametres/templates/parametres/_sous_nav.html",
@@ -67,6 +70,9 @@ ZONES = {
         "parametres/views.py", "parametres/vues_hebergement.py", "parametres/vues_langues.py",
         "parametres/sauvegardes.py", "parametres/couleurs.py", "parametres/traductions.py",
         "parametres/traductions_fichier.py", "parametres/niveaux.py", "parametres/vues_ia.py", "parametres/ia.py",
+        "connexion_entreprise/templates/connexion_entreprise/*.html", "connexion_entreprise/vues_reglages.py",
+        "parametres/alertes.py", "parametres/mise_a_jour_auto.py", "parametres/copie_externe.py",
+        "parametres/vues_copie_externe.py",
     )),
     "referentiels": ("Assistant de mise en place, référentiels, bibliothèque, installation, paquets", ("referentiels.",), (
         "parametres/templates/parametres/mise_en_place/*.html", "parametres/templates/parametres/referentiel*.html",

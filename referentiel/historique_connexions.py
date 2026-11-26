@@ -31,6 +31,7 @@ from espaces import contexte as E
 
 journal = logging.getLogger("referentiel.connexion")
 DERNIERES = 10  # Mon compte : les dernières connexions de la personne
+MOT_DE_PASSE, ENTREPRISE = "mot_de_passe", "entreprise"  # méthode de la connexion
 
 
 def empreinte(identifiant):
@@ -52,9 +53,11 @@ def trouver_compte(identifiant):
             or Compte.objects.filter(username__iexact=ident).order_by("pk").first())
 
 
-def noter(resultat, identifiant="", utilisateur=None, alias=None):
+def noter(resultat, identifiant="", utilisateur=None, alias=None, methode=MOT_DE_PASSE, motif=""):
     """Ajoute une ligne. ``utilisateur`` : la copie connectée (réussite) ; sinon le compte visé par ``identifiant`` est
-    rattaché seulement s'il a une copie dans l'espace ``alias`` (par défaut l'espace courant)."""
+    rattaché seulement s'il a une copie dans l'espace ``alias`` (par défaut l'espace courant). ``methode`` : mot de passe
+    ou compte d'entreprise ; ``motif`` : cause courte d'un refus (connexion_entreprise/flux.py). Compte d'entreprise
+    refusé avant que l'adresse soit connue : ni compte ni empreinte."""
     from .models import HistoriqueConnexion, Utilisateur
 
     try:
@@ -70,8 +73,9 @@ def noter(resultat, identifiant="", utilisateur=None, alias=None):
                     pk = c.pk
             with transaction.atomic(using=alias):
                 HistoriqueConnexion.objects.using(alias).create(
-                    utilisateur_id=pk, resultat=resultat,
-                    empreinte="" if utilisateur is not None else empreinte(identifiant))
+                    utilisateur_id=pk, resultat=resultat, methode=methode, motif=motif[:16],
+                    empreinte="" if utilisateur is not None or (methode == ENTREPRISE and not identifiant)
+                    else empreinte(identifiant))
     except DatabaseError:
         journal.exception("Sign-in not written to the sign-in history (%s)", resultat)
 

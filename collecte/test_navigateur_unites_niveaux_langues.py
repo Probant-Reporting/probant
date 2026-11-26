@@ -37,7 +37,9 @@ class _Demo(NavigateurBase):
     def texte(self, page, chemin, ouvrir=True):
         self.aller(page, chemin)
         if ouvrir:
-            page.evaluate("document.querySelectorAll('details').forEach((d) => { d.open = true; })")
+            # seulement les blocs repliables du contenu : le menu de langue de la barre du haut s'ouvre en fenêtre flottante
+            # et recouvrirait un onglet des Paramètres (axe : « partially obscured »), ce que personne ne voit sur la page
+            page.evaluate("document.querySelectorAll('#contenu details').forEach((d) => { d.open = true; })")
         page.evaluate("document.querySelectorAll('.nom-org').forEach((e) => e.remove())")  # noms propres fictifs de la démo
         return page.inner_text("#contenu")
 
@@ -63,7 +65,7 @@ class _Demo(NavigateurBase):
         # l'aperçu de l'unité, au chargement et après un clic dans une ligne, reste dans la langue de l'interface
         self.aller(page, UNITES)
         self.assertNotIn("kilowattheure", page.inner_text("[data-apercu-unite]"))
-        page.evaluate("document.querySelectorAll('details').forEach((d) => { d.open = true; })")
+        page.evaluate("document.querySelectorAll('#contenu details').forEach((d) => { d.open = true; })")
         page.locator('input[name="libelle__0"]').first.click()
         self.assertNotIn("kilowattheure", page.inner_text("[data-apercu-unite]"))
         return unites, niveaux

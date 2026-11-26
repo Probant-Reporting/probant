@@ -21,3 +21,18 @@ typing_extensions==4.16.0 ; python_version < "3.13"
 tzdata==2026.6 ; sys_platform == "win32"
 gunicorn==27.0.0
 whitenoise==6.12.0
+# Sign-in with a company account (OpenID Connect, connexion_entreprise/): signature checks of the ID token (PyJWT, MIT) and
+# encryption of the client secret (cryptography, Apache-2.0 OR BSD-3-Clause), with their dependencies. Not in the
+# all-in-one version (portable/requirements.txt: pure Python only), where company sign-in does not exist.
+PyJWT==2.15.1
+cryptography==50.0.2
+cffi==2.1.1 ; platform_python_implementation != "PyPy"
+pycparser==3.12 ; platform_python_implementation != "PyPy"
+# External copy of the backups to an SFTP server (parametres/copie_sftp.py): SSH and SFTP by paramiko (LGPL-2.1), which
+# relies on cryptography (above), bcrypt (Apache-2.0), PyNaCl (Apache-2.0) and invoke (BSD-2-Clause). The copy to an
+# S3-compatible storage needs no package (standard library). Not in the all-in-one version, where the external copy does
+# not exist.
+paramiko==5.1.0
+bcrypt==5.0.0
+PyNaCl==1.6.2
+invoke==3.0.3

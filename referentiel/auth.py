@@ -1,4 +1,8 @@
-"""Connexion par e-mail (ou identifiant), sans tenir compte des majuscules. Comptes créés par l'administrateur, sans SSO.
+"""Connexion par e-mail (ou identifiant), sans tenir compte des majuscules. Comptes créés par l'administrateur.
+
+Connexion d'entreprise allumée (connexion_entreprise/regles.py) : le mot de passe ne sert plus qu'aux comptes de secours
+(gestionnaires des espaces), sauf si le réglage le laisse à tous ; un bon mot de passe d'un autre compte est refusé
+(``request.connexion_entreprise_exigee``) ; la page donne alors le même message que pour un mauvais mot de passe.
 
 Comptes communs à tous les espaces (docs/spaces.md) : le mot de passe est vérifié dans le registre commun ; la personne
 reçoit la copie de son compte dans l'espace demandé (avec le rôle de cet espace)."""
@@ -56,6 +60,12 @@ class EmailOuIdentifiant(ModelBackend):
                     suivre_hachage(alias, c.pk, ancien, c.password)
 
         if not (check_password(password, c.password, mettre_a_jour) and c.actif):
+            return None
+        from connexion_entreprise.regles import mot_de_passe_permis
+
+        if not mot_de_passe_permis(c.pk):  # bon mot de passe, mais ce compte se connecte par son compte d'entreprise
+            if request is not None:
+                request.connexion_entreprise_exigee = True
             return None
         u = copie_active(c, E.alias_courant())
         if u is not None:

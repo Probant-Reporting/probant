@@ -38,7 +38,8 @@ class DonneesDuPaquetTests(SimpleTestCase):
         self.tmp = Path(tempfile.mkdtemp())
         self.addCleanup(shutil.rmtree, self.tmp, True)
         d = self.tmp / "data"
-        for rel, contenu in ((".secret_key", "secret"), (".cle_secrete", "ancien secret"), ("ai-keys/principal.key", "sk-x"),
+        for rel, contenu in ((".secret_key", "secret"), (".secret_key_all_in_one", "secret du PC"), (".cle_secrete", "ancien secret"),
+                             ("ai-keys/principal.key", "sk-x"),
                              ("files/exports/gros.xlsx", "export"), ("files/evidence/preuve.pdf", "%PDF"),
                              ("spaces-data/rh/files/exports/gros.csv", "export"),
                              ("spaces-data/rh/files/evidence/p.pdf", "%PDF"),
@@ -56,7 +57,7 @@ class DonneesDuPaquetTests(SimpleTestCase):
         racine = bp.construire("Probant-essai", self.tmp / "out", self.tmp / "app", {"python": self.tmp / "python"},
                                self.tmp / "libs", [], {"mode": "data"}, self.d)
         data = racine / "data"
-        for jamais in (".secret_key", ".cle_secrete", "ai-keys", "files/exports/gros.xlsx",
+        for jamais in (".secret_key", ".secret_key_all_in_one", ".cle_secrete", "ai-keys", "files/exports/gros.xlsx",
                        "spaces-data/rh/files/exports/gros.csv"):
             self.assertFalse((data / jamais).exists(), jamais)
         for garde in ("files/evidence/preuve.pdf", "spaces-data/rh/files/evidence/p.pdf",
@@ -73,4 +74,6 @@ class DonneesDuPaquetTests(SimpleTestCase):
         con.close()
 
     def test_memes_tables_que_la_copie_d_une_sauvegarde(self):
-        self.assertEqual(sorted(module().TABLES_VIDEES), sorted(SV._tables(SV.TABLES_VIDEES_DANS_LA_COPIE)))
+        """Toutes celles de la copie d'une sauvegarde ; le paquet vide en plus les réglages de l'installation gardés au
+        registre commun (test_vider_bases_registre_commun)."""
+        self.assertLessEqual(set(SV._tables(SV.TABLES_VIDEES_DANS_LA_COPIE)), set(module().TABLES_VIDEES))

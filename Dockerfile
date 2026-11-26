@@ -5,9 +5,12 @@ FROM python:3.12-slim
 ARG VERSION_COMMIT=""
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1 \
     DJANGO_DEBUG=0 DATA_DIR=/data DANS_DOCKER=1 TZ=Europe/Brussels VERSION_COMMIT=${VERSION_COMMIT}
+# certificate authorities added by the IT for outgoing connections (docs/installation.md, "Company network"): the PEM
+# files of this folder (certificates/ca of the installation, mounted by docker-compose.yml); empty: nothing changes
+ENV EXTRA_CA_CERTS=/etc/probant/ca
 
 RUN useradd --uid 1000 --create-home --shell /usr/sbin/nologin probant \
- && mkdir -p /data && chown probant:probant /data
+ && mkdir -p /data /etc/probant/ca && chown probant:probant /data
 
 WORKDIR /app
 COPY requirements.txt .

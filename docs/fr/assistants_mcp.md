@@ -71,6 +71,11 @@ propres (`serveur_mcp/0001`), aucune colonne ajoutée à une table existante, au
   aussi ses jetons invalides. Un mot de passe seulement haché de nouveau par Django (même mot de passe, après une mise à
   jour de Django) ne révoque rien, même quand cela se fait à la connexion (le nouveau hachage est écrit dans chaque
   espace et l'empreinte gardée avec les jetons le suit). **Mon compte** le dit à côté du formulaire du mot de passe.
+- **Connexion d'entreprise** : quand elle est allumée, une personne qui ne peut pas se connecter avec un mot de passe ne
+  peut pas utiliser d'assistant : ses jetons sont refusés avec le code HTTP 403 et la raison `company_sign_in` (un
+  message qui dit pourquoi), et **Mon compte** ne lui permet pas d'en créer. Les gestionnaires des espaces gardent leurs
+  jetons, et tout le monde quand le mot de passe reste permis à tous. Connexion d'entreprise éteinte : rien ne change.
+  Voir [Connexion d'entreprise](connexion_entreprise.md).
 - **Un espace par jeton** : le jeton est rangé dans la base de son espace ; à l'adresse d'un autre espace, il est
   inconnu.
 - 10 jetons actifs par personne. L'administrateur voit les jetons actifs de l'espace et peut les révoquer ; il ne voit

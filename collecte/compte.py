@@ -29,14 +29,25 @@ def mot_de_passe_provisoire():
 
 
 class MotDePasseProvisoireMiddleware:
-    """Tant que le mot de passe provisoire n'est pas remplacé, seule la page « Mon compte » est accessible."""
+    """Tant que le mot de passe provisoire n'est pas remplacé, seule la page « Mon compte » est accessible. Sauf pour une
+    session ouverte par le compte d'entreprise d'une personne qui ne peut plus se connecter par mot de passe
+    (connexion_entreprise/regles.py) : son mot de passe provisoire ne sert à rien, rien ne lui est demandé."""
 
     def __init__(self, get_response):
         self.get_response = get_response
 
+    @staticmethod
+    def _par_compte_d_entreprise(request, u):
+        from connexion_entreprise.flux import CLE_METHODE
+        from connexion_entreprise.regles import mot_de_passe_permis
+
+        session = getattr(request, "session", None)
+        return session is not None and session.get(CLE_METHODE) == "entreprise" and not mot_de_passe_permis(u.pk)
+
     def __call__(self, request):
         u = getattr(request, "user", None)
-        if u is not None and u.is_authenticated and getattr(u, "doit_changer_mdp", False):
+        if u is not None and u.is_authenticated and getattr(u, "doit_changer_mdp", False) \
+                and not self._par_compte_d_entreprise(request, u):
             libres = (reverse("collecte:mon_compte"), reverse("logout"), reverse("langue"), reverse("collecte:confidentialite"))
             if request.path not in libres and not request.path.startswith(("/static/", "/media/")):
                 return redirect("collecte:mon_compte")

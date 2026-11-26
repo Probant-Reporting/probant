@@ -27,3 +27,6 @@ data/
 resources/
 
 .claude/worktrees/
+
+# certificates given by the IT to an installation (authorities, HTTPS certificate and its private key): never versioned
+/certificates/

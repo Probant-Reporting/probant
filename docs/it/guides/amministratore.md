@@ -236,13 +236,27 @@ Ogni risposta è una proposta contrassegnata «Proposto dall'IA». Nulla viene s
 
 ## Controllare l'hosting e i backup {#hosting}
 
-Andare in **Amministrazione › Impostazioni › Hosting**. La pagina mostra la versione, il backup automatico, il controllo dei dati e la configurazione dell'e-mail. Fare clic su **Crea e scarica un backup** per farne uno subito. Il team informatico copia i backup in un altro luogo.
-
-Per vedere a colpo d'occhio se tutto va bene, andare in **Amministrazione › Impostazioni › Stato**. Ogni riga (versione, database, file, ultimo backup, spazio su disco, e-mail, attività in background, aggiornamento del database, HTTPS) mostra **Buono**, **Da controllare** o **Guasto**, e cosa fare. L'amministratore di uno spazio diverso dallo spazio principale vede le stesse righe, ma le righe database e aggiornamento del database controllano solo il suo spazio e il registro comune degli account, non gli altri spazi. Non vede il dettaglio per l'IT (nomi degli altri spazi, cartelle del disco): lo vede il gestore degli spazi. In **Impostazioni › Hosting**, il riquadro **Per l'IT** non gli mostra la cartella dei dati, gli indirizzi consentiti, il server del database, il nome utente delle email né la cartella dei backup.
+Andare in **Amministrazione › Impostazioni › Hosting**. La pagina mostra la versione, il backup automatico, il controllo dei dati e la configurazione dell'e-mail. Fare clic su **Crea e scarica un backup** per farne uno subito. Il team informatico copia i backup in un altro luogo. Oppure un gestore degli spazi configura la **Copia fuori dal server**: lo strumento copia allora da sé ogni backup in un'archiviazione compatibile S3 o su un server SFTP fornito dal team informatico, e vi avvisa se una copia non riesce.
 
 ![Impostazioni, Hosting](../../screenshots/it/hosting.png)
 
+![Impostazioni, Hosting, Copia fuori dal server](../../screenshots/it/hosting-external-copy.png)
+
+Per configurare il server e-mail, usare il riquadro **E-mail** della stessa pagina. Inserire il server, la porta, la sicurezza, il nome utente, la password e l'indirizzo di invio forniti dal team informatico. Fare clic su **Salva**, poi su **Invia un'e-mail di prova**. Se l'e-mail non parte, un messaggio ne indica la causa in parole semplici. Queste impostazioni valgono per tutti gli spazi: solo un gestore degli spazi può modificarle. La password non viene mai più mostrata. Se il team informatico ha configurato le e-mail nel file delle impostazioni, il riquadro mostra queste impostazioni in sola lettura.
+
+![Impostazioni, Hosting, E-mail](../../screenshots/it/hosting-emails.png)
+
+Per vedere a colpo d'occhio se tutto va bene, andare in **Amministrazione › Impostazioni › Stato**. Ogni riga (versione, database, file, ultimo backup, spazio su disco, e-mail, attività in background, aggiornamento del database, HTTPS) mostra **Buono**, **Da controllare** o **Guasto**, e cosa fare. L'amministratore di uno spazio diverso dallo spazio principale vede le stesse righe, ma le righe database e aggiornamento del database controllano solo il suo spazio e il registro comune degli account, non gli altri spazi. Non vede il dettaglio per l'IT (nomi degli altri spazi, cartelle del disco): lo vede il gestore degli spazi. In **Impostazioni › Hosting**, il riquadro **Per l'IT** non gli mostra la cartella dei dati, gli indirizzi consentiti, il server del database, il nome utente delle email né la cartella dei backup.
+
 ![Impostazioni, Stato](../../screenshots/it/admin-health.png)
+
+Lo strumento può anche avvisarvi via e-mail. In fondo a **Impostazioni › Stato**, un gestore degli spazi attiva gli **Avvisi via e-mail** e sceglie i destinatari: di base gli amministratori dello spazio principale e i gestori degli spazi, più altri indirizzi, per esempio la casella del team IT. Quando compare un problema (backup non riuscito o in ritardo, disco quasi pieno, attività in background ferma, e-mail non riuscite…), i destinatari ricevono un'e-mail che dice cosa fare. Poi ricevono un promemoria al massimo una volta al giorno finché il problema dura, e un'e-mail quando è risolto. In una nuova installazione gli avvisi sono attivi fin dall'inizio; un'installazione che esisteva prima di essi li lascia disattivati finché qualcuno non li attiva. La pagina dice quale caso si applica. Fare clic su **Inviare un avviso di prova** per controllarli. Quando il server è spento, lo strumento non può avvisare nessuno.
+
+![Impostazioni, Stato, Avvisi via e-mail](../../screenshots/it/admin-health-alerts.png)
+
+Il blocco **Aggiornamenti automatici** di **Impostazioni › Hosting** mostra l'ultima verifica del server e il suo risultato. Un gestore degli spazi sceglie cosa succede quando viene pubblicata una nuova versione: **Installarla automaticamente** (di notte, dopo un backup; se la nuova versione non funziona, il server torna alla versione precedente), **Solo avvisare** (il team IT la installa) o **Disattivato**, e quanti giorni attendere dopo la pubblicazione (3 per impostazione predefinita). Il lavoro lo fa un'attività del server, mai lo strumento stesso. Se la schermata dice che l'attività non è installata, chiedete al team IT di installarla.
+
+![Impostazioni, Hosting, Aggiornamenti automatici](../../screenshots/it/hosting-auto-updates.png)
 
 ## Vedere i totali di ogni livello {#consolidation}
 
@@ -279,6 +293,20 @@ Se il file contiene cifre per KPI calcolati di un periodo non chiuso, l'anteprim
 ## Gestire gli spazi {#spaces}
 
 **Spazi** elenca gli spazi di questa installazione. Ogni spazio ha i propri dati: quadri di riferimento, organizzazioni, campagne, valori, giustificativi e identità. Gli account sono condivisi: una persona accede una sola volta.
+
+## Accedere con l'account aziendale {#company-sign-in}
+
+Un gestore degli spazi può consentire a ognuno di accedere con l'account aziendale (OpenID Connect, per esempio Microsoft Entra ID, Google, Okta o Keycloak). L'account aziendale dimostra solo chi è la persona: account, ruoli e assegnazioni si creano sempre nello strumento. Una persona ha bisogno di un account attivo con la stessa e-mail.
+
+1. Andare in **Amministrazione › Impostazioni › Accesso aziendale**.
+2. Copiare l'**URI di reindirizzamento** nell'applicazione presso il fornitore. Inserire l'**Indirizzo del fornitore (issuer)**, l'**ID client** e il **Segreto client**.
+3. Fare clic su **Verifica il fornitore**. Selezionare **Consentire l'accesso con l'account aziendale**, poi fare clic su **Salva**.
+
+![Impostazioni, Accesso aziendale](../../screenshots/it/admin-company-sign-in.png)
+
+Una volta attivo, solo i gestori degli spazi conservano la password, come account di emergenza. **Esci** chiude la sessione solo nello strumento, non presso il fornitore. La **Cronologia degli accessi** mostra il metodo di ogni accesso.
+
+![Pagina di accesso, Accedi con l'account aziendale](../../screenshots/it/login-company.png)
 
 ## Seguire ogni modifica {#history}
 

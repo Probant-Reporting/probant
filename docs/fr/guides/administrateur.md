@@ -252,13 +252,27 @@ Chaque réponse est une proposition marquée « Proposé par l'IA ». Rien n'est
 
 ## Vérifier l'hébergement et les sauvegardes {#hosting}
 
-Allez dans **Administration › Paramètres › Hébergement**. La page montre la version, la sauvegarde automatique, le contrôle des données et la configuration des e-mails. Cliquez sur **Créer et télécharger une sauvegarde** pour en faire une tout de suite. L'équipe informatique copie les sauvegardes ailleurs.
-
-Pour voir d'un coup d'œil si tout va bien, allez dans **Administration › Paramètres › Santé**. Chaque ligne (version, base de données, fichiers, dernière sauvegarde, espace disque, e-mails, tâches de fond, mise à jour de la base, HTTPS) montre **Bon**, **À regarder** ou **En panne**, et que faire. L'administrateur d'un autre espace que l'espace principal voit les mêmes lignes, mais les lignes base de données et mise à jour de la base ne contrôlent que son espace et le registre commun des comptes, pas les autres espaces. Il ne voit pas le détail pour l'IT (noms des autres espaces, dossiers du disque) : le gestionnaire des espaces le voit. Dans **Paramètres › Hébergement**, le volet **Pour l'IT** ne lui montre ni le dossier des données, ni les adresses autorisées, ni le serveur de la base, ni l'identifiant des e-mails, ni le dossier des sauvegardes.
+Allez dans **Administration › Paramètres › Hébergement**. La page montre la version, la sauvegarde automatique, le contrôle des données et la configuration des e-mails. Cliquez sur **Créer et télécharger une sauvegarde** pour en faire une tout de suite. L'équipe informatique copie les sauvegardes ailleurs. Ou un gestionnaire des espaces règle la **Copie hors du serveur** : l'outil copie alors lui-même chaque sauvegarde vers un stockage compatible S3 ou un serveur SFTP que l'équipe informatique fournit, et vous prévient si une copie échoue.
 
 ![Paramètres, Hébergement](../../screenshots/fr/hosting.png)
 
+![Paramètres, Hébergement, Copie hors du serveur](../../screenshots/fr/hosting-external-copy.png)
+
+Pour régler le serveur d'e-mails, utilisez le cadre **E-mails** de la même page. Saisissez le serveur, le port, la sécurité, l'identifiant, le mot de passe et l'adresse d'expédition que l'équipe informatique vous donne. Cliquez sur **Enregistrer**, puis sur **Envoyer un e-mail de test**. Si l'e-mail ne part pas, un message donne la cause en clair. Ces réglages valent pour tous les espaces : seul un gestionnaire des espaces peut les changer. Le mot de passe n'est jamais réaffiché. Si l'équipe informatique a réglé les e-mails dans le fichier de réglages, le cadre montre ces réglages en lecture seule.
+
+![Paramètres, Hébergement, E-mails](../../screenshots/fr/hosting-emails.png)
+
+Pour voir d'un coup d'œil si tout va bien, allez dans **Administration › Paramètres › Santé**. Chaque ligne (version, base de données, fichiers, dernière sauvegarde, espace disque, e-mails, tâches de fond, mise à jour de la base, HTTPS) montre **Bon**, **À regarder** ou **En panne**, et que faire. L'administrateur d'un autre espace que l'espace principal voit les mêmes lignes, mais les lignes base de données et mise à jour de la base ne contrôlent que son espace et le registre commun des comptes, pas les autres espaces. Il ne voit pas le détail pour l'IT (noms des autres espaces, dossiers du disque) : le gestionnaire des espaces le voit. Dans **Paramètres › Hébergement**, le volet **Pour l'IT** ne lui montre ni le dossier des données, ni les adresses autorisées, ni le serveur de la base, ni l'identifiant des e-mails, ni le dossier des sauvegardes.
+
 ![Paramètres, Santé](../../screenshots/fr/admin-health.png)
+
+L'outil peut aussi vous prévenir par e-mail. En bas de **Paramètres › Santé**, un gestionnaire des espaces allume les **Alertes par e-mail** et choisit les destinataires : par défaut les administrateurs de l'espace principal et les gestionnaires des espaces, plus d'autres adresses, par exemple la boîte de l'équipe IT. Quand un problème apparaît (sauvegarde échouée ou en retard, disque presque plein, tâche de fond arrêtée, e-mails en échec…), les destinataires reçoivent un e-mail qui dit quoi faire. Ils reçoivent ensuite un rappel au plus une fois par jour tant que le problème dure, et un e-mail quand il est résolu. Sur une installation neuve, les alertes sont allumées d'office ; une installation qui existait avant elles les garde éteintes tant que personne ne les allume. La page dit quel cas s'applique. Cliquez sur **Envoyer une alerte d'essai** pour les vérifier. Quand le serveur est éteint, l'outil ne peut prévenir personne.
+
+![Paramètres, Santé, Alertes par e-mail](../../screenshots/fr/admin-health-alerts.png)
+
+Le bloc **Mises à jour automatiques** de **Paramètres › Hébergement** montre la dernière vérification du serveur et son résultat. Un gestionnaire des espaces choisit ce qui se passe quand une nouvelle version est publiée : **L'installer automatiquement** (la nuit, après une sauvegarde ; si la nouvelle version ne fonctionne pas, le serveur revient à la version précédente), **Prévenir seulement** (l'équipe IT l'installe) ou **Éteint**, et combien de jours attendre après la publication (3 par défaut). C'est une tâche du serveur qui fait le travail, jamais l'outil lui-même. Si l'écran dit que la tâche n'est pas installée, demandez à l'équipe IT de la poser.
+
+![Paramètres, Hébergement, Mises à jour automatiques](../../screenshots/fr/hosting-auto-updates.png)
 
 ## Voir les totaux de chaque niveau {#consolidation}
 
@@ -295,6 +309,20 @@ Si le fichier contient des chiffres pour des KPI calculés d'une période non cl
 ## Gérer les espaces {#spaces}
 
 **Espaces** liste les espaces de cette installation. Chaque espace a ses propres données : référentiels, organisations, campagnes, valeurs, preuves et identité. Les comptes sont communs : une personne se connecte une seule fois.
+
+## Se connecter avec le compte d'entreprise {#company-sign-in}
+
+Un gestionnaire des espaces peut permettre à chacun de se connecter avec son compte d'entreprise (OpenID Connect, par exemple Microsoft Entra ID, Google, Okta ou Keycloak). Le compte d'entreprise prouve seulement qui est la personne : les comptes, les rôles et les attributions restent créés dans l'outil. Une personne a besoin d'un compte actif avec le même e-mail.
+
+1. Allez dans **Administration › Paramètres › Connexion d'entreprise**.
+2. Copiez l'**Adresse de retour (redirect URI)** dans l'application chez votre fournisseur. Saisissez l'**Adresse du fournisseur (issuer)**, l'**Identifiant du client** et le **Secret du client**.
+3. Cliquez sur **Vérifier le fournisseur**. Cochez **Permettre la connexion avec le compte d'entreprise**, puis cliquez sur **Enregistrer**.
+
+![Paramètres, Connexion d'entreprise](../../screenshots/fr/admin-company-sign-in.png)
+
+Une fois allumée, seuls les gestionnaires des espaces gardent leur mot de passe, comme comptes de secours. **Se déconnecter** ferme la session de l'outil seulement, pas celle du fournisseur. L'**Historique des connexions** donne la méthode de chaque connexion.
+
+![Page de connexion, Se connecter avec le compte d'entreprise](../../screenshots/fr/login-company.png)
 
 ## Suivre chaque modification {#history}
 

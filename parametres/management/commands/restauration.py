@@ -49,6 +49,26 @@ class Command(BaseCommand):
         with L.activer_interface("en"):  # messages pour l'IT en anglais (erreurs, tailles), interface inchangée
             return self._handle(*args, **o)
 
+    def _remis_a_zero(self, remis):
+        """Ce que la restauration du registre a vidé sans le remettre (pas dans l'archive) : à régler de nouveau."""
+        textes = {
+            "espaces.serveurenvoi": "the email server set in the tool (Settings > Hosting): enter it again, otherwise "
+                                    "no email leaves (reminders, alerts, tests)",
+            "espaces.reglagealertes": "the setting of the email alerts (Settings > Health): back to its default, check it",
+            "espaces.destinationcopie": "the destination of the external copy of the backups (Settings > Hosting): "
+                                        "set it again, otherwise no backup is copied outside the server",
+        }
+        lignes = [texte for label, texte in textes.items() if label in remis]
+        if "connexion_entreprise.reglageentreprise" in remis or "connexion_entreprise.lienentreprise" in remis:
+            liens = remis.get("connexion_entreprise.lienentreprise", 0)
+            lignes.append(f"company sign-in is off and its {liens} link(s) with company accounts are removed (Settings > "
+                          "Company sign-in): set it again; until then, everyone signs in with the password of the tool "
+                          "that the archive holds")
+        if lignes:
+            self.stdout.write(self.style.WARNING("Reset by the restore (not in the archive), to set again:"))
+            for l in lignes:
+                self.stdout.write(f"  - {l}")
+
     def _handle(self, *args, **o):
         if o["commun"]:
             from espaces import contexte as ESP
@@ -61,10 +81,12 @@ class Command(BaseCommand):
             if not o["oui"] and input("The shared registry (accounts, spaces) will be replaced. Continue? [yes/no] ").strip().lower() not in ("o", "oui", "y", "yes"):
                 raise CommandError("Restore cancelled.")
             try:
-                SV.restaurer_registre(chemin)
+                d = SV.restaurer_registre(chemin)
             except SV.ErreurSauvegarde as e:
                 raise CommandError(str(e)) from e
             self.stdout.write(self.style.SUCCESS("Shared registry restored and brought back in line with the spaces."))
+            self.stdout.write("Everyone signs in again (the sessions were emptied).")
+            self._remis_a_zero(dict(d.get("remis_a_zero") or []))
             return
         chemin = Path(o["archive"])
         if not chemin.is_file():

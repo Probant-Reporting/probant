@@ -25,7 +25,8 @@ from .test_droits_balayage import Balayage, instantane, routes
 
 MARQUE = "Quuxville"  # nom de l'organisation hors périmètre : ne doit apparaître dans aucune réponse
 SECRET = "Confidentiel-Quux"  # commentaire de sa valeur
-SANS_CONNEXION = {"login", "logout", "langue", "sante", "logo", "confidentialite"}
+# pages hors de l'outil, ouvertes sans connexion : connexion (mot de passe et compte d'entreprise), langue, supervision…
+SANS_CONNEXION = {"login", "logout", "langue", "sante", "logo", "confidentialite", "entreprise_debut", "entreprise_retour"}
 
 
 def texte(rep):

@@ -161,7 +161,12 @@ class Lines:
     def isatty(self):
         return False
 
-os.environ.update(DATA_DIR=str(DATA), DJANGO_DEBUG="1", PYTHONUTF8="1", DJANGO_SETTINGS_MODULE="config.settings")
+# mode développement pour le serveur local (HTTP, fichiers statiques) ; PROBANT_ALL_IN_ONE : une clé secrète à cette
+# copie, créée au premier démarrage dans data/.secret_key_all_in_one (config/settings.py), jamais la clé fixe du
+# développement (connue de tous) ni une clé embarquée dans le paquet
+os.environ.update(DATA_DIR=str(DATA), DJANGO_DEBUG="1", PROBANT_ALL_IN_ONE="1", PYTHONUTF8="1",
+                  DJANGO_SETTINGS_MODULE="config.settings")
+os.environ.pop("DJANGO_SECRET_KEY", None)  # une clé donnée par l'environnement du poste n'est pas celle de cette copie
 for name in ("SPACE", "ESPACE"):
     os.environ.pop(name, None)
 sys.path.insert(0, str(SYSTEM / "app"))
@@ -325,7 +330,15 @@ def reset(conf):
 
     django.setup()
     call_command("migrate", interactive=False, verbosity=0)
-    call_command("restore", archive.name, oui=True, sans_sauvegarde_avant=True)
+    from parametres import sauvegardes
+
+    # le point de départ vient avec le paquet : signé par l'installation qui l'a préparé, ou avant que cette copie ait sa
+    # propre clé secrète ; il garde la confiance du paquet (seul ce fichier, jamais une archive déposée par l'outil)
+    signee = sauvegardes.signature_valide(archive)
+    if not signee:
+        print("The starting point was saved with another secret key (the installation that prepared this package, or "
+              "this copy before it had its own key): it is restored all the same, as it comes with the package.")
+    call_command("restore", archive.name, oui=True, sans_sauvegarde_avant=True, non_signee=not signee)
     print("Done: back to the starting point. Start the tool again.")
 
 

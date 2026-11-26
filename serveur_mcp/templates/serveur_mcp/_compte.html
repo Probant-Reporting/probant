@@ -5,6 +5,9 @@
   {% if not mcp.actif %}
   <p class="discret m-0">{% libelle "mcp.compte.eteint" %}</p>
   {% else %}
+  {% if mcp.entreprise %}{# connexion d'entreprise allumée, pas de mot de passe : aucun jeton (connexion_entreprise/regles.py) #}
+  {% encart "info" role="status" %}{% libelle "mcp.compte.entreprise" %}{% if mcp.jetons %} {% libelle "mcp.compte.entreprise_jetons" %}{% endif %}{% endencart %}
+  {% else %}
   {% if user.lecture_seule %}<p class="discret">{% libelle "mcp.compte.lecture_seule" %}</p>{% elif not mcp.ecriture %}<p class="discret">{% libelle "mcp.compte.ecriture_eteinte" %}</p>{% endif %}
   {% if mcp.nouveau %}{# montré une seule fois, dans la réponse à la création : gardé nulle part en clair #}
   {% libelle "mcp.compte.copie" as t_copie %}{% libelle "mcp.compte.copier" as t_copier %}
@@ -40,6 +43,7 @@
     <div class="barre-enregistrement"><button type="submit">{% icone "plus" %} {% libelle "mcp.compte.creer" %}</button>
       <span class="discret">{% libelle "mcp.compte.max" max=mcp.max %}</span></div>
   </form>
+  {% endif %}
   <h3>{% libelle "mcp.compte.liste" %}</h3>
   {% if mcp.jetons %}
   <div class="defile-x"><table class="carte-table table-jetons">

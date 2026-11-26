@@ -98,6 +98,11 @@ migrations are its own (`serveur_mcp/0001`, …). It adds no column to an existi
   only hashed again by Django (same password, after an update of Django) revokes nothing, also when this happens at
   sign-in (the new hash is written in every space, and the digest kept with the tokens follows it:
   `serveur_mcp/test_authenticate_hachage_jetons.py`). **My account** says so next to the password form.
+- **Company sign-in.** When company sign-in is on, a person who cannot sign in with a password cannot use
+  assistants: their tokens are refused with HTTP 403 and the reason `company_sign_in` (a message that says why), and
+  **My account** does not let them create a token. Space managers keep their tokens, and so does everyone when the
+  password stays allowed for everyone. Company sign-in off: nothing changes. See
+  [Company sign-in](single_sign_on.md).
 - **One space per token.** The token is stored in the database of the space where it was created, and only that
   database is searched. The same token sent to the address of another space is unknown there.
 - **Limits.** 10 active tokens per person. The administrator sees the active tokens of the space (name, owner,

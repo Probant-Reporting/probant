@@ -250,13 +250,27 @@ Each answer is a proposal marked “Proposed by AI”. Nothing is saved until a 
 
 ## Check the hosting and the backups {#hosting}
 
-Go to **Administration › Settings › Hosting**. The page shows the version, the automatic backup, the data check, and the email setup. Click **Create and download a backup** to make a backup at once. The IT team copies the backups to another place.
-
-To see at a glance if all is well, go to **Administration › Settings › Health**. Each line (version, database, files, last backup, disk space, email, background tasks, database update, HTTPS) shows **Good**, **To check** or **Failure**, and what to do. The administrator of a space other than the main space sees the same lines, but the database and database update lines check only their space and the shared account registry, not the other spaces. They do not see the detail for IT (names of the other spaces, folders on the disk): the space manager sees it. In **Settings › Hosting**, the **For IT** box does not show them the data folder, the allowed addresses, the database server, the email username or the backups folder.
+Go to **Administration › Settings › Hosting**. The page shows the version, the automatic backup, the data check, and the email setup. Click **Create and download a backup** to make a backup at once. The IT team copies the backups to another place. Or a space manager sets **Copy outside the server**: the tool then copies each backup itself to an S3-compatible storage or an SFTP server that the IT team provides, and warns you if a copy fails.
 
 ![Settings, Hosting](../screenshots/en/hosting.png)
 
+![Settings, Hosting, Copy outside the server](../screenshots/en/hosting-external-copy.png)
+
+To set up the email server, use the **Emails** box of the same page. Enter the server, the port, the security, the username, the password and the sending address that the IT team gives you. Click **Save**, then **Send a test email**. If the email is not sent, a message gives the cause in plain words. These settings apply to all the spaces: only a space manager can change them. The password is never shown again. If the IT team set the emails in the settings file, the box shows these settings read-only.
+
+![Settings, Hosting, Emails](../screenshots/en/hosting-emails.png)
+
+To see at a glance if all is well, go to **Administration › Settings › Health**. Each line (version, database, files, last backup, disk space, email, background tasks, database update, HTTPS) shows **Good**, **To check** or **Failure**, and what to do. The administrator of a space other than the main space sees the same lines, but the database and database update lines check only their space and the shared account registry, not the other spaces. They do not see the detail for IT (names of the other spaces, folders on the disk): the space manager sees it. In **Settings › Hosting**, the **For IT** box does not show them the data folder, the allowed addresses, the database server, the email username or the backups folder.
+
 ![Settings, Health](../screenshots/en/admin-health.png)
+
+The tool can also warn you by email. At the bottom of **Settings › Health**, a space manager turns on **Email alerts** and chooses the recipients: by default the administrators of the main space and the space managers, plus other addresses, for example the mailbox of the IT team. When a problem appears (failed or late backup, disk almost full, stopped background task, failed emails…), the recipients get an email with what to do. Then they get a reminder at most once a day while the problem lasts, and an email when it is resolved. On a new installation, the alerts are on from the start; an installation that existed before them keeps them off until someone turns them on. The page says which case applies. Click **Send a test alert** to check them. When the server is off, the tool cannot warn anyone.
+
+![Settings, Health, Email alerts](../screenshots/en/admin-health-alerts.png)
+
+The block **Automatic updates** of **Settings › Hosting** shows the last check of the server and its result. A space manager chooses what happens when a new version is published: **Install it automatically** (at night, after a backup; if the new version does not work, the server goes back to the previous version), **Notify only** (the IT team installs it), or **Off**, and how many days to wait after the publication (3 by default). A task of the server does the work, never the tool itself. If the screen says that the task is not installed, ask the IT team to set it up.
+
+![Settings, Hosting, Automatic updates](../screenshots/en/hosting-auto-updates.png)
 
 ## See the totals of each level {#consolidation}
 
@@ -293,6 +307,20 @@ If the file has figures for calculated KPIs of a period that is not closed, the 
 ## Manage the spaces {#spaces}
 
 **Spaces** lists the spaces of this installation. Each space has its own data: frameworks, organisations, campaigns, values, evidence, and identity. Accounts are shared: a person signs in once.
+
+## Sign in with the company account {#company-sign-in}
+
+A space manager can let people sign in with their company account (OpenID Connect, for example Microsoft Entra ID, Google, Okta or Keycloak). The company account only proves who the person is: you still create the accounts, the roles and the assignments in the tool. A person needs an active account with the same email.
+
+1. Go to **Administration › Settings › Company sign-in**.
+2. Copy the **Redirect URI** into the application at your provider. Enter the **Provider address (issuer)**, the **Client ID** and the **Client secret**.
+3. Click **Check the provider**. Select **Allow sign-in with the company account**, then click **Save**.
+
+![Settings, Company sign-in](../screenshots/en/admin-company-sign-in.png)
+
+When it is on, only the space managers keep their password, as rescue accounts. **Sign out** closes the session in the tool only, not at the provider. The **Sign-in history** shows the method of each sign-in.
+
+![Sign-in page, Sign in with your company account](../screenshots/en/login-company.png)
 
 ## Follow every change {#history}
 

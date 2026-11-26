@@ -1,7 +1,10 @@
 # HTTPS proxy: Let's Encrypt certificate obtained and renewed automatically for DOMAIN (the server must be reachable
 # from the Internet on ports 80 and 443, and the domain name must point to it). "https" profile of docker-compose.yml,
 # which also passes DOMAIN and CADDY_MAX_SIZE from their former French names (DOMAINE, CADDY_TAILLE_MAX) if needed.
+# Certificate of the company instead (HTTPS_CERTIFICATE=files in .env, ./install.sh --cert --key): docker-compose.yml
+# sets CADDY_TLS to "tls <certificate> <key>" (folder certificates/https), and Caddy never asks Let's Encrypt.
 {$DOMAIN} {
+	{$CADDY_TLS}
 	encode zstd gzip
 	request_body {
 		max_size {$CADDY_MAX_SIZE:50MB}

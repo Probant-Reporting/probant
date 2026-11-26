@@ -33,6 +33,7 @@ L'outil range lui-même le dossier des données. Un fichier `README.txt` dans le
 ├── db.sqlite3                   base de l'espace principal (SQLite ; avec PostgreSQL, la base est ailleurs)
 ├── shared.sqlite3               registre des comptes, commun à tous les espaces
 ├── .secret_key                  clé de l'installation : à ne jamais partager
+├── .secret_key_all_in_one       clé de la version tout-en-un : à ne jamais partager (un serveur crée la sienne)
 ├── files/                       DOCUMENTS DÉPOSÉS DANS L'OUTIL (espace principal)
 │   ├── evidence/                documents de preuve des contributeurs
 │   │   └── <période>/<organisation>/<KPI>/<fichier>
@@ -43,6 +44,7 @@ L'outil range lui-même le dossier des données. Un fichier `README.txt` dans le
 │   └── exports/                 gros exports fabriqués en arrière-plan ; effacés après 7 jours (réglable), jamais sauvegardés
 ├── sign-in-attempts/            compteur des connexions manquées, partagé par les processus du serveur (jamais sauvegardé)
 ├── ai-keys/<code>.key           clé de l'assistant IA de chaque espace (docs/fr/prise_ia.md) : jamais en base, jamais sauvegardée
+├── ca-bundle.pem                autorités de certification du système et celles ajoutées par l'IT, réunies à chaque démarrage (seulement quand l'IT en ajoute, docs/fr/installation.md, « Réseau d'entreprise ») ; jamais sauvegardé
 ├── backups/                     ARCHIVES DATÉES (base + fichiers)
 │   ├── backup-AAAAMMJJ-HHMMSS-<motif>.zip    espace principal
 │   ├── restores.jsonl           historique des restaurations
@@ -84,6 +86,7 @@ Le tableau indique qui ajoute chaque sorte de document, où il va, et si les sau
 | Fichier d'import (valeurs, configuration, référentiel, reprise) | Administrateur | `files/pending-imports/`, effacé après l'import ou au bout d'un jour | Non (temporaire) |
 | Gros export (au-delà du seuil de **Paramètres › Hébergement › Gros exports**) | Toute personne qui peut exporter | `files/exports/<nom au hasard>.xlsx` ou `.csv`, jusqu'au téléchargement, 7 jours au plus (réglable) ; puis effacé par le planificateur, aussi au démarrage | Non (refait sur demande) |
 | Archive de sauvegarde | Automatique, ou administrateur / IT | `backups/` | — |
+| Copie d'une archive de sauvegarde hors du serveur | L'outil, quand une destination est réglée (**Paramètres › Hébergement › Copie externe**) | À la destination : `<dossier ou préfixe>/<identifiant de l'installation>/`, rangé comme `backups/` (`backup-….zip`, `spaces/<code>/`, `shared/`). Ce qui est déjà copié est noté dans le registre commun des comptes, jamais dans un fichier du dossier des données. | — |
 | Export Excel ou CSV | Tout utilisateur | Téléchargé directement, jamais gardé sur le serveur | — |
 
 ### Dossiers des preuves

@@ -236,13 +236,27 @@ Cada resposta é uma proposta marcada «Proposto pela IA». Nada é guardado enq
 
 ## Verificar o alojamento e as cópias de segurança {#hosting}
 
-Aceda a **Administração › Definições › Alojamento**. A página mostra a versão, a cópia de segurança automática, o controlo dos dados e a configuração do email. Clique em **Criar e transferir uma cópia de segurança** para fazer uma de imediato. A equipa de informática copia as cópias de segurança para outro local.
-
-Para ver num relance se está tudo bem, aceda a **Administração › Definições › Estado**. Cada linha (versão, base de dados, ficheiros, última cópia de segurança, espaço em disco, email, tarefas em segundo plano, atualização da base, HTTPS) mostra **Bom**, **A verificar** ou **Avaria**, e o que fazer. O administrador de um espaço que não é o espaço principal vê as mesmas linhas, mas as linhas base de dados e atualização da base só verificam o seu espaço e o registo comum das contas, não os outros espaços. Não vê o detalhe para a IT (nomes dos outros espaços, pastas do disco): o gestor de espaços vê-o. Em **Definições › Alojamento**, o bloco **Para a IT** não lhe mostra a pasta dos dados, os endereços autorizados, o servidor da base, o nome de utilizador do email nem a pasta das cópias de segurança.
+Aceda a **Administração › Definições › Alojamento**. A página mostra a versão, a cópia de segurança automática, o controlo dos dados e a configuração do email. Clique em **Criar e transferir uma cópia de segurança** para fazer uma de imediato. A equipa de informática copia as cópias de segurança para outro local. Ou um gestor de espaços define a **Cópia fora do servidor**: a ferramenta copia então ela própria cada cópia de segurança para um armazenamento compatível com S3 ou um servidor SFTP fornecido pela equipa de informática, e avisa-o se uma cópia falhar.
 
 ![Definições, Alojamento](../../screenshots/pt/hosting.png)
 
+![Definições, Alojamento, Cópia fora do servidor](../../screenshots/pt/hosting-external-copy.png)
+
+Para configurar o servidor de email, use o bloco **Emails** da mesma página. Introduza o servidor, a porta, a segurança, o nome de utilizador, a palavra-passe e o endereço de envio que a equipa informática lhe indicar. Clique em **Guardar** e depois em **Enviar um email de teste**. Se o email não for enviado, uma mensagem indica a causa em palavras simples. Estas definições valem para todos os espaços: só um gestor de espaços as pode alterar. A palavra-passe nunca é mostrada novamente. Se a equipa informática definiu o email no ficheiro de definições, o bloco mostra estas definições só de leitura.
+
+![Definições, Alojamento, Emails](../../screenshots/pt/hosting-emails.png)
+
+Para ver num relance se está tudo bem, aceda a **Administração › Definições › Estado**. Cada linha (versão, base de dados, ficheiros, última cópia de segurança, espaço em disco, email, tarefas em segundo plano, atualização da base, HTTPS) mostra **Bom**, **A verificar** ou **Avaria**, e o que fazer. O administrador de um espaço que não é o espaço principal vê as mesmas linhas, mas as linhas base de dados e atualização da base só verificam o seu espaço e o registo comum das contas, não os outros espaços. Não vê o detalhe para a IT (nomes dos outros espaços, pastas do disco): o gestor de espaços vê-o. Em **Definições › Alojamento**, o bloco **Para a IT** não lhe mostra a pasta dos dados, os endereços autorizados, o servidor da base, o nome de utilizador do email nem a pasta das cópias de segurança.
+
 ![Definições, Estado](../../screenshots/pt/admin-health.png)
+
+A ferramenta também o pode avisar por email. No fim de **Definições › Estado**, um gestor de espaços liga os **Alertas por email** e escolhe os destinatários: por omissão os administradores do espaço principal e os gestores de espaços, mais outros endereços, por exemplo a caixa de correio da equipa de IT. Quando aparece um problema (cópia de segurança falhada ou atrasada, disco quase cheio, tarefa em segundo plano parada, emails falhados…), os destinatários recebem um email que diz o que fazer. Depois recebem um lembrete no máximo uma vez por dia enquanto o problema durar, e um email quando estiver resolvido. Numa instalação nova, os alertas estão ligados desde o início; uma instalação que já existia antes deles mantém-nos desligados até alguém os ligar. A página diz que caso se aplica. Clique em **Enviar um alerta de teste** para os verificar. Quando o servidor está desligado, a ferramenta não consegue avisar ninguém.
+
+![Definições, Estado, Alertas por email](../../screenshots/pt/admin-health-alerts.png)
+
+O bloco **Atualizações automáticas** de **Definições › Alojamento** mostra a última verificação do servidor e o seu resultado. Um gestor de espaços escolhe o que acontece quando é publicada uma nova versão: **Instalá-la automaticamente** (durante a noite, depois de uma cópia de segurança; se a nova versão não funcionar, o servidor volta à versão anterior), **Só avisar** (a equipa de IT instala-a) ou **Desligado**, e quantos dias esperar depois da publicação (3 por predefinição). É uma tarefa do servidor que faz o trabalho, nunca a própria ferramenta. Se o ecrã disser que a tarefa não está instalada, peça à equipa de IT que a instale.
+
+![Definições, Alojamento, Atualizações automáticas](../../screenshots/pt/hosting-auto-updates.png)
 
 ## Ver os totais de cada nível {#consolidation}
 
@@ -279,6 +293,20 @@ Se o ficheiro tiver números para KPI calculados de um período não encerrado, 
 ## Gerir os espaços {#spaces}
 
 **Espaços** lista os espaços desta instalação. Cada espaço tem os seus próprios dados: quadros de referência, organizações, campanhas, valores, comprovativos e identidade. As contas são comuns: uma pessoa inicia sessão uma só vez.
+
+## Iniciar sessão com a conta da empresa {#company-sign-in}
+
+Um gestor de espaços pode permitir que cada pessoa inicie sessão com a conta da empresa (OpenID Connect, por exemplo Microsoft Entra ID, Google, Okta ou Keycloak). A conta da empresa só prova quem é a pessoa: as contas, as funções e as atribuições continuam a ser criadas na ferramenta. Uma pessoa precisa de uma conta ativa com o mesmo email.
+
+1. Aceda a **Administração › Definições › Início de sessão da empresa**.
+2. Copie o **URI de redirecionamento** para a aplicação no seu fornecedor. Introduza o **Endereço do fornecedor (issuer)**, o **ID de cliente** e o **Segredo de cliente**.
+3. Clique em **Verificar o fornecedor**. Selecione **Permitir o início de sessão com a conta da empresa** e clique em **Guardar**.
+
+![Definições, Início de sessão da empresa](../../screenshots/pt/admin-company-sign-in.png)
+
+Depois de ligado, só os gestores de espaços mantêm a palavra-passe, como contas de emergência. **Terminar sessão** fecha a sessão apenas na ferramenta, não no fornecedor. O **Histórico de inícios de sessão** mostra o método de cada início de sessão.
+
+![Página de início de sessão, Iniciar sessão com a conta da empresa](../../screenshots/pt/login-company.png)
 
 ## Acompanhar cada alteração {#history}
 

@@ -13,6 +13,8 @@ from pathlib import Path
 from django.conf.locale import LANG_INFO
 from django.core.exceptions import ImproperlyConfigured
 
+from config import autorites_certificats as AUTORITES
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Droits des fichiers : tout ce que l'outil et ses commandes créent (bases, archives,
@@ -113,24 +115,40 @@ else:
     DOSSIER_DONNEES = BASE_DIR / env("DATA_DIR")
 if DOSSIER_DONNEES.is_dir():
     _noms_anglais(DOSSIER_DONNEES)
+    # Autorités de certification ajoutées par l'IT (EXTRA_CA_CERTS, réseau d'entreprise) : réunies avec celles du
+    # système et données à tous les appels sortants par SSL_CERT_FILE (config/autorites_certificats.py). Dans l'image,
+    # docker/entrypoint.sh l'a déjà fait une fois pour tous les processus : rien n'est refait ici.
+    AUTORITES.appliquer(os.environ, DOSSIER_DONNEES)
+AUTORITES_AJOUTEES = os.environ.get(AUTORITES.VARIABLE, "").strip()
+# pour Paramètres › Santé (aucune application n'importe config) : autorités lues une fois par processus, et fichier
+# réuni en service ou non dans ce processus
+AUTORITES_BILAN = AUTORITES.lire(AUTORITES_AJOUTEES)
+AUTORITES_EN_SERVICE = AUTORITES.en_service() is not None
 VERSION = (BASE_DIR / "VERSION").read_text(encoding="utf-8").strip() if (BASE_DIR / "VERSION").exists() else "dev"
 VERSION_COMMIT = env("VERSION_COMMIT", "")
 
 DEBUG = env("DJANGO_DEBUG", "0") == "1"
+# version tout-en-un (portable/launch.py la pose) : mode développement pour le serveur local (HTTP, fichiers statiques),
+# mais sa propre clé secrète, gardée dans son dossier des données sous un autre nom que celle d'un serveur : un dossier
+# « data » recopié sur un serveur (docs/from_pc_to_server.md) n'y apporte pas la clé du PC, le serveur crée la sienne
+TOUT_EN_UN = env("PROBANT_ALL_IN_ONE", "0") == "1"
+CLE_DEVELOPPEMENT = "dev-only-change-me"  # connue de tous : jamais pour des données réelles
+FICHIER_CLE = ".secret_key_all_in_one" if TOUT_EN_UN else ".secret_key"
 
 
 def _cle_secrete():
     """DJANGO_SECRET_KEY si fournie ; sinon une clé générée une fois et gardée dans le dossier des données (les sessions
-    survivent aux redémarrages et aux mises à jour) ; en développement, une clé fixe suffit.
+    survivent aux redémarrages et aux mises à jour) ; en développement, une clé fixe suffit (pas pour la version
+    tout-en-un, qui garde de vraies données : sa clé à elle, ``FICHIER_CLE``).
 
     Le fichier est écrit à part puis mis en place d'un coup (jamais de fichier vide ou à moitié écrit après un arrêt
     brutal) ; un fichier vide (ancienne version interrompue) est remplacé. Fichier perdu : une nouvelle
     clé, chacun se reconnecte (rien d'autre n'en dépend)."""
     if env("DJANGO_SECRET_KEY"):
         return env("DJANGO_SECRET_KEY")
-    if DEBUG:
-        return "dev-only-change-me"
-    fichier = DOSSIER_DONNEES / ".secret_key"
+    if DEBUG and not TOUT_EN_UN:
+        return CLE_DEVELOPPEMENT
+    fichier = DOSSIER_DONNEES / FICHIER_CLE
     try:
         cle = fichier.read_text(encoding="ascii").strip()
     except FileNotFoundError:
@@ -143,7 +161,7 @@ def _cle_secrete():
     from django.core.management.utils import get_random_secret_key
 
     nouvelle = get_random_secret_key() + get_random_secret_key()
-    tmp = DOSSIER_DONNEES / f".secret_key.{os.getpid()}.tmp"
+    tmp = DOSSIER_DONNEES / f"{FICHIER_CLE}.{os.getpid()}.tmp"
     try:
         fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(fd, "w", encoding="ascii") as f:
@@ -202,6 +220,7 @@ INSTALLED_APPS = [
     "collecte",
     "espaces",  # plusieurs espaces dans une installation (docs/spaces.md) ; sa commande migrate migre toutes les bases
     "serveur_mcp",  # assistants (MCP) : lire et agir avec les droits de la personne, jeton personnel (docs/mcp.md)
+    "connexion_entreprise",  # connexion par le compte d'entreprise (OpenID Connect), éteinte par défaut (docs/single_sign_on.md)
 ]
 
 MIDDLEWARE = [
@@ -222,6 +241,7 @@ MIDDLEWARE = [
     "espaces.intergiciels.AccesEspaceMiddleware",  # personne connectée sans accès à cet espace : page « pas d'accès »
     "collecte.reponses_script.SessionExpireeMiddleware",  # envoi du script sans session : 401 lisible, pas la page de connexion
     "django.contrib.messages.middleware.MessageMiddleware",
+    "connexion_entreprise.intergiciels.SessionSelonLaRegleMiddleware",  # session par mot de passe refusée si la règle a changé
     "parametres.mise_en_place.MiseEnPlaceMiddleware",
     "collecte.compte.MotDePasseProvisoireMiddleware",
     "collecte.lecture_seule.LectureSeuleMiddleware",
@@ -398,7 +418,8 @@ FILE_UPLOAD_PERMISSIONS = 0o600
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Connexion : comptes créés par l'administrateur (pas de SSO), connexion par e-mail
+# Connexion : comptes créés par l'administrateur, connexion par e-mail ; le compte d'entreprise (OpenID Connect) peut
+# prouver qui est la personne, jamais créer un compte (connexion_entreprise/, docs/single_sign_on.md)
 AUTHENTICATION_BACKENDS = ["referentiel.auth.EmailOuIdentifiant"]
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "collecte:accueil"
@@ -450,6 +471,18 @@ IA_CLES_DIR = DOSSIER_DONNEES / "ai-keys"
 # voir les écrans ; jamais proposé autrement
 IA_FOURNISSEUR_FACTICE = _ESSAIS or env("AI_FAKE_PROVIDER", "0") == "1"
 IA_RESEAU_INTERDIT = _ESSAIS  # aucun appel réel pendant les tests, jamais
+
+# Connexion par le compte d'entreprise (docs/single_sign_on.md) : réglée dans l'outil (Paramètres › Connexion
+# d'entreprise) par un gestionnaire des espaces, éteinte par défaut. COMPANY_SIGN_IN=off : coupée par l'IT pour toute
+# l'installation (bouton retiré, mot de passe permis à tous : la porte de secours si le fournisseur est en panne).
+CONNEXION_ENTREPRISE_PERMISE = env("COMPANY_SIGN_IN", "on").strip().lower() not in ("off", "0", "no", "false")
+# Appels au fournisseur (connexion_entreprise/sortant.py) : délai de chaque appel, en secondes ; adresses en http et sur
+# la machine elle-même (localhost) permises seulement pour les essais et le développement (DEBUG) : en production, https
+CONNEXION_ENTREPRISE_DELAI = float(env("COMPANY_SIGN_IN_TIMEOUT", "5"))
+CONNEXION_ENTREPRISE_LOCAL = _ESSAIS or DEBUG
+# Copie externe des sauvegardes (parametres/copie_externe.py) : destination réglée dans l'outil (Paramètres › Hébergement).
+# La machine elle-même (127.0.0.1, ::1) n'est une destination permise que pour les essais et le développement.
+COPIE_EXTERNE_LOCAL = _ESSAIS or DEBUG
 
 # Journaux lisibles sur la sortie standard (docker compose logs) : date, niveau, origine, message.
 LOGGING = {

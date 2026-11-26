@@ -1,0 +1,49 @@
+{% load collecte %}
+{% comment %}Bloc « Mises à jour automatiques » de la page Hébergement (parametres/mise_a_jour_auto.py). La tâche planifiée de
+la machine (auto-update.sh) fait tout ; l'outil montre son dernier passage (fichier du dossier des données, entrée non
+sûre : seulement des textes de libellé et des valeurs contrôlées) et enregistre le choix de l'administrateur. Formulaire
+pour un gestionnaire des espaces ; les autres administrateurs voient l'état seul. Hors image Docker (hébergement
+géré, version tout-en-un) : pas disponible.{% endcomment %}
+<section class="bloc" id="mise-a-jour-auto" aria-labelledby="titre-maj-auto">
+  <h2 id="titre-maj-auto">{% libelle "admin.maj_auto.titre" %}</h2>
+  {% if not maj_auto.disponible %}
+    <p class="m-0">{% libelle "admin.maj_auto.non_disponible" %}</p>
+  {% else %}
+    <p class="aide-champ remonte">{% libelle "admin.maj_auto.aide" %}</p>
+    {% if maj_auto.invalide %}{% encart "avertissement" role="status" %}{% libelle "admin.maj_auto.invalide" %}{% endencart %}{% endif %}
+    {% if not maj_auto.posee %}
+      {% encart "avertissement" role="status" %}{% libelle "admin.maj_auto.sans_tache" %} <code>./install.sh --auto-update on</code>{# libelle-ok : commande technique #}{% endencart %}
+    {% elif maj_auto.silence %}
+      {% encart "avertissement" role="status" %}{% libelle "admin.maj_auto.silence" quand=maj_auto.dernier %}{% endencart %}
+    {% endif %}
+    <table class="table-mep infos-maj-auto">
+      <tr><th scope="row">{% libelle "admin.maj_auto.col.tache" %}</th><td>{{ maj_auto.tache_texte }}</td></tr>
+      <tr><th scope="row">{% libelle "admin.maj_auto.col.dernier" %}</th><td>{% if maj_auto.dernier %}{{ maj_auto.dernier }}{% else %}{% libelle "admin.maj_auto.jamais" %}{% endif %}</td></tr>
+      {% if maj_auto.etat_texte %}<tr><th scope="row">{% libelle "admin.maj_auto.col.resultat" %}</th><td>{{ maj_auto.etat_texte }}</td></tr>{% endif %}
+    </table>
+
+    {% if form_maj_auto %}
+    <form method="post" action="#mise-a-jour-auto" class="form-maj-auto" novalidate>{% csrf_token %}
+      <fieldset class="choix-maj-auto">
+        <legend>{{ form_maj_auto.mode.label }}</legend>
+        {% for choix in form_maj_auto.mode %}
+        <label class="case-option" for="{{ choix.id_for_label }}"><input type="radio" name="{{ choix.data.name }}" value="{{ choix.data.value }}" id="{{ choix.id_for_label }}"{% if choix.data.selected %} checked{% endif %} aria-describedby="aide-maj-auto-{{ choix.data.value }}"><span>{{ choix.choice_label }}</span></label>
+        <p class="aide-champ" id="aide-maj-auto-{{ choix.data.value }}">{% if choix.data.value == "automatic" %}{% libelle "admin.maj_auto.mode_aide.automatic" %}{% elif choix.data.value == "notify" %}{% libelle "admin.maj_auto.mode_aide.notify" %}{% else %}{% libelle "admin.maj_auto.mode_aide.off" %}{% endif %}</p>
+        {% endfor %}
+        {% for e in form_maj_auto.mode.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+      </fieldset>
+      <div class="champ{% if form_maj_auto.delai.errors %} en-erreur{% endif %}">
+        <label for="{{ form_maj_auto.delai.id_for_label }}">{{ form_maj_auto.delai.label }}</label>{{ form_maj_auto.delai }}
+        <p class="aide-champ" id="aide-maj-auto-delai">{% libelle "admin.maj_auto.delai.aide" %}</p>
+        {% for e in form_maj_auto.delai.errors %}<p class="erreur-champ" role="alert">{{ e }}</p>{% endfor %}
+      </div>
+      <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_mise_a_jour_auto">{% libelle "commun.enregistrer" %}</button></div>
+    </form>
+    {% else %}
+    <p class="m-0">{% libelle "admin.maj_auto.choix_actuel" %} <strong>{% if maj_auto.choix.mode == "automatic" %}{% libelle "admin.maj_auto.mode.automatic" %}{% elif maj_auto.choix.mode == "notify" %}{% libelle "admin.maj_auto.mode.notify" %}{% else %}{% libelle "admin.maj_auto.mode.off" %}{% endif %}</strong></p>
+    <p class="discret">{% libelle "admin.maj_auto.reserve_texte" %}</p>
+    {% endif %}
+    <p class="aide-champ">{% libelle "admin.maj_auto.journal_it" %} <code>auto-update.log</code>{# libelle-ok : nom de fichier #}</p>
+  {% endif %}
+  <div id="resultat-maj-auto" class="resultat-emails">{% for m in messages_maj_auto %}{% if m.level_tag == "error" %}{% encart "erreur" role="alert" %}{{ m }}{% endencart %}{% else %}{% encart "succes" role="status" %}{{ m }}{% endencart %}{% endif %}{% endfor %}</div>
+</section>

@@ -44,7 +44,8 @@ class PageTests(EspacesTestCase):
         rep = connecter(self.admin).get(URL)
         self.assertEqual(rep.status_code, 200)
         cles = [x["cle"] for x in rep.context["lignes"]]
-        self.assertEqual(cles, ["version", "base", "fichiers", "sauvegarde", "disque", "email", "taches", "migrations", "https"])
+        self.assertEqual(cles, ["version", "base", "fichiers", "sauvegarde", "copie_externe", "disque", "email", "taches", "migrations",
+                                "https"])
         self.assertEqual(etat_de(rep, "base"), SI.BON)
         self.assertEqual(etat_de(rep, "migrations"), SI.BON)
         self.assertEqual(etat_de(rep, "sauvegarde"), SI.A_REGARDER)  # aucune sauvegarde dans les tests

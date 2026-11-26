@@ -85,7 +85,9 @@ class LectureSeuleBalayageTests(Balayage):
         for u in (self.lecteur, self.auditeur):
             ouvertes[u.role] = {f"{ns}:{nom}" for ns, nom, motif in routes() if not LS.motif_refus(u, rf.get(self.url(motif)))}
             envois[u.role] = {f"{ns}:{nom}" for ns, nom, motif in routes() if not LS.motif_refus(u, rf.post(self.url(motif)))}
-        libres = {"None:login", "None:logout", "None:langue", "parametres:logo", "parametres:sante"}
+        libres = {"None:login", "None:logout", "None:langue", "parametres:logo", "parametres:sante",
+                  # connexion par le compte d'entreprise : aller vers le fournisseur et retour (hors de l'outil, comme login)
+                  "None:entreprise_debut", "None:entreprise_retour"}
         self.assertEqual(ouvertes["lecteur"] - libres, {f"collecte:{n}" for n in LS.PAGES_LECTEUR})
         self.assertEqual(ouvertes["auditeur"] - libres, {f"collecte:{n}" for n in LS.PAGES_AUDITEUR})
         self.assertEqual(LS.PAGES_AUDITEUR - LS.PAGES_LECTEUR,
@@ -203,6 +205,19 @@ class AutresRolesBalayageTests(Balayage):
                 yield ns, nom, motif
             elif ns == "serveur_mcp" and nom == "reglages":  # Paramètres › Assistants (docs/mcp.md)
                 yield ns, nom, motif
+            elif ns == "connexion_entreprise":  # Paramètres › Connexion d'entreprise (docs/single_sign_on.md)
+                yield ns, nom, motif
+
+    def sans_gestionnaire(self, essai):
+        """``essai`` joué avec l'administrateur de l'espace principal privé du rôle de gestionnaire des espaces (les
+        réglages de toute l'installation ne s'écrivent que par un gestionnaire), puis rôle rendu."""
+        from espaces.models import Compte
+
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=False)
+        try:
+            essai()
+        finally:
+            Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=True)
 
     def test_administration_refusee_au_contributeur_et_au_validateur(self):
         avant = instantane()
@@ -264,6 +279,36 @@ class AutresRolesBalayageTests(Balayage):
         self.client.force_login(self.auditeur)
         self.assertEqual(self.client.post(url).status_code, 403)
 
+    def test_connexion_entreprise_dans_le_balayage(self):
+        """Paramètres › Connexion d'entreprise (réglage de l'installation) : balayée ci-dessus pour le contributeur et le
+        validateur, et pour le lecteur et l'auditeur (tout envoi refusé) ; refusée aussi à un administrateur de l'espace
+        qui n'est pas gestionnaire des espaces (comme la page Espaces), ouverte au gestionnaire. Aller vers le fournisseur
+        et retour : hors de l'outil comme la page de connexion (``LIBRES``), sans rien écrire dans les tables de l'outil
+        tant que la connexion d'entreprise est éteinte (pas même une ligne d'historique : test_retour_refus_limites)."""
+        from espaces.models import Compte
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("connexion_entreprise:reglages_entreprise", admin)
+        self.assertTrue({"entreprise_debut", "entreprise_retour"} <= LS.LIBRES)
+        url = reverse("connexion_entreprise:reglages_entreprise")
+        avant = instantane()
+        for u in (self.lecteur, self.auditeur, self.contrib, self.validateur):
+            self.client.force_login(u)
+            self.assertEqual(self.client.get(url).status_code, 403, u.role)
+            self.assertEqual(self.client.post(url, {"action": "enregistrer", "actif": "on"}).status_code, 403, u.role)
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=False)
+        self.client.force_login(self.admin)
+        self.assertEqual(self.client.get(url).status_code, 403)
+        self.assertEqual(self.client.post(url, {"action": "enregistrer", "actif": "on"}).status_code, 403)
+        self.assertEqual(instantane(), avant)
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=True)
+        self.assertEqual(self.client.get(url).status_code, 200)
+        for u in (None, self.lecteur, self.contrib):  # éteinte : retour à la page de connexion, rien d'autre
+            self.client.logout()
+            if u is not None:
+                self.client.force_login(u)
+            self.assertEqual(self.client.get(reverse("entreprise_debut"))["Location"], reverse("login"))
+
     def test_comptes_en_lecture_seule_avec_attributions_dans_le_balayage(self):
         """Page des comptes en lecture seule qui ont encore des attributions : réservée à
         l'administrateur comme Comptes et Attributions ; balayée ci-dessus pour le contributeur et le validateur, et pour
@@ -310,6 +355,125 @@ class AutresRolesBalayageTests(Balayage):
         self.client.force_login(self.admin)
         self.assertEqual(self.client.post(url, {"action": "monnaie", "monnaie": "USD"}).status_code, 302)
         self.assertEqual(Instance.courante().monnaie, "USD")
+
+    def test_serveur_d_envoi_des_e_mails_dans_le_balayage(self):
+        """Serveur d'envoi des e-mails (Paramètres › Hébergement, parametres/envoi_emails.py) : même adresse que la page
+        Hébergement, balayée ci-dessus ; ses envois (réglage, effacement du mot de passe, e-mail de test) sont refusés à
+        tous les rôles sauf l'administrateur, et le réglage (de toute l'installation, au registre commun) seulement à un
+        gestionnaire des espaces : refusé à l'administrateur de l'espace principal qui ne l'est pas."""
+        from django.core import mail
+        from django.test import override_settings
+
+        from espaces.models import ServeurEnvoi
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("parametres:hebergement", admin)
+        url = reverse("parametres:hebergement")
+        corps = {"hote": "smtp.balayage.example", "port": "587", "securite": "starttls", "identifiant": "",
+                 "mot_de_passe": "Balayage-mdp", "expediteur": "envoi@balayage.example", "destinataire": "x@exemple.test"}
+        with override_settings(EMAIL_HOST=""):
+            for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+                self.client.force_login(u)
+                for action in ("reglage_emails", "effacer_mdp_emails", "tester_email"):
+                    self.assertEqual(self.client.post(url, {**corps, "action": action}).status_code, 403, f"{u.role} {action}")
+            self.assertFalse(ServeurEnvoi.objects.exists())
+            self.assertEqual(mail.outbox, [])
+            self.client.force_login(self.admin)
+            self.sans_gestionnaire(lambda: [self.assertEqual(self.client.post(url, {**corps, "action": a}).status_code, 403, a)
+                                            for a in ("reglage_emails", "effacer_mdp_emails")])
+            self.assertFalse(ServeurEnvoi.objects.exists())
+            self.assertEqual(self.client.post(url, {**corps, "action": "reglage_emails"}).status_code, 302)
+        self.assertEqual(ServeurEnvoi.objects.get().hote, "smtp.balayage.example")
+
+    def test_copie_externe_des_sauvegardes_dans_le_balayage(self):
+        """Copie externe des sauvegardes (Paramètres › Hébergement › Copie externe, parametres/copie_externe.py) : page
+        des Paramètres balayée ci-dessus ; ses envois (réglage, effacement du secret, essai, confirmation de la clé SFTP,
+        retrait) sont refusés à tous les rôles sauf l'administrateur, et seulement à un gestionnaire des espaces (refusés
+        à l'administrateur de l'espace principal qui ne l'est pas), réglage de toute l'installation au registre commun."""
+        from espaces.models import DestinationCopie
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("parametres:copie_externe", admin)
+        url = reverse("parametres:copie_externe")
+        corps = {"genre": "s3", "adresse": "https://stockage.balayage.example", "region": "", "compartiment": "balayage",
+                 "chemin": "", "style": "auto", "identifiant": "CLE", "secret": "Balayage-secret", "conserver": "0",
+                 "empreinte": "SHA256:x"}
+        avant = instantane()
+        for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+            self.client.force_login(u)
+            self.assertEqual(self.client.get(url).status_code, 403, u.role)
+            for action in ("enregistrer", "effacer_secrets", "essayer", "confirmer_cle", "retirer"):
+                self.assertEqual(self.client.post(url, {**corps, "action": action}).status_code, 403, f"{u.role} {action}")
+        self.assertFalse(DestinationCopie.objects.exists())
+        self.assertEqual(instantane(), avant)
+        self.client.force_login(self.admin)
+        self.sans_gestionnaire(lambda: [self.assertEqual(self.client.post(url, {**corps, "action": a}).status_code, 403, a)
+                                        for a in ("enregistrer", "effacer_secrets", "essayer", "confirmer_cle", "retirer")])
+        self.assertFalse(DestinationCopie.objects.exists())
+        self.assertEqual(self.client.post(url, {**corps, "action": "enregistrer"}).status_code, 302)
+        self.assertEqual(DestinationCopie.objects.get().compartiment, "balayage")
+
+    def test_alertes_par_e_mail_dans_le_balayage(self):
+        """Alertes par e-mail (Paramètres › Santé, parametres/alertes.py) : même adresse que la page Santé, balayée
+        ci-dessus ; ses envois (réglage, alerte d'essai) sont refusés à tous les rôles sauf l'administrateur ; le réglage
+        (de toute l'installation, au registre commun) seulement à un gestionnaire des espaces : refusé à l'administrateur
+        de l'espace principal qui ne l'est pas."""
+        from django.core import mail
+        from django.test import override_settings
+
+        from espaces.models import ReglageAlertes
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("parametres:sante_installation", admin)
+        url = reverse("parametres:sante_installation")
+        corps = {"actives": "on", "aux_comptes": "on", "adresses": "it@balayage.example"}
+        with override_settings(EMAIL_HOST="smtp.balayage.example"):
+            for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+                self.client.force_login(u)
+                for action in ("reglage_alertes", "tester_alertes"):
+                    self.assertEqual(self.client.post(url, {**corps, "action": action}).status_code, 403, f"{u.role} {action}")
+            self.assertFalse(ReglageAlertes.objects.exists())
+            self.assertEqual(mail.outbox, [])
+            self.client.force_login(self.admin)
+            self.sans_gestionnaire(lambda: self.assertEqual(
+                self.client.post(url, {**corps, "action": "reglage_alertes"}).status_code, 403))
+            self.assertFalse(ReglageAlertes.objects.exists())
+            self.assertEqual(self.client.post(url, {**corps, "action": "reglage_alertes"}).status_code, 302)
+        self.assertEqual(ReglageAlertes.objects.get().adresses, "it@balayage.example")
+
+    def test_mises_a_jour_automatiques_dans_le_balayage(self):
+        """Mises à jour automatiques (Paramètres › Hébergement, parametres/mise_a_jour_auto.py) : même adresse que la page
+        Hébergement, balayée ci-dessus ; l'envoi qui règle le choix (un fichier du dossier des données, pas une table :
+        ``instantane`` ne le voit pas) est refusé à tous les rôles sauf l'administrateur, et seulement à un gestionnaire
+        des espaces : refusé à l'administrateur de l'espace principal qui ne l'est pas."""
+        import os
+        import shutil
+        import tempfile
+        from pathlib import Path
+        from unittest import mock
+
+        from django.test import override_settings
+
+        from parametres import mise_a_jour_auto as MA
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("parametres:hebergement", admin)
+        url = reverse("parametres:hebergement")
+        corps = {"action": "reglage_mise_a_jour_auto", "mode": "automatic", "delai": "0"}
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        with override_settings(DOSSIER_DONNEES=tmp), mock.patch.dict(os.environ, {"DANS_DOCKER": "1"}):
+            avant = instantane()
+            for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+                self.client.force_login(u)
+                self.assertEqual(self.client.post(url, corps).status_code, 403, u.role)
+            self.assertFalse(MA.dossier().exists())
+            self.assertEqual(instantane(), avant)
+            self.client.force_login(self.admin)
+            self.sans_gestionnaire(lambda: self.assertEqual(self.client.post(url, corps).status_code, 403))
+            self.assertFalse(MA.dossier().exists())
+            self.assertEqual(self.client.post(url, corps).status_code, 302)
+            self.assertEqual(MA.lire_choix()["mode"], "automatic")
 
     def test_relances_reservees_au_validateur_et_a_l_admin(self):
         self.client.force_login(self.contrib)

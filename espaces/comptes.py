@@ -37,6 +37,19 @@ def role_index(u):
     return "admin" if u.is_superuser else u.role
 
 
+def est_gestionnaire(utilisateur):
+    """Seule règle de « gestionnaire des espaces » : compte connecté, copie active, compte du registre commun actif et
+    marqué gestionnaire. Lue par la page Espaces, la connexion d'entreprise et l'ÉCRITURE de tout réglage qui vaut pour
+    toute l'installation (serveur d'e-mails, alertes, mises à jour automatiques, copie externe des sauvegardes) : ces
+    réglages décident où partent les archives de tous les espaces et du registre commun, et les e-mails de tous. Il y a
+    toujours un gestionnaire actif (``doit_devenir_gestionnaire``), y compris dans une installation à un seul espace."""
+    from .models import Compte
+
+    if utilisateur is None or not getattr(utilisateur, "is_authenticated", False) or not utilisateur.is_active:
+        return False
+    return Compte.objects.filter(pk=utilisateur.pk, gestionnaire=True, actif=True).exists()
+
+
 def plus_grand_numero(code):
     """Plus grand numéro de copie dans un espace (0 si sa base est illisible)."""
     from referentiel.models import Utilisateur
@@ -140,6 +153,11 @@ def reconcilier(codes=None):
     with E.toutes_les_bases():
         for code in codes or codes_ouverts():
             alias = E.declarer(code)
+            if Utilisateur._meta.db_table not in connections[alias].introspection.table_names():
+                # base pas encore créée (registre restauré sur un serveur neuf, avant ses espaces) : l'espace est remis
+                # d'accord à sa propre restauration (sauvegardes._apres_restauration) ou au démarrage suivant
+                journal.warning("Space \"%s\": its database has no tables yet; it is reconciled when it is restored", code)
+                continue
             espace = Espace.objects.filter(code=code).first()
             comptes = {c.pk: c for c in Compte.objects.all()}
             for u in Utilisateur.objects.using(alias).order_by("pk"):

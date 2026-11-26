@@ -236,13 +236,27 @@ Elk antwoord is een voorstel met de markering “Voorgesteld door AI”. Er word
 
 ## De hosting en de back-ups controleren {#hosting}
 
-Ga naar **Beheer › Instellingen › Hosting**. De pagina toont de versie, de automatische back-up, de controle van de gegevens en de e-mailinstellingen. Klik op **Een back-up maken en downloaden** om meteen een back-up te maken. Het IT-team kopieert de back-ups naar een andere plek.
-
-Om in één oogopslag te zien of alles in orde is, gaat u naar **Beheer › Instellingen › Status**. Elke regel (versie, database, bestanden, laatste back-up, schijfruimte, e-mail, achtergrondtaken, update van de database, HTTPS) toont **Goed**, **Te controleren** of **Storing**, en wat te doen. De beheerder van een andere ruimte dan de hoofdruimte ziet dezelfde regels, maar de regels database en update van de database controleren alleen de eigen ruimte en het gemeenschappelijke accountregister, niet de andere ruimtes. Het detail voor IT (namen van de andere ruimtes, mappen op de schijf) ziet hij niet: de ruimtebeheerder ziet het. In **Instellingen › Hosting** toont het blok **Voor IT** hem niet de gegevensmap, de toegestane adressen, de databaseserver, de gebruikersnaam voor e-mail of de map van de back-ups.
+Ga naar **Beheer › Instellingen › Hosting**. De pagina toont de versie, de automatische back-up, de controle van de gegevens en de e-mailinstellingen. Klik op **Een back-up maken en downloaden** om meteen een back-up te maken. Het IT-team kopieert de back-ups naar een andere plek. Of een ruimtebeheerder stelt de **Kopie buiten de server** in: de tool kopieert dan zelf elke back-up naar S3-compatibele opslag of een SFTP-server die het IT-team levert, en waarschuwt u als een kopie mislukt.
 
 ![Instellingen, Hosting](../../screenshots/nl/hosting.png)
 
+![Instellingen, Hosting, Kopie buiten de server](../../screenshots/nl/hosting-external-copy.png)
+
+Om de e-mailserver in te stellen, gebruikt u het blok **E-mail** van dezelfde pagina. Voer de server, de poort, de beveiliging, de gebruikersnaam, het wachtwoord en het verzendadres in die het IT-team u geeft. Klik op **Opslaan** en daarna op **Een test-e-mail sturen**. Als de e-mail niet vertrekt, geeft een bericht de oorzaak in eenvoudige woorden. Deze instellingen gelden voor alle ruimtes: alleen een ruimtebeheerder kan ze wijzigen. Het wachtwoord wordt nooit meer getoond. Als het IT-team de e-mails in het instellingenbestand heeft ingesteld, toont het blok deze instellingen alleen-lezen.
+
+![Instellingen, Hosting, E-mail](../../screenshots/nl/hosting-emails.png)
+
+Om in één oogopslag te zien of alles in orde is, gaat u naar **Beheer › Instellingen › Status**. Elke regel (versie, database, bestanden, laatste back-up, schijfruimte, e-mail, achtergrondtaken, update van de database, HTTPS) toont **Goed**, **Te controleren** of **Storing**, en wat te doen. De beheerder van een andere ruimte dan de hoofdruimte ziet dezelfde regels, maar de regels database en update van de database controleren alleen de eigen ruimte en het gemeenschappelijke accountregister, niet de andere ruimtes. Het detail voor IT (namen van de andere ruimtes, mappen op de schijf) ziet hij niet: de ruimtebeheerder ziet het. In **Instellingen › Hosting** toont het blok **Voor IT** hem niet de gegevensmap, de toegestane adressen, de databaseserver, de gebruikersnaam voor e-mail of de map van de back-ups.
+
 ![Instellingen, Status](../../screenshots/nl/admin-health.png)
+
+De tool kan u ook per e-mail waarschuwen. Onderaan **Instellingen › Status** zet een ruimtebeheerder de **Waarschuwingen per e-mail** aan en kiest de ontvangers: standaard de beheerders van de hoofdruimte en de ruimtebeheerders, plus andere adressen, bijvoorbeeld de mailbox van het IT-team. Als er een probleem verschijnt (mislukte of te late back-up, schijf bijna vol, gestopte achtergrondtaak, mislukte e-mails…), krijgen de ontvangers een e-mail met wat ze moeten doen. Daarna krijgen ze hoogstens één keer per dag een herinnering zolang het probleem duurt, en een e-mail als het is opgelost. Op een nieuwe installatie staan de waarschuwingen meteen aan; een installatie die al vóór de waarschuwingen bestond, houdt ze uit tot iemand ze aanzet. De pagina zegt welk geval geldt. Klik op **Testwaarschuwing sturen** om ze te controleren. Als de server uit staat, kan de tool niemand waarschuwen.
+
+![Instellingen, Status, Waarschuwingen per e-mail](../../screenshots/nl/admin-health-alerts.png)
+
+Het blok **Automatische updates** van **Instellingen › Hosting** toont de laatste controle van de server en het resultaat. Een ruimtebeheerder kiest wat er gebeurt als er een nieuwe versie verschijnt: **Automatisch installeren** ('s nachts, na een back-up; als de nieuwe versie niet werkt, gaat de server terug naar de vorige versie), **Alleen melden** (het IT-team installeert hem) of **Uit**, en hoeveel dagen er na de publicatie wordt gewacht (standaard 3). Een taak van de server doet het werk, nooit de tool zelf. Als het scherm zegt dat de taak niet is geïnstalleerd, vraag het IT-team dan om haar in te stellen.
+
+![Instellingen, Hosting, Automatische updates](../../screenshots/nl/hosting-auto-updates.png)
 
 ## De totalen van elk niveau bekijken {#consolidation}
 
@@ -279,6 +293,20 @@ Bevat het bestand cijfers voor berekende KPI's van een niet-afgesloten periode, 
 ## De ruimtes beheren {#spaces}
 
 **Ruimtes** toont de ruimtes van deze installatie. Elke ruimte heeft eigen gegevens: referentiekaders, organisaties, campagnes, waarden, bewijsstukken en identiteit. De accounts worden gedeeld: een persoon meldt zich één keer aan.
+
+## Inloggen met het bedrijfsaccount {#company-sign-in}
+
+Een ruimtebeheerder kan iedereen laten inloggen met zijn bedrijfsaccount (OpenID Connect, bijvoorbeeld Microsoft Entra ID, Google, Okta of Keycloak). Het bedrijfsaccount bewijst alleen wie de persoon is: accounts, rollen en toewijzingen maakt u nog steeds in de tool aan. Iemand heeft een actief account met hetzelfde e-mailadres nodig.
+
+1. Ga naar **Beheer › Instellingen › Bedrijfslogin**.
+2. Kopieer de **Omleidings-URI** naar de applicatie bij uw provider. Voer het **Adres van de provider (issuer)**, de **Client-ID** en het **Clientgeheim** in.
+3. Klik op **De provider controleren**. Selecteer **Inloggen met het bedrijfsaccount toestaan** en klik op **Opslaan**.
+
+![Instellingen, Bedrijfslogin](../../screenshots/nl/admin-company-sign-in.png)
+
+Staat het aan, dan houden alleen de ruimtebeheerders hun wachtwoord, als noodaccounts. **Uitloggen** sluit de sessie alleen in de tool, niet bij de provider. De **Inloggeschiedenis** toont de methode van elke login.
+
+![Inlogpagina, Inloggen met uw bedrijfsaccount](../../screenshots/nl/login-company.png)
 
 ## Elke wijziging volgen {#history}
 

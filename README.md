@@ -30,6 +30,12 @@ anything. A guide for each role is in [`docs/guides/`](docs/guides/README.md), a
 The rules that the tool follows to calculate totals and formulas, and to accept an entry, are in
 [`docs/calculation_rules.md`](docs/calculation_rules.md).
 
+## What is new in version 1.1
+
+For IT teams: installation in one command, signed image and installation files, installation without Internet
+access, company certificates, and sign-in with the company account (OpenID Connect). For small teams: emails set in
+the tool, email alerts, automatic updates, and an external copy of the backups. See [`CHANGELOG.md`](CHANGELOG.md).
+
 ## Try Probant in 5 minutes
 
 You need a computer with [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2.24 or later.
@@ -68,11 +74,32 @@ The model of the standard (the names of its indicators) is translated, its long 
 
 ## Install Probant
 
+On a Linux server, one command installs the tool with the published image, in about 2 minutes, without Git. If Docker
+is missing on Debian or Ubuntu, the command offers to install it:
+
+```bash
+curl -fsSL https://github.com/Probant-Reporting/probant/raw/main/get.sh | sudo sh
+```
+
+To check the server first, without any change, add `--check` (after `sh -s --`). To read the script before you run
+it, download it first, then run `sudo sh get.sh`. For HTTPS with a domain name, add `--domain reporting.example.com`
+(after `sh -s --` in the command above). The command checks each file against the signed list of the release, and
+sets up the automatic updates (`--auto-update off` to install without them).
+
 The installation guide tells you, step by step, how to install the tool on a server with Docker, set up HTTPS and
 emails, back up and restore: [`docs/installation.md`](docs/installation.md). French version:
 [`docs/fr/installation.md`](docs/fr/installation.md).
 
 To install without a server of your own, on Clever Cloud, see [`docs/managed_hosting.md`](docs/managed_hosting.md).
+For a server without Internet access, the guide describes the offline package of each release. To move the data of
+the all-in-one version (Windows, Mac) to a server, see [`docs/from_pc_to_server.md`](docs/from_pc_to_server.md).
+
+People can sign in with their company account, through OpenID Connect: see
+[`docs/single_sign_on.md`](docs/single_sign_on.md). It is off by default, and the accounts stay managed in the tool.
+
+Before the installation, give your IT team [`docs/it_request.md`](docs/it_request.md) (what to prepare), and your
+security team [`docs/security_overview.md`](docs/security_overview.md) (architecture, data, network flows, and a
+security questionnaire).
 
 A new installation is empty. When you first open the tool, the **Setup** wizard asks you to create the administrator
 account. Do it right after the installation, before you share the address of the tool. To evaluate the tool with the
@@ -80,8 +107,10 @@ demo first, load it before that step: the guide says how, and how to start empty
 
 ## Update Probant
 
-To update an installation, run `./update.sh` in the folder of the tool. The script backs up each space first, then the
-tool applies the changes to the database when it starts. The changes of each version are in
+To update an installation, run `./update.sh` in the folder of the tool. After an installation with one command, it
+installs the latest published version, and a timer of the server can install each new version at night, with a
+backup first and a way back if the new version does not start. The script backs up each space first, then the
+tool applies the changes to the database when it starts. You can update from any published version directly. The changes of each version are in
 [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Languages

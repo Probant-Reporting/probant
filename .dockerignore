@@ -29,3 +29,5 @@ backups/
 # complète, jamais dans l'image (test : parametres/test_dockerignore_copies.py)
 **/*.zip
 **/*.dump
+# certificats donnés par l'IT à une installation (autorités, certificat HTTPS et sa clé privée) : jamais dans l'image
+certificates/

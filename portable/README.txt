@@ -3,6 +3,8 @@ Probant - all-in-one version (to try the tool on one computer, no installation, 
 TRIAL VERSION: for one person on one computer, to discover the tool. Not for use by several people, and not for
 data that you must keep. To use Probant as a team, install it on a server:
 https://github.com/Probant-Reporting/probant/blob/main/docs/installation.md
+To move your data from this computer to a server without losing anything:
+https://github.com/Probant-Reporting/probant/blob/main/docs/from_pc_to_server.md
 
 1. Extract the .zip (Windows: right-click > Extract All; Mac: double-click), for example into Documents.
 2. Double-click Start.bat (Windows) or Start.command (Mac). A window opens, then the browser opens.

@@ -10,12 +10,20 @@ case "${1:-server}" in
   server|serveur) ;;
   *) exec "$@" ;;
 esac
+# certificate authorities added by the IT (EXTRA_CA_CERTS: the folder certificates/ca of the installation, mounted in
+# /etc/probant/ca): joined once with those of the system in /data/ca-bundle.pem, then given by SSL_CERT_FILE to every
+# process below, for every outgoing connection (email server, HTTPS). A file that is not an authority is reported in the
+# log and ignored; the tool starts anyway. Nothing added: nothing changes.
+if BUNDLE=$(python -m config.autorites_certificats) && [ -n "$BUNDLE" ]; then
+  export SSL_CERT_FILE="$BUNDLE" REQUESTS_CA_BUNDLE="$BUNDLE" PROBANT_CA_BUNDLE="$BUNDLE"
+fi
 python manage.py startup
 # automatic backups: enabling, frequency, time and number kept are set in the tool (Settings › Hosting)
 python manage.py backup --schedule &
 # e-mail reminders: sent only if the responsible team has enabled them (Dashboard › Reminders)
 python manage.py send_reminders --schedule &
-# data check: consistency of each space's database every night at DATA_CHECK_TIME (read only; Settings › Hosting, /sante/)
+# data check: consistency of each space's database every night at DATA_CHECK_TIME (read only; Settings › Hosting, /sante/),
+# and the email alerts about the health of the installation every 15 minutes, if they are on (Settings › Health)
 python manage.py check_data --schedule &
 # large value imports (above BACKGROUND_IMPORT_ROWS rows) started in the tool: run here, with a progress bar in the tool
 python manage.py run_imports --schedule &

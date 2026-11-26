@@ -31,8 +31,10 @@ Ces guides sont la traduction française des guides anglais. **Le reste de la do
 - bibliothèque de référentiels : [library.md](../library.md)
 - traductions : [translation.md](../translation.md)
 
-L'équipe qui pilote le reporting développe l'outil avec Claude. Cette équipe crée et gère les comptes dans l'outil. Il
-n'y a pas d'authentification unique (SSO). L'IT fournit l'hébergement, le nom de domaine avec HTTPS, le compte SMTP
+L'équipe qui pilote le reporting développe l'outil avec Claude. Cette équipe crée et gère les comptes dans l'outil.
+Chacun peut aussi se connecter avec son compte d'entreprise (OpenID Connect, éteint par défaut,
+[connexion_entreprise.md](connexion_entreprise.md)) : le fournisseur prouve seulement l'identité, l'outil ne crée aucun
+compte. L'IT fournit l'hébergement, le nom de domaine avec HTTPS, le compte SMTP
 pour les e-mails et la copie externe des sauvegardes.
 
 ## Essayer l'outil sur un ordinateur
@@ -153,7 +155,13 @@ Avec Docker, ajoutez `docker compose exec web` devant chaque commande. Dans un C
 
 | Pour… | Commande |
 |---|---|
+| Installer en une commande (serveur) | `curl -fsSL https://github.com/Probant-Reporting/probant/raw/main/get.sh \| sudo sh` (`--check` : vérifier le serveur seulement) |
+| Vérifier un serveur avant l'installation | `./install.sh --check` ou `sh check.sh` (ne change rien) |
+| Installer ou mettre à jour sans accès à Internet | `./install.sh --offline probant-image-X.Y.Z.tar.gz`, `./update.sh --offline <archive>` |
 | Mettre à jour (Docker) | `./update.sh` (sauvegarde d'abord, migrations au démarrage) |
+| Mises à jour automatiques (serveur) | `sudo ./install.sh --auto-update on` ou `off` ; `./auto-update.sh --status` |
+| Copier tout de suite les sauvegardes vers la destination externe | `python manage.py backup --copy` |
+| Envoyer les alertes par e-mail (sans les tâches de fond) | `python manage.py check_data --alerts`, toutes les 15 minutes |
 | Faire une sauvegarde maintenant | `python manage.py backup` (liste : `backup --list`) |
 | Restaurer une archive | `python manage.py restore backup-20261026-023000-auto.zip` |
 | Charger la démo | `python manage.py load_demo` (repartir de zéro : `--reset`, deux espaces : `--spaces` ; seulement sur une base vide ou déjà faite par la commande, sinon refus, sauf `--force-on-existing-data`) |
@@ -175,7 +183,14 @@ Les anciens noms français des commandes (`sauvegarde`, `restauration`, `charger
 
 ## Pour l'IT
 
+Avant l'installation, donnez à l'IT [demande_it.md](demande_it.md) (ce qu'il faut préparer) et à l'équipe sécurité
+[dossier_securite.md](dossier_securite.md) (architecture, données, flux réseau, questionnaire de sécurité).
+
 Pour surveiller l'outil, utilisez ces repères :
+
+- L'outil envoie lui-même des alertes par e-mail sur sa santé (**Administration › Paramètres › Santé**), allumées dès le
+  départ sur une installation neuve. Le serveur d'e-mails se règle dans **Administration › Paramètres › Hébergement**,
+  ou dans `.env` (`SMTP_HOST` passe alors en premier).
 
 - `GET /sante/` répond `200` quand tout va bien, et `503` sinon (base ou stockage indisponible). Cette adresse ne
   demande pas de connexion et ne montre aucune donnée sensible.

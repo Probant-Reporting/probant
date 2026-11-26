@@ -88,6 +88,8 @@ def point(request):
         utilisateur, jeton = JT.authentifier(JT.lire_entete(request.headers.get("Authorization")))
     except JT.JetonRefuse as e:
         noter_refus(ESP.code_courant(), e.cause)
+        if e.entreprise:  # jeton valable, accès retiré par la connexion d'entreprise : 403, avec la raison
+            return P.erreur(None, P.SERVER_ERROR, libelle("mcp.refus.entreprise"), {"reason": "company_sign_in"}, http=403)
         return refus_jeton()
     request.user = utilisateur
     with ESP.acteur(utilisateur.pk), L.pour(utilisateur):
@@ -180,9 +182,12 @@ def configurations(url, clair):
 
 def contexte_compte(request, plus=None):
     """Ce que montre la carte « Assistants » de Mon compte."""
+    from connexion_entreprise import regles as RE
+
     reglage = ReglageMCP.courant()
     durees = JT.durees_proposees(reglage)
     return {"mcp": {"actif": reglage.actif, "ecriture": reglage.ecriture, "jetons": list(JT.actifs(request.user)),
+                    "entreprise": reglage.actif and not RE.assistants_permis(request.user.pk),
                     "durees": durees, "duree_defaut": JT.duree_par_defaut(durees), "adresse": adresse(request),
                     "max": JT.JETONS_MAX, **(plus or {})}}
 

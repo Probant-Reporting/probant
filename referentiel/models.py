@@ -830,17 +830,25 @@ class HistoriqueConnexion(models.Model):
     Paramètres › Hébergement (``Instance.connexions_jours``), puis effacée par le ménage de la nuit. Le strict nécessaire :
     la date, le compte (s'il a une copie dans cet espace), le résultat. Jamais de mot de passe, jamais d'adresse réseau,
     jamais l'identifiant tapé : seulement son empreinte (``empreinte``, HMAC tronqué), qui permet de voir des essais
-    répétés avec le même identifiant sans le montrer (un mot de passe tapé par erreur dans le champ de l'identifiant)."""
+    répétés avec le même identifiant sans le montrer (un mot de passe tapé par erreur dans le champ de l'identifiant).
+    ``methode`` : mot de passe ou compte d'entreprise (connexion_entreprise/) ; ``motif`` : cause courte d'un refus du
+    compte d'entreprise (jamais de jeton ni de réponse du fournisseur)."""
 
     class Resultat(models.TextChoices):
         REUSSIE = "reussie", "Réussie"
         ECHEC = "echec", "Manquée"
         BLOQUEE = "bloquee", "Bloquée : trop d'essais"
 
+    class Methode(models.TextChoices):
+        MOT_DE_PASSE = "mot_de_passe", "Mot de passe"
+        ENTREPRISE = "entreprise", "Compte d'entreprise"
+
     date = models.DateTimeField(auto_now_add=True, db_index=True)
     utilisateur = models.ForeignKey(Utilisateur, null=True, blank=True, on_delete=models.SET_NULL, related_name="+")
     resultat = models.CharField(max_length=10, choices=Resultat.choices)
     empreinte = models.CharField(max_length=16, blank=True)
+    methode = models.CharField(max_length=12, choices=Methode.choices, default=Methode.MOT_DE_PASSE)
+    motif = models.CharField(max_length=16, blank=True)
 
     class Meta:
         verbose_name = "connexion"

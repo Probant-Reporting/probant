@@ -209,6 +209,16 @@ class StructureImportsTests(SimpleTestCase):
         casses = imports_casses(self.projet)
         self.assertEqual(casses, [], "\n".join(f"{f}:{l} {t}" for f, l, t in casses))
 
+    def test_qa_est_un_paquet_ordinaire(self):
+        """Les scripts de ``qa/`` s'importent entre eux (``from qa import migration_rehearsal``) : ``qa`` est un paquet
+        ordinaire (``qa/__init__.py``), que l'analyse sait résoudre et qu'aucun autre paquet ``qa`` installé ne peut
+        masquer (un paquet d'espace de noms passe après tout paquet ordinaire du même nom dans ``sys.path``)."""
+        import importlib.util
+
+        spec = importlib.util.find_spec("qa")
+        self.assertIsNotNone(spec.origin, "qa est un paquet d'espace de noms (pas de qa/__init__.py)")
+        self.assertEqual(Path(spec.origin), RACINE / "qa" / "__init__.py")
+
     def test_sens_d_import_absents_restent_absents(self):
         sens = sens_d_import(self.projet)
         for couple in sorted(SENS_ABSENTS):

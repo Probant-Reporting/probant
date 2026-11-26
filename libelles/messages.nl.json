@@ -139,5 +139,6 @@
  "messages.tableau.liste_inconnue": "Kolom {n}: de lijst “{liste}” bestaat niet (geef de code van een keuzelijst op).",
  "messages.attribution.pas_validateur": "{nom} kan geen validatortoewijzing krijgen: dat kan alleen een actief account met de rol validator of beheerder.",
  "messages.attribution.validateur_calcule": "{kpi} wordt berekend: er is niets te valideren.",
- "messages.attribution.validateur_niveau": "{kpi} wordt ingevoerd op niveau {niveau}: wijs de validator toe op dit niveau of hoger."
+ "messages.attribution.validateur_niveau": "{kpi} wordt ingevoerd op niveau {niveau}: wijs de validator toe op dit niveau of hoger.",
+ "messages.relances.echec.mot_de_passe": "het opgeslagen wachtwoord van de e-mailserver kan niet meer worden gelezen (voer het opnieuw in bij Instellingen › Hosting)"
 }

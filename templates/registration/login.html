@@ -4,6 +4,12 @@
    E-mail (aria-describedby) : le lecteur d'écran les lit avec le champ qui reçoit le focus.{% endcomment %}
 {% block messages %}{% endblock %}
 {% block contenu %}
+{% if connexion_entreprise %}<style nonce="{% jeton_csp %}">
+  .connexion-entreprise { margin-bottom: 18px; }
+  .connexion-entreprise .bouton-large { margin-top: 0; min-height: 44px; }
+  .separateur-connexion { display: flex; align-items: center; gap: 12px; margin: 18px 0 0; color: var(--texte-doux); font-size: var(--taille-moyenne); }
+  .separateur-connexion::before, .separateur-connexion::after { content: ""; flex: 1; border-top: 1px solid var(--bord); }
+</style>{% endif %}
 <div class="page-connexion">
   <form method="post" class="carte carte-connexion">
     {% csrf_token %}
@@ -16,12 +22,19 @@
     <div class="corps-connexion">
     {% if messages %}<div id="message-connexion">{% for m in messages %}<p class="encart {% if m.tags == 'error' %}encart-erreur{% elif m.tags == 'success' %}encart-succes{% else %}encart-avertissement{% endif %}">{{ m|premiere_phrase_gras }}</p>{% endfor %}</div>{% endif %}
     {% if form.bloquee %}{% encart "erreur" id="erreur-connexion" role="alert" %}{% libelle "cadre.connexion.trop_essais" contact=instance.contact %}{% endencart %}
+    {% elif form.entreprise_exigee %}{% encart "erreur" id="erreur-connexion" role="alert" %}{% libelle "cadre.connexion.entreprise.incorrect" %}{% endencart %}
     {% elif form.errors %}{% encart "erreur" id="erreur-connexion" role="alert" %}{% libelle "cadre.connexion.incorrect" %}{% endencart %}{% endif %}
+    {% comment %}Compte d'entreprise (connexion_entreprise/flux.py) : un lien, pas un envoi de formulaire (la politique des
+    contenus garde « form-action 'self' ») ; puis la connexion par mot de passe, toujours là (comptes de secours).{% endcomment %}
+    {% if connexion_entreprise %}<div class="connexion-entreprise">
+      <a class="bouton bouton-large" id="bouton-entreprise" href="{% url 'entreprise_debut' %}{% if next %}?next={{ next|urlencode }}{% endif %}">{% icone "building" %} {% if connexion_entreprise.libelle %}{{ connexion_entreprise.libelle }}{% else %}{% libelle "cadre.connexion.entreprise.bouton_defaut" %}{% endif %}</a>
+      <p class="separateur-connexion"><span>{% libelle "cadre.connexion.entreprise.ou" %}</span></p>
+    </div>{% endif %}
     {# l'erreur est reliée aux deux champs (aria-describedby, aria-invalid) : le lecteur d'écran la lit avec le champ E-mail #}
     <div class="champ"><label for="id_username">{% libelle "cadre.connexion.email" %}</label><input type="text" name="username" id="id_username"{% if messages or form.errors or form.bloquee %} aria-describedby="{% if messages %}message-connexion{% endif %}{% if messages and form.errors or messages and form.bloquee %} {% endif %}{% if form.errors or form.bloquee %}erreur-connexion{% endif %}"{% endif %}{% if form.errors or form.bloquee %} aria-invalid="true"{% endif %} autofocus required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" value="{{ form.username.value|default:'' }}"></div>
     <div class="champ"><label for="id_password">{% libelle "cadre.connexion.mot_de_passe" %}</label><input type="password" name="password" id="id_password"{% if form.errors or form.bloquee %} aria-describedby="erreur-connexion" aria-invalid="true"{% endif %} required autocomplete="current-password"></div>
     <input type="hidden" name="next" value="{{ next }}">
-    <button type="submit" class="bouton-large">{% libelle "cadre.connexion.bouton" %}</button>
+    <button type="submit" class="bouton-large{% if connexion_entreprise %} secondaire{% endif %}">{% libelle "cadre.connexion.bouton" %}</button>
     </div>
     <div class="aide-connexion">
       <span class="icone-aide" aria-hidden="true">{% icone "circle-help" %}</span>

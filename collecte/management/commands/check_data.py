@@ -2,7 +2,10 @@
 
     python manage.py check_data              chaque espace actif (SPACE=<code> : un seul), résultat gardé
     python manage.py check_data --json       même chose, sortie JSON
-    python manage.py check_data --schedule   chaque nuit à DATA_CHECK_TIME (lancé par l'image Docker)
+    python manage.py check_data --schedule   chaque nuit à DATA_CHECK_TIME (lancé par l'image Docker), et les alertes par
+                                             e-mail de la santé de l'installation toutes les 15 minutes
+    python manage.py check_data --alerts     seulement un passage des alertes par e-mail (tâche planifiée « cron » d'un
+                                             hébergement sans tâche de fond ; rien si les alertes sont éteintes)
 
 Code de sortie 1 si une erreur est trouvée (supervision, cron).
 """
@@ -28,6 +31,9 @@ class Command(BaseCommand):
                             help="Do not keep the result (Settings > Hosting and /sante/ keep showing the previous one).")
         parser.add_argument("--schedule", "--planifier", dest="planifier", action="store_true",
                             help="Run forever: a check of each space every day at DATA_CHECK_TIME.")
+        parser.add_argument("--alerts", "--alertes", dest="alertes", action="store_true",
+                            help="Only send the email alerts about the health of the installation, if they are on "
+                                 "(Settings > Health) and if their time has come (every 15 minutes at most).")
         parser.add_argument("--time", "--heure", dest="heure", default=None, metavar="HH:MM",
                             help="With --schedule: time of the daily check (default: DATA_CHECK_TIME, 03:30).")
 
@@ -38,6 +44,9 @@ class Command(BaseCommand):
     def _handle(self, **o):
         if o["planifier"]:
             CD.planifier(o["heure"])
+            return
+        if o["alertes"]:
+            self._alertes()
             return
         resultats = []
         for _ in ESP.chaque_espace():  # tous les espaces actifs (SPACE=<code> : un seul)
@@ -51,8 +60,24 @@ class Command(BaseCommand):
                 self._afficher(r)
         if o["json"]:
             self.stdout.write(json.dumps(resultats if len(resultats) != 1 else resultats[0], ensure_ascii=False, indent=1, default=str))
+        if not o["json"]:
+            self._alertes()
         if any(r["errors"] for r in resultats):
             sys.exit(1)
+
+    def _alertes(self):
+        """Un passage des alertes par e-mail (parametres/alertes.py) : jamais d'erreur qui change le code de sortie."""
+        from parametres import alertes
+
+        try:
+            r = alertes.passage()
+        except Exception:  # noqa: BLE001 - journalisé ; le contrôle reste le résultat de la commande
+            alertes.journal.exception("Email alerts failed")
+            return
+        if r.get("fait"):
+            self.stdout.write(f"Email alerts: {len(r['nouveaux'])} new, {len(r['toujours'])} still open, "
+                              f"{len(r['resolus'])} resolved, {r['envoyes']} email(s) sent"
+                              + (f" (failure: {r['erreur']})" if r["erreur"] else ""))
 
     def _afficher(self, r):
         self.stdout.write(f"Space \"{r['space']}\": {r['errors']} error(s), {r['warnings']} warning(s), {r['infos']} info "

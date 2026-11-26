@@ -124,7 +124,19 @@ class VersionToutEnUnTests(SimpleTestCase):
         self.assertIn("Not for use by several people", lisez_moi)
 
 
+# version d'une action : étiquette majeure (@v4) ou version exacte (@v4.1.4, plus stricte, pour une action qui ne publie
+# pas d'étiquette majeure) ; jamais une branche, un motif (@v4.x) ni une version incomplète (@v4.1)
+VERSION_D_ACTION = r"@v\d+(\.\d+\.\d+)?$"
+
+
 class SecuriteDesWorkflowsTests(SimpleTestCase):
+    def test_motif_des_versions_d_action(self):
+        for bonne in ("actions/checkout@v7", "sigstore/cosign-installer@v4.1.4"):
+            self.assertRegex(bonne, VERSION_D_ACTION)
+        for mauvaise in ("actions/checkout@main", "actions/checkout@v4.x", "actions/checkout@v4.1", "actions/checkout",
+                         "actions/checkout@v4.1.4-rc1", "actions/checkout@4.1.4", "actions/checkout@latest"):
+            self.assertNotRegex(mauvaise, VERSION_D_ACTION)
+
     def test_permissions_et_actions(self):
         for p in sorted(WORKFLOWS.glob("*.yml")):
             t = p.read_text(encoding="utf-8")
@@ -133,7 +145,7 @@ class SecuriteDesWorkflowsTests(SimpleTestCase):
                 self.assertNotRegex(t, r"pull_request_target", "pull_request_target donnerait les secrets aux forks")
                 self.assertRegex(t, r"(?m)^concurrency:", "une exécution à la fois par branche ou par version")
                 for action in re.findall(r"uses: ([^\s]+)", t):
-                    self.assertRegex(action, r"@v\d+$", f"{action} : version majeure fixée, jamais une branche")
+                    self.assertRegex(action, VERSION_D_ACTION, f"{action} : version majeure ou exacte fixée, jamais une branche")
                 # les entrées d'une exécution à la demande ne vont jamais telles quelles dans un script
                 for ligne in t.splitlines():
                     if "${{ inputs." in ligne or "${{ github.event.release." in ligne:

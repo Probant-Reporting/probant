@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load collecte %}
 {% block titre %}{% libelle "admin.sante.titre" %}{% endblock %}
+{% block messages %}{% if messages_haut %}<ul class="messages">{% for m in messages_haut %}<li class="{{ m.tags }}">{{ m|premiere_phrase_gras }}</li>{% endfor %}</ul>{% endif %}{% endblock %}
 {% block contenu %}
 {% include "collecte/administration/_nav.html" %}
 {% include "parametres/_sous_nav.html" %}
@@ -27,5 +28,51 @@ du disque) n'est montré qu'au gestionnaire des espaces et à l'administrateur d
   </table>
   <p class="discret">{% if not detail_permis %}{% libelle "admin.sante.note_espace" %}{% elif avec_detail %}{% libelle "admin.sante.note_detail" %}{% endif %}
     <a href="{% url 'parametres:hebergement' %}">{% libelle "admin.sante.lien_hebergement" %}</a></p>
+
+  {% comment %}Alertes par e-mail (parametres/alertes.py) : les lignes ci-dessus qui passent en panne ou à regarder
+  partent par e-mail. Réglage de toute l'installation : formulaire pour qui voit le détail de l'installation, état seul
+  pour les autres administrateurs.{% endcomment %}
+  <section class="bloc bloc-alertes" id="alertes" aria-labelledby="titre-alertes">
+    <h2 id="titre-alertes">{% libelle "admin.alertes.titre" %}</h2>
+    <p class="aide-champ remonte">{% libelle "admin.alertes.aide" minutes=alertes.minutes %}</p>
+    {% if alertes.actives and not alertes.envoi %}
+      {% encart "avertissement" role="status" %}{% libelle "admin.alertes.sans_envoi" %} <a href="{% url 'parametres:hebergement' %}#emails">{% libelle "admin.alertes.sans_envoi_lien" %}</a>{% endencart %}
+    {% elif alertes.actives %}
+      {% encart "succes" %}{% if detail_permis %}{% libelle "admin.alertes.etat_on" n=alertes.nb %}{% else %}{% libelle "admin.alertes.etat_on_court" %}{% endif %}{% endencart %}
+    {% else %}
+      <p><strong>{% libelle "admin.alertes.etat_off" %}</strong></p>
+    {% endif %}
+    {% if alertes.pourquoi %}<p class="discret" id="pourquoi-alertes">{{ alertes.pourquoi }}</p>{% endif %}
+    {% if alertes.echec_le %}{% encart "avertissement" role="status" %}{% libelle "admin.alertes.echec" quand=alertes.echec_le|date_heure_courte %} {{ alertes.echec }}{% if detail_permis and alertes.echec_resume %} <span class="discret">({{ alertes.echec_resume }})</span>{% endif %}{% endencart %}{% endif %}
+    {% if alertes.envoye_le %}<p class="discret">{% libelle "admin.alertes.dernier" quand=alertes.envoye_le|date_heure_courte %}</p>{% endif %}
+
+    {% if form_alertes %}
+    <form method="post" action="#alertes" class="form-alertes" novalidate>{% csrf_token %}
+      <label class="case-option"><input type="checkbox" name="actives" id="id_actives"{% if form_alertes.actives.value %} checked{% endif %}><span>{% libelle "admin.alertes.form.actives" %}</span></label>
+      <fieldset class="destinataires-alertes">
+        <legend>{% libelle "admin.alertes.form.destinataires" %}</legend>
+        <label class="case-option"><input type="checkbox" name="aux_comptes" id="id_aux_comptes"{% if form_alertes.aux_comptes.value %} checked{% endif %} aria-describedby="aide-alertes-comptes"><span>{% libelle "admin.alertes.form.aux_comptes" %}</span></label>
+        <p class="aide-champ remonte" id="aide-alertes-comptes">{% if alertes.comptes %}{% libelle "admin.alertes.form.aux_comptes_aide" n=alertes.comptes|length %} {% for c in alertes.comptes %}{{ c.2 }}{% if not forloop.last %}, {% endif %}{% endfor %}.{% else %}{% libelle "admin.alertes.form.aux_comptes_aucun" %}{% endif %}</p>
+        <div class="champ{% if form_alertes.adresses.errors %} en-erreur{% endif %}">
+          <label for="{{ form_alertes.adresses.id_for_label }}">{{ form_alertes.adresses.label }}</label>{{ form_alertes.adresses }}
+          <p class="aide-champ" id="aide-alertes-adresses">{% libelle "admin.alertes.form.adresses_aide" %}</p>
+          {% for e in form_alertes.adresses.errors %}<p class="erreur-champ"{% if forloop.first %} id="erreur-alertes-adresses"{% endif %} role="alert">{{ e }}</p>{% endfor %}
+        </div>
+      </fieldset>
+      <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_alertes">{% libelle "commun.enregistrer" %}</button></div>
+    </form>
+    {% elif detail_permis %}
+    <p class="discret">{% libelle "admin.alertes.reserve_texte" %}</p>
+    {% endif %}
+    {% if detail_permis %}
+    <div id="resultat-alertes" class="resultat-emails">{% for m in messages_alertes %}{% if m.level_tag == "error" %}{% encart "erreur" role="alert" %}{{ m }}{% endencart %}{% else %}{% encart "succes" role="status" %}{{ m }}{% endencart %}{% endif %}{% endfor %}</div>
+    <form method="post" action="#alertes" class="essai-alertes">{% csrf_token %}
+      <button type="submit" name="action" value="tester_alertes" class="secondaire">{% libelle "admin.alertes.essai.bouton" %}</button>
+      <p class="aide-champ">{% libelle "admin.alertes.essai.aide" %}</p>
+    </form>
+    {% else %}
+    <p class="discret">{% libelle "admin.alertes.reserve_texte" %}</p>
+    {% endif %}
+  </section>
 </div>
 {% endblock %}

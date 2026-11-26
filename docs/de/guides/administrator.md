@@ -236,13 +236,27 @@ Jede Antwort ist ein Vorschlag mit der Kennzeichnung „Von der KI vorgeschlagen
 
 ## Hosting und Sicherungen prüfen {#hosting}
 
-Gehen Sie zu **Administration › Einstellungen › Hosting**. Die Seite zeigt die Version, die automatische Sicherung, die Datenprüfung und die E-Mail-Einrichtung. Klicken Sie auf **Sicherung erstellen und herunterladen**, um sofort eine Sicherung zu erstellen. Das IT-Team kopiert die Sicherungen an einen anderen Ort.
-
-Um auf einen Blick zu sehen, ob alles in Ordnung ist, gehen Sie zu **Administration › Einstellungen › Zustand**. Jede Zeile (Version, Datenbank, Dateien, letzte Sicherung, Speicherplatz, E-Mail, Hintergrundaufgaben, Aktualisierung der Datenbank, HTTPS) zeigt **In Ordnung**, **Zu prüfen** oder **Störung** und was zu tun ist. Die Administration eines anderen Bereichs als des Hauptbereichs sieht dieselben Zeilen, aber die Zeilen Datenbank und Aktualisierung der Datenbank prüfen nur den eigenen Bereich und das gemeinsame Kontenregister, nicht die anderen Bereiche. Das Detail für die IT (Namen der anderen Bereiche, Ordner auf dem Datenträger) sieht sie nicht: Die Bereichsverwaltung sieht es. In **Einstellungen › Hosting** zeigt ihr der Block **Für die IT** weder den Datenordner noch die zulässigen Adressen, den Datenbankserver, den Benutzernamen für E-Mails oder den Ordner der Sicherungen.
+Gehen Sie zu **Administration › Einstellungen › Hosting**. Die Seite zeigt die Version, die automatische Sicherung, die Datenprüfung und die E-Mail-Einrichtung. Klicken Sie auf **Sicherung erstellen und herunterladen**, um sofort eine Sicherung zu erstellen. Das IT-Team kopiert die Sicherungen an einen anderen Ort. Oder die Bereichsverwaltung richtet die **Kopie außerhalb des Servers** ein: Das Tool kopiert dann jede Sicherung selbst in einen S3-kompatiblen Speicher oder auf einen SFTP-Server, den das IT-Team bereitstellt, und warnt Sie, wenn eine Kopie fehlschlägt.
 
 ![Einstellungen, Hosting](../../screenshots/de/hosting.png)
 
+![Einstellungen, Hosting, Kopie außerhalb des Servers](../../screenshots/de/hosting-external-copy.png)
+
+Um den E-Mail-Server einzurichten, verwenden Sie den Block **E-Mails** derselben Seite. Geben Sie den Server, den Port, die Sicherheit, den Benutzernamen, das Passwort und die Absenderadresse ein, die Ihnen das IT-Team nennt. Klicken Sie auf **Speichern** und dann auf **Test-E-Mail senden**. Wird die E-Mail nicht gesendet, nennt eine Meldung den Grund in einfachen Worten. Diese Einstellungen gelten für alle Bereiche: Nur die Bereichsverwaltung kann sie ändern. Das Passwort wird nie wieder angezeigt. Hat das IT-Team die E-Mails in der Einstellungsdatei festgelegt, zeigt der Block diese Einstellungen schreibgeschützt an.
+
+![Einstellungen, Hosting, E-Mails](../../screenshots/de/hosting-emails.png)
+
+Um auf einen Blick zu sehen, ob alles in Ordnung ist, gehen Sie zu **Administration › Einstellungen › Zustand**. Jede Zeile (Version, Datenbank, Dateien, letzte Sicherung, Speicherplatz, E-Mail, Hintergrundaufgaben, Aktualisierung der Datenbank, HTTPS) zeigt **In Ordnung**, **Zu prüfen** oder **Störung** und was zu tun ist. Die Administration eines anderen Bereichs als des Hauptbereichs sieht dieselben Zeilen, aber die Zeilen Datenbank und Aktualisierung der Datenbank prüfen nur den eigenen Bereich und das gemeinsame Kontenregister, nicht die anderen Bereiche. Das Detail für die IT (Namen der anderen Bereiche, Ordner auf dem Datenträger) sieht sie nicht: Die Bereichsverwaltung sieht es. In **Einstellungen › Hosting** zeigt ihr der Block **Für die IT** weder den Datenordner noch die zulässigen Adressen, den Datenbankserver, den Benutzernamen für E-Mails oder den Ordner der Sicherungen.
+
 ![Einstellungen, Zustand](../../screenshots/de/admin-health.png)
+
+Das Tool kann Sie auch per E-Mail warnen. Unten auf **Einstellungen › Zustand** schaltet die Bereichsverwaltung die **E-Mail-Warnungen** ein und wählt die Empfänger: standardmäßig die Administration des Hauptbereichs und die Bereichsverwaltung, dazu weitere Adressen, zum Beispiel das Postfach der IT. Wenn ein Problem auftritt (fehlgeschlagene oder verspätete Sicherung, fast voller Datenträger, beendete Hintergrundaufgabe, fehlgeschlagene E-Mails…), erhalten die Empfänger eine E-Mail mit dem, was zu tun ist. Danach erhalten sie höchstens einmal am Tag eine Erinnerung, solange das Problem besteht, und eine E-Mail, wenn es behoben ist. Bei einer neuen Installation sind die Warnungen von Anfang an eingeschaltet; eine Installation, die schon vor ihnen bestand, lässt sie ausgeschaltet, bis jemand sie einschaltet. Die Seite sagt, welcher Fall gilt. Klicken Sie auf **Testwarnung senden**, um sie zu prüfen. Wenn der Server ausgeschaltet ist, kann das Tool niemanden warnen.
+
+![Einstellungen, Zustand, E-Mail-Warnungen](../../screenshots/de/admin-health-alerts.png)
+
+Der Block **Automatische Updates** unter **Einstellungen › Hosting** zeigt die letzte Prüfung des Servers und ihr Ergebnis. Die Bereichsverwaltung wählt, was bei einer neuen Version passiert: **Automatisch installieren** (nachts, nach einer Sicherung; funktioniert die neue Version nicht, kehrt der Server zur vorherigen Version zurück), **Nur benachrichtigen** (die IT installiert sie) oder **Aus**, und wie viele Tage nach der Veröffentlichung gewartet wird (standardmäßig 3). Die Arbeit macht eine Aufgabe des Servers, nie das Tool selbst. Wenn der Bildschirm sagt, dass die Aufgabe nicht installiert ist, bitten Sie Ihre IT, sie einzurichten.
+
+![Einstellungen, Hosting, Automatische Updates](../../screenshots/de/hosting-auto-updates.png)
 
 ## Die Summen jeder Ebene ansehen {#consolidation}
 
@@ -279,6 +293,20 @@ Enthält die Datei Zahlen für berechnete KPIs eines nicht abgeschlossenen Zeitr
 ## Die Bereiche verwalten {#spaces}
 
 **Bereiche** listet die Bereiche dieser Installation auf. Jeder Bereich hat eigene Daten: Rahmenwerke, Organisationen, Kampagnen, Werte, Nachweise und Identität. Die Konten sind gemeinsam: Eine Person meldet sich nur einmal an.
+
+## Mit dem Firmenkonto anmelden {#company-sign-in}
+
+Die Bereichsverwaltung kann allen erlauben, sich mit ihrem Firmenkonto anzumelden (OpenID Connect, zum Beispiel Microsoft Entra ID, Google, Okta oder Keycloak). Das Firmenkonto beweist nur, wer die Person ist: Konten, Rollen und Zuweisungen legen Sie weiterhin im Tool an. Eine Person braucht ein aktives Konto mit derselben E-Mail-Adresse.
+
+1. Öffnen Sie **Administration › Einstellungen › Firmenanmeldung**.
+2. Kopieren Sie die **Weiterleitungs-URI** in die Anwendung bei Ihrem Anbieter. Geben Sie die **Adresse des Anbieters (Issuer)**, die **Client-ID** und das **Client-Geheimnis** ein.
+3. Klicken Sie auf **Anbieter prüfen**. Wählen Sie **Anmeldung mit dem Firmenkonto erlauben** und klicken Sie auf **Speichern**.
+
+![Einstellungen, Firmenanmeldung](../../screenshots/de/admin-company-sign-in.png)
+
+Ist sie eingeschaltet, behält nur die Bereichsverwaltung ihr Passwort, als Notfallkonten. **Abmelden** beendet die Sitzung nur im Tool, nicht beim Anbieter. Der **Anmeldeverlauf** zeigt die Methode jeder Anmeldung.
+
+![Anmeldeseite, Mit dem Firmenkonto anmelden](../../screenshots/de/login-company.png)
 
 ## Jede Änderung nachverfolgen {#history}
 

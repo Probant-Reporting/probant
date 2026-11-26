@@ -22,6 +22,7 @@ The table answers the usual questions about spaces:
 | Who sees the space button? | Only the people who have access to **at least two** spaces. For the others, nothing changes. |
 | What changes for the current installation? | **Nothing changes.** The current database becomes the "main space", at the same addresses. The only new item is the **Administration › Settings › Spaces** tab, which only *space managers* see. |
 | Who are the space managers? | On the first startup of the new version, the active administrators of the main space become space managers. On a new installation, the first active administrator created in the main space becomes a space manager (a contributor, a reader or the administrator of another space never does). If the installation has no active space manager, the next active administrator of the main space becomes one, also when an account is given the administrator role. A manager appoints other managers in the **People and access** table of **Administration › Settings › Spaces**. IT can also do it (§ 2). |
+| What can only a space manager do? | Manage the spaces, set the company sign-in, and change the settings that apply to the whole installation: the email server, the email alerts, the automatic updates and the external copy of the backups. These settings decide where the emails and the backups of all spaces go, so an administrator who is not a space manager, also in the main space, only sees them. This rule is the same on an installation with one space. |
 
 ### Create a space
 
@@ -108,7 +109,7 @@ The table shows where the tool keeps the data of each space, with SQLite and wit
 | What | SQLite (default, `/data` in Docker) | PostgreSQL |
 |---|---|---|
 | Main space | `db.sqlite3`, `files/` (an older `media/` folder is renamed automatically) | `public` schema (unchanged) |
-| Shared registry (accounts, list of spaces, access, sessions) | `shared.sqlite3` | `commun` schema of the same database |
+| Shared registry (accounts, list of spaces, access, sessions, email server set in the tool) | `shared.sqlite3` | `commun` schema of the same database |
 | Each other space | `spaces-data/<code>/database.sqlite3` and `spaces-data/<code>/files/` | `espace_<code>` schema of the same database. Files in `spaces-data/<code>/files/` |
 | Backups of the main space | `backups/*.zip` (unchanged) | Same |
 | Backups of the other spaces | `backups/spaces/<code>/*.zip` | Same |
@@ -173,7 +174,7 @@ The table shows the commands for spaces and what they do:
 | `python3 manage.py spaces --manager <email>` | Gives the right to create and manage spaces (`--remove-manager` removes it) |
 | `python3 manage.py spaces --archive <code>` / `--reactivate <code>` | Hides a space, or shows it again |
 | `SPACE=achats python3 manage.py restore <archive>` | Restores a backup **of this space** |
-| `python3 manage.py restore --shared <archive>` | Restores the shared registry (accounts, spaces) from `backups/shared` |
+| `python3 manage.py restore --shared <archive>` | Restores the shared registry (accounts, spaces, email server set in the tool) from `backups/shared` |
 
 > **Warning:** **Never** run `migrate --database espace_x` by hand outside the command of the tool. The command of the
 > tool always activates the correct space, and the data migrations write to the database of the activated space.
@@ -255,6 +256,8 @@ backups, commands and roles, on SQLite and on PostgreSQL. These known points do 
 - If IT replaces the database of a space by hand while the tool runs, the tool detects it only at the next startup
   (marker). Never replace the file or the schema of a space by hand: use the restore.
 - A space manager can take control of any account. Only appoint trusted people.
+- Only a space manager can change the email server or the external copy. The external copy receives the archives of
+  all spaces and of the shared registry, which contain the password hashes.
 - When an administrator of a space creates an account, they learn if the email already has an account in the
   installation (and the name of the person).
 - PostgreSQL: the shared registry opens its own connections (about twice as many as before). Check the connection

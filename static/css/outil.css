@@ -1249,7 +1249,20 @@ details.theme-unites:not([open]) > summary:hover { background: var(--principale-
 .sante-detail { margin: 6px 0 0; overflow-wrap: anywhere; }
 /* téléphone : l'étiquette d'état passe à la ligne (« Te controleren », « Zu prüfen » dépassaient la colonne) et les mots longs se coupent */
 @media (max-width: 560px) { .table-sante col.col-sante-etat { width: 112px; } .table-sante th, .table-sante td { padding: 10px 8px; overflow-wrap: anywhere; } .table-sante .etiquette { white-space: normal; } }
-.etapes-emails { margin: 0 0 10px; padding-left: 20px; line-height: 1.55; }
+/* Santé › Alertes par e-mail (parametres/alertes.py) : case, destinataires, autres adresses, alerte d'essai */
+.bloc-alertes { margin-top: 24px; }
+.destinataires-alertes { border: 0; padding: 0; margin: 14px 0 0; min-width: 0; }
+.destinataires-alertes > legend { padding: 0; margin-bottom: 8px; font-weight: 600; }
+.destinataires-alertes .champ { max-width: 560px; margin-top: 10px; }
+.destinataires-alertes textarea { font: inherit; padding: 7px 10px; border: 1px solid var(--contour); border-radius: var(--coin); background-color: var(--surface); resize: vertical; }
+.destinataires-alertes .champ.en-erreur textarea { border-color: var(--erreur); }
+.essai-alertes { margin-top: 16px; } .essai-alertes .aide-champ { margin: 6px 0 0; }
+/* mises à jour automatiques (Paramètres › Hébergement, parametres/_mise_a_jour_auto.html) : choix en boutons radio, chacun
+   suivi de son explication, alignée sur le texte du libellé */
+.choix-maj-auto { border: 0; padding: 0; margin: 14px 0 0; min-width: 0; }
+.choix-maj-auto > legend { padding: 0; margin-bottom: 4px; font-weight: 600; }
+.choix-maj-auto .aide-champ { margin: 0 0 8px 28px; max-width: 72ch; }
+.form-maj-auto .champ { max-width: 560px; margin-top: 10px; }
 .lancer-controle { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-top: 10px; }
 .lancer-controle .aide-champ { margin: 0; }
 /* volet « Pour l'IT » : dernier bloc de la page, replié */
@@ -2366,6 +2379,23 @@ pre.commande { background: var(--fond); border: 1px solid var(--bord); border-ra
 .infos-hebergement th { width: 45%; font-weight: 600; color: var(--texte-doux); } .infos-hebergement td { word-break: break-word; }
 .test-email { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; } .test-email .champ { flex: 1; min-width: 220px; margin: 0; }
 .test-email input[type=email] { width: 100%; font: inherit; padding: 7px 10px; border: 1px solid var(--contour); border-radius: var(--coin); }
+/* serveur d'envoi des e-mails réglé dans l'outil (parametres/_emails.html) : serveur, port, sécurité / identifiant, mot de
+   passe / adresse d'expédition ; une colonne sur téléphone */
+.champs-smtp { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0 16px; align-items: start; max-width: 760px; }
+.champs-smtp .champ-smtp-hote { grid-column: span 3; } .champs-smtp .champ-smtp-port { grid-column: span 1; }
+.champs-smtp .champ-smtp-securite, .champs-smtp .champ-smtp-identifiant, .champs-smtp .champ-smtp-mot_de_passe,
+.champs-smtp .champ-smtp-expediteur { grid-column: span 3; }
+.champs-smtp .champ-smtp-securite { grid-column: span 2; }
+.champs-smtp .champ-smtp-expediteur { grid-column: 1 / span 3; }
+.champs-smtp .aide-champ { margin: 4px 0 0; }
+.champs-smtp .champ.en-erreur input, .champs-smtp .champ.en-erreur select { border-color: var(--erreur); }
+.champs-smtp .champ-smtp-mot_de_passe button { margin-top: 6px; }
+.bloc .titre-test-email { margin: 24px 0 6px; }
+.resultat-emails { scroll-margin-top: 16px; } .resultat-emails:not(:empty) { margin-top: 16px; } .resultat-emails .encart { margin: 0 0 8px; }
+@media (max-width: 560px) {
+  .champs-smtp { grid-template-columns: minmax(0, 1fr); }
+  .champs-smtp > .champ { grid-column: 1 / -1; }
+}
 .pied-version { text-align: center; font-size: var(--taille-mini); color: var(--texte-doux); padding: 4px 16px 18px; }
 /* assistant de mise en place (parametres/mise_en_place.py) */
 .mise-en-place { display: grid; grid-template-columns: 240px minmax(0, 1fr) 280px; gap: 20px; align-items: start; }

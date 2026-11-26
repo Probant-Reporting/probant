@@ -7,7 +7,8 @@
         [--data DIR --login TEXT]        an installation's data folder, already filled with the tool (its database,
                                          uploaded files and an initial backup data/backups/backup-…-initial.zip);
                                          without it, an empty data folder and the demo at the first start. Copied
-                                         without its secrets (.secret_key, .cle_secrete, ai-keys/) nor its large
+                                         without its secrets (.secret_key, .secret_key_all_in_one, .cle_secrete,
+                                         ai-keys/) nor its large
                                          exports (files/exports/), and with the assistant (MCP) tokens removed from
                                          each database, as in a backup
 
@@ -31,6 +32,7 @@ from pathlib import Path
 RACINE = Path(__file__).resolve().parent.parent
 # ce que l'outil lit pour fonctionner (liste d'inclusion : rien d'autre n'entre dans le paquet)
 APP = ["manage.py", "VERSION", "requirements.txt", "config", "collecte", "parametres", "referentiel", "espaces", "serveur_mcp",
+       "connexion_entreprise",  # connexion d'entreprise : présente mais éteinte (sans PyJWT ni cryptography)
        "libelles", "static", "templates",
        # guides par rôle lus par l'outil (lien Aide, collecte/aide.py), avec leurs captures
        "docs/guides", *(f"docs/{lg}/guides" for lg in ("fr", "es", "de", "it", "nl", "pt")),
@@ -76,10 +78,20 @@ def _ignorer_python(dossier, noms):
 
 # dossier des données d'une installation (--data) : jamais ses secrets ni ses fichiers jetables. Clé secrète (nouveau et
 # ancien nom : chaque copie a la sienne), clés de la prise IA (docs/ai_socket.md), gros exports (refaits sur demande)
-SECRETS_DONNEES = {".secret_key", ".cle_secrete", "ai-keys"}
+# clé de la version tout-en-un : chaque copie crée la sienne au premier démarrage (portable/launch.py)
+SECRETS_DONNEES = {".secret_key", ".secret_key_all_in_one", ".cle_secrete", "ai-keys"}
 # tables vidées dans chaque base SQLite copiée : celles que la sauvegarde vide dans sa copie, jetons des assistants compris
-# (parametres.sauvegardes.TABLES_VIDEES_DANS_LA_COPIE ; mêmes tables, vérifié par parametres/test_build_package_donnees.py)
-TABLES_VIDEES = ["django_session", "django_admin_log", "serveur_mcp_jetonmcp"]
+# (parametres.sauvegardes.TABLES_VIDEES_DANS_LA_COPIE, vérifié par parametres/test_build_package_donnees.py), puis les
+# réglages de toute l'installation gardés au registre commun et leur état : serveur d'e-mails, alertes, copie externe,
+# connexion d'entreprise et ses liens (hôtes, identifiants, « sub » des personnes, secrets chiffrés) ; la version
+# tout-en-un n'a ni copie externe ni connexion d'entreprise, et chaque copie règle ses propres e-mails
+TABLES_VIDEES = ["django_session", "django_admin_log", "serveur_mcp_jetonmcp",
+                 "espaces_serveurenvoi", "espaces_reglagealertes", "espaces_etatalertes", "espaces_problemesignale",
+                 "espaces_destinationcopie", "espaces_etatcopie",
+                 "connexion_entreprise_reglageentreprise", "connexion_entreprise_lienentreprise"]
+# tables du registre commun gardées telles quelles (installation, espaces, comptes et leurs accès) : toute table du
+# registre est soit vidée, soit gardée, explicitement (parametres/test_vider_bases_registre_commun.py)
+TABLES_GARDEES = ["espaces_installation", "espaces_espace", "espaces_compte", "espaces_accesespace"]
 # gros exports en arrière-plan prêts : leur fichier n'est pas copié, ils passent « expirés » avec le motif que la page
 # donne au clic (collecte.exports_arriere_plan.FICHIER_ABSENT ; vérifié par parametres/test_vider_bases_exports_fond.py)
 EXPORTS_FOND, FICHIER_ABSENT = "collecte_tacheexport", "fichier_absent"

@@ -6,7 +6,9 @@ son nom, son propriétaire et ses dates. Il n'est montré qu'une fois, à la cr�
 
 ``authentifier`` relit tout à chaque requête : jeton connu dans la base de l'espace courant (un jeton d'un autre espace
 y est inconnu), ni révoqué ni expiré, compte actif dans l'espace et dans le registre commun (``get_user`` de la
-connexion, la même règle que pour une session), mot de passe provisoire déjà remplacé. Le jeton n'a aucun droit propre :
+connexion, la même règle que pour une session), mot de passe provisoire déjà remplacé ; connexion d'entreprise allumée et
+mot de passe refusé à la personne : aucun jeton (``connexion_entreprise.regles.assistants_permis`` ; refus avec son
+propre message, ``JetonRefuse.entreprise``). Le jeton n'a aucun droit propre :
 le rôle, les attributions et le périmètre de la personne s'appliquent tels qu'ils sont à ce moment."""
 import datetime
 import hashlib
@@ -65,6 +67,10 @@ def creer(utilisateur, nom, jours):
     reglage = ReglageMCP.courant()
     if not reglage.actif:
         raise PermissionDenied(libelle("mcp.jetons.eteint"))
+    from connexion_entreprise import regles as RE
+
+    if not RE.assistants_permis(utilisateur.pk):
+        raise PermissionDenied(libelle("mcp.jetons.entreprise"))
     nom = " ".join((nom or "").split())
     if not nom:
         raise ValidationError(libelle("mcp.jetons.nom_requis"))
@@ -115,11 +121,14 @@ def revoquer(par, pk, tous=False):
 
 
 class JetonRefuse(Exception):
-    """Jeton absent ou refusé : un seul message pour toutes les causes (``cause`` : pour le journal du serveur)."""
+    """Jeton absent ou refusé : un seul message pour toutes les causes (``cause`` : pour le journal du serveur), sauf
+    ``entreprise`` : jeton valable d'une personne qui n'a plus d'accès par un assistant (connexion d'entreprise allumée,
+    pas de mot de passe), refusé avec son propre message pour qu'elle sache pourquoi."""
 
-    def __init__(self, cause):
+    def __init__(self, cause, entreprise=False):
         super().__init__(cause)
         self.cause = cause
+        self.entreprise = entreprise
 
 
 def lire_entete(valeur):
@@ -146,10 +155,15 @@ def authentifier(clair):
     u = EmailOuIdentifiant().get_user(j.utilisateur_id)  # copie active ici, compte actif au registre, même e-mail
     if u is None:
         raise JetonRefuse(f"compte désactivé ou absent (jeton n° {j.pk})")
-    if u.doit_changer_mdp:
-        raise JetonRefuse(f"mot de passe provisoire à remplacer (jeton n° {j.pk})")
+    from connexion_entreprise import regles as RE
+
+    # mot de passe changé d'abord : un jeton déjà mort ne reçoit pas le message propre à la connexion d'entreprise
     if not secrets.compare_digest(j.mdp_empreinte, empreinte_mdp(u.password)):
         raise JetonRefuse(f"mot de passe changé depuis la création (jeton n° {j.pk})")
+    if not RE.assistants_permis(u.pk):  # connexion d'entreprise allumée, pas de mot de passe : aucun accès par un assistant
+        raise JetonRefuse(f"company sign-in on, no password for this account (jeton n° {j.pk})", entreprise=True)
+    if u.doit_changer_mdp:
+        raise JetonRefuse(f"mot de passe provisoire à remplacer (jeton n° {j.pk})")
     return u, j
 
 

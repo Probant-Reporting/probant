@@ -236,13 +236,27 @@ Cada respuesta es una propuesta marcada «Propuesto por IA». Nada se guarda has
 
 ## Comprobar el alojamiento y las copias de seguridad {#hosting}
 
-Vaya a **Administración › Configuración › Alojamiento**. La página muestra la versión, la copia de seguridad automática, el control de los datos y la configuración del correo. Haga clic en **Crear y descargar una copia de seguridad** para hacer una de inmediato. El equipo informático copia las copias de seguridad en otro lugar.
-
-Para ver de un vistazo si todo va bien, vaya a **Administración › Configuración › Estado**. Cada línea (versión, base de datos, archivos, última copia de seguridad, espacio en disco, correo electrónico, tareas en segundo plano, actualización de la base, HTTPS) muestra **Correcto**, **Por revisar** o **Averiado**, y qué hacer. El administrador de un espacio que no es el espacio principal ve las mismas líneas, pero las líneas base de datos y actualización de la base solo comprueban su espacio y el registro común de cuentas, no los otros espacios. No ve el detalle para TI (nombres de los otros espacios, carpetas del disco): el gestor de espacios lo ve. En **Configuración › Alojamiento**, el bloque **Para TI** no le muestra la carpeta de datos, las direcciones permitidas, el servidor de la base, el usuario del correo electrónico ni la carpeta de las copias de seguridad.
+Vaya a **Administración › Configuración › Alojamiento**. La página muestra la versión, la copia de seguridad automática, el control de los datos y la configuración del correo. Haga clic en **Crear y descargar una copia de seguridad** para hacer una de inmediato. El equipo informático copia las copias de seguridad en otro lugar. O un gestor de espacios configura la **Copia fuera del servidor**: la herramienta copia entonces ella misma cada copia de seguridad a un almacenamiento compatible con S3 o a un servidor SFTP que proporciona el equipo informático, y le avisa si una copia falla.
 
 ![Configuración, Alojamiento](../../screenshots/es/hosting.png)
 
+![Configuración, Alojamiento, Copia fuera del servidor](../../screenshots/es/hosting-external-copy.png)
+
+Para configurar el servidor de correo, use el bloque **Correos electrónicos** de la misma página. Introduzca el servidor, el puerto, la seguridad, el usuario, la contraseña y la dirección de envío que le proporciona el equipo informático. Haga clic en **Guardar** y luego en **Enviar un correo de prueba**. Si el correo no se envía, un mensaje da la causa con palabras sencillas. Estos ajustes valen para todos los espacios: solo un gestor de espacios puede cambiarlos. La contraseña no se vuelve a mostrar nunca. Si el equipo informático configuró el correo en el archivo de ajustes, el bloque muestra estos ajustes en solo lectura.
+
+![Configuración, Alojamiento, Correos electrónicos](../../screenshots/es/hosting-emails.png)
+
+Para ver de un vistazo si todo va bien, vaya a **Administración › Configuración › Estado**. Cada línea (versión, base de datos, archivos, última copia de seguridad, espacio en disco, correo electrónico, tareas en segundo plano, actualización de la base, HTTPS) muestra **Correcto**, **Por revisar** o **Averiado**, y qué hacer. El administrador de un espacio que no es el espacio principal ve las mismas líneas, pero las líneas base de datos y actualización de la base solo comprueban su espacio y el registro común de cuentas, no los otros espacios. No ve el detalle para TI (nombres de los otros espacios, carpetas del disco): el gestor de espacios lo ve. En **Configuración › Alojamiento**, el bloque **Para TI** no le muestra la carpeta de datos, las direcciones permitidas, el servidor de la base, el usuario del correo electrónico ni la carpeta de las copias de seguridad.
+
 ![Configuración, Estado](../../screenshots/es/admin-health.png)
+
+La herramienta también puede avisarle por correo. Al final de **Configuración › Estado**, un gestor de espacios activa las **Alertas por correo** y elige los destinatarios: por defecto los administradores del espacio principal y los gestores de espacios, más otras direcciones, por ejemplo el buzón del equipo de TI. Cuando aparece un problema (copia de seguridad fallida o con retraso, disco casi lleno, tarea en segundo plano detenida, correos fallidos…), los destinatarios reciben un correo que dice qué hacer. Después reciben un recordatorio como máximo una vez al día mientras dure el problema, y un correo cuando se resuelve. En una instalación nueva, las alertas están activadas desde el principio; una instalación que ya existía antes de ellas las mantiene desactivadas hasta que alguien las activa. La página dice qué caso se aplica. Haga clic en **Enviar una alerta de prueba** para comprobarlas. Cuando el servidor está apagado, la herramienta no puede avisar a nadie.
+
+![Configuración, Estado, Alertas por correo](../../screenshots/es/admin-health-alerts.png)
+
+El bloque **Actualizaciones automáticas** de **Configuración › Alojamiento** muestra la última comprobación del servidor y su resultado. Un gestor de espacios elige lo que ocurre cuando se publica una nueva versión: **Instalarla automáticamente** (por la noche, después de una copia de seguridad; si la nueva versión no funciona, el servidor vuelve a la versión anterior), **Solo avisar** (el equipo de TI la instala) o **Desactivado**, y cuántos días esperar después de la publicación (3 por defecto). Es una tarea del servidor la que hace el trabajo, nunca la herramienta. Si la pantalla dice que la tarea no está instalada, pida al equipo de TI que la instale.
+
+![Configuración, Alojamiento, Actualizaciones automáticas](../../screenshots/es/hosting-auto-updates.png)
 
 ## Ver los totales de cada nivel {#consolidation}
 
@@ -279,6 +293,20 @@ Si el archivo contiene cifras para KPI calculados de un periodo no cerrado, la v
 ## Gestionar los espacios {#spaces}
 
 **Espacios** enumera los espacios de esta instalación. Cada espacio tiene sus propios datos: marcos de referencia, organizaciones, campañas, valores, justificantes e identidad. Las cuentas son comunes: una persona inicia sesión una sola vez.
+
+## Iniciar sesión con la cuenta de empresa {#company-sign-in}
+
+Un gestor de espacios puede permitir que cada persona inicie sesión con su cuenta de empresa (OpenID Connect, por ejemplo Microsoft Entra ID, Google, Okta o Keycloak). La cuenta de empresa solo demuestra quién es la persona: las cuentas, los roles y las asignaciones se siguen creando en la herramienta. Una persona necesita una cuenta activa con el mismo correo electrónico.
+
+1. Vaya a **Administración › Configuración › Inicio de sesión de empresa**.
+2. Copie la **URI de redirección** en la aplicación de su proveedor. Introduzca la **Dirección del proveedor (issuer)**, el **ID de cliente** y el **Secreto de cliente**.
+3. Haga clic en **Comprobar el proveedor**. Marque **Permitir el inicio de sesión con la cuenta de empresa** y haga clic en **Guardar**.
+
+![Configuración, Inicio de sesión de empresa](../../screenshots/es/admin-company-sign-in.png)
+
+Una vez activado, solo los gestores de espacios conservan su contraseña, como cuentas de emergencia. **Cerrar sesión** cierra la sesión solo en la herramienta, no en el proveedor. El **Historial de inicios de sesión** muestra el método de cada inicio de sesión.
+
+![Página de inicio de sesión, Iniciar sesión con la cuenta de empresa](../../screenshots/es/login-company.png)
 
 ## Seguir cada cambio {#history}
 

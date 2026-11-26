@@ -5,6 +5,13 @@
     python3 qa/migration_rehearsal.py --postgres postgres://user:password@host:5432/postgres --base SOURCE_DATABASE \
         --before /path/checkout-of-the-old-version [--media /path/media]
 
+Options added for the check "update from every published version" (qa/update_from_published.py, which builds the
+database with the code of each published version): ``--before-python`` (interpreter of the old version, when its
+packages differ), ``--old-archive`` (an archive made by the old version: restored by the new version into an empty
+database, the result must equal the database updated in place; PostgreSQL: an archive restores only with the version
+that made it, so when the update applied migrations the documented refusal is the expected result), ``--health-port`` (starts the tool on the updated
+database and checks ``/sante/``, then the sign-in with the demo accounts).
+
 PostgreSQL (``--postgres``): ``--base`` is the name of a database of that server built with the old version; it is
 copied (CREATE DATABASE … TEMPLATE …, never modified), and the restore goes into a new empty database. The user of the
 URL must be allowed to create databases.
@@ -52,6 +59,8 @@ COLONNES_VALEUR = ["Exercice", "ID KPI", "Indicateur", "Thème", "Sous-thème", 
                    "Pays", "Entité", "Site", "Valeur", "N/A", "Statut", "Origine", "Commentaire", "Saisi par", "Mis à jour le",
                    "Validé par", "Validé le", "Preuves"]
 ECARTS = []  # détails pour l'écran seulement (en anglais)
+CLE_SECRETE = "repetition-" + "x" * 40  # secret de l'installation, le même avant et après (les archives sont signées avec lui)
+PYTHON_AVANT = sys.executable  # interpréteur du code de l'ancienne version (``--before-python``)
 ATTENDUS = {  # tables dont le contenu change par construction
     "auth_permission": "Django technical: permissions of the new models (expected)",
     "django_content_type": "Django technical: new models (expected)",
@@ -356,7 +365,7 @@ def retour_arriere(avant, env, pg, archive, travail):
     import zipfile
 
     debut = time.monotonic()
-    aide = subprocess.run([sys.executable, "manage.py", "restore", "--help"], cwd=avant, env={**os.environ, **env},
+    aide = subprocess.run([PYTHON_AVANT, "manage.py", "restore", "--help"], cwd=avant, env={**os.environ, **env},
                           capture_output=True, text=True).stdout
     options = []
     procedure = "restore"
@@ -369,8 +378,8 @@ def retour_arriere(avant, env, pg, archive, travail):
             for app, cible in cibles_retour(d["migrations"], migrations_pg(env["DATABASE_URL"])):
                 lancer([sys.executable, "manage.py", "migrate", app, cible], RACINE, env)
             procedure = "migrate back (new version), then restore"
-    lancer([sys.executable, "manage.py", "restore", archive.name, "--yes", *options], avant, env, True)
-    lancer([sys.executable, str(EXTRAIRE), str(travail / "retour.json")], avant, env)
+    lancer([PYTHON_AVANT, "manage.py", "restore", archive.name, "--yes", *options], avant, env, True)
+    lancer([PYTHON_AVANT, str(EXTRAIRE), str(travail / "retour.json")], avant, env)
     return time.monotonic() - debut, procedure
 
 
@@ -810,6 +819,88 @@ def tout_identique(c):
             and c.get("tableaux", {"identique": True})["identique"])
 
 
+# ---------------------------------------------------------------- démarrage de l'outil et archive de l'ancienne version
+def verifier_demarrage(env, port, travail):
+    """Démarre l'outil sur la base que décrit ``env`` (``runserver``), puis vérifie ``/sante/`` (état « ok », version du
+    code), la page de connexion et la connexion d'un compte de la démo (``docker/check_sign_in.sh``, comme la tâche
+    Docker). Renvoie (vrai si tout va bien, phrase pour le rapport). Le serveur est toujours arrêté."""
+    import urllib.error
+    import urllib.request
+
+    adresse = f"http://127.0.0.1:{port}"
+    journal = open(travail / "serveur.log", "w", encoding="utf-8")
+    serveur = subprocess.Popen([sys.executable, "manage.py", "runserver", f"127.0.0.1:{port}", "--noreload"], cwd=RACINE,
+                               env={**os.environ, **env}, stdout=journal, stderr=subprocess.STDOUT)
+    version = (RACINE / "VERSION").read_text(encoding="utf-8").strip()
+    try:
+        etat = None
+        for _ in range(90):
+            if serveur.poll() is not None:
+                break
+            try:
+                with urllib.request.urlopen(f"{adresse}/sante/", timeout=5) as r:
+                    etat = json.load(r)
+                break
+            except urllib.error.HTTPError as e:  # 503 : l'outil répond, mais pas en bonne santé
+                etat = json.load(e)
+                break
+            except (OSError, ValueError):
+                time.sleep(1)
+        if etat is None:
+            ECARTS.append("start: the tool did not answer on /sante/ (see the server log)")
+            return False, "the tool did not start"
+        if etat.get("etat") != "ok" or etat.get("version") != version:
+            ECARTS.append(f"/sante/: {json.dumps(etat, ensure_ascii=False)[:500]}")
+            return False, f"/sante/ answered state \"{etat.get('etat')}\", version {etat.get('version')}"
+        connexion = subprocess.run(["bash", str(RACINE / "docker" / "check_sign_in.sh"), adresse, "admin", "demo-probant-2026", version],
+                                   capture_output=True, text=True)
+        if connexion.returncode:
+            ECARTS.append(f"sign-in after the update: {(connexion.stdout + connexion.stderr).strip()[-500:]}")
+            return False, "/sante/ green, but the sign-in failed"
+        return True, f"/sante/ green (state ok, version {version}), the demo account signs in and opens the home page"
+    finally:
+        serveur.terminate()
+        try:
+            serveur.wait(timeout=15)
+        except subprocess.TimeoutExpired:
+            serveur.kill()
+        journal.close()
+
+
+REFUS_PG_DOCUMENTE = "other database migrations"  # message de ``restore`` (docs/installation.md, « Going back… »)
+
+
+def restaurer_archive_ancienne(archive, env_apres, pg, base, suffixe, travail, bases_pg, migrations_passees):
+    """Archive faite par l'ancienne version, restaurée par la nouvelle version dans une base vide (comme un nouveau
+    serveur) ; extraction, puis (durée, {clé : empreinte}, refus). PostgreSQL : base vide créée puis migrée par
+    ``startup``. Une archive PostgreSQL (JSON) ne se restaure qu'avec la version qui l'a faite : quand la mise à jour a
+    passé des migrations (``migrations_passees``), la nouvelle version la refuse, sans rien changer, avec un message qui
+    renvoie au guide ; ce refus voulu est rendu (``refus`` : le message, ``{clé : empreinte}`` vide) au lieu d'un échec.
+    Toute autre erreur, ou un refus alors qu'aucune migration n'a passé, arrête la répétition."""
+    debut = time.monotonic()
+    dossier = travail / "restauree-ancienne"
+    (dossier / "backups").mkdir(parents=True)
+    shutil.copy2(archive, dossier / "backups" / archive.name)
+    env = {**env_apres, "DATA_DIR": str(dossier)}
+    if pg:
+        nom = (base + suffixe + "_ancienne")[:63]
+        pg_admin(pg, f'CREATE DATABASE "{nom}"')
+        bases_pg.append(nom)
+        env["DATABASE_URL"] = url_base(pg, nom)
+        lancer([sys.executable, "manage.py", "startup"], RACINE, env)
+    commande = [sys.executable, "manage.py", "restore", archive.name, "--yes", *(["--other-space"] if pg else [])]
+    r = subprocess.run(commande, cwd=RACINE, env={**os.environ, **env}, capture_output=True, text=True)
+    if r.returncode:
+        sortie = r.stdout + r.stderr
+        if pg and migrations_passees and REFUS_PG_DOCUMENTE in sortie and "Nothing was changed" in sortie:
+            return time.monotonic() - debut, {}, sortie.strip().splitlines()[-1][:300]
+        print(r.stdout[-3000:], r.stderr[-6000:])
+        raise SystemExit(f"Failed: {' '.join(map(str, commande))}")
+    print(r.stdout.strip()[-1500:])
+    lancer([sys.executable, str(EXTRAIRE), str(travail / "restauree-ancienne.json")], RACINE, env)
+    return time.monotonic() - debut, sur_disque(travail / "restauree-ancienne.json", None), None
+
+
 # ---------------------------------------------------------------- rapport
 def oui(v):
     return "yes" if v else "**NO**"
@@ -860,6 +951,19 @@ def rapport(r):
           f"Archive {rest['taille_mo']} MB; restore {rest['duree']:.1f} s; extraction after restore identical to "
           f"that of the migrated database: {oui(rest['identique'])}. Automatic backup before migration (startup): "
           f"{'not needed (no migration to apply)' if r['sauvegarde_auto'] is None else oui(r['sauvegarde_auto'])}.", ""]
+    if r.get("sante"):
+        l += ["**Start of the tool on the updated database**", "", f"{r['sante']['texte']}: {oui(r['sante']['ok'])}.", ""]
+    if r.get("archive_ancienne"):
+        a = r["archive_ancienne"]
+        l += ["**Archive made by the old version, restored by the new version**", ""]
+        if a.get("refus"):
+            l += [f"Archive {a['taille_mo']} MB made by the old version. PostgreSQL: the update applied migrations, and a "
+                  "PostgreSQL archive restores only with the version that made it (docs/installation.md, \"Going back to "
+                  f"the previous version\"): the new version refused it, changing nothing, with the documented message "
+                  f"({a['duree']:.1f} s): {oui(a['identique'])}.", ""]
+        else:
+            l += [f"Archive {a['taille_mo']} MB made by the old version, restored into an empty database by the new version in "
+                  f"{a['duree']:.1f} s; extraction identical to that of the database updated in place: {oui(a['identique'])}.", ""]
     ret = r.get("retour")
     l += ["**Going back to the old version** (\"before-update\" archive restored with the code of the old version)", "",
           (f"Procedure: {ret['procedure']}; {ret['duree']:.1f} s; extraction and {ret['tables']} tables identical to the "
@@ -883,8 +987,18 @@ def main():
     p.add_argument("--before", "--avant", dest="avant", help="Folder of the code of the old version (default: git worktree of origin/main).")
     p.add_argument("--report", "--rapport", dest="rapport", help="Markdown file to which the report is added (figures only).")
     p.add_argument("--source", default="copy of the production database", help="Description of the database, for the report.")
+    p.add_argument("--before-python", default="", help="Python interpreter of the old version (default: the one running this "
+                   "script); needed when the packages of the old version differ from the current ones.")
+    p.add_argument("--old-archive", help="Archive (.zip) made by the old version with its own backup command, same secret "
+                   "key as this script (CLE_SECRETE): restored by the new version into an empty database; the result "
+                   "must equal the database updated in place.")
+    p.add_argument("--health-port", type=int, default=0, help="Port on which to start the tool on the updated database to "
+                   "check /sante/ and the sign-in with a demo account (0: not done).")
     p.add_argument("--keep", "--garder", dest="garder", action="store_true", help="Keep the working folder (investigation of a difference).")
     o = p.parse_args()
+    global PYTHON_AVANT
+    if o.before_python:
+        PYTHON_AVANT = o.before_python
     pg = o.postgres
     source = None if pg else Path(o.base).resolve()
     if source is not None and not source.is_file():
@@ -912,10 +1026,10 @@ def main():
         dossier_avant = travail / "donnees-avant"
         dossier_avant.mkdir()
         env_avant = {"DJANGO_DEBUG": "1", "MEDIA_ROOT": str(donnees / "media"), "DOSSIER_DONNEES": str(dossier_avant),
-                     "DATA_DIR": str(dossier_avant)}
-        env_apres = {"DJANGO_DEBUG": "1", "DATA_DIR": str(donnees), "DJANGO_SECRET_KEY": "repetition-" + "x" * 40}
+                     "DATA_DIR": str(dossier_avant), "DJANGO_SECRET_KEY": CLE_SECRETE}
+        env_apres = {"DJANGO_DEBUG": "1", "DATA_DIR": str(donnees), "DJANGO_SECRET_KEY": CLE_SECRETE}
+        suffixe = f"_rep{os.getpid()}"
         if pg:
-            suffixe = f"_rep{os.getpid()}"
             b_avant, b_apres = (o.base + suffixe + "_avant")[:63], (o.base + suffixe + "_apres")[:63]
             for b in (b_avant, b_apres):
                 pg_admin(pg, f'CREATE DATABASE "{b}" TEMPLATE "{o.base}"')
@@ -936,7 +1050,7 @@ def main():
             taille = source.stat().st_size / 1e6
 
         etape("2. Extraction before (old version)")
-        durees["Extraction before (old version)"] = lancer([sys.executable, str(EXTRAIRE), str(travail / "avant.json")], avant, env_avant)
+        durees["Extraction before (old version)"] = lancer([PYTHON_AVANT, str(EXTRAIRE), str(travail / "avant.json")], avant, env_avant)
         h_avant = sur_disque(travail / "avant.json", travail / "avant", o.garder)
         emp_avant = empreinte_pg(env_avant["DATABASE_URL"]) if pg else empreinte_sql(ancienne)
 
@@ -972,6 +1086,22 @@ def main():
                 exclure = {"collecte_reponse": ecartees}
                 emp_comparee = empreinte_pg(env_avant["DATABASE_URL"], exclure) if pg else empreinte_sql(ancienne, exclure)
         tables = comparer_tables(emp_comparee, emp_apres, deja, unites=bool(comparaison["unites_corrigees"]))
+
+        sante = None
+        if o.health_port:
+            # démarrage sur une COPIE de la base mise à jour : une connexion écrit (session, historique des connexions), ce
+            # qui fausserait les comparaisons des étapes suivantes
+            etape("4b. Start of the tool on a copy of the updated database (/sante/, sign-in)")
+            env_sante = {**env_apres, "DATA_DIR": str(travail / "sante")}
+            if pg:
+                nom_sante = (o.base + suffixe + "_sante")[:63]
+                pg_admin(pg, f'CREATE DATABASE "{nom_sante}" TEMPLATE "{b_apres}"')
+                bases_pg.append(nom_sante)
+                env_sante["DATABASE_URL"] = url_base(pg, nom_sante)
+            shutil.copytree(donnees, travail / "sante")
+            ok_sante, texte_sante = verifier_demarrage(env_sante, o.health_port, travail)
+            print(texte_sante)
+            sante = {"ok": ok_sante, "texte": texte_sante}
 
         etape("5. Backup, then restore into an empty database")
         durees["Backup of the migrated database"] = lancer([sys.executable, "manage.py", "backup", "--reason", "repetition"], RACINE, env_apres, True)
@@ -1016,8 +1146,22 @@ def main():
         elif sauvegarde_auto is not None:
             ECARTS.append("going back: no \"before-update\" archive")
 
+        archive_ancienne = None
+        if o.old_archive:
+            etape("7. Archive made by the old version, restored by the new version into an empty database")
+            archive_a = Path(o.old_archive).resolve()
+            duree_a, h_a, refus = restaurer_archive_ancienne(archive_a, env_apres, pg, o.base, suffixe, travail, bases_pg,
+                                                              bool(appliquees))
+            if refus is None:
+                for k in h_apres:  # même résultat que la base mise à jour sur place
+                    if h_apres[k] != h_a.get(k):
+                        ECARTS.append(f"archive of the old version: \"{k}\" different from the database updated in place")
+            archive_ancienne = {"taille_mo": f"{archive_a.stat().st_size / 1e6:.1f}", "duree": duree_a, "refus": refus,
+                                "identique": refus is not None or h_a == h_apres}
+
         ok = (tout_identique(comparaison) and identique_rest and sauvegarde_auto is not False
-              and (retour["identique"] if retour else sauvegarde_auto is None))
+              and (retour["identique"] if retour else sauvegarde_auto is None)
+              and (sante["ok"] if sante else True) and (archive_ancienne["identique"] if archive_ancienne else True))
         resultat = {
             "date": datetime.date.today().strftime("%d/%m/%Y"), "source": o.source,
             "taille_mo": f"{taille:.1f}" if not pg else "PostgreSQL", "fichiers": nb_fichiers,
@@ -1026,7 +1170,7 @@ def main():
             "version_apres": (RACINE / "VERSION").read_text().strip(), "durees": durees, "comparaison": comparaison, "tables": tables,
             "restauration": {"taille_mo": f"{archive.stat().st_size / 1e6:.1f}", "duree": duree_rest,
                              "identique": identique_rest},
-            "sauvegarde_auto": sauvegarde_auto, "retour": retour, "ok": ok,
+            "sauvegarde_auto": sauvegarde_auto, "retour": retour, "sante": sante, "archive_ancienne": archive_ancienne, "ok": ok,
         }
         texte = rapport(resultat)
         print("\n" + texte)

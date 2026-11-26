@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.copie.titre" %}{% endblock %}
+{% block messages %}{% if messages_haut %}<ul class="messages">{% for m in messages_haut %}<li class="{{ m.tags }}">{{ m|premiere_phrase_gras }}</li>{% endfor %}</ul>{% endif %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Copie externe des sauvegardes (parametres/vues_copie_externe.py, parametres/copie_externe.py) : réglage de
+l'installation. État pour chaque administrateur (la destination pour qui voit le détail de l'installation) ; formulaire,
+essai, confirmation de la clé SFTP et retrait pour un gestionnaire des espaces seulement (« ecrire »). Les secrets ne sont jamais réaffichés : champs toujours vides et date de l'enregistrement.{% endcomment %}
+<div class="page-copie">
+<p class="m-0 retour-copie"><a href="{% url 'parametres:hebergement' %}#copie-externe">{% icone "chevron-gauche" %} {% libelle "admin.copie.retour" %}</a></p>
+<p class="intro-page">{% libelle "admin.copie.intro" %}</p>
+
+{% if not disponible %}
+  {% encart "avertissement" role="status" %}{% libelle "admin.copie.absente" %}{% endencart %}
+{% else %}
+
+<section class="bloc" id="etat-copie" aria-labelledby="titre-etat-copie">
+  <h2 id="titre-etat-copie">{% libelle "admin.copie.etat_titre" %}</h2>
+  {% if etat.etat == "aucune" %}
+    <p class="m-0">{% libelle "admin.copie.etat.aucune" %}</p>
+  {% elif etat.etat == "a_confirmer" %}
+    {% encart "avertissement" role="status" %}{% libelle "admin.copie.etat.a_confirmer" %}{% endencart %}
+  {% elif etat.etat == "echec" %}
+    <div class="encart encart-erreur" role="status">
+      <p class="encart-titre">{% libelle "admin.copie.etat.echec" quand=etat.echec_le|date_heure_courte n=etat.attente %}</p>
+      <p>{{ cause_echec }}</p>
+      {% if etat.prochain_essai %}<p class="discret">{% libelle "admin.copie.etat.prochain" quand=etat.prochain_essai|date_heure_courte %}</p>{% endif %}
+      {% if detail and etat.echec_resume %}<p class="discret">{% libelle "admin.sante.detail_it" %} <code>{{ etat.echec }} {{ etat.echec_resume }}</code></p>{% endif %}
+    </div>
+  {% elif etat.etat == "retard" %}
+    {% encart "avertissement" role="status" %}{% libelle "admin.copie.etat.retard" n=etat.attente %}{% endencart %}
+  {% else %}
+    {% encart "succes" %}{% if etat.reussie_le %}{% libelle "admin.copie.etat.ok" quand=etat.reussie_le|date_heure_courte %}{% else %}{% libelle "admin.copie.etat.ok_jamais" %}{% endif %}
+      {% if etat.attente %} {% libelle "admin.copie.etat.attente" n=etat.attente %}{% else %} {% libelle "admin.copie.etat.tout" %}{% endif %}{% endencart %}
+  {% endif %}
+  {% if r.secret_illisible or r.cle_privee_illisible %}{% encart "avertissement" role="status" %}{% libelle "admin.copie.secret_illisible" %}{% endencart %}{% endif %}
+  {% if r.configure %}<p class="aide-champ">{% if r.genre == "s3" %}{% libelle "admin.copie.genre.s3" %}{% else %}{% libelle "admin.copie.genre.sftp" %}{% endif %}{% if d %} – {% if d.genre == "s3" %}{{ d.compartiment }} · {{ d.adresse }}{% else %}{{ d.hote }}{% if d.port != 22 %}:{{ d.port }}{% endif %}{% endif %}{% endif %}.
+    {% if d.conserver %}{% libelle "admin.copie.conserver_n" n=d.conserver %}{% elif d %}{% libelle "admin.copie.conserver_tout" %}{% endif %}</p>{% endif %}
+</section>
+
+{% if ecrire %}
+<section class="bloc" id="destination" aria-labelledby="titre-destination">
+  <h2 id="titre-destination">{% libelle "admin.copie.destination_titre" %}</h2>
+  {% encart "avertissement" %}{% libelle "admin.copie.prive" %}{% endencart %}
+  {% if not genre %}
+    <p>{% libelle "admin.copie.choisir" %}</p>
+    <ul class="choix-genre-copie">
+      <li><a class="carte" href="?type=s3#destination"><strong>{% libelle "admin.copie.genre.s3" %}</strong><span class="discret">{% libelle "admin.copie.genre.s3_aide" %}</span></a></li>
+      <li><a class="carte" href="?type=sftp#destination"><strong>{% libelle "admin.copie.genre.sftp" %}</strong><span class="discret">{% libelle "admin.copie.genre.sftp_aide" %}</span></a></li>
+    </ul>
+  {% else %}
+    <p class="aide-champ remonte"><strong>{% if genre == "s3" %}{% libelle "admin.copie.genre.s3" %}{% else %}{% libelle "admin.copie.genre.sftp" %}{% endif %}</strong>
+      · <a href="?type={% if genre == 's3' %}sftp{% else %}s3{% endif %}#destination">{% if genre == "s3" %}{% libelle "admin.copie.vers_sftp" %}{% else %}{% libelle "admin.copie.vers_s3" %}{% endif %}</a></p>
+    {% if d and d.genre and d.genre != genre %}{% encart "avertissement" %}{% libelle "admin.copie.changer_genre" %}{% endencart %}{% endif %}
+    {% if d.modifie_le %}<p class="aide-champ">{% if modifie_par %}{% libelle "admin.copie.modifie_par" date=d.modifie_le|date_heure_courte nom=modifie_par %}{% else %}{% libelle "admin.copie.modifie" date=d.modifie_le|date_heure_courte %}{% endif %}</p>{% endif %}
+    <form method="post" action="#destination" class="form-copie" novalidate>{% csrf_token %}
+      <input type="hidden" name="genre" value="{{ genre }}">
+      {% if form.non_field_errors %}{% encart "erreur" role="alert" %}{{ form.non_field_errors|join:" " }}{% endencart %}{% endif %}
+      <div class="champs-copie">
+      {% for f in form %}
+        <div class="champ champ-copie-{{ f.name }}{% if f.errors %} en-erreur{% endif %}">
+          <label for="{{ f.id_for_label }}">{% if f.name == "secret" and r.secret and d.genre == genre %}{% libelle "admin.copie.form.remplacer" champ=f.label %}{% elif f.name == "cle_privee" and r.cle_privee and d.genre == genre %}{% libelle "admin.copie.form.remplacer" champ=f.label %}{% else %}{{ f.label }}{% endif %}</label>{{ f }}
+          {% if f.name == "adresse" %}<p class="aide-champ" id="aide-copie-adresse">{% libelle "admin.copie.aide.adresse" %}</p>
+          {% elif f.name == "region" %}<p class="aide-champ" id="aide-copie-region">{% libelle "admin.copie.aide.region" %}</p>
+          {% elif f.name == "chemin" %}<p class="aide-champ" id="aide-copie-chemin">{% if genre == "s3" %}{% libelle "admin.copie.aide.prefixe" %}{% else %}{% libelle "admin.copie.aide.dossier" %}{% endif %}</p>
+          {% elif f.name == "style" %}<p class="aide-champ" id="aide-copie-style">{% libelle "admin.copie.aide.style" %}</p>
+          {% elif f.name == "secret" %}<p class="aide-champ" id="aide-copie-secret">{% if d.genre == genre and r.secret_illisible %}{% libelle "admin.copie.aide.secret_illisible" %}{% elif d.genre == genre and r.secret %}{% libelle "admin.copie.aide.secret_present" date=d.secret_le|date_heure_courte %}{% elif genre == "sftp" %}{% libelle "admin.copie.aide.secret_ou_cle" %}{% else %}{% libelle "admin.copie.aide.secret_absent" %}{% endif %}</p>
+          {% elif f.name == "cle_privee" %}<p class="aide-champ" id="aide-copie-cle">{% if d.genre == genre and r.cle_privee_illisible %}{% libelle "admin.copie.aide.secret_illisible" %}{% elif d.genre == genre and r.cle_privee %}{% libelle "admin.copie.aide.cle_presente" date=d.secret_le|date_heure_courte %}{% else %}{% libelle "admin.copie.aide.cle" %}{% endif %}</p>
+          {% elif f.name == "conserver" %}<p class="aide-champ" id="aide-copie-conserver">{% libelle "admin.copie.aide.conserver" %}</p>{% endif %}
+          {% for e in f.errors %}<p class="erreur-champ"{% if forloop.first %} id="erreur-copie-{{ f.name }}"{% endif %} role="alert">{{ e }}</p>{% endfor %}
+        </div>
+      {% endfor %}
+      </div>
+      {% if d.genre == genre and r.secret or d.genre == genre and r.cle_privee %}<p class="m-0"><button type="submit" form="form-effacer-secrets" class="secondaire compact" data-confirmer="{% libelle "admin.copie.effacer_confirmer" %}">{% libelle "admin.copie.effacer" %}</button></p>{% endif %}
+      <div class="barre-enregistrement"><button type="submit" name="action" value="enregistrer">{% libelle "commun.enregistrer" %}</button></div>
+    </form>
+    <form method="post" id="form-effacer-secrets" hidden>{% csrf_token %}<input type="hidden" name="action" value="effacer_secrets"></form>
+  {% endif %}
+
+  {% if d.genre == "sftp" %}
+  <h3 class="titre-cle-copie">{% libelle "admin.copie.cle.titre" %}</h3>
+  {% if cle_serveur %}<p class="etat-cle-copie">{% icone "cadenas" %}<span>{% if cle_serveur.par %}{% libelle "admin.copie.cle.epinglee_par" type=cle_serveur.type date=cle_serveur.le|date_heure_courte nom=cle_serveur.par %}{% else %}{% libelle "admin.copie.cle.epinglee" type=cle_serveur.type date=cle_serveur.le|date_heure_courte %}{% endif %}<br><code class="empreinte-copie">{{ cle_serveur.empreinte }}</code></span></p>
+  {% elif not cle_proposee %}<p class="aide-champ remonte">{% libelle "admin.copie.cle.aucune" %}</p>{% endif %}
+  {% if cle_proposee %}
+    <div class="encart {% if cle_serveur %}encart-erreur{% else %}encart-avertissement{% endif %}" role="status">
+      <p class="encart-titre">{% if cle_serveur %}{% libelle "admin.copie.cle.differente" %}{% else %}{% libelle "admin.copie.cle.a_comparer" %}{% endif %}</p>
+      <p>{% libelle "admin.copie.cle.proposee" type=cle_proposee.type %}<br><code class="empreinte-copie">{{ cle_proposee.empreinte }}</code></p>
+      <p>{% libelle_html "admin.copie.cle.comparer" %}</p>
+      <form method="post" action="#essai">{% csrf_token %}<input type="hidden" name="action" value="confirmer_cle"><input type="hidden" name="empreinte" value="{{ cle_proposee.empreinte }}">
+        <button type="submit" class="{% if cle_serveur %}danger{% else %}secondaire{% endif %}" data-confirmer="{% libelle "admin.copie.cle.confirmer_question" empreinte=cle_proposee.empreinte %}">{% if cle_serveur %}{% libelle "admin.copie.cle.remplacer" %}{% else %}{% libelle "admin.copie.cle.confirmer" %}{% endif %}</button></form>
+    </div>
+  {% endif %}
+  {% endif %}
+</section>
+
+<section class="bloc" id="essai" aria-labelledby="titre-essai-copie"{% if essai %} tabindex="-1" data-focus-initial{% endif %}>
+  <h2 id="titre-essai-copie">{% libelle "admin.copie.essai.titre" %}</h2>
+  <p class="aide-champ remonte">{% libelle "admin.copie.essai.aide" n=essais_max minutes=essais_minutes %}</p>
+  {% if essai %}
+    <ul class="liste-essai-copie" aria-label="{% libelle "admin.copie.essai.resultat" %}">
+      {% for code in essai.faits %}<li class="ok">{% icone "check" %} <span>{% libelle "admin.copie.essai."|add:code %}</span></li>{% endfor %}
+      {% if essai.cause and essai.cause != "empreinte_a_confirmer" %}<li class="echec">{% icone "x" %} <span>{{ essai.message }}{% if essai.resume %} <span class="discret">({{ essai.resume }})</span>{% endif %}</span></li>{% endif %}
+      {% if essai.avertissement %}<li class="echec">{% icone "alerte" %} <span>{% libelle "admin.copie.essai.sans_supprimer" %}</span></li>{% endif %}
+    </ul>
+    {% if essai.cause == "empreinte_a_confirmer" %}{% encart "avertissement" role="status" %}{% libelle "admin.copie.essai.cle_a_confirmer" %}{% endencart %}
+    {% elif not essai.cause %}{% encart "succes" role="status" %}{% libelle "admin.copie.essai.reussi" %}{% endencart %}{% endif %}
+  {% endif %}
+  {% for m in messages_essai %}{% if m.level_tag == "error" %}{% encart "erreur" role="alert" %}{{ m }}{% endencart %}{% else %}{% encart "succes" role="status" %}{{ m }}{% endencart %}{% endif %}{% endfor %}
+  <form method="post" action="#essai">{% csrf_token %}
+    <button type="submit" name="action" value="essayer" class="secondaire"{% if not r.configure %} disabled aria-describedby="aide-essai-copie"{% endif %}>{% libelle "admin.copie.essai.bouton" %}</button>
+    {% if not r.configure %}<span class="aide-champ" id="aide-essai-copie">{% libelle "admin.copie.essai.sans_destination" %}</span>{% endif %}
+  </form>
+</section>
+{% else %}
+  <p class="discret">{% libelle "admin.copie.reserve_lecture" %}</p>
+{% endif %}
+
+{% if detail %}
+<details class="bloc bon-a-savoir" id="reconstruire">
+  <summary><strong>{% libelle "admin.copie.reconstruire.titre" %}</strong></summary>
+  <ol class="etapes-copie">
+    <li>{% libelle "admin.copie.reconstruire.1" %}</li>
+    <li>{% libelle "admin.copie.reconstruire.2" %}</li>
+    <li>{% libelle "admin.copie.reconstruire.3" %}</li>
+    <li>{% libelle "admin.copie.reconstruire.4" %}</li>
+  </ol>
+  {% libelle "admin.copie.reconstruire.commandes" as t_cm %}<pre class="commande" tabindex="0" aria-label="{{ t_cm }}">docker compose exec web python manage.py restore --shared registry-YYYYMMDD-HHMMSS-auto.zip --yes{# libelle-ok : commande technique #}
+docker compose exec web python manage.py restore --unsigned backup-YYYYMMDD-HHMMSS-auto.zip{# libelle-ok : commande technique #}
+docker compose exec -e SPACE=code web python manage.py restore --unsigned backup-YYYYMMDD-HHMMSS-auto.zip{# libelle-ok : commande technique #}
+docker compose restart web</pre>{# libelle-ok : commande technique #}
+</details>
+{% endif %}
+
+{% if ecrire and r.configure %}
+<section class="bloc" id="retirer" aria-labelledby="titre-retirer-copie">
+  <h2 id="titre-retirer-copie">{% libelle "admin.copie.retirer.titre" %}</h2>
+  <p class="aide-champ remonte">{% libelle "admin.copie.retirer.aide" %}</p>
+  <form method="post">{% csrf_token %}<button type="submit" name="action" value="retirer" class="secondaire lien-danger" data-confirmer="{% libelle "admin.copie.retirer.confirmer" %}">{% libelle "admin.copie.retirer.bouton" %}</button></form>
+</section>
+{% endif %}
+{% endif %}
+</div>
+<style nonce="{% jeton_csp %}">
+  .page-copie .retour-copie a { display: inline-flex; align-items: center; gap: 4px; min-height: 24px; }
+  .page-copie .form-copie input[type="text"], .page-copie .form-copie input[type="password"], .page-copie .form-copie textarea,
+  .page-copie .form-copie select { width: 100%; max-width: 560px; }
+  .page-copie .form-copie textarea { font-family: var(--police-code, monospace); font-size: var(--taille-mini); }
+  .page-copie .form-copie input[type="number"] { max-width: 10rem; }
+  .page-copie .choix-genre-copie { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .page-copie .choix-genre-copie a { display: flex; flex-direction: column; gap: 4px; min-height: 44px; text-decoration: none; color: inherit; }
+  .page-copie .choix-genre-copie a:hover { border-color: var(--principale-claire); }
+  .page-copie .choix-genre-copie a strong { color: var(--principale-texte); }
+  .page-copie .etat-cle-copie { display: flex; gap: 8px; align-items: flex-start; }
+  .page-copie .etat-cle-copie .icone-svg { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+  .page-copie .empreinte-copie { overflow-wrap: anywhere; word-break: break-all; }
+  .page-copie .liste-essai-copie { list-style: none; padding: 0; margin: 0 0 12px; display: grid; gap: 6px; }
+  .page-copie .liste-essai-copie li { display: flex; gap: 8px; align-items: flex-start; }
+  .page-copie .liste-essai-copie .icone-svg { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+  .page-copie .etapes-copie { margin: 12px 0; padding-left: 1.4em; display: grid; gap: 6px; }
+  .page-copie .titre-cle-copie { margin-top: 20px; }
+</style>
+{% endblock %}

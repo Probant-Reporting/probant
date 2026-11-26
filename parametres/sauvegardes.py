@@ -67,6 +67,13 @@ def nom_dans(noms, nom):
 def _horodatage(nom):
     """« 20261101-023000 » d'un nom d'archive (préfixe anglais ou français)."""
     return nom.split("-", 1)[1][:15] if "-" in nom else ""
+
+
+def horodatage(nom):
+    """Même chose, nom public (copie externe des sauvegardes, ``copie_externe.py``)."""
+    return _horodatage(nom)
+
+
 EXCLUS = {IMPORTS, EXPORTS, "imports", ".restore-new", ".restore-old"}  # dossiers de fichiers non sauvegardés (fichiers temporaires ; « imports » : ancien nom ; gros exports : refaits sur demande)
 # recréées par Django ; jetons des assistants (MCP) : jamais sauvegardés, une restauration ne peut pas rendre valide un jeton
 # révoqué après la sauvegarde (docs/mcp.md, 1.4) : chacun en crée un nouveau
@@ -638,7 +645,7 @@ def _proteges(racine):
 
     chemins = {Path(settings.ESPACES_DOSSIER), ESP.dossier_sauvegardes(ESP.PRINCIPAL),
                Path(settings.DOSSIER_DONNEES) / ".cle_secrete", Path(settings.DOSSIER_DONNEES) / ".secret_key",
-               Path(settings.IA_CLES_DIR)}
+               Path(settings.DOSSIER_DONNEES) / ".secret_key_all_in_one", Path(settings.IA_CLES_DIR)}
     for conf in connections.settings.values():
         if str(conf.get("ENGINE", "")).endswith("sqlite3") and str(conf.get("NAME", "")) not in ("", ":memory:"):
             nom = str(conf["NAME"])
@@ -669,8 +676,26 @@ def _fichiers_deposes():
             yield p, (rel_dossier / n).as_posix()
 
 
+def avant_derniere_mise_a_jour(chemins):
+    """Archives « before-update » (ancien nom compris) de la dernière mise à jour parmi ``chemins`` : la plus récente et
+    celles faites moins d'un jour avant elle (celle de update.sh avec l'ancienne version, puis celle du démarrage de la
+    nouvelle). Toujours gardées par la rotation, en plus des archives conservées : le retour à la version précédente
+    reste possible jusqu'à la mise à jour suivante."""
+    avant = []
+    for c in chemins:
+        a = Archive(Path(c))
+        if a.motif == "before-update":
+            with contextlib.suppress(ValueError):  # date impossible dans le nom : tourne comme les autres
+                avant.append((a.date, c))
+    if not avant:
+        return set()
+    derniere = max(d for d, _ in avant)
+    return {c for d, c in avant if d >= derniere - datetime.timedelta(days=1)}
+
+
 def tourner(conserver=None):
-    """Supprime les archives au-delà des ``conserver`` plus récentes ; renvoie les noms supprimés."""
+    """Supprime les archives au-delà des ``conserver`` plus récentes (sauf la dernière « before-update ») ; renvoie les
+    noms supprimés."""
     if conserver is None:
         from .models import Instance
 
@@ -682,7 +707,10 @@ def tourner(conserver=None):
     if futures:  # horloge du serveur remise en arrière : ces archives ne sont pas les plus récentes, mais on les garde
         journal.warning("%s backup(s) dated in the future (%s): check the server clock; they are kept, not rotated",
                         len(futures), futures[0].nom)
+    garder = avant_derniere_mise_a_jour([a.chemin for a in liste])
     for a in [a for a in liste if a not in futures][max(conserver, 1):]:
+        if a.chemin in garder:
+            continue
         a.chemin.unlink()
         supprimees.append(a.nom)
     if supprimees:
@@ -731,11 +759,12 @@ def _signer(descriptif, empreintes, secret):
     return salted_hmac(SEL_SIGNATURE, message, secret=secret, algorithm="sha256").hexdigest()
 
 
-def signature_valide(chemin):
+def signature_valide(chemin, secrets=None):
     """Vrai si l'archive a été signée par cette installation (``SECRET_KEY``, ou une clé de ``SECRET_KEY_FALLBACKS``) et
     que rien n'y a changé depuis : ni le descriptif, ni un fichier, ni un fichier ajouté ou retiré. Faux pour une archive
     sans signature (faite avant cette version, ou par une version antérieure), d'un autre serveur, abîmée ou forgée.
-    Deux fichiers du même nom dans l'archive : refusée (on ne saurait pas lequel la restauration lirait)."""
+    Deux fichiers du même nom dans l'archive : refusée (on ne saurait pas lequel la restauration lirait). ``secrets`` :
+    d'autres clés à essayer à la place (seulement pour dire pourquoi une archive est refusée)."""
     import hmac
 
     try:
@@ -751,13 +780,17 @@ def signature_valide(chemin):
             empreintes = _empreintes(z)
     except (zipfile.BadZipFile, zipfile.LargeZipFile, KeyError, ValueError, OSError, EOFError, RuntimeError):
         return False
-    secrets = [settings.SECRET_KEY, *getattr(settings, "SECRET_KEY_FALLBACKS", [])]
+    secrets = secrets or [settings.SECRET_KEY, *getattr(settings, "SECRET_KEY_FALLBACKS", [])]
     return any(hmac.compare_digest(_signer(d, empreintes, secret), s["valeur"]) for secret in secrets)
 
 
 def controler_signature(chemin):
-    """Refuse (ErreurSauvegarde, message pour l'administrateur) une archive sans signature valide de cette installation."""
+    """Refuse (ErreurSauvegarde, message pour l'administrateur) une archive sans signature valide de cette installation.
+    Version tout-en-un : une archive signée avec la clé fixe du développement (faite avant que cette copie ait sa propre
+    clé) est refusée aussi (cette clé est connue de tous : la signature ne prouve rien), avec un message qui le dit."""
     if not signature_valide(chemin):
+        if getattr(settings, "TOUT_EN_UN", False) and signature_valide(chemin, [settings.CLE_DEVELOPPEMENT]):
+            raise ErreurSauvegarde(libelle("admin.sauvegarde.non_signee_ancienne_cle"))
         raise ErreurSauvegarde(libelle("admin.sauvegarde.non_signee"))
 
 
@@ -1285,6 +1318,36 @@ def derniere_auto():
     return a.date if a else None
 
 
+ECHEC_AUTO = ".automatic-backup-failed.json"  # dans le dossier des sauvegardes de l'espace : dernier échec (page Santé)
+
+
+def noter_echec_auto(erreur, code=None):
+    """Sauvegarde automatique échouée (planificateur) : date et nom de l'erreur, hors de la base, lus par la page Santé
+    et les alertes par e-mail ; effacé à la sauvegarde automatique suivante réussie."""
+    f = ESP.dossier_sauvegardes(code) / ECHEC_AUTO
+    try:
+        f.parent.mkdir(parents=True, exist_ok=True)
+        _ecrire_atomique(f, json.dumps({"date": timezone.now().isoformat(), "error": type(erreur).__name__}))
+    except OSError:
+        pass  # disque plein : la ligne « Espace disque » le dit
+
+
+def effacer_echec_auto(code=None):
+    try:
+        (ESP.dossier_sauvegardes(code) / ECHEC_AUTO).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+
+def echec_auto(code=None):
+    """Date (aware) du dernier échec de la sauvegarde automatique de l'espace, s'il n'a pas été suivi d'une réussite."""
+    try:
+        d = json.loads((ESP.dossier_sauvegardes(code) / ECHEC_AUTO).read_text(encoding="utf-8"))
+        return datetime.datetime.fromisoformat(d["date"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def etat_automatique(instance=None, maintenant=None):
     """Pour la page Hébergement : {active, derniere, prochaine, en_retard}."""
     from .models import Instance
@@ -1328,9 +1391,17 @@ def planifier(heure=None):
                 return
             reference = derniere_auto() or departs.setdefault(code, timezone.localtime())
             if echeance_suivante(i.sauvegarde_frequence, heure or i.sauvegarde_heure, reference) <= timezone.localtime():
-                creer("auto")
-                tourner(i.sauvegarde_conserver)
+                try:
+                    creer("auto")
+                    tourner(i.sauvegarde_conserver)
+                except Exception as e:
+                    noter_echec_auto(e)  # page Santé et alertes ; l'erreur est journalisée par pour_chaque_espace
+                    raise
+                effacer_echec_auto()
 
+    from . import alertes, copie_externe, taches_fond
+
+    taches_fond.demarrer("backup")
     while True:
         # un échec : la boucle continue, on réessaiera à la prochaine vérification (dans 10 minutes)
         pause = 60 if ESP.pour_chaque_espace(sauvegarder_si_echeance, journal, "Automatic backup failed (space \"%s\")") else 600
@@ -1338,13 +1409,22 @@ def planifier(heure=None):
             registre_du_jour()
         except Exception:
             journal.exception("Backup of the shared registry failed")
+        try:  # copie externe (Paramètres › Hébergement) : les archives pas encore copiées, registre compris
+            copie_externe.passage()
+        except Exception:
+            journal.exception("External copy of the backups failed")
+        alertes.passage_planifie()  # alertes par e-mail (aussi lancées par check_data --schedule : une seule à la fois)
         connections.close_all()
         time.sleep(pause)
 
 
 # ---------------------------------------------------------------- registre commun (comptes, espaces)
 NOM_REGISTRE = re.compile(r"^(registry|registre)-\d{8}-\d{6}(-[a-z0-9-]+)?\.zip$")  # « registre- » : avant la mise à jour
-MODELES_REGISTRE = ["espaces.installation", "espaces.espace", "espaces.compte", "espaces.accesespace"]  # sans les sessions
+# sans les sessions ; le serveur d'envoi des e-mails et la destination de la copie externe avec leurs secrets chiffrés
+# (illisibles sans le secret de l'installation)
+MODELES_REGISTRE = ["espaces.installation", "espaces.espace", "espaces.compte", "espaces.accesespace", "espaces.serveurenvoi",
+                    "espaces.reglagealertes", "espaces.destinationcopie"]  # pas l'état des alertes, des problèmes
+# signalés ni de la copie externe : refaits au passage suivant
 
 
 def archives_registre():
@@ -1370,17 +1450,30 @@ def creer_registre(motif=""):
     partiel = d / f".{nom}.partiel"
     try:
         with zipfile.ZipFile(partiel, "w", zipfile.ZIP_DEFLATED) as z:
-            objets = (o for label in MODELES_REGISTRE for o in apps.get_model(label)._base_manager.order_by("pk"))
+            # tables qui existent : avant les migrations d'une mise à jour (« before-update »), celles qu'elle va créer
+            # n'existent pas encore
+            from django.db import connections
+
+            tables = set(connections[ESP.COMMUN].introspection.table_names())
+            modeles = [apps.get_model(label) for label in MODELES_REGISTRE]
+            objets = (o for m in modeles if m._meta.db_table in tables for o in m._base_manager.order_by("pk"))
             z.writestr("registry.json", serializers.serialize("json", objets, cls=EncodeurExact))
+            # migrations du registre : une version plus ancienne que l'archive la refuse avant tout changement
+            enregistreur = MigrationRecorder(connections[ESP.COMMUN])
+            migrations = sorted([a, n] for a, n in enregistreur.applied_migrations()) if enregistreur.has_table() else []
             z.writestr(DESCRIPTIF, json.dumps({"format": FORMAT, "outil": OUTIL, "contenu": "registre",
                                                       "version": settings.VERSION, "date": maintenant.isoformat(),
-                                                      "identifiant_installation": _identifiant_installation()}, indent=1))
+                                                      "identifiant_installation": _identifiant_installation(),
+                                                      "migrations": migrations}, indent=1))
         os.replace(partiel, d / nom)
     finally:
         if partiel.exists():
             partiel.unlink()
-    for ancienne in archives_registre()[max(settings.SAUVEGARDE_CONSERVER, 1):]:
-        ancienne.unlink()
+    liste = archives_registre()
+    garder = avant_derniere_mise_a_jour(liste)
+    for ancienne in liste[max(settings.SAUVEGARDE_CONSERVER, 1):]:
+        if ancienne not in garder:
+            ancienne.unlink()
     return d / nom
 
 
@@ -1390,9 +1483,33 @@ def registre_du_jour():
         creer_registre("auto")
 
 
+# réglages du registre commun remis à zéro par une restauration du registre quand l'archive ne les a pas (archive d'une
+# version qui ne les sauvegardait pas) ; la connexion d'entreprise n'est jamais dans l'archive (docs/single_sign_on.md)
+REGLAGES_REGISTRE = ("espaces.serveurenvoi", "espaces.reglagealertes", "espaces.destinationcopie")
+
+
+def _remis_a_zero(objets):
+    """[(étiquette du modèle, nombre de lignes)] de ce que la restauration va vider sans le remettre : réglages absents
+    de l'archive, connexion d'entreprise (réglage, liens). Lu avant le vidage ; table absente : rien."""
+    from django.db import DatabaseError
+
+    dans_l_archive = {o.object._meta.label_lower for o in objets}
+    sortie = []
+    for label in (*[m for m in REGLAGES_REGISTRE if m not in dans_l_archive], "connexion_entreprise.reglageentreprise",
+                  "connexion_entreprise.lienentreprise"):
+        try:
+            n = apps.get_model(label)._base_manager.using(ESP.COMMUN).count()
+        except (LookupError, DatabaseError):
+            continue
+        if n:
+            sortie.append((label, n))
+    return sortie
+
+
 def restaurer_registre(chemin):
     """IT seulement (``restauration --commun``) : remplace le registre commun par celui de l'archive (les sessions sont
-    vidées : chacun se reconnecte), puis le remet d'accord avec les espaces."""
+    vidées : chacun se reconnecte), puis le remet d'accord avec les espaces. Renvoie le descriptif de l'archive, avec
+    ``remis_a_zero`` : ce qui a été vidé sans être remis (``_remis_a_zero``), à régler de nouveau."""
     from django.db import connections
 
     from espaces import comptes as EC
@@ -1406,13 +1523,32 @@ def restaurer_registre(chemin):
         raise ErreurSauvegarde(f"This file is not a backup of the registry ({e}).") from e
     if d.get("contenu") != "registre":
         raise ErreurSauvegarde("This file is not a backup of the shared registry.")
+    # archive d'une version plus récente (faite après une mise à jour, puis retour à la version d'avant) : refusée avant
+    # tout changement, par ses migrations (archives qui les notent) ou par un contenu que ces modèles ne lisent pas
+    recente = (f"This backup of the shared registry was made by a more recent version of the tool "
+               f"({d.get('version') or 'unknown'}; this one: {settings.VERSION}): it cannot be restored here. Nothing was "
+               "changed. Restore it with the version that made it, or restore an archive of the registry made by this "
+               "version (for example the \"before-update\" one, in backups/shared).")
+    m = d.get("migrations")
+    if m is not None:
+        paires = [x for x in m if isinstance(x, list) and len(x) == 2 and all(isinstance(y, str) for y in x)]             if isinstance(m, list) else []
+        if not isinstance(m, list) or len(paires) != len(m):
+            raise ErreurSauvegarde("This file is not a backup of the registry (damaged list of migrations).")
+        connues = {(a, n) for a, n in MigrationLoader(None, ignore_no_migrations=True).disk_migrations}
+        if any((a, n) not in connues for a, n in paires_actuelles(paires)):
+            raise ErreurSauvegarde(recente)
+    try:
+        objets = list(serializers.deserialize("json", contenu, using=ESP.COMMUN))
+    except serializers.base.DeserializationError as e:
+        raise ErreurSauvegarde(recente) from e
+    remis = _remis_a_zero(objets)
     with ESP.toutes_les_bases():
         creer_registre("before-restore")
         from django.db import transaction
 
         with transaction.atomic(using=ESP.COMMUN):  # vidage et rechargement ensemble : jamais un registre vide
             call_command("flush", database=ESP.COMMUN, interactive=False, verbosity=0)
-            for o in serializers.deserialize("json", contenu, using=ESP.COMMUN):
+            for o in objets:
                 o.save(using=ESP.COMMUN)
             # PostgreSQL : lignes rechargées avec leur numéro, séquences remises au-dessus (sinon la création suivante
             # d'un espace ou d'un accès reprenait un numéro déjà pris : IntegrityError)
@@ -1424,6 +1560,7 @@ def restaurer_registre(chemin):
                     cur.execute(sql)
         connections[ESP.COMMUN].close()
     EC.reconcilier()
+    d["remis_a_zero"] = remis
     return d
 
 

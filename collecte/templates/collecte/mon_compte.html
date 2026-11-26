@@ -73,7 +73,7 @@
     {% if connexions %}
     <ul class="liste-connexions">
       {% for c in connexions %}<li><span>{{ c.date|date_courte }} <span class="discret">{{ c.date|date:"H:i" }}</span></span>
-        {% if c.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "cadre.compte.connexions.reussie" %}</span>{% elif c.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "cadre.compte.connexions.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "cadre.compte.connexions.echec" %}</span>{% endif %}</li>{% endfor %}
+        {% if c.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "cadre.compte.connexions.reussie" %}</span>{% elif c.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "cadre.compte.connexions.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "cadre.compte.connexions.echec" %}</span>{% endif %}{% if c.methode == "entreprise" %} <span class="discret">{% libelle "cadre.compte.connexions.entreprise" %}</span>{% endif %}</li>{% endfor %}
     </ul>
     <p class="aide-champ">{% libelle "cadre.compte.connexions.aide" %}</p>
     {% else %}

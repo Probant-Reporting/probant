@@ -10,10 +10,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.mail import EmailMessage
-from django.conf import settings
 from django.shortcuts import redirect, render
 from django.utils import timezone
 
+from parametres import envoi_emails as EE
 from parametres.libelles import libelle
 from parametres.models import Instance
 from referentiel.models import Organisation
@@ -206,8 +206,9 @@ def relances(request):
                 sujet_essai, texte = R.rediger(liste[0], request) if liste else ("", "")
                 if liste:
                     try:
-                        EmailMessage(libelle("suivi.relances.msg.objet_essai", objet=sujet_essai), texte, settings.DEFAULT_FROM_EMAIL,
-                                     [request.user.email]).send()
+                        connexion, expediteur = EE.connexion_envoi()
+                        EmailMessage(libelle("suivi.relances.msg.objet_essai", objet=sujet_essai), texte, expediteur,
+                                     [request.user.email], connection=connexion).send()
                         messages.success(request, libelle("suivi.relances.msg.essai_envoye", email=request.user.email,
                                                           personne=liste[0].personne))
                     except Exception as e:

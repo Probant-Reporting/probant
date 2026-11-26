@@ -1,0 +1,71 @@
+{% load collecte %}
+{% comment %}Encart « E-mails » de la page Hébergement (parametres/envoi_emails.py). Trois cas : réglé par l'IT dans le
+fichier de réglages (lecture seule, il garde la priorité) ; réglé ou à régler dans l'outil par un gestionnaire des espaces
+(formulaire) ; les autres administrateurs voient les réglages en lecture seule. Le mot de passe n'est
+jamais réaffiché : un champ toujours vide et la date de son enregistrement.{% endcomment %}
+<section class="bloc" id="emails">
+  <h2>{% libelle "admin.hebergement.emails" %}</h2>
+  {% libelle "admin.hebergement.smtp_aucun" as t_aucun %}
+  {% if smtp.illisible %}
+    {% encart "avertissement" role="status" %}{% libelle "admin.hebergement.smtp.illisible" %}{% endencart %}
+  {% elif smtp.configure %}
+    {% encart "succes" %}{% libelle_html "admin.hebergement.envoi_actif" %}{% endencart %}
+  {% else %}
+    <div class="encart encart-avertissement" role="status">
+      <p class="encart-titre">{% libelle "admin.hebergement.emails_inactif_titre" %}</p>
+      <p>{% libelle "admin.hebergement.emails_inactif" %}</p>
+    </div>
+  {% endif %}
+
+  {% if smtp.modifiable %}
+    {% if smtp.outil and smtp.modifie_le %}<p class="aide-champ remonte">{% if smtp.modifie_par %}{% libelle "admin.hebergement.smtp.modifie_par" date=smtp.modifie_le|date_heure_courte nom=smtp.modifie_par %}{% else %}{% libelle "admin.hebergement.smtp.modifie" date=smtp.modifie_le|date_heure_courte %}{% endif %}</p>{% endif %}
+    <form method="post" action="#emails" class="form-smtp" novalidate>{% csrf_token %}
+      {% if form_smtp.non_field_errors %}{% encart "erreur" role="alert" %}{{ form_smtp.non_field_errors|join:" " }}{% endencart %}{% endif %}
+      <div class="champs-smtp">
+        {% for f in form_smtp %}{% if f.name == "en_clair" %}{% elif f.name != "mot_de_passe" %}
+        <div class="champ champ-smtp-{{ f.name }}{% if f.errors %} en-erreur{% endif %}">
+          <label for="{{ f.id_for_label }}">{{ f.label }}</label>{{ f }}
+          {% if f.name == "hote" %}<p class="aide-champ" id="aide-smtp-hote">{% libelle "admin.hebergement.smtp.aide_hote" %}</p>{% endif %}
+          {% if f.name == "securite" %}<p class="aide-champ" id="aide-smtp-securite">{% libelle "admin.hebergement.smtp.aide_securite" %}</p>{% endif %}
+          {% for e in f.errors %}<p class="erreur-champ"{% if forloop.first %} id="erreur-smtp-{{ f.name }}"{% endif %} role="alert">{{ e }}</p>{% endfor %}
+        </div>
+        {% else %}
+        <div class="champ champ-smtp-mot_de_passe{% if f.errors %} en-erreur{% endif %}">
+          <label for="{{ f.id_for_label }}">{% if smtp.mot_de_passe %}{% libelle "admin.hebergement.smtp.form.mot_de_passe_remplacer" %}{% else %}{{ f.label }}{% endif %}</label>{{ f }}
+          <p class="aide-champ" id="aide-smtp-mdp">{% if smtp.illisible %}{% libelle "admin.hebergement.smtp.mdp_illisible_aide" %}{% elif smtp.mot_de_passe %}{% libelle "admin.hebergement.smtp.mdp_present" date=smtp.mot_de_passe_le|date_heure_courte %}{% else %}{% libelle "admin.hebergement.smtp.mdp_absent" %}{% endif %}</p>
+          {% for e in f.errors %}<p class="erreur-champ"{% if forloop.first %} id="erreur-smtp-{{ f.name }}"{% endif %} role="alert">{{ e }}</p>{% endfor %}
+          {% if smtp.mot_de_passe %}<p class="m-0"><button type="submit" form="form-effacer-mdp-smtp" class="secondaire compact" data-confirmer="{% libelle "admin.hebergement.smtp.effacer_confirmer" %}">{% libelle "admin.hebergement.smtp.effacer" %}</button></p>{% endif %}
+        </div>
+        {% endif %}{% endfor %}
+      </div>
+      {% if form_smtp.demander_en_clair %}<div class="champ champ-smtp-en-clair">
+        <label class="case-option" for="{{ form_smtp.en_clair.id_for_label }}">{{ form_smtp.en_clair }}<span>{{ form_smtp.en_clair.label }}</span></label>
+        <p class="aide-champ" id="aide-smtp-en-clair">{% libelle "admin.hebergement.smtp.en_clair_aide" %}</p>
+      </div>{% endif %}
+      <p class="aide-champ">{% libelle "admin.hebergement.smtp.aide_portee" %}</p>
+      <div class="barre-enregistrement"><button type="submit" name="action" value="reglage_emails">{% libelle "commun.enregistrer" %}</button></div>
+    </form>
+    {% if smtp.mot_de_passe %}<form method="post" id="form-effacer-mdp-smtp" hidden>{% csrf_token %}<input type="hidden" name="action" value="effacer_mdp_emails"></form>{% endif %}
+    <details class="aide-repliable"><summary>{% libelle "admin.hebergement.message_it_titre" %}</summary>
+      {% libelle "admin.hebergement.message_it_label" as t_mi %}<pre class="commande" tabindex="0" aria-label="{{ t_mi }}">{% libelle "admin.hebergement.message_it" %}</pre>
+    </details>
+  {% elif smtp.configure %}
+    <table class="table-mep">
+      <tr><th scope="row">{% libelle "admin.hebergement.smtp_serveur" %}</th><td>{{ smtp.hote }}:{{ smtp.port }} ({{ smtp.securite }})</td></tr>
+      {% if smtp.utilisateur is not None %}<tr><th scope="row">{% libelle "admin.hebergement.smtp_identifiant" %}</th><td>{{ smtp.utilisateur|default:t_aucun }}</td></tr>{% endif %}
+      <tr><th scope="row">{% libelle "admin.hebergement.smtp_expediteur" %}</th><td>{{ smtp.expediteur }}</td></tr>
+    </table>
+    <p class="aide-champ">{% if smtp.par_it %}{% libelle "admin.hebergement.smtp.par_it_mention" %}{% else %}{% libelle "admin.hebergement.smtp.par_outil_mention" %}{% endif %}</p>
+  {% else %}
+    <p>{% libelle "admin.hebergement.smtp.demander" %}</p>
+  {% endif %}
+
+  <div id="resultat-emails" class="resultat-emails">{% for m in messages_emails %}{% if m.level_tag == "error" %}{% encart "erreur" role="alert" %}{{ m }}{% endencart %}{% elif m.level_tag == "warning" %}{% encart "avertissement" role="status" %}{{ m }}{% endencart %}{% else %}{% encart "succes" role="status" %}{{ m }}{% endencart %}{% endif %}{% endfor %}</div>
+  <h3 class="titre-test-email">{% libelle "admin.hebergement.smtp.tester_titre" %}</h3>
+  {% if smtp.configure %}<p class="aide-champ remonte">{% if smtp.outil %}{% libelle "admin.hebergement.smtp.tester_aide_outil" n=smtp.essais_max minutes=smtp.essais_minutes %}{% else %}{% libelle "admin.hebergement.verifier" %}{% endif %}</p>{% endif %}
+  <form method="post" action="#resultat-emails" class="test-email">{% csrf_token %}
+    {% include "collecte/administration/_champ.html" with champ=form.destinataire %}
+    <button type="submit" name="action" value="tester_email" class="secondaire">{% libelle "admin.hebergement.tester" %}</button>
+  </form>
+  {% if not smtp.configure %}<p class="aide-champ">{% libelle "admin.hebergement.tester_aide" %}</p>{% endif %}
+</section>

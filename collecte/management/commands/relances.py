@@ -33,6 +33,9 @@ class Command(BaseCommand):
     def handle(self, *args, **o):
         if o["planifier"]:
             R.journal.info("Automatic reminders checked every day at %s", settings.RELANCE_HEURE)
+            from parametres import taches_fond
+
+            taches_fond.demarrer("reminders")  # signe de vie (page Santé, alertes par e-mail)
             while True:
                 echeance = SV.prochaine(settings.RELANCE_HEURE)
                 while (reste := (echeance - timezone.localtime()).total_seconds()) > 0:
@@ -45,8 +48,9 @@ class Command(BaseCommand):
             self.stdout.write("Specify --auto (today's reminders) or --schedule.")
             return
         if not R.envoi_actif() and not o["simulation"]:
-            self.stdout.write("E-mails not enabled (SMTP_HOST empty): no reminder sent or recorded. The sending account (SMTP) "
-                              "is to be provided by IT; \"--simulation\" shows who would be reminded.")
+            self.stdout.write("E-mails not enabled (no SMTP server set): no reminder sent or recorded. Set the sending server "
+                              "in Administration > Settings > Hosting, or SMTP_HOST in the settings file; \"--simulation\" "
+                              "shows who would be reminded.")
             R.relancer_automatiquement()  # avertissement dans le journal du serveur, rien n'est envoyé
             return
         liste = []

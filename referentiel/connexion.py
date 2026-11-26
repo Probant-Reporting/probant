@@ -67,6 +67,12 @@ def _reseau(ip):
     return ip
 
 
+def reseau(request):
+    """Adresse du visiteur qui porte les compteurs (IPv6 ramenée à son réseau /64) ; sert aussi à la limite des refus de
+    la connexion d'entreprise (connexion_entreprise/flux.py)."""
+    return _reseau(adresse(request))
+
+
 def _cles(identifiant, request):
     ip = _reseau(adresse(request))
     empreinte = hashlib.sha256(f"{(identifiant or '').strip().lower()}|{ip}".encode()).hexdigest()
@@ -212,7 +218,8 @@ def _echec(sender, credentials, request=None, **kwargs):
     if request is not None and not vers_ailleurs:
         from . import historique_connexions as HC
 
-        HC.noter("echec", identifiant)
+        # bon mot de passe refusé : la connexion d'entreprise est exigée pour ce compte (referentiel/auth.py)
+        HC.noter("echec", identifiant, motif="mot_de_passe" if getattr(request, "connexion_entreprise_exigee", False) else "")
 
 
 @receiver(user_logged_in)
@@ -223,6 +230,11 @@ def _reussite(sender, request, user, **kwargs):
         from . import historique_connexions as HC
 
         HC.noter("reussie", utilisateur=user)
+        # méthode de connexion gardée dans la session : la session suit la règle du mot de passe à chaque requête
+        # (connexion_entreprise/intergiciels.py ; la connexion d'entreprise note « entreprise », par une requête GET)
+        from connexion_entreprise.flux import CLE_METHODE
+
+        request.session[CLE_METHODE] = "mot_de_passe"
     # langue du compte gardée dans la session, commune à tous les espaces : chaque espace (page « pas d'accès »
     # comprise) s'ouvre dans la langue de la personne, même là où la copie de son compte ne la porte pas encore
     from parametres.langues import CLE_SESSION
@@ -236,7 +248,18 @@ class FormulaireConnexion(AuthenticationForm):
     """Formulaire de la page Connexion : dit « Trop d'essais » quand la connexion est bloquée."""
 
     bloquee = False
+    # connexion d'entreprise exigée (mot de passe réservé aux comptes de secours) : TOUT échec reçoit le même message,
+    # qu'il s'agisse d'un bon mot de passe d'un compte qui passe par l'entreprise, d'un mauvais ou d'un compte inconnu
+    # (sinon la page confirmerait que le compte existe et que le mot de passe est bon)
+    entreprise_exigee = False
     espace_ailleurs = None  # code de l'espace où la personne a accès, si ce n'est pas celui de cette page
+
+    @staticmethod
+    def _mot_de_passe_reserve():
+        from connexion_entreprise import regles
+
+        r = regles.reglage()
+        return regles.active(r) and not r.mot_de_passe_pour_tous
 
     def clean(self):
         if bloquee(self.data.get("username", ""), self.request):
@@ -249,6 +272,9 @@ class FormulaireConnexion(AuthenticationForm):
             return super().clean()
         except forms.ValidationError:
             ailleurs = getattr(self.request, "espaces_connexion_ailleurs", None)
+            if getattr(self.request, "connexion_entreprise_exigee", False) or (not ailleurs and self._mot_de_passe_reserve()):
+                self.entreprise_exigee = True
+                raise forms.ValidationError(libelle("cadre.connexion.entreprise.incorrect"), code="invalid_login") from None
             if not ailleurs:
                 raise
             # bon mot de passe, mais pas d'accès à cet espace : connexion dans un espace où la personne a accès

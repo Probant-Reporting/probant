@@ -155,7 +155,9 @@ class GuidesContenuTests(TestCase):
     def test_poids_et_nombre_des_images(self):
         for langue in AI.LANGUES_GUIDES:
             fichiers = list((RACINE / "docs" / "screenshots" / langue).glob("*.png"))
-            self.assertLessEqual(len(fichiers), 35, langue)
+            # 38 en anglais et en français depuis la 1.1.0 (six écrans nouveaux : hébergement, santé, connexion
+            # d'entreprise) ; le poids de chaque image reste borné ci-dessous
+            self.assertLessEqual(len(fichiers), 40, langue)
             for f in fichiers:
                 self.assertLessEqual(f.stat().st_size, 300 * 1024, f.name)
 

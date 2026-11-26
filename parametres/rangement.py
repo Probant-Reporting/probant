@@ -7,6 +7,7 @@ Codespace, ``data`` dans la version Windows) :
     README.txt                    ce plan, écrit par l'outil au démarrage
     db.sqlite3, shared.sqlite3    bases de données (SQLite) : l'espace principal, le registre des comptes
     .secret_key                   clé de l'installation, à ne jamais partager
+    .secret_key_all_in_one        clé de la version tout-en-un (à elle seule, jamais reprise par un serveur)
     files/                        documents déposés dans l'outil (espace principal)
         evidence/<période>/<organisation>/<KPI>/<fichier>
                                   preuves déposées par les contributeurs
@@ -15,6 +16,8 @@ Codespace, ``data`` dans la version Windows) :
         exports/                  gros exports fabriqués en arrière-plan, effacés après quelques jours (jamais sauvegardés)
     sign-in-attempts/             compteur des essais de connexion manqués, partagé par les processus (jamais sauvegardé)
     ai-keys/<code>.key            clé de l'assistant IA de chaque espace, saisie par son administrateur (jamais sauvegardée)
+    ca-bundle.pem                 autorités du système et celles ajoutées par l'IT (EXTRA_CA_CERTS), réunies au démarrage
+                                  (config/autorites_certificats.py ; jamais sauvegardé)
     backups/                      archives datées (base + fichiers) de l'espace principal, historique des restaurations
         shared/                   archives du registre des comptes
         spaces/<code>/            archives des autres espaces
@@ -47,6 +50,7 @@ do not move anything by hand (backups and restores take care of it).
 db.sqlite3            database of the main space (when the installation uses SQLite)
 shared.sqlite3        account registry, shared by all spaces
 .secret_key           installation key: never share it
+.secret_key_all_in_one  key of the all-in-one version: never share it (a server makes its own)
 
 files/                files uploaded in the tool (main space)
   evidence/           evidence files uploaded by contributors,
@@ -58,6 +62,8 @@ files/                files uploaded in the tool (main space)
 
 sign-in-attempts/     count of failed sign-ins (temporary, never backed up)
 ai-keys/<code>.key    key of the AI assistant of each space, entered by its administrator (never backed up)
+ca-bundle.pem         certificate authorities of the system and those added by the IT, joined at each start
+                      (only when the IT adds authorities; never backed up)
 
 backups/              dated archives (database + files) of the main space
   restores.jsonl      history of restores

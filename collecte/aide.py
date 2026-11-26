@@ -95,6 +95,7 @@ SECTIONS = {
     "langues": {"administrator": "languages"},
     "ia": {"administrator": "ai"},
     "reglages": {"administrator": "assistants"},  # Paramètres › Assistants (serveur_mcp)
+    "reglages_entreprise": {"administrator": "company-sign-in"},  # Paramètres › Connexion d'entreprise
     "hebergement": {"administrator": "hosting"},
 }
 # préfixes : pages de la même famille (une campagne, un compte, un référentiel…)

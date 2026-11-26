@@ -2,28 +2,55 @@
 # (Actions tab › "Docker image" › Run workflow). Before publishing: tests (same pinned packages and same parallel
 # suite as .github/workflows/tests.yml, which also runs the PostgreSQL and browser tests on every push), then
 # installation on a blank machine (docker/test_installation.sh).
+# After the push, for each version:
+#   signature        the image is signed by its digest with cosign, without a key ("keyless"): the certificate names
+#                    this workflow and the tag it ran for (GitHub OIDC token, id-token: write)
+#   SBOM             list of the components of the image (SPDX JSON, made by Syft), attached to the image as a
+#                    signed attestation (cosign attest --type spdxjson)
+#   vulnerabilities  report of the known vulnerabilities of those components (Grype, text table and JSON); it informs,
+#                    it never stops the run
+#   list of sums     the SHA-256 sums of the files that get.sh, update.sh and auto-update.sh download from the tag
+#                    (docker/make_file_sums.sh), signed with cosign without a key (sign-blob, Sigstore bundle), and
+#                    checked as the scripts check it; tags only (the scripts verify the identity of the tag)
+#   offline package  for a server without Internet access: the image (docker save, compressed) and the files that
+#                    install and update the tool, with their SHA-256 sums (docker/make_offline_package.sh); the package
+#                    is signed with cosign without a key (sign-blob, Sigstore bundle), and the signature is checked
+#                    online and without network
+# The SBOM and the report are kept as an artifact of the run ("probant-image-reports"), the list of sums as another one
+# ("probant-file-sums"), the offline package as a third one ("probant-offline-package"); all are attached to the release
+# of the tag: by this run if the release already
+# exists, otherwise by the run that starts when the release is published (same logic as .github/workflows/portable.yml).
 name: Docker image
 
 on:
   push:
     tags: ["v*"]
+  release:
+    types: [published]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# one run at a time for a tag; a second run waits instead of cancelling a push of the image
+# one run at a time for a tag; a second run waits instead of cancelling a push of the image (a release event has the
+# same github.ref as its tag: it waits for the image run of that tag, then finds its files)
 concurrency:
   group: image-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   test-and-publish:
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
       contents: read
-      packages: write  # push the image to ghcr.io
+      packages: write  # push the image, its signature and its attestation to ghcr.io
+      id-token: write  # keyless signature: OIDC token of this workflow for the certificate of the signature
+    outputs:
+      release_tag: ${{ steps.publish.outputs.release_tag }}
+      version: ${{ steps.publish.outputs.version }}
+      ref: ${{ steps.publish.outputs.ref }}
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -46,9 +73,251 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build and publish
+        id: publish
         run: |
           IMAGE=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           VERSION=$(cat VERSION)
-          docker build --build-arg VERSION_COMMIT=${{ github.sha }} -t $IMAGE:$VERSION -t $IMAGE:latest .
-          docker push $IMAGE:$VERSION
-          docker push $IMAGE:latest
+          docker build --build-arg "VERSION_COMMIT=${{ github.sha }}" -t "$IMAGE:$VERSION" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$VERSION"
+          docker push "$IMAGE:latest"
+          # digest given by the registry at the push: the signature and the attestation name this digest, never a tag
+          REF=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:$VERSION")
+          case "$REF" in
+            "$IMAGE@sha256:"*) ;;
+            *) echo "::error::No digest for $IMAGE:$VERSION after the push (got: '$REF')"; exit 1 ;;
+          esac
+          # tag of the release the files go to: the pushed tag, or v<VERSION> on a run on demand
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then TAG="$GITHUB_REF_NAME"; else TAG="v$VERSION"; fi
+          {
+            echo "version=$VERSION"
+            echo "ref=$REF"
+            echo "release_tag=$TAG"
+          } >> "$GITHUB_OUTPUT"
+          echo "Published $REF (tags $VERSION and latest)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v4.1.4
+      - name: Sign the image (keyless)
+        env:
+          REF: ${{ steps.publish.outputs.ref }}
+        run: cosign sign --yes "$REF"
+      - name: List the components of the image (SBOM)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ${{ steps.publish.outputs.ref }}
+          format: spdx-json
+          output-file: probant-${{ steps.publish.outputs.version }}-sbom.spdx.json
+          upload-artifact: false        # one artifact for the SBOM and the report, uploaded below
+          upload-release-assets: false  # attached to the release by the job "attach-reports"
+      - name: Attach the SBOM to the image (signed attestation)
+        env:
+          REF: ${{ steps.publish.outputs.ref }}
+          SBOM: probant-${{ steps.publish.outputs.version }}-sbom.spdx.json
+        run: cosign attest --yes --type spdxjson --predicate "$SBOM" "$REF"
+      - name: Check the signature and the attestation as a client would
+        env:
+          REF: ${{ steps.publish.outputs.ref }}
+        run: |
+          IDENTITY="https://github.com/${GITHUB_WORKFLOW_REF}"
+          ISSUER="https://token.actions.githubusercontent.com"
+          cosign verify --certificate-identity "$IDENTITY" --certificate-oidc-issuer "$ISSUER" "$REF" > /dev/null
+          cosign verify-attestation --type spdxjson \
+            --certificate-identity "$IDENTITY" --certificate-oidc-issuer "$ISSUER" "$REF" > /dev/null
+          echo "Signed by $IDENTITY" >> "$GITHUB_STEP_SUMMARY"
+      # The check that the automatic updates of a server make (auto-update.sh): the official container of cosign pinned by
+      # its digest in auto-update.sh, read only and without any capability, and the identity of this workflow for the tag
+      # of the version. Only GitHub can run it (OIDC identity of the workflow, network of Sigstore); the local test
+      # (docker/test_auto_update.sh) uses a test key instead. Credentials of the registry: read only, for a private image.
+      - name: Verify the signature as auto-update.sh does
+        if: github.ref_type == 'tag'
+        env:
+          REF: ${{ steps.publish.outputs.ref }}
+          VERSION: ${{ steps.publish.outputs.version }}
+        run: |
+          COSIGN_IMAGE="$(sed -n 's/^COSIGN_IMAGE="\(.*\)"$/\1/p' auto-update.sh)"
+          test -n "$COSIGN_IMAGE"
+          V_RE="$(printf '%s' "$VERSION" | sed 's/\./\\./g')"
+          docker run --rm --network host --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges \
+            -e HOME=/tmp -e DOCKER_CONFIG=/run/docker -v "$HOME/.docker:/run/docker:ro" "$COSIGN_IMAGE" verify "$REF" \
+            --certificate-identity-regexp "^https://github\\.com/${GITHUB_REPOSITORY}/\\.github/workflows/image\\.yml@refs/tags/[vV]${V_RE}\$" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com > /dev/null
+          echo "Verified as auto-update.sh does, with $COSIGN_IMAGE" >> "$GITHUB_STEP_SUMMARY"
+      # List of the SHA-256 sums of the files of the version that the scripts download from the tag (files of this
+      # commit), signed without a key: get.sh, update.sh and auto-update.sh refuse a version without it, and a file that
+      # does not match it. Tags only: the scripts verify the signature for the identity of the tag.
+      - name: List of the SHA-256 sums of the files (signed)
+        if: github.ref_type == 'tag'
+        env:
+          VERSION: ${{ steps.publish.outputs.version }}
+        run: |
+          bash docker/make_file_sums.sh sums
+          LIST="sums/probant-$VERSION-files.sha256"
+          cosign sign-blob --yes --bundle "$LIST.sigstore.json" "$LIST"
+      # The check of the scripts: the official container of cosign pinned in auto-update.sh (the same in get.sh and
+      # update.sh), read only, without any capability, as the user of the runner, with the list read only; then each
+      # file of the commit against the list
+      - name: Verify the list as the scripts do
+        if: github.ref_type == 'tag'
+        env:
+          VERSION: ${{ steps.publish.outputs.version }}
+        run: |
+          COSIGN_IMAGE="$(sed -n 's/^COSIGN_IMAGE="\(.*\)"$/\1/p' auto-update.sh)"
+          test -n "$COSIGN_IMAGE"
+          V_RE="$(printf '%s' "$VERSION" | sed 's/\./\\./g')"
+          docker run --rm --network host --read-only --tmpfs /tmp --cap-drop ALL --security-opt no-new-privileges \
+            --user "$(id -u):$(id -g)" -e HOME=/tmp -v "$PWD/sums:/work:ro" "$COSIGN_IMAGE" verify-blob \
+            --certificate-identity-regexp "^https://github\\.com/${GITHUB_REPOSITORY}/\\.github/workflows/image\\.yml@refs/tags/[vV]${V_RE}\$" \
+            --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+            --bundle "/work/probant-$VERSION-files.sha256.sigstore.json" "/work/probant-$VERSION-files.sha256"
+          sha256sum -c --strict "sums/probant-$VERSION-files.sha256"
+          echo "List of sums signed and verified as the scripts do, with $COSIGN_IMAGE" >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the list of sums with the run
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v7
+        with:
+          name: probant-file-sums
+          path: |
+            sums/probant-${{ steps.publish.outputs.version }}-files.sha256
+            sums/probant-${{ steps.publish.outputs.version }}-files.sha256.sigstore.json
+          if-no-files-found: error
+      # the report informs: a known vulnerability never stops the run (fail-build: false)
+      - name: Known vulnerabilities (text table)
+        uses: anchore/scan-action@v7
+        with:
+          sbom: probant-${{ steps.publish.outputs.version }}-sbom.spdx.json
+          output-format: table
+          output-file: probant-${{ steps.publish.outputs.version }}-vulnerabilities.txt
+          fail-build: false
+      - name: Known vulnerabilities (JSON)
+        uses: anchore/scan-action@v7
+        with:
+          sbom: probant-${{ steps.publish.outputs.version }}-sbom.spdx.json
+          output-format: json
+          output-file: probant-${{ steps.publish.outputs.version }}-vulnerabilities.json
+          fail-build: false
+      - name: Keep the SBOM and the report with the run
+        uses: actions/upload-artifact@v7
+        with:
+          name: probant-image-reports
+          path: |
+            probant-${{ steps.publish.outputs.version }}-sbom.spdx.json
+            probant-${{ steps.publish.outputs.version }}-vulnerabilities.txt
+            probant-${{ steps.publish.outputs.version }}-vulnerabilities.json
+          if-no-files-found: error
+
+  # Offline package of the version (docs/installation.md, "Install without Internet access"), made from the published
+  # image, pulled by its digest. A file of a release is at most 2 GiB: the job stops above. A failure of this job does
+  # not change the published image, its signature or its reports (continue-on-error): the release then has no
+  # offline package, and the job shows the error.
+  offline-package:
+    needs: test-and-publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    continue-on-error: true
+    permissions:
+      contents: read
+      packages: read   # pull the image from ghcr.io
+      id-token: write  # keyless signature of the package: OIDC token of this workflow
+    env:
+      VERSION: ${{ needs.test-and-publish.outputs.version }}
+      REF: ${{ needs.test-and-publish.outputs.ref }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Log in to the registry
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Make the package (image of the digest, files of this commit)
+        run: |
+          IMAGE="${REF%@*}"
+          docker pull "$REF"
+          docker tag "$REF" "$IMAGE:$VERSION"
+          bash docker/make_offline_package.sh "$IMAGE:$VERSION" dist
+          PACKAGE="dist/probant-$VERSION-offline.tar"
+          SIZE=$(stat -c %s "$PACKAGE")
+          echo "Offline package: $((SIZE / 1000000)) MB ($PACKAGE)" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$SIZE" -ge 2147483648 ]; then
+            echo "::error::The offline package is $SIZE bytes: a file of a release is at most 2 GiB."
+            exit 1
+          fi
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v4.1.4
+      - name: Sign the package (keyless, Sigstore bundle)
+        run: |
+          PACKAGE="dist/probant-$VERSION-offline.tar"
+          cosign sign-blob --yes --bundle "$PACKAGE.sigstore.json" "$PACKAGE"
+      # As a client would: online, then without any network (unshare --net), with the trusted root of Sigstore that
+      # cosign keeps after its first use (the file that a client copies from a machine with Internet access)
+      - name: Check the signature of the package, online and without network
+        run: |
+          PACKAGE="dist/probant-$VERSION-offline.tar"
+          IDENTITY="https://github.com/${GITHUB_WORKFLOW_REF}"
+          ISSUER="https://token.actions.githubusercontent.com"
+          cosign verify-blob --bundle "$PACKAGE.sigstore.json" \
+            --certificate-identity "$IDENTITY" --certificate-oidc-issuer "$ISSUER" "$PACKAGE"
+          ROOT=$(find "$HOME/.sigstore" -name '*trusted_root.json' -print -quit 2>/dev/null || true)
+          if [ -z "$ROOT" ]; then
+            cosign initialize > /dev/null
+            ROOT=$(find "$HOME/.sigstore" -name '*trusted_root.json' -print -quit)
+          fi
+          test -n "$ROOT"
+          sudo unshare --net -- "$(command -v cosign)" verify-blob --trusted-root "$ROOT" \
+            --bundle "$PACKAGE.sigstore.json" \
+            --certificate-identity "$IDENTITY" --certificate-oidc-issuer "$ISSUER" "$PACKAGE"
+          echo "Package signed by $IDENTITY, checked without network" >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the package with the run
+        uses: actions/upload-artifact@v7
+        with:
+          name: probant-offline-package
+          path: |
+            dist/probant-${{ env.VERSION }}-offline.tar
+            dist/probant-${{ env.VERSION }}-offline.tar.sha256
+            dist/probant-${{ env.VERSION }}-offline.tar.sigstore.json
+          compression-level: 0  # the image is already compressed
+          if-no-files-found: error
+
+  # Attaches the SBOM, the report, the list of sums and the offline package to the release of the tag. After an image run: from the
+  # artifacts of this run, if the release exists. When a release is published: from the artifacts of the last
+  # successful image run of its tag (if that run has not ended yet, it attaches the files itself when it ends).
+  attach-reports:
+    needs: [test-and-publish, offline-package]
+    if: ${{ !cancelled() && (github.event_name == 'release' || needs.test-and-publish.result == 'success') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write  # attach the files to the release (gh release upload)
+      actions: read    # read the artifact of an earlier run (gh run list, gh run download)
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.event.release.tag_name || needs.test-and-publish.outputs.release_tag }}
+    steps:
+      - name: Files of this run
+        if: github.event_name != 'release'
+        uses: actions/download-artifact@v8
+        with:
+          pattern: probant-*  # probant-image-reports, probant-file-sums, and probant-offline-package if it was made
+          merge-multiple: true
+          path: reports
+      - name: Files of the image run of the tag
+        if: github.event_name == 'release'
+        run: |
+          RUN=$(gh run list --repo "$GITHUB_REPOSITORY" --workflow image.yml --event push --branch "$TAG" \
+                --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -z "$RUN" ]; then
+            echo "::notice::No finished image run for $TAG yet: that run attaches the files to the release when it ends."
+            exit 0
+          fi
+          gh run download "$RUN" --repo "$GITHUB_REPOSITORY" --pattern 'probant-*' --dir reports
+      - name: Attach the files to the release
+        run: |
+          # files of the artifacts (one folder for each artifact when gh downloads several)
+          if [ -z "$TAG" ] || [ -z "$(find reports -type f 2>/dev/null)" ]; then
+            echo "Nothing to attach."
+            exit 0
+          fi
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "::notice::No release for $TAG yet: the files are attached when the release is published."
+            exit 0
+          fi
+          find reports -type f -print0 | xargs -0 gh release upload "$TAG" --clobber --repo "$GITHUB_REPOSITORY"

@@ -126,9 +126,21 @@ class Command(BaseCommand):
             f"Database: {base}, {len(en_attente.get(ESP.PRINCIPAL, []))} migration(s) applied; installation {etat}",
             f"Data: {settings.DOSSIER_DONNEES}; backups: {settings.SAUVEGARDES_DIR} ({len(SV.archives())} archive(s))",
             f"Address(es): {', '.join(settings.ALLOWED_HOSTS)}; HTTPS: {'yes' if settings.HTTPS else 'no'}",
-            f"E-mails: {'SMTP ' + settings.EMAIL_HOST + ':' + str(settings.EMAIL_PORT) if settings.EMAIL_HOST else 'not configured (SMTP_HOST empty)'}",
+            f"E-mails: {self._emails()}",
         ]
+        libre = self._liberer_copie()
+        if libre:
+            self.stdout.write(libre)
+        copie = self._copie()
+        if copie:  # seulement quand une destination est réglée : rien de nouveau sinon
+            lignes.append(f"External copy of the backups: {copie}")
         lignes += [f"Space \"{e}" for e in self._controler_espaces()]
+        from collecte.management.commands.charger_demo import base_de_demo
+
+        if base_de_demo():  # ex. dossier de la version tout-en-un préparé avec la démo, posé sur un serveur
+            lignes.append("WARNING: this is the demo database (fictitious data). Its accounts were created with a public "
+                          "password: do not enter real data. To start for real, use an empty data folder "
+                          "(see docs/from_pc_to_server.md).")
         for l in lignes:
             self.stdout.write(l)
         try:  # corbeille (collecte/corbeille.py) : ce qui y est depuis plus que le délai réglé est effacé ; jamais bloquant
@@ -172,6 +184,47 @@ class Command(BaseCommand):
             f"  Nothing has been changed in it and it has not been updated. To repair: {espace}{conseil}. "
             "The damaged state is kept by the restore (\"before-restore-damaged\" archive, or the file renamed "
             "\".damaged-<date>\" when it cannot be opened). See docs/installation.md, \"Troubleshooting\".")
+
+    @staticmethod
+    def _emails():
+        """Serveur d'envoi en vigueur et d'où il vient (fichier de réglages, ou outil) ; jamais le mot de passe."""
+        from parametres import envoi_emails as EE
+
+        r = EE.reglage()
+        if r.source == EE.ENVIRONNEMENT:
+            return f"SMTP {r.hote}:{r.port}"  # comme avant (fichier de réglages)
+        if r.source == EE.OUTIL:
+            mdp = "; saved password unreadable with this secret key: enter it again" if r.mot_de_passe_illisible else ""
+            return f"SMTP {r.hote}:{r.port} (set in the tool, Settings > Hosting{mdp})"
+        return "not configured (SMTP_HOST empty, nothing set in the tool)"
+
+    @staticmethod
+    def _copie():
+        """Destination de la copie externe des sauvegardes (genre et hôte, jamais un secret), ou "" sans destination."""
+        from parametres import copie_externe as CE
+
+        if not CE.disponible():
+            return ""
+        d = CE.ligne()
+        r = CE.reglage(d)
+        if not r.configure:
+            return ""
+        ou = f"S3 {d.compartiment} at {d.adresse}" if d.genre == "s3" else f"SFTP {d.hote}:{d.port}"
+        manque = {"secret_illisible": "; saved secret unreadable with this secret key: enter it again",
+                  "empreinte_a_confirmer": "; key of the SFTP server to confirm", "secret": "; no secret saved"}
+        return ou + " (set in the tool, Settings > Hosting)" + "".join(manque.get(m, "") for m in r.manques)
+
+    @staticmethod
+    def _liberer_copie():
+        """Copie externe arrêtée en route (conteneur redémarré pendant un envoi) : sa réservation est libérée avant les
+        tâches de fond, la copie reprend au tour suivant. Une copie vivante ailleurs est gardée (copie_externe.SANS_VIE)."""
+        from parametres import copie_externe as CE
+
+        quand = CE.liberer_abandonnee()
+        if quand is None:
+            return ""
+        return (f"External copy of the backups: the interrupted copy (last sign of life {quand:%Y-%m-%d %H:%M} UTC) "
+                "has been released; it resumes at the next round.")
 
     def _controler_espaces(self):
         """Chaque espace supplémentaire : base joignable et marquée à son nom (et à celui de l'installation). En défaut :

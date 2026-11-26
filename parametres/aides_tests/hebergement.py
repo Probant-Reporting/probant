@@ -41,7 +41,7 @@ def environnement_propre():
 
     noms = set(ANCIENS_NOMS) | set(ANCIENS_NOMS.values()) | {
         "BACKGROUND_IMPORT_ROWS", "DEFAULT_LANGUAGE", "DISK_ALERT_MB", "MEDIA_ROOT", "DATABASE_URL", "POSTGRESQL_ADDON_URI",
-        "VERSION_COMMIT", "TIME_ZONE"}
+        "VERSION_COMMIT", "TIME_ZONE", "PROBANT_ALL_IN_ONE"}
     return {k: v for k, v in os.environ.items() if k not in noms and not k.startswith(("DJANGO_", "POSTGRES_", "SQLITE_", "SMTP_"))}
 
 

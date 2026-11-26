@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Screenshots of the role guides (docs/guides/, docs/<language>/guides/) and of the installation guide, made by a script: run
 // it again after any change of the screens and the guides stay up to date. The installation guide exists in English and
-// French only: its screens (login, health, setup-*) are made for these two languages, the others get the 24 screens of the guides.
+// French only: its screens (login, health, setup-*) are made for these two languages, the others get only the screens of the role guides.
 //
 //   node qa/guide_screenshots.js [--out docs/screenshots] [--langs en,fr,es,de,it,nl,pt] [--port 8261] [--python python3]
 //                                [--only name,name] [--keep] [--data-dir FOLDER]
@@ -11,8 +11,11 @@
 //      (`load_demo --language <code>`, 2026 open: entry, validation, reminders; the texts of the demo are in the language of
 //      the screenshots) on --port, and an empty installation on --port + 1 (setup wizard). A second server on --port + 2
 //      serves the same demo with the guided tour switched on, for the screenshot `guided-tour` only;
-//   2. seeds two things the demo does not have: evidence files of a "Restricted" KPI in a closed year and a retention
-//      period (page Evidence to delete);
+//   2. seeds what the demo does not have: evidence files of a "Restricted" KPI in a closed year and a retention period
+//      (page Evidence to delete); one backup and the data check; an installation in use rather than a fresh demo
+//      (demo accounts with another password, email server, email alerts, copy outside the server, automatic updates,
+//      all with example values: nothing is sent, no service is joined); company sign-in, switched on only for its two
+//      screens, at the end;
 //   3. for each language, signs in with the demo accounts and takes each screen at a fixed size (1,280 x 720 on a
 //      computer, 390 x 844 on a phone), deviceScaleFactor 2, then compresses the PNG (Pillow, palette) under 300 KB;
 //   4. writes docs/screenshots/<lang>/<name>.png. Fixed names: the guides and docs/installation*.md cite them.
@@ -34,6 +37,8 @@ const INSTALL_LANGS = ['en', 'fr'];  // languages of docs/installation*.md: the 
 const wanted = (s, lang) => !s.installOnly || INSTALL_LANGS.includes(lang);
 const SETUP_PASSWORD = 'Demo-guide-2026!';
 const SETUP_EMAIL = 'alex.admin@exemple.test';
+// password of the demo accounts once seeded: not the public one of the demo, so that Health shows no "Demo data" line
+const SHOTS_PASSWORD = 'Guide-screens-2026!';
 
 // {name, role (null = visitor), url, size, act(page)}: `blank` = the empty installation
 const SHOTS = [
@@ -65,6 +70,13 @@ const SHOTS = [
   { name: 'admin-assistants', role: 'admin', url: '/administration/parametres/assistants/' },
   { name: 'admin-ai', role: 'admin', url: '/administration/parametres/ia/' },
   { name: 'hosting', role: 'admin', url: '/administration/parametres/hebergement/' },
+  { name: 'hosting-emails', role: 'admin', url: '/administration/parametres/hebergement/', act: scrollTo('#emails'), keepScroll: true },
+  { name: 'hosting-auto-updates', role: 'admin', url: '/administration/parametres/hebergement/', act: scrollTo('#mise-a-jour-auto'), keepScroll: true },
+  { name: 'hosting-external-copy', role: 'admin', url: '/administration/parametres/hebergement/copie-externe/' },
+  { name: 'admin-health-alerts', role: 'admin', url: '/administration/parametres/sante/', act: scrollTo('#alertes'), keepScroll: true },
+  // company sign-in switched on (COMPANY_SEED) just before these two: with it, only the space managers keep their password
+  { name: 'admin-company-sign-in', role: 'admin', url: '/administration/parametres/connexion-entreprise/', company: true },
+  { name: 'login-company', role: null, url: '/connexion/', company: true },
   { name: 'health', installOnly: true, role: null, url: '/sante/', clip: { x: 0, y: 0, width: 900, height: 110 } },
   { name: 'setup-admin-account', installOnly: true, role: null, url: '/mise-en-place/', blank: 'before' },
   { name: 'setup-frameworks', installOnly: true, role: 'setup', url: '/mise-en-place/5/', blank: 'after' },
@@ -108,7 +120,63 @@ if kpi:
 i = Instance.courante()
 i.preuves_sensibles_mois = 1
 i.save()
+
+# An installation in use, not a fresh demo: no "Demo data" line (the demo accounts get another password), the email
+# server, the alerts, the copy outside the server and the automatic updates set with example values. Nothing is sent and
+# nothing is joined: the settings are written as the tool writes them, the copy and the server task are only noted done.
+import datetime, os
+from django.contrib.auth.hashers import make_password
+from django.utils import timezone
+from collecte.management.commands._exemplia import COMPTES
+from espaces.models import Compte, EtatCopie
+from referentiel.models import Utilisateur
+from parametres import alertes, copie_externe, envoi_emails, mise_a_jour_auto
+empreinte = make_password("${SHOTS_PASSWORD}")
+noms = [c[0] for c in COMPTES]
+Compte.objects.filter(username__in=noms).update(password=empreinte)
+Utilisateur.objects.filter(username__in=noms).update(password=empreinte)
+admin = Compte.objects.get(username="admin")
+assert admin.gestionnaire, "the demo administrator must be a space manager"
+envoi_emails.enregistrer(admin, "smtp.example.com", 587, "starttls", "probant@example.com", "probant@example.com",
+                         mot_de_passe="example-password")
+alertes.enregistrer(admin, True, True, "it-team@example.com")
+copie_externe.enregistrer(admin, "s3", {"adresse": "https://backup.example.com", "region": "eu-west-1",
+                                        "compartiment": "probant-backups", "style": "auto", "identifiant": "probant-copy",
+                                        "chemin": "probant", "conserver": 0}, secret="example-secret-key")
+d = copie_externe.ligne()
+maintenant = timezone.now()
+copiees = {rel: {"taille": ch.stat().st_size, "sha256": copie_externe.sha256_fichier(ch), "le": maintenant.isoformat()}
+           for rel, ch in copie_externe.archives_locales()}
+EtatCopie.objects.update_or_create(pk=1, defaults={"destination": copie_externe.empreinte_destination(d), "copiees": copiees,
+                                                   "reussie_le": maintenant, "derniere_copie_le": maintenant})
+mise_a_jour_auto.ecrire_choix("automatic", 3)
+nuit = timezone.localtime().replace(hour=3, minute=2, second=0, microsecond=0)  # the last night run of the server task
+nuit = nuit if nuit <= timezone.localtime() else nuit - datetime.timedelta(days=1)
+verifie = nuit.astimezone(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+resultat = mise_a_jour_auto.dossier() / "result"
+resultat.write_text("format=1\\ntask=systemd\\ntime=03:00\\nchecked=%s\\nstate=up_to_date\\ninstalled=%s\\n"
+                    % (verifie, open("VERSION").read().strip()), encoding="utf-8")
+os.chmod(resultat, 0o600)
 `;
+
+// Company sign-in switched on with example values (no provider is joined: the screen and the button only read the setting)
+const COMPANY_SEED = `
+from connexion_entreprise.models import ReglageEntreprise
+from connexion_entreprise.secret import chiffrer
+from django.utils import timezone
+ReglageEntreprise.objects.update_or_create(pk=1, defaults={
+    "actif": True, "emetteur": "https://login.example.com/realms/example", "client_id": "probant",
+    "secret_chiffre": chiffrer("example-client-secret"), "secret_le": timezone.now(), "libelle_bouton": "",
+    "modifie_le": timezone.now()})
+`;
+
+function scrollTo(selector) {
+  return async (page) => {
+    // the block at the top of the screen, 16 px below the edge (no anchor offset of the page in between)
+    await page.locator(selector).first().evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 16));
+    await page.waitForTimeout(300);
+  };
+}
 
 function sh(python, args, env) {
   execFileSync(python, args, { cwd: ROOT, env: { ...process.env, ...env }, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -165,7 +233,8 @@ async function main() {
   const tmp = o['data-dir'] ? path.resolve(o['data-dir']) : fs.mkdtempSync(path.join(os.tmpdir(), 'guide_screenshots_'));
   const raw = path.join(tmp, 'raw');
   fs.mkdirSync(raw, { recursive: true });
-  const demoEnv = (lang) => ({ DATA_DIR: path.join(tmp, 'demo_' + lang), SQLITE_FILE: 'demo.sqlite3', DJANGO_DEBUG: '0', GUIDED_TOUR: 'off' });
+  // DANS_DOCKER: the demo runs as in the Docker image, where the automatic updates exist (block of Settings › Hosting)
+  const demoEnv = (lang) => ({ DATA_DIR: path.join(tmp, 'demo_' + lang), SQLITE_FILE: 'demo.sqlite3', DJANGO_DEBUG: '0', GUIDED_TOUR: 'off', DANS_DOCKER: '1' });
   const blank = { DATA_DIR: path.join(tmp, 'blank'), SQLITE_FILE: 'blank.sqlite3', DJANGO_DEBUG: '0', GUIDED_TOUR: 'off' };
   fs.mkdirSync(blank.DATA_DIR, { recursive: true });
   for (const k of ['DATABASE_URL', 'POSTGRESQL_ADDON_URI', 'SMTP_HOST', 'SMTP_HOTE']) delete process.env[k];
@@ -233,13 +302,17 @@ async function main() {
     await cs.close();
     // 3. the demo: one database per language, loaded in that language (texts of the demo included)
     for (const lang of langs) {
-      const lshots = shots.filter((x) => !x.blank && wanted(x, lang));
+      // the company sign-in screens last: company sign-in stays off for the others
+      const lshots = shots.filter((x) => !x.blank && wanted(x, lang)).sort((a, b) => Number(!!a.company) - Number(!!b.company));
       if (!lshots.length) continue;
       const demo = demoEnv(lang);
       fs.mkdirSync(demo.DATA_DIR, { recursive: true });
       sh(PYTHON, ['manage.py', 'migrate', '--noinput'], demo);
       sh(PYTHON, ['manage.py', 'load_demo', '--language', lang], demo);
+      sh(PYTHON, ['manage.py', 'backup'], demo);  // one backup, copied outside the server by the seed (no "No backup yet")
       sh(PYTHON, ['manage.py', 'shell', '-c', SEED], demo);
+      sh(PYTHON, ['manage.py', 'check_data'], demo);  // the data check of the night, done (no "Data check: not done yet")
+      cfg.password = SHOTS_PASSWORD;
       const demoServers = [serve(PYTHON, demo, port, path.join(tmp, `demo_${lang}.log`))];
       base = `http://127.0.0.1:${port}`;
       const baseTour = `http://127.0.0.1:${port + 2}`;
@@ -247,7 +320,9 @@ async function main() {
       try {
         await waitFor(base + '/connexion/');
         if (demoServers.length > 1) await waitFor(baseTour + '/connexion/');
+        let company = false;
         for (const s of lshots) {
+          if (s.company && !company) { sh(PYTHON, ['manage.py', 'shell', '-c', COMPANY_SEED], demo); company = true; }
           if (s.role === null) {
             const { ctx, page } = await newPage();
             await page.goto(base + (s.url === '/sante/' ? '/sante/' : '/connexion/'), { waitUntil: 'networkidle' });

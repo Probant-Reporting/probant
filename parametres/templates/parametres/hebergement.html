@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load collecte %}
 {% block titre %}{% libelle "admin.hebergement.titre" %}{% endblock %}
+{% block messages %}{% if messages_haut %}<ul class="messages">{% for m in messages_haut %}<li class="{{ m.tags }}">{{ m|premiere_phrase_gras }}</li>{% endfor %}</ul>{% endif %}{% endblock %}
 {% block contenu %}
 {% include "collecte/administration/_nav.html" %}
 {% include "parametres/_sous_nav.html" %}
@@ -31,8 +32,25 @@ e-mails, contrôle des données, éléments supprimés, puis le volet « Pour l'
     </form>
     {% for f in reglages %}{% for e in f.errors %}{% encart "erreur" %}{% libelle "admin.hebergement.erreur_champ" champ=f.label|capfirst erreur=e %}{% endencart %}{% endfor %}{% endfor %}
     <p class="aide-champ">{% libelle "admin.hebergement.auto_aide" %}</p>
-    <p class="aide-champ">{% libelle_html "admin.hebergement.auto_copie" %}</p>
     <p class="aide-champ" id="aide-preuves-sauvegardes">{% libelle "admin.hebergement.preuves_sauvegardes" %}</p>
+  </section>
+
+  <section class="bloc" id="copie-externe">{# copie hors du serveur (parametres/copie_externe.py), réglée sur sa page #}
+    <h2>{% libelle "admin.hebergement.copie.titre" %}</h2>
+    {% if copie.etat == "absente" or copie.etat == "aucune" %}
+      <p class="aide-champ remonte">{% libelle_html "admin.hebergement.auto_copie" %}</p>
+    {% elif copie.etat == "echec" %}
+      {% encart "erreur" role="status" %}{% libelle "admin.hebergement.copie.echec" quand=copie.echec_le|date_heure_courte n=copie.attente %}{% endencart %}
+    {% elif copie.etat == "a_confirmer" %}
+      {% encart "avertissement" role="status" %}{% libelle "admin.copie.etat.a_confirmer" %}{% endencart %}
+    {% elif copie.etat == "retard" %}
+      {% encart "avertissement" role="status" %}{% libelle "admin.copie.etat.retard" n=copie.attente %}{% endencart %}
+    {% else %}
+      <p class="aide-champ remonte">{% if copie.reussie_le %}{% libelle "admin.copie.etat.ok" quand=copie.reussie_le|date_heure_courte %}{% else %}{% libelle "admin.copie.etat.ok_jamais" %}{% endif %}
+        {% if copie.attente %}{% libelle "admin.copie.etat.attente" n=copie.attente %}{% else %}{% libelle "admin.copie.etat.tout" %}{% endif %}</p>
+    {% endif %}
+    {% if copie.etat == "aucune" %}<p class="aide-champ">{% libelle "admin.hebergement.copie.proposer" %}</p>{% endif %}
+    {% if copie.etat != "absente" %}<p class="m-0"><a href="{% url 'parametres:copie_externe' %}">{% if not copie.modifiable %}{% libelle "admin.hebergement.copie.voir" %}{% elif copie.etat == "aucune" %}{% libelle "admin.hebergement.copie.regler" %}{% else %}{% libelle "admin.hebergement.copie.modifier" %}{% endif %}</a></p>{% endif %}
   </section>
 
   <section class="bloc" id="sauvegarder-maintenant">
@@ -83,37 +101,9 @@ e-mails, contrôle des données, éléments supprimés, puis le volet « Pour l'
       </details>
   </section>
 
-  <section class="bloc" id="emails">
-    <h2>{% libelle "admin.hebergement.emails" %}</h2>
-    {% if smtp.configure %}
-      {% libelle "admin.hebergement.smtp_aucun" as t_aucun %}{% encart "succes" %}{% libelle_html "admin.hebergement.envoi_actif" %}{% endencart %}
-      <table class="table-mep">
-        <tr><th>{% libelle "admin.hebergement.smtp_serveur" %}</th><td>{{ smtp.hote }}:{{ smtp.port }} ({{ smtp.securite }})</td></tr>
-        {% if smtp.utilisateur is not None %}<tr><th>{% libelle "admin.hebergement.smtp_identifiant" %}</th><td>{{ smtp.utilisateur|default:t_aucun }}</td></tr>{% endif %}
-        <tr><th>{% libelle "admin.hebergement.smtp_expediteur" %}</th><td>{{ smtp.expediteur }}</td></tr>
-      </table>
-      <p class="aide-champ">{% libelle "admin.hebergement.verifier" %}</p>
-    {% else %}
-    <div class="encart encart-avertissement" role="status">
-        <p class="encart-titre">{% libelle "admin.hebergement.emails_inactif_titre" %}</p>
-        <p>{% libelle "admin.hebergement.emails_inactif" %}</p>
-</div>
-    <h3>{% libelle "admin.hebergement.pour_activer" %}</h3>
-    <ol class="etapes-emails">
-      <li>{% libelle "admin.hebergement.etape_1" %}</li>
-      <li>{% libelle "admin.hebergement.etape_2" %}</li>
-      <li>{% libelle "admin.hebergement.etape_3" %}</li>
-    </ol>
-    <details class="aide-repliable"><summary>{% libelle "admin.hebergement.message_it_titre" %}</summary>
-      {% libelle "admin.hebergement.message_it_label" as t_mi %}<pre class="commande" tabindex="0" aria-label="{{ t_mi }}">{% libelle "admin.hebergement.message_it" %}</pre>
-    </details>
-    {% endif %}
-    <form method="post" class="test-email">{% csrf_token %}
-      {% include "collecte/administration/_champ.html" with champ=form.destinataire %}
-      <button type="submit" name="action" value="tester_email" class="secondaire">{% libelle "admin.hebergement.tester" %}</button>
-    </form>
-    {% if not smtp.configure %}<p class="aide-champ">{% libelle "admin.hebergement.tester_aide" %}</p>{% endif %}
-  </section>
+  {% include "parametres/_emails.html" %}
+
+  {% include "parametres/_mise_a_jour_auto.html" %}
 
   <section class="bloc" id="controle-donnees">
     <h2>{% libelle "admin.controle.titre" %}</h2>

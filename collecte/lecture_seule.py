@@ -49,7 +49,8 @@ ECRITURES_PERMISES = {
     "visu_vues_ordre", "visu_vue_preferee",
     "corbeille_restaurer",  # ne remet en place que ce que la personne a elle-même supprimé (corbeille.restaurer)
 }
-LIBRES = {"logout", "login", "langue"}  # hors de l'outil : connexion, déconnexion, langue de l'interface
+# hors de l'outil : connexion (par mot de passe ou par le compte d'entreprise), déconnexion, langue de l'interface
+LIBRES = {"logout", "login", "langue", "entreprise_debut", "entreprise_retour"}
 # ouvertes à tous, même sans connexion : logo de l'identité, état pour la supervision de l'IT (même réponse qu'à un visiteur)
 PARAMETRES_LIBRES = {"logo", "sante"}
 

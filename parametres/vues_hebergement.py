@@ -1,12 +1,11 @@
 """Hébergement : page de santé (supervision) et Administration › Paramètres › Hébergement (version, sauvegardes à
-télécharger, e-mails avec test d'envoi)."""
+télécharger, serveur d'envoi des e-mails avec test d'envoi : ``envoi_emails.py``)."""
 import datetime
 import os
 import platform
 import re
+import logging
 import shutil
-import smtplib
-import socket
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -16,7 +15,8 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.core.mail import send_mail
+from django.core.exceptions import PermissionDenied
+from django.core.mail import EmailMessage
 from django.core.serializers.base import DeserializationError
 from django.db import DatabaseError, connections
 from django.http import FileResponse, Http404, JsonResponse
@@ -25,12 +25,14 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import lazy
 from django.views.decorators.cache import never_cache
+from django.views.decorators.debug import sensitive_post_parameters
 
 from collecte import dates_courtes as DC
 from collecte.models import Journal
 from espaces import contexte as ESP
 from collecte.saisie import campagne_courante
 
+from . import envoi_emails as EE
 from . import sauvegardes as SV
 from . import libelles as LB
 from .libelles import libelle
@@ -38,6 +40,8 @@ from .models import Instance
 from .views import exiger_admin_reglages
 
 _l = lazy(libelle, str)  # libellé évalué à l'affichage (champs de formulaire définis à l'import)
+journal = logging.getLogger("reporting.emails")
+EMAILS = "emails"  # étiquette des messages montrés dans l'encart « E-mails »
 
 
 @never_cache
@@ -103,7 +107,11 @@ def mesurer_sante(codes=None, chemins=True):
     from collecte import exports_arriere_plan as EAP
 
     etat["background_exports"] = EAP.pour_sante(codes)
-    messages = [etat[c]["message"] for c in ("background_imports", "background_exports") if etat[c].get("message")]
+    # copie externe des sauvegardes (copie_externe.py) : dite, jamais en 503 (la sauvegarde sur le serveur reste là)
+    from . import copie_externe as CE
+
+    etat["external_copy"] = CE.pour_sante()
+    messages = [etat[c]["message"] for c in ("background_imports", "background_exports", "external_copy") if etat[c].get("message")]
     if messages:
         etat["avertissement"] = "; ".join(filter(None, [etat.get("avertissement"), *messages]))
     return {"etat": etat, "codes": codes, "alertes": structurees}
@@ -205,6 +213,90 @@ EN_TETES_PROXY = ("HTTP_X_FORWARDED_FOR", "HTTP_X_REAL_IP", "HTTP_FORWARDED")
 class TestEmailForm(forms.Form):
     destinataire = forms.EmailField(label=_l("admin.hebergement.form.destinataire"),
                                     error_messages={"invalid": _l("admin.compte.email_invalide")})
+
+
+class ServeurEnvoiForm(forms.Form):
+    """Serveur d'envoi des e-mails réglé dans l'outil (``envoi_emails``). Le mot de passe n'est jamais réaffiché : champ
+    toujours vide, vide à l'enregistrement = garder celui qui est enregistré. Serveur vide : l'outil n'envoie plus rien."""
+
+    hote = forms.CharField(required=False, max_length=253, label=_l("admin.hebergement.smtp.form.hote"),
+                           widget=forms.TextInput(attrs={"autocomplete": "off", "spellcheck": "false", "autocapitalize": "none",
+                                                         "aria-describedby": "aide-smtp-hote"}))
+    port = forms.IntegerField(required=False, min_value=1, max_value=65535, label=_l("admin.hebergement.smtp.form.port"),
+                              error_messages={"invalid": _l("admin.hebergement.smtp.erreur.port"),
+                                              "min_value": _l("admin.hebergement.smtp.erreur.port"),
+                                              "max_value": _l("admin.hebergement.smtp.erreur.port")},
+                              widget=forms.NumberInput(attrs={"min": 1, "max": 65535, "inputmode": "numeric"}))
+    securite = forms.ChoiceField(label=_l("admin.hebergement.smtp.form.securite"), choices=[(s, s) for s in EE.SECURITES],
+                                 widget=forms.Select(attrs={"aria-describedby": "aide-smtp-securite"}))
+    identifiant = forms.CharField(required=False, max_length=254, label=_l("admin.hebergement.smtp.form.identifiant"),
+                                  widget=forms.TextInput(attrs={"autocomplete": "off", "spellcheck": "false", "autocapitalize": "none"}))
+    mot_de_passe = forms.CharField(required=False, strip=False, max_length=EE.MOT_DE_PASSE_MAX,
+                                   label=_l("admin.hebergement.smtp.form.mot_de_passe"),
+                                   widget=forms.PasswordInput(render_value=False, attrs={"autocomplete": "new-password",
+                                                                                        "aria-describedby": "aide-smtp-mdp"}))
+    expediteur = forms.EmailField(required=False, max_length=254, label=_l("admin.hebergement.smtp.form.expediteur"),
+                                  error_messages={"invalid": _l("admin.compte.email_invalide")},
+                                  widget=forms.EmailInput(attrs={"autocomplete": "off", "spellcheck": "false"}))
+    # sécurité « Aucune » avec un mot de passe (saisi ou déjà enregistré) : il partirait en clair ; confirmation explicite
+    en_clair = forms.BooleanField(required=False, label=_l("admin.hebergement.smtp.form.en_clair"),
+                                  widget=forms.CheckboxInput(attrs={"aria-describedby": "aide-smtp-en-clair"}))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["securite"].choices = [(s, libelle(f"admin.hebergement.smtp.securite.{s}")) for s in EE.SECURITES]
+        s = EE.ligne()
+        self.ligne = s
+        self.mot_de_passe_enregistre = bool(s and s.mot_de_passe_chiffre)
+        # la case n'est montrée que là où elle sert : réglage en vigueur déjà « Aucune » avec un mot de passe, ou envoi refusé
+        self.demander_en_clair = bool(s and s.securite == "none" and s.mot_de_passe_chiffre)
+
+    def clean_hote(self):
+        h = (self.cleaned_data.get("hote") or "").strip()
+        if h and not EE.HOTE.match(h):
+            raise forms.ValidationError(libelle("admin.hebergement.smtp.erreur.hote"))
+        return h
+
+    def clean_identifiant(self):
+        v = (self.cleaned_data.get("identifiant") or "").strip()
+        if any(ord(c) < 32 or ord(c) == 127 for c in v):
+            raise forms.ValidationError(libelle("admin.hebergement.smtp.erreur.caracteres"))
+        return v
+
+    def clean_mot_de_passe(self):
+        v = self.cleaned_data.get("mot_de_passe") or ""
+        if any(c in v for c in "\r\n\x00"):  # ni retour à la ligne ni caractère nul : jamais injecté dans l'échange SMTP
+            raise forms.ValidationError(libelle("admin.hebergement.smtp.erreur.caracteres"))
+        return v
+
+    def full_clean(self):
+        """Champ refusé : son message (``erreur-smtp-<champ>``) est relié au champ."""
+        super().full_clean()
+        for nom in self.errors:
+            if nom in self.fields:
+                aide = self.fields[nom].widget.attrs.get("aria-describedby", "")
+                self.fields[nom].widget.attrs["aria-describedby"] = f"erreur-smtp-{nom} {aide}".strip()
+
+    def clean(self):
+        d = super().clean()
+        if d.get("hote"):
+            if not d.get("port") and "port" not in self.errors:
+                self.add_error("port", libelle("admin.hebergement.smtp.erreur.port"))
+            if not d.get("expediteur") and "expediteur" not in self.errors:
+                self.add_error("expediteur", libelle("admin.hebergement.smtp.erreur.expediteur"))
+            # le mot de passe enregistré ne compte que s'il est gardé : une autre destination l'efface (envoi_emails)
+            garde = self.mot_de_passe_enregistre and not EE.destination_changee(
+                self.ligne, d.get("hote"), d.get("port") or 587, d.get("securite"), d.get("identifiant") or "")
+            if d.get("securite") == "none" and (d.get("mot_de_passe") or garde) and not d.get("en_clair"):
+                self.demander_en_clair = True
+                self.add_error("securite", libelle("admin.hebergement.smtp.erreur.en_clair"))
+        return d
+
+
+def _form_serveur(donnees=None):
+    s = EE.ligne()
+    initial = {c: getattr(s, c) for c in EE.CHAMPS} if s else {"port": 587, "securite": "starttls"}
+    return ServeurEnvoiForm(donnees, initial=initial)
 
 
 class ReglagesSauvegardeForm(forms.ModelForm):
@@ -347,33 +439,174 @@ CONTENU = [  # ce qu'une sauvegarde contient, pour la page (clés de libellé)
 HORS_CONTENU = ["admin.hebergement.hors_contenu.programme", "admin.hebergement.hors_contenu.serveur"]
 
 
+class AlertesForm(forms.Form):
+    """Alertes par e-mail de la santé de l'installation (``alertes.py``) : un réglage pour toute l'installation."""
+
+    actives = forms.BooleanField(required=False, label=_l("admin.alertes.form.actives"))
+    aux_comptes = forms.BooleanField(required=False, label=_l("admin.alertes.form.aux_comptes"))
+    adresses = forms.CharField(required=False, max_length=5000, label=_l("admin.alertes.form.adresses"),
+                               widget=forms.Textarea(attrs={"rows": 3, "autocomplete": "off", "spellcheck": "false",
+                                                            "autocapitalize": "none", "aria-describedby": "aide-alertes-adresses"}))
+
+    def clean_adresses(self):
+        from . import alertes as AL
+
+        bonnes, refusees = AL.lire_adresses(self.cleaned_data.get("adresses"))
+        if refusees:
+            raise forms.ValidationError(libelle("admin.alertes.erreur.adresses", liste=", ".join(refusees[:5])))
+        if len(bonnes) > AL.ADRESSES_MAX:
+            raise forms.ValidationError(libelle("admin.alertes.erreur.trop", n=AL.ADRESSES_MAX))
+        return "\n".join(bonnes)
+
+    def clean(self):
+        d = super().clean()
+        if d.get("actives") and not d.get("aux_comptes") and not d.get("adresses") and "adresses" not in self.errors:
+            self.add_error("adresses", libelle("admin.alertes.erreur.aucun"))
+        return d
+
+    def full_clean(self):
+        """Champ refusé : son message (``erreur-alertes-<champ>``) est relié au champ avant l'aide."""
+        super().full_clean()
+        for nom in self.errors:
+            if nom in self.fields:
+                aide = self.fields[nom].widget.attrs.get("aria-describedby", "")
+                self.fields[nom].widget.attrs["aria-describedby"] = f"erreur-alertes-{nom} {aide}".strip()
+
+
+ALERTES = "alertes"  # étiquette des messages montrés dans le bloc « Alertes par e-mail » de la page Santé
+
+
+class MiseAJourAutoForm(forms.Form):
+    """Mise à jour automatique (``mise_a_jour_auto.py``) : choix de l'administrateur, écrit dans le dossier des données pour
+    la tâche de la machine. Valeurs d'une liste fermée seulement."""
+
+    mode = forms.ChoiceField(label=_l("admin.maj_auto.form.mode"), widget=forms.RadioSelect)
+    delai = forms.TypedChoiceField(label=_l("admin.maj_auto.form.delai"), coerce=int,
+                                   widget=forms.Select(attrs={"aria-describedby": "aide-maj-auto-delai"}))
+
+    def __init__(self, *args, **kwargs):
+        from . import mise_a_jour_auto as MA
+
+        super().__init__(*args, **kwargs)
+        self.fields["mode"].choices = [(m, libelle(f"admin.maj_auto.mode.{m}")) for m in MA.MODES]
+        self.fields["delai"].choices = [(d, libelle("admin.maj_auto.delai.jours", n=d) if d else libelle("admin.maj_auto.delai.aucun"))
+                                        for d in MA.DELAIS]
+
+
+MAJ_AUTO = "maj_auto"  # étiquette des messages montrés dans le bloc « Mises à jour automatiques » de la page Hébergement
+
+
 @login_required
 def sante_installation(request):
-    """Administration › Paramètres › Santé : une ligne par point (bon, à regarder, en panne) et quoi faire. Lecture
-    seule, réservée à l'administrateur de l'espace comme les autres pages des Paramètres."""
+    """Administration › Paramètres › Santé : une ligne par point (bon, à regarder, en panne) et quoi faire, réservée à
+    l'administrateur de l'espace comme les autres pages des Paramètres. Les mêmes lignes partent en alertes par e-mail
+    (``alertes.py``) : réglées ici par un gestionnaire des espaces seulement (« reglage_alertes »,
+    ``espaces.comptes.est_gestionnaire``) ; l'alerte d'essai aux destinataires enregistrés (« tester_alertes ») reste
+    permise à qui voit le détail de l'installation ; tout autre administrateur : refusé."""
+    from espaces.comptes import est_gestionnaire
+
+    from . import alertes as AL
     from . import sante_installation as SI
 
     exiger_admin_reglages(request)
+    form_alertes = None
+    ecrire = est_gestionnaire(request.user)
+    if request.method == "POST":
+        action = request.POST.get("action")
+        if not SI.detail_installation_permis(request.user):
+            raise PermissionDenied(libelle("admin.alertes.reserve"))
+        if action == "reglage_alertes":
+            if not ecrire:  # réglage de toute l'installation : gestionnaire des espaces seulement
+                raise PermissionDenied(libelle("admin.alertes.reserve"))
+            form_alertes = AlertesForm(request.POST)
+            if form_alertes.is_valid():
+                d = form_alertes.cleaned_data
+                for champ, avant, apres in AL.enregistrer(request.user, d["actives"], d["aux_comptes"], d["adresses"]):
+                    if champ == "adresses":  # le nombre d'adresses, pas les adresses elles-mêmes
+                        avant, apres = len(AL.lire_adresses(avant)[0]), len(AL.lire_adresses(apres)[0])
+                    Journal.ecrire(request.user, "reglage_alertes", Instance.courante(), champ, avant, apres)
+                messages.success(request, libelle("admin.alertes.enregistre_on" if d["actives"] else "admin.alertes.enregistre_off"),
+                                 extra_tags=ALERTES)
+                return redirect(reverse("parametres:sante_installation") + "#alertes")
+        elif action == "tester_alertes":
+            n, erreur = AL.envoyer_essai(request.user)
+            Journal.ecrire(request.user, "test_alerte_echec" if erreur else "test_alerte", Instance.courante(), "destinataires",
+                           "", str(n))
+            if erreur:
+                messages.error(request, erreur, extra_tags=ALERTES)
+            else:
+                messages.success(request, libelle("admin.alertes.essai.envoye", n=n), extra_tags=ALERTES)
+            return redirect(reverse("parametres:sante_installation") + "#alertes")
+        else:
+            return redirect("parametres:sante_installation")
     lignes, permis = SI.lignes(request)
     etat, texte = SI.bilan(lignes)
+    r, e = AL.reglage(), AL.etat()
+    if form_alertes is None and permis and ecrire:
+        form_alertes = AlertesForm(initial={"actives": r.actives, "aux_comptes": r.aux_comptes, "adresses": r.adresses})
+    tous = list(messages.get_messages(request))
+    messages_alertes = [m for m in tous if ALERTES in m.extra_tags.split()]
     return render(request, "parametres/sante_installation.html", {
         "page": "administration", "rubrique": "parametres", "sous_rubrique": "sante", "lignes": lignes,
-        "bilan_etat": etat, "bilan_texte": texte, "detail_permis": permis, "avec_detail": any(x["detail"] for x in lignes), "campagne": campagne_courante(),
+        "bilan_etat": etat, "bilan_texte": texte, "detail_permis": permis, "reglage_permis": ecrire, "avec_detail": any(x["detail"] for x in lignes), "campagne": campagne_courante(),
+        "alertes": {"actives": r.actives, "pourquoi": AL.pourquoi(r, court=not permis), "envoi": EE.envoi_actif(), "nb": len(AL.destinataires(r)) if permis else 0,
+                    "comptes": AL.comptes_permis() if permis else [], "envoye_le": e.envoye_le,
+                    "echec_le": e.echec_le if e.echec_le and (e.envoye_le is None or e.echec_le > e.envoye_le) else None,
+                    "echec": EE.texte_cause(e.echec) if e.echec else "",
+                    "echec_resume": e.echec_resume, "minutes": int(AL.INTERVALLE.total_seconds() // 60)},
+        "form_alertes": form_alertes, "messages_alertes": messages_alertes,
+        "messages_haut": [m for m in tous if m not in messages_alertes],
     })
 
 
 @login_required
+@sensitive_post_parameters("mot_de_passe")
 def hebergement(request):
+    from espaces.comptes import est_gestionnaire
+
+    from .sante_installation import detail_installation_permis
+
     exiger_admin_reglages(request)
+    # détail de l'installation (dossier des données, adresses permises, hôte de la base, identifiant SMTP, dossier des
+    # sauvegardes) : seulement pour qui le voit (même règle que /sante/ et la page Santé). Les réglages de toute
+    # l'installation (serveur d'envoi des e-mails, mises à jour automatiques) ne s'ÉCRIVENT que par un gestionnaire des
+    # espaces (``est_gestionnaire``) : ils décident par où partent les e-mails de tous les espaces
+    detail = detail_installation_permis(request.user)
+    ecrire = est_gestionnaire(request.user)
     form = TestEmailForm(initial={"destinataire": request.user.email})
+    form_smtp = _form_serveur() if ecrire and not EE.par_environnement() else None
     instance = Instance.courante()
     reglages = ReglagesSauvegardeForm(instance=instance)
     corbeille = ReglageCorbeilleForm(instance=instance)
     connexions = ReglageConnexionsForm(instance=instance)
     conservation = ReglageConservationForm(instance=instance)
     exports_fond = ReglageExportsFondForm(instance=instance)
+    form_maj_auto = None
     if request.method == "POST":
         action = request.POST.get("action")
+        if action == "reglage_mise_a_jour_auto":
+            from . import mise_a_jour_auto as MA
+
+            # réglage de toute l'installation : gestionnaire des espaces seulement (même règle que les e-mails), et
+            # seulement là où la tâche de la machine existe (image Docker)
+            if not ecrire:
+                raise PermissionDenied(libelle("admin.maj_auto.reserve"))
+            if not MA.disponible():
+                messages.error(request, libelle("admin.maj_auto.indisponible"), extra_tags=MAJ_AUTO)
+                return redirect(reverse("parametres:hebergement") + "#mise-a-jour-auto")
+            form_maj_auto = MiseAJourAutoForm(request.POST)
+            if form_maj_auto.is_valid():
+                d = form_maj_auto.cleaned_data
+                try:
+                    changements = MA.ecrire_choix(d["mode"], d["delai"])
+                except OSError as e:
+                    messages.error(request, libelle("admin.maj_auto.ecriture_impossible", erreur=e.strerror or str(e)),
+                                   extra_tags=MAJ_AUTO)
+                    return redirect(reverse("parametres:hebergement") + "#mise-a-jour-auto")
+                for champ, avant, apres in changements:
+                    Journal.ecrire(request.user, "reglage_mise_a_jour_auto", instance, champ, avant, apres)
+                messages.success(request, libelle(f"admin.maj_auto.enregistre.{d['mode']}"), extra_tags=MAJ_AUTO)
+                return redirect(reverse("parametres:hebergement") + "#mise-a-jour-auto")
         if action == "reglage_exports_fond":
             from collecte.templatetags.collecte import entier
 
@@ -462,23 +695,42 @@ def hebergement(request):
                 Journal.ecrire(request.user, "controle_donnees", instance, "controle", "", f"{r['errors']} / {r['warnings']}")
                 messages.success(request, libelle("admin.controle.fait"))
             return redirect(reverse("parametres:hebergement") + "#controle-donnees")
+        if action in ("reglage_emails", "effacer_mdp_emails"):
+            if not ecrire:
+                raise PermissionDenied(libelle("admin.hebergement.smtp.reserve"))
+            if EE.par_environnement():  # le fichier de réglages gagne : rien à enregistrer dans l'outil
+                messages.error(request, libelle("admin.hebergement.smtp.par_it"), extra_tags=EMAILS)
+                return redirect(reverse("parametres:hebergement") + "#resultat-emails")
+            if action == "effacer_mdp_emails":
+                if EE.effacer_mot_de_passe(request.user):
+                    Journal.ecrire(request.user, "reglage_emails", instance, "mot_de_passe", "", "mot de passe effacé")
+                messages.success(request, libelle("admin.hebergement.smtp.mdp_efface"), extra_tags=EMAILS)
+                return redirect(reverse("parametres:hebergement") + "#resultat-emails")
+            form_smtp = _form_serveur(request.POST)
+            if form_smtp.is_valid():
+                d = form_smtp.cleaned_data
+                changements = EE.enregistrer(request.user, d["hote"], d["port"] or 587, d["securite"], d["identifiant"],
+                                             d["expediteur"] or "", d["mot_de_passe"])
+                for champ, avant, apres in changements:
+                    Journal.ecrire(request.user, "reglage_emails", instance, champ, avant, apres)
+                if ("mot_de_passe", "", EE.EFFACE_SERVEUR_CHANGE) in changements:
+                    messages.warning(request, libelle("admin.hebergement.smtp.mdp_efface_serveur"), extra_tags=EMAILS)
+                    return redirect(reverse("parametres:hebergement") + "#resultat-emails")
+                messages.success(request, libelle("admin.hebergement.smtp.enregistre", hote=d["hote"]) if d["hote"]
+                                 else libelle("admin.hebergement.smtp.enregistre_vide"), extra_tags=EMAILS)
+                return redirect(reverse("parametres:hebergement") + "#resultat-emails")
         if action == "tester_email":
             form = TestEmailForm(request.POST)
             if form.is_valid():
                 erreur = _envoyer_test(request, form.cleaned_data["destinataire"])
-                if erreur:
-                    messages.error(request, erreur)
+                if erreur:  # page rendue tout de suite, ouverte sur le résultat (action du formulaire : #resultat-emails)
+                    messages.error(request, erreur, extra_tags=EMAILS)
                 else:
-                    messages.success(request, libelle("admin.hebergement.test_envoye", destinataire=form.cleaned_data["destinataire"]) if settings.EMAIL_HOST
-                                     else libelle("admin.hebergement.test_non_envoye"))
-                    return redirect("parametres:hebergement")
-    from .sante_installation import detail_installation_permis
-
+                    messages.success(request, libelle("admin.hebergement.test_envoye", destinataire=form.cleaned_data["destinataire"])
+                                     if EE.envoi_actif() else libelle("admin.hebergement.test_non_envoye"), extra_tags=EMAILS)
+                    return redirect(reverse("parametres:hebergement") + "#resultat-emails")
     connexion = ESP.connexion()
     b = connexion.settings_dict
-    # détail de l'installation (dossier des données, adresses permises, hôte de la base, identifiant SMTP, dossier des
-    # sauvegardes) : seulement pour qui le voit (même règle que /sante/ et la page Santé)
-    detail = detail_installation_permis(request.user)
     try:
         liste = SV.archives()
     except OSError:
@@ -486,6 +738,16 @@ def hebergement(request):
     auto, controle = SV.etat_automatique(instance), _controle()
     if not detail:
         controle["fichier"] = Path(controle["fichier"]).name  # le nom du fichier, sans le chemin du disque
+    # messages des e-mails (réglage, e-mail de test) : dans l'encart « E-mails », à côté du bouton de test, où la page
+    # s'ouvre ; les autres en haut de la page, comme ailleurs
+    from . import mise_a_jour_auto as MA
+
+    maj_auto = MA.etat_ecran()
+    if form_maj_auto is None and ecrire and maj_auto["disponible"]:
+        form_maj_auto = MiseAJourAutoForm(initial={"mode": maj_auto["choix"]["mode"], "delai": maj_auto["choix"]["delai"]})
+    tous = list(messages.get_messages(request))
+    messages_emails = [m for m in tous if EMAILS in m.extra_tags.split()]
+    messages_maj_auto = [m for m in tous if MAJ_AUTO in m.extra_tags.split()]
     return render(request, "parametres/hebergement.html", {
         "bilan": _bilan(liste[0] if liste else None, auto, controle),
         "page": "administration", "rubrique": "parametres", "sous_rubrique": "hebergement", "campagne": campagne_courante(),
@@ -502,13 +764,41 @@ def hebergement(request):
             (libelle("admin.hebergement.info.logiciels"), f"Python {platform.python_version()}, Django {django.get_version()}"),
             (libelle("admin.hebergement.info.heure"), f"{DC.date_heure_courte(timezone.localtime())} ({settings.TIME_ZONE})"),  # fuseau : TIME_ZONE
         ],
-        "smtp": {"configure": bool(settings.EMAIL_HOST), "hote": settings.EMAIL_HOST, "port": settings.EMAIL_PORT,
-                 "securite": "SSL" if settings.EMAIL_USE_SSL else "STARTTLS" if settings.EMAIL_USE_TLS else libelle("admin.hebergement.info.aucune"),
-                 "utilisateur": settings.EMAIL_HOST_USER if detail else None, "expediteur": settings.DEFAULT_FROM_EMAIL},
+        "smtp": _smtp(detail, ecrire), "form_smtp": form_smtp, "messages_emails": messages_emails,
+        "messages_haut": [m for m in tous if m not in messages_emails and m not in messages_maj_auto],
+        "maj_auto": maj_auto, "form_maj_auto": form_maj_auto, "messages_maj_auto": messages_maj_auto,
         "contenu": [libelle(c) for c in CONTENU], "hors_contenu": [libelle(c) for c in HORS_CONTENU],
         "dossier_sauvegardes": str(SV.dossier()) if detail else "", "docker": os.environ.get("DANS_DOCKER") == "1",
-        "controle": controle,
+        "controle": controle, "copie": _copie(ecrire),
     })
+
+
+def _copie(ecrire):
+    """Encart « Copie hors du serveur » de la page Hébergement (copie_externe.py) : état, lien vers son réglage."""
+    from . import copie_externe as CE
+
+    s = CE.resume_etat()
+    r = CE.reglage() if s["etat"] != "absente" else None
+    return {**s, "genre": r.genre if r else "", "modifiable": ecrire}
+
+
+def _smtp(detail, ecrire):
+    """Encart « E-mails » : réglages en vigueur, jamais le mot de passe ; l'identifiant pour qui voit le détail."""
+    r = EE.reglage()
+    modifie_par = ""
+    s = EE.ligne() if r.source == EE.OUTIL else None
+    if s is not None and s.modifie_par:
+        from espaces.models import Compte
+
+        c = Compte.objects.filter(pk=s.modifie_par).first()
+        modifie_par = (f"{c.first_name} {c.last_name}".strip() or c.email) if c else ""
+    return {"source": r.source, "configure": r.actif, "par_it": r.source == EE.ENVIRONNEMENT, "outil": r.source == EE.OUTIL,
+            "hote": r.hote, "port": r.port, "securite": r.nom_securite,
+            "utilisateur": r.identifiant if detail else None, "expediteur": r.expediteur,
+            "mot_de_passe": r.mot_de_passe, "illisible": r.mot_de_passe_illisible, "mot_de_passe_le": r.mot_de_passe_le,
+            "modifie_le": r.modifie_le, "modifie_par": modifie_par if detail else "",
+            "modifiable": ecrire and r.source != EE.ENVIRONNEMENT, "essais_max": EE.ESSAIS_MAX,
+            "essais_minutes": int(EE.ESSAIS_FENETRE.total_seconds() // 60)}
 
 
 def _bilan(derniere, auto, controle):
@@ -547,8 +837,21 @@ def _bilan(derniere, auto, controle):
         point("controle_points", "controle-donnees", "controle_lien", n=controle["constats_a_voir"])
     elif controle["date"]:
         ok.append(libelle("admin.hebergement.etat.controle_ok", date=jour(controle["date"])))
-    if settings.EMAIL_HOST:
-        ok.append(libelle("admin.hebergement.etat.emails_ok", hote=settings.EMAIL_HOST))
+    from . import copie_externe as CE  # copie externe : dite seulement quand une destination est réglée (aucun bruit sinon)
+
+    copie = CE.resume_etat()
+    if copie["etat"] == "echec":
+        point("copie_echec", "copie-externe", "copie_lien", n=copie["attente"])
+    elif copie["etat"] in ("a_confirmer", "retard"):
+        point("copie_regarder", "copie-externe", "copie_lien")
+    elif copie["etat"] == "ok" and copie.get("reussie_le"):
+        ok.append(libelle("admin.hebergement.etat.copie_ok", date=jour(copie["reussie_le"]),
+                          heure=jour(copie["reussie_le"], "%H:%M")))
+    r = EE.reglage()
+    if r.mot_de_passe_illisible:
+        point("emails_mdp", "emails", "emails_mdp_lien")
+    elif r.actif:
+        ok.append(libelle("admin.hebergement.etat.emails_ok", hote=r.hote))
     else:
         point("emails_non", "emails", "emails_non_lien")
     return {"ok": ok, "points": points}
@@ -610,13 +913,29 @@ def _mo(octets):
 
 
 def _envoyer_test(request, destinataire):
+    """E-mail de test avec les réglages ENREGISTRÉS (``envoi_emails.connexion_envoi``) ; message d'erreur en clair, sans
+    la réponse du serveur. Réglages de l'outil : limite d'essais pour toute l'installation et délai court (le serveur et
+    le port sont saisis dans l'outil : pas de bouton pour sonder le réseau interne)."""
     i = Instance.courante()
+    r = EE.reglage()
+    if r.source == EE.OUTIL:
+        attente = EE.reserver_essai()
+        if attente:
+            return libelle("admin.hebergement.test.trop", n=attente)
+    delai = EE.delai_essai()
     try:
-        send_mail(libelle("admin.hebergement.test.objet", titre=i.titre),
-                  libelle("admin.hebergement.test.corps", titre=i.titre, nom=i.nom, auteur=request.user.get_full_name() or request.user.email),
-                  None, [destinataire])
-    except (smtplib.SMTPException, socket.error, OSError) as e:
-        return libelle("admin.hebergement.test.echec", type=e.__class__.__name__, erreur=str(e))
+        connexion, expediteur = EE.connexion_envoi(timeout=delai)
+        EmailMessage(libelle("admin.hebergement.test.objet", titre=i.titre),
+                     libelle("admin.hebergement.test.corps", titre=i.titre, nom=i.nom, auteur=request.user.get_full_name() or request.user.email),
+                     expediteur, [destinataire], connection=connexion).send()
+    except OSError as e:  # erreurs SMTP, réseau, certificat, mot de passe illisible : toutes des OSError
+        resume = EE.resume_technique(e)
+        journal.warning("Test email to %s through %s:%s failed (%s)", destinataire, r.hote or "-", r.port, resume)
+        Journal.ecrire(request.user, "test_email_echec", i, "serveur", "", f"{r.hote}:{r.port} · {resume}"[:200])
+        texte = libelle("admin.hebergement.test.echec", cause=EE.cause(e, delai), detail=resume)
+        if r.source == EE.ENVIRONNEMENT:
+            texte += " " + libelle("admin.hebergement.test.echec_env")
+        return texte
     Journal.ecrire(request.user, "test_email", i, "destinataire", "", destinataire)
     return ""
 

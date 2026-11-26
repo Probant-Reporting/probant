@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load collecte %}
+{% block titre %}{% libelle "admin.connexion_entreprise.titre" %}{% endblock %}
+{% block contenu %}
+{% include "collecte/administration/_nav.html" %}
+{% include "parametres/_sous_nav.html" %}
+{% comment %}Paramètres › Connexion d'entreprise (connexion_entreprise/vues_reglages.py, docs/single_sign_on.md) : réglage de
+l'installation, pour les gestionnaires des espaces. Le secret n'est jamais réaffiché : un champ mot de passe toujours vide
+et la date de son enregistrement.{% endcomment %}
+{% if not disponible %}{% encart "avertissement" role="status" %}{% if bibliotheques %}{% libelle "admin.connexion_entreprise.coupee_it" %}{% else %}{% libelle "admin.connexion_entreprise.manque.indisponible" %}{% endif %}{% endencart %}{% endif %}
+<p class="intro-page">{% libelle "admin.connexion_entreprise.intro" %}</p>
+
+<form method="post" class="page-connexion-entreprise" novalidate>{% csrf_token %}
+  <section class="bloc" aria-labelledby="titre-etat-ce">
+    <h2 id="titre-etat-ce">{% libelle "admin.connexion_entreprise.etat_titre" %}</h2>
+    <p class="etat-ce{% if active %} allume{% endif %}" role="status">{% if active %}{% icone "check" %}<span>{% libelle "admin.connexion_entreprise.etat_allumee" %}</span>
+      {% elif r.actif %}{% icone "alerte" %}<span>{% libelle "admin.connexion_entreprise.etat_incomplete" %}</span>
+      {% else %}<span>{% libelle "admin.connexion_entreprise.etat_eteinte" %}</span>{% endif %}</p>
+    <label class="case-option"><input type="checkbox" name="actif" {% if v.actif %}checked{% endif %}{% if not disponible %} disabled{% endif %} aria-describedby="aide-actif-ce">
+      <span><strong>{% libelle "admin.connexion_entreprise.form.actif" %}</strong><br><span class="discret" id="aide-actif-ce">{% libelle "admin.connexion_entreprise.actif_aide" %}</span></span></label>
+  </section>
+
+  <section class="bloc" aria-labelledby="titre-fournisseur-ce">
+    <h2 id="titre-fournisseur-ce">{% libelle "admin.connexion_entreprise.fournisseur_titre" %}</h2>
+    <div class="champ{% if erreurs.emetteur %} en-erreur{% endif %}">
+      <label for="ce-emetteur">{% libelle "admin.connexion_entreprise.form.emetteur" %}</label>
+      <input type="url" id="ce-emetteur" name="emetteur" value="{{ v.emetteur }}" maxlength="500" autocomplete="off" spellcheck="false" inputmode="url" aria-describedby="aide-emetteur-ce{% if erreurs.emetteur %} erreur-emetteur-ce{% endif %}"{% if erreurs.emetteur %} aria-invalid="true"{% endif %}>
+      <p class="aide-champ" id="aide-emetteur-ce">{% libelle "admin.connexion_entreprise.emetteur_aide" %}</p>
+      {% if erreurs.emetteur %}<p class="erreur-champ" id="erreur-emetteur-ce" role="alert">{{ erreurs.emetteur }}</p>{% endif %}
+    </div>
+    <div class="champ{% if erreurs.client_id %} en-erreur{% endif %}">
+      <label for="ce-client">{% libelle "admin.connexion_entreprise.form.client_id" %}</label>
+      <input type="text" id="ce-client" name="client_id" value="{{ v.client_id }}" maxlength="255" autocomplete="off" spellcheck="false"{% if erreurs.client_id %} aria-invalid="true" aria-describedby="erreur-client-ce"{% endif %}>
+      {% if erreurs.client_id %}<p class="erreur-champ" id="erreur-client-ce" role="alert">{{ erreurs.client_id }}</p>{% endif %}
+    </div>
+    {% if secret_illisible %}{% encart "avertissement" %}{% libelle "admin.connexion_entreprise.secret_illisible" %}{% endencart %}
+    {% elif secret_present %}<p class="etat-cle">{% icone "cadenas" %}<span>{% libelle "admin.connexion_entreprise.secret_present" date=r.secret_le|date_heure_courte %}</span>
+      <button type="submit" form="form-retirer-secret" class="secondaire compact" data-confirmer="{% libelle "admin.connexion_entreprise.retirer_confirmer" %}">{% libelle "admin.connexion_entreprise.retirer" %}</button></p>
+    {% endif %}
+    <div class="champ{% if erreurs.secret %} en-erreur{% endif %}">
+      <label for="ce-secret">{% if secret_present %}{% libelle "admin.connexion_entreprise.form.secret_remplacer" %}{% else %}{% libelle "admin.connexion_entreprise.form.secret" %}{% endif %}</label>
+      <input type="password" id="ce-secret" name="secret" value="" maxlength="512" autocomplete="new-password" spellcheck="false" aria-describedby="aide-secret-ce{% if erreurs.secret %} erreur-secret-ce{% endif %}"{% if erreurs.secret %} aria-invalid="true"{% endif %}>
+      <p class="aide-champ" id="aide-secret-ce">{% libelle "admin.connexion_entreprise.secret_aide" %}</p>
+      {% if erreurs.secret %}<p class="erreur-champ" id="erreur-secret-ce" role="alert">{{ erreurs.secret }}</p>{% endif %}
+    </div>
+    <div class="adresse-retour-ce" data-zone-copie>
+      <p class="m-0"><strong id="titre-retour-ce">{% libelle "admin.connexion_entreprise.retour_titre" %}</strong></p>
+      <p class="aide-champ">{% libelle "admin.connexion_entreprise.retour_aide" %}</p>
+      <p class="ligne-retour-ce"><code id="adresse-retour-ce">{{ adresse_retour }}</code>
+        {% libelle "admin.connexion_entreprise.copie" as t_copie %}<button type="button" class="secondaire compact" data-copier="#adresse-retour-ce" data-copier-annonce="{{ t_copie }}" aria-describedby="titre-retour-ce">{% icone "copy" %} {% libelle "admin.connexion_entreprise.copier" %}</button></p>
+      <p class="visuellement-cache" aria-live="polite" data-annonce-copie></p>
+    </div>
+  </section>
+
+  <section class="bloc" aria-labelledby="titre-bouton-ce">
+    <h2 id="titre-bouton-ce">{% libelle "admin.connexion_entreprise.bouton_titre" %}</h2>
+    <div class="champ">
+      <label for="ce-libelle">{% libelle "admin.connexion_entreprise.form.libelle_bouton" %}</label>
+      {% libelle "cadre.connexion.entreprise.bouton_defaut" as t_defaut %}<input type="text" id="ce-libelle" name="libelle_bouton" value="{{ v.libelle_bouton }}" maxlength="80" placeholder="{{ t_defaut }}" aria-describedby="aide-libelle-ce">
+      <p class="aide-champ" id="aide-libelle-ce">{% libelle "admin.connexion_entreprise.libelle_aide" %}</p>
+    </div>
+  </section>
+
+  <section class="bloc" aria-labelledby="titre-prudence-ce">
+    <h2 id="titre-prudence-ce">{% libelle "admin.connexion_entreprise.prudence_titre" %}</h2>
+    <label class="case-option"><input type="checkbox" name="mot_de_passe_pour_tous" {% if v.mot_de_passe_pour_tous %}checked{% endif %} aria-describedby="aide-mdp-ce">
+      <span><strong>{% libelle "admin.connexion_entreprise.form.mot_de_passe_pour_tous" %}</strong><br><span class="discret" id="aide-mdp-ce">{% libelle "admin.connexion_entreprise.mot_de_passe_aide" %}</span></span></label>
+    <label class="case-option"><input type="checkbox" name="email_non_declare" {% if v.email_non_declare %}checked{% endif %} aria-describedby="aide-email-ce">
+      <span><strong>{% libelle "admin.connexion_entreprise.form.email_non_declare" %}</strong><br><span class="discret" id="aide-email-ce">{% libelle "admin.connexion_entreprise.email_aide" %}</span></span></label>
+  </section>
+
+  {% if essai %}<section class="bloc resultat-essai-ce" aria-labelledby="titre-essai-ce" tabindex="-1" data-focus-initial>
+    <h2 id="titre-essai-ce">{% libelle "admin.connexion_entreprise.essai_titre" %}</h2>
+    <ul class="liste-essai-ce">
+      {% for code, ok in essai.faits %}<li class="ok">{% icone "check" %} <span>{% libelle "admin.connexion_entreprise.essai."|add:code %}</span></li>{% endfor %}
+      {% if essai.cause %}<li class="echec">{% icone "x" %} <span>{{ essai.message }}</span></li>{% endif %}
+      {% for m in essai.manques %}<li class="echec">{% icone "x" %} <span>{% libelle "admin.connexion_entreprise.manque."|add:m %}</span></li>{% endfor %}
+    </ul>
+    {% if not essai.cause and not essai.manques %}<p class="aide-champ">{% libelle "admin.connexion_entreprise.essai_reussi" %}</p>{% endif %}
+  </section>{% endif %}
+
+  <div class="barre-enregistrement collante">
+    <button type="submit" name="action" value="essayer" class="secondaire">{% libelle "admin.connexion_entreprise.essayer" %}</button>
+    <button type="submit" name="action" value="enregistrer">{% libelle "commun.enregistrer" %}</button>
+  </div>
+</form>
+<form method="post" id="form-retirer-secret" hidden>{% csrf_token %}<input type="hidden" name="action" value="retirer_secret"></form>
+
+<section class="carte liens-ce" aria-labelledby="titre-liens-ce">
+  <h2 id="titre-liens-ce">{% libelle "admin.connexion_entreprise.liens_titre" %}</h2>
+  <p class="aide-champ remonte">{% libelle "admin.connexion_entreprise.liens_aide" n=liens %}</p>
+  <form method="post" class="ligne-oublier-ce">{% csrf_token %}<input type="hidden" name="action" value="oublier_lien">
+    <div class="champ"><label for="ce-oublier">{% libelle "admin.connexion_entreprise.form.oublier_email" %}</label>
+      <input type="email" id="ce-oublier" name="email" maxlength="254" autocomplete="off" required></div>
+    <button type="submit" class="secondaire">{% libelle "admin.connexion_entreprise.oublier" %}</button>
+  </form>
+</section>
+
+<details class="carte bon-a-savoir">
+  <summary><strong>{% libelle "admin.fichiers.bon_a_savoir" %}</strong></summary>
+  <ul>
+    <li>{% libelle "admin.connexion_entreprise.savoir.comptes" %}</li>
+    <li>{% libelle "admin.connexion_entreprise.savoir.secours" %}</li>
+    <li>{% libelle "admin.connexion_entreprise.savoir.deconnexion" %}</li>
+    <li>{% libelle "admin.connexion_entreprise.savoir.jetons" %}</li>
+    <li>{% libelle "admin.connexion_entreprise.savoir.reseau" %}</li>
+    <li>{% libelle "admin.connexion_entreprise.savoir.espaces" %}</li>
+  </ul>
+</details>
+<style nonce="{% jeton_csp %}">
+  .page-connexion-entreprise .etat-ce { display: flex; gap: 8px; align-items: center; margin: 0 0 12px; }
+  .page-connexion-entreprise .etat-ce.allume { color: var(--succes-texte, inherit); font-weight: 600; }
+  .page-connexion-entreprise input[type="url"], .page-connexion-entreprise input[type="text"], .page-connexion-entreprise input[type="password"] { width: 100%; max-width: 560px; }
+  .page-connexion-entreprise .etat-cle { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; }
+  .adresse-retour-ce { margin-top: 16px; }
+  .ligne-retour-ce { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin: 6px 0 0; }
+  .ligne-retour-ce code { overflow-wrap: anywhere; }
+  .liste-essai-ce { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+  .liste-essai-ce li { display: flex; gap: 8px; align-items: flex-start; }
+  .liens-ce .ligne-oublier-ce { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end; }
+  .liens-ce .ligne-oublier-ce .champ { margin: 0; flex: 1 1 240px; max-width: 420px; }
+  .liens-ce .ligne-oublier-ce input { width: 100%; }
+</style>
+{% endblock %}

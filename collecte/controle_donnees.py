@@ -586,10 +586,13 @@ def planifier(heure=None):
     corbeille), fait aussi au lancement de la boucle."""
     from django.db import connections
 
+    from parametres import alertes
     from parametres import sauvegardes as SV
+    from parametres import taches_fond
 
     heure = heure or settings.CONTROLE_HEURE
     journal.info("Data check scheduler started: every day at %s", heure)
+    taches_fond.demarrer("data_check")
     dernier_menage = None
     def controler_si_echeance():
         if SV.base_vide():
@@ -608,5 +611,6 @@ def planifier(heure=None):
             except Exception:  # noqa: BLE001 - on réessaiera la nuit suivante
                 journal.exception("Nightly clean-up failed")
         ESP.pour_chaque_espace(controler_si_echeance, journal, "Data check failed (space \"%s\")", codes)
+        alertes.passage_planifie()  # alertes par e-mail, toutes les 15 minutes au plus (aussi lancées par backup --schedule)
         connections.close_all()
         time.sleep(300)

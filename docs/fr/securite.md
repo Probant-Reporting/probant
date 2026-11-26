@@ -45,9 +45,14 @@ avant.
 Une correction de sécurité est une nouvelle version de l'image Docker. Pour l'appliquer, voir
 [Mettre à jour l'outil](installation.md).
 
+Chaque image publiée est signée, et chaque release contient la liste des composants de l'image (SBOM) et un rapport
+de leurs failles connues. Pour les vérifier, voir « Vérifier l'image » dans [Installation](installation.md).
+
 ## Périmètre
 
 Dans le périmètre : le code de ce dépôt, et l'image Docker qu'il construit.
 
 Hors périmètre : le serveur, le nom de domaine, HTTPS, le compte SMTP et les copies des sauvegardes. L'équipe IT de
-chaque installation les gère. Voir [Installation](installation.md).
+chaque installation les gère. Voir [Installation](installation.md). Le fournisseur d'identité de la connexion avec le
+compte d'entreprise est aussi hors périmètre : l'outil vérifie seulement ses réponses (voir
+[Connexion d'entreprise](connexion_entreprise.md)).

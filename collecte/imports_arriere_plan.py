@@ -177,7 +177,10 @@ def planifier():
     les gros exports (``exports_arriere_plan``) dans un fil à part du même processus."""
     from parametres import sauvegardes as SV
 
+    from parametres import taches_fond
+
     journal.info("Background import scheduler started (imports above %s rows)", seuil())
+    taches_fond.demarrer("imports")  # signe de vie de la tâche (page Santé, alertes par e-mail)
     arret = threading.Event()
 
     def battre():  # signe de vie, même pendant une longue tâche

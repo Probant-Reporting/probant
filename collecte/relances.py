@@ -9,7 +9,8 @@ reste à saisir ou à valider, sans copie automatique.
   toutes les personnes qui ont encore quelque chose à faire dans les campagnes ouvertes concernées, une fois par jour au
   plus (« python manage.py relances --auto », lancée chaque jour par l'image Docker).
 Le message suit un modèle réglable (objet et texte, avec des variables) ; chaque envoi est tracé (historique et journal).
-Sans serveur d'envoi (SMTP) : rien ne part et rien n'est noté comme envoyé ; on écrit à chaque personne à la main.
+Sans serveur d'envoi (SMTP, réglé dans le fichier de réglages ou dans Paramètres › Hébergement) : rien ne part et rien
+n'est noté comme envoyé ; on écrit à chaque personne à la main. Tout envoi passe par ``parametres.envoi_emails``.
 """
 import logging
 import string
@@ -20,6 +21,7 @@ from django.core.mail import EmailMessage
 from django.urls import reverse
 from django.utils import timezone
 
+from parametres import envoi_emails as EE
 from parametres.libelles import libelle
 from referentiel.models import Utilisateur
 
@@ -327,9 +329,10 @@ def _rediger(af, request=None, sujet=None, message=None):
 
 # ---------------------------------------------------------------- envoi
 def envoi_actif():
-    """Un serveur d'envoi (SMTP) est réglé par l'IT. Sans lui, rien ne part : aucune relance n'est envoyée ni notée comme
-    envoyée ; on écrit à la main (page Relances, « Écrire à … »)."""
-    return bool(settings.EMAIL_HOST)
+    """Un serveur d'envoi (SMTP) est réglé : par l'IT dans le fichier de réglages, ou dans Paramètres › Hébergement
+    (``parametres.envoi_emails``). Sans lui, rien ne part : aucune relance n'est envoyée ni notée comme envoyée ; on écrit
+    à la main (page Relances, « Écrire à … »)."""
+    return EE.envoi_actif()
 
 
 def marquer(af, par):
@@ -343,6 +346,7 @@ def marquer(af, par):
 
 # cause d'un échec d'envoi, en clair (l'erreur technique reste dans Relance.erreur et dans le journal du serveur)
 CAUSES_ECHEC = (
+    (("MotDePasseIllisible",), "messages.relances.echec.mot_de_passe"),
     (("SMTPAuthenticationError",), "messages.relances.echec.identifiants"),
     (("SMTPRecipientsRefused",), "messages.relances.echec.destinataire"),
     (("SMTPSenderRefused",), "messages.relances.echec.expediteur"),
@@ -363,10 +367,16 @@ def cause_echec(erreur):
 def envoyer(liste, par=None, request=None):
     """Envoie un e-mail par personne ; renvoie les relances créées (envoyées ou en échec). Aucune copie. Sans serveur
     d'envoi : rien n'est envoyé ni enregistré (liste vide)."""
-    if not envoi_actif():
-        journal.warning("%s reminders not sent: e-mails not enabled (SMTP_HOST empty)", "Manual" if par else "Automatic")
+    reglage = EE.reglage()
+    if not reglage.actif:
+        journal.warning("%s reminders not sent: e-mails not enabled (no SMTP server set)", "Manual" if par else "Automatic")
         return []
     sorties = []
+    connexion = expediteur = erreur_connexion = None
+    try:
+        connexion, expediteur = EE.connexion_envoi()  # pas encore ouverte : chaque e-mail ouvre et ferme la sienne
+    except EE.MotDePasseIllisible as e:
+        erreur_connexion = e
     for af in liste:
         if not af.personne.email_joignable:  # sans adresse, ou adresse provisoire « …@….invalid »
             continue
@@ -374,10 +384,15 @@ def envoyer(liste, par=None, request=None):
         r = Relance(destinataire=af.personne, envoyee_par=par if getattr(par, "pk", None) else None,
                     nb_a_saisir=af.a_saisir, nb_brouillons=af.brouillons)
         try:
-            EmailMessage(sujet, texte, settings.DEFAULT_FROM_EMAIL, [af.personne.email_joignable]).send()
+            if erreur_connexion is not None:
+                raise erreur_connexion
+            EmailMessage(sujet, texte, expediteur, [af.personne.email_joignable], connection=connexion).send()
         except Exception as e:  # SMTP refusé, serveur injoignable… : noté, on continue avec les autres
-            r.statut, r.erreur = Relance.Statut.ECHEC, f"{e.__class__.__name__} : {e}"[:500]
-            journal.warning("Reminder to %s: failed (%s)", af.personne.email, r.erreur)
+            # réglé dans l'outil : seulement le nom de l'erreur et le code SMTP (jamais la réponse brute d'un serveur
+            # choisi dans l'outil) ; réglé par l'IT : le détail, comme avant
+            detail = EE.resume_technique(e) if reglage.source == EE.OUTIL else f"{e.__class__.__name__} : {e}"
+            r.statut, r.erreur = Relance.Statut.ECHEC, detail[:500]
+            journal.warning("Reminder to %s: failed (%s: %s)", af.personne.email, e.__class__.__name__, e)
         r.save()
         r.campagnes.set(af.toutes_campagnes)
         Journal.ecrire(par, "relance" if par else "relance_auto", af.personne, "à faire", "", str(af.nombre))
@@ -420,7 +435,7 @@ def relancer_automatiquement(aujourdhui=None, simulation=False):
     if not Instance.courante().relance_auto:
         return []
     if not simulation and not envoi_actif():
-        journal.warning("Automatic reminders skipped: e-mails not enabled (SMTP_HOST empty)")
+        journal.warning("Automatic reminders skipped: e-mails not enabled (no SMTP server set)")
         return []
     aujourdhui = aujourdhui or timezone.localdate()
     campagnes = campagnes_a_relancer(aujourdhui)

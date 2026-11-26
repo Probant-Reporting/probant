@@ -36,15 +36,17 @@ Administration ni de lien vers le réglage de la durée ; retour à son Historiq
 
 {% if lignes %}
 <table class="carte-table table-connexions">
-  <thead><tr><th scope="col">{% libelle "admin.connexions.col.date" %}</th><th scope="col">{% libelle "admin.connexions.col.compte" %}</th><th scope="col">{% libelle "admin.connexions.col.resultat" %}</th></tr></thead>
+  <thead><tr><th scope="col">{% libelle "admin.connexions.col.date" %}</th><th scope="col">{% libelle "admin.connexions.col.compte" %}</th><th scope="col">{% libelle "admin.connexions.col.methode" %}</th><th scope="col">{% libelle "admin.connexions.col.resultat" %}</th></tr></thead>
   <tbody>
   {% for l in lignes %}
   <tr>
     <td class="quand">{{ l.date|date_courte }} <span class="discret">{{ l.date|date:"H:i" }}</span></td>
     <td>{% if l.utilisateur %}<span class="personne">{% avatar l.utilisateur %}<span><span class="nom-personne">{{ l.utilisateur }}</span><span class="discret">{{ l.utilisateur.email }}</span></span></span>
       {% elif l.empreinte %}{% libelle "admin.connexions.inconnu" %} <span class="discret">{% libelle "admin.connexions.empreinte" empreinte=l.empreinte %}</span>
+      {% elif l.methode == "entreprise" %}<span class="discret">{% libelle "admin.connexions.entreprise_inconnu" %}</span>
       {% else %}<span class="discret">{% libelle "admin.connexions.compte_supprime" %}</span>{% endif %}</td>
-    <td>{% if l.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "admin.connexions.resultat.reussie" %}</span>{% elif l.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "admin.connexions.resultat.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "admin.connexions.resultat.echec" %}</span>{% endif %}</td>
+    <td>{% if l.methode == "entreprise" %}{% libelle "admin.connexions.methode.entreprise" %}{% else %}{% libelle "admin.connexions.methode.mot_de_passe" %}{% endif %}</td>
+    <td>{% if l.resultat == "reussie" %}<span class="etiquette e-vert">{% icone "coche" %} {% libelle "admin.connexions.resultat.reussie" %}</span>{% elif l.resultat == "bloquee" %}<span class="etiquette e-rouge">{% icone "cadenas" %} {% libelle "admin.connexions.resultat.bloquee" %}</span>{% else %}<span class="etiquette e-orange">{% icone "x" %} {% libelle "admin.connexions.resultat.echec" %}</span>{% endif %}{% if l.motif %}<br><span class="discret">{% libelle "admin.connexions.motif."|add:l.motif %}</span>{% endif %}</td>
   </tr>
   {% endfor %}
   </tbody>

@@ -31,6 +31,63 @@ Django view, and the call to the AI provider uses the Python standard library. O
 the end-to-end test of the server (`serveur_mcp/test_client_officiel.py`). The AI socket calls the network only when an
 administrator turns it on with a key; the tests never call it.
 
+## Packages of the company sign-in
+
+Sign-in with a company account (OpenID Connect, [`docs/single_sign_on.md`](single_sign_on.md)) adds two packages to
+production, pinned in `requirements.txt` with their dependencies:
+
+| Package | Version | Licence | Role |
+|---|---|---|---|
+| PyJWT | 2.15.1 | MIT | Checks the signature and the claims of the ID token (asymmetric algorithms only, explicit list) |
+| cryptography | 50.0.2 | Apache-2.0 OR BSD-3-Clause | RSA and EC keys for PyJWT; encryption of the client secret (Fernet, HKDF) |
+| cffi | 2.1.1 | MIT-0 | Dependency of cryptography |
+| pycparser | 3.12 | BSD-3-Clause | Dependency of cffi |
+
+All four licences are permissive and compatible with the AGPL-3.0-or-later licence of the tool. The calls to the
+provider use the Python standard library (`urllib`), through a single function (`connexion_entreprise/sortant.py`). The
+tool calls the provider only when a person signs in, or when a space manager checks or saves the settings.
+
+Why these choices: PyJWT is small, widely used, and requires the list of accepted algorithms at each check, which
+rules out unsigned tokens and algorithm confusion. `cryptography` is the reference cryptography library of Python.
+Complete OpenID Connect client libraries were not kept: they add more code and dependencies (an HTTP client), or they
+are configured in files instead of in the tool, and some create accounts at the first sign-in. The flow itself
+(`state`, `nonce`, PKCE, discovery, key rotation) is a few lines of standard code in `connexion_entreprise/oidc.py`, with
+no cryptography written by hand.
+
+The all-in-one version (Windows or Mac) installs only pure-Python packages: it does not include these packages, and
+company sign-in does not exist there.
+
+## Packages of the external copy of the backups
+
+The external copy of the backups ([Install Probant](installation.md), “Copy the backups outside the server”) adds these
+packages to production, pinned in `requirements.txt`:
+
+| Package | Version | Licence | Role |
+|---|---|---|---|
+| paramiko | 5.1.0 | LGPL-2.1 | SSH and SFTP client: copy to an SFTP server, check of the key of the server |
+| bcrypt | 5.0.0 | Apache-2.0 | Dependency of paramiko (private keys in the OpenSSH format) |
+| PyNaCl | 1.6.2 | Apache-2.0 | Dependency of paramiko |
+| invoke | 3.0.3 | BSD-2-Clause | Dependency of paramiko |
+
+paramiko also uses `cryptography` (above). The LGPL-2.1 licence of paramiko allows its use, unchanged, by a program
+under the AGPL-3.0-or-later licence. The other licences are permissive.
+
+Why these choices:
+
+- **SFTP**: paramiko is the reference SSH library of Python, maintained for many years. It does all the cryptography of
+  SSH; the tool writes none. The tool uses its lower level (a transport and an SFTP client), so that it checks the key
+  of the server itself, before any password or signature leaves, and reads no `known_hosts` file, no `~/.ssh` folder
+  and no SSH agent. paramiko also gives the server classes that the tests use for a local SFTP server.
+- **S3**: no package. The requests are signed with the public “Signature Version 4” protocol, with HMAC-SHA256 and
+  SHA-256 from the Python standard library, in about a hundred lines (`parametres/copie_s3.py`); the examples published
+  with the protocol are replayed by the tests. A complete S3 client library was not kept: it adds a large dependency
+  (a data file of all the cloud services, an HTTP library), and it looks for credentials and endpoints by itself in
+  the environment, in files and in the metadata service of the host. The tool must call only the destination that an
+  administrator sets, with the secret saved in the tool.
+
+The all-in-one version (Windows or Mac) installs only pure-Python packages: it does not include these packages, and the
+external copy does not exist there (the screen says so).
+
 ## Files and checksums (SHA-256)
 
 `collecte/test_bibliotheques.py` checks these checksums: if a file is changed or replaced, the tests fail. The test

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import mise_en_place, views, vues_hebergement, vues_ia, vues_installation, vues_langues, vues_paquets, vues_referentiels
+from . import mise_en_place, views, vues_copie_externe, vues_hebergement, vues_ia, vues_installation, vues_langues, vues_paquets, vues_referentiels
 
 app_name = "parametres"
 
@@ -38,6 +38,7 @@ urlpatterns = [
     path("administration/parametres/ia/", vues_ia.reglages, name="ia"),
     path("administration/parametres/hebergement/", vues_hebergement.hebergement, name="hebergement"),
     path("administration/parametres/sante/", vues_hebergement.sante_installation, name="sante_installation"),
+    path("administration/parametres/hebergement/copie-externe/", vues_copie_externe.copie_externe, name="copie_externe"),
     path("administration/parametres/hebergement/sauvegardes/<str:nom>/", vues_hebergement.sauvegarde_telecharger,
          name="sauvegarde_telecharger"),
     path("administration/parametres/hebergement/restaurer/", vues_hebergement.sauvegarde_restaurer, name="sauvegarde_deposer"),

@@ -7,7 +7,13 @@
 #               parallel; REQUIRE_BROWSER_TESTS=1 turns a missing browser into a failure instead of a silent skip;
 #               axe-core (pinned version, AXE_JS) runs the automatic accessibility checks
 #   docker      the Docker path of docs/installation.md on a blank runner, with SQLite and with PostgreSQL:
-#               ./install.sh, health page, version, demo, sign-in, backup, restore, ./update.sh
+#               ./install.sh, health page, version, demo, sign-in, backup, restore, ./update.sh; with SQLite, also
+#               the one-line installation (get.sh) from a local copy of the repository and a local image registry
+#   update-published  an installation of ANY published version goes straight to this version, with no step in between:
+#               for each version listed in CHANGELOG.md, a demo database built with the code of that version (the git
+#               tag vX.Y.Z), updated with this commit, then compared (rows, values, statuses, evidence files, closed
+#               years, backup and restore, an archive of the old version restored by this one) and started (/sante/
+#               green, sign-in); SQLite and PostgreSQL (qa/update_from_published.py)
 #   lint        ruff: mechanical defects (unused import or variable, undefined name, function defined twice...); no
 #               style rule, nothing is reformatted (rules in pyproject.toml)
 #   audit       known vulnerabilities in the pinned production packages (informational: never blocks)
@@ -223,11 +229,86 @@ jobs:
         run: |
           curl -fsS "$URL/sante/" | grep -q '"etat": "ok"'
           bash docker/check_sign_in.sh "$URL" admin "$DEMO_PASSWORD" "$(cat VERSION)"
+      # cosign: test signatures of the lists of sums (get.sh, update.sh) and of the automatic updates
+      - name: Install cosign (test signatures)
+        uses: sigstore/cosign-installer@v4.1.4
+      # get.sh as an IT team runs it ("curl … | sh"), with the image built above, from a local copy of the public
+      # repository and a local registry (other ports, other Compose project: the installation above is not touched);
+      # the files of each version checked against its list of sums, signed with a test key (a file changed: refused);
+      # then ./update.sh to a newer version and the way back of docs/installation.md. Once: it does not depend on the database.
+      - name: "One-line installation (get.sh), update to a newer version, going back"
+        if: matrix.database == 'sqlite'
+        run: IMAGE_UNDER_TEST=probant:local bash docker/test_get.sh
+      # A server without Internet access: offline packages of two versions made from the image built above
+      # (docker/make_offline_package.sh), installation, update and going back; the name of the image points to a
+      # registry where nothing answers, curl and wget fail, and no image download may appear in the Docker events.
+      - name: "Installation without Internet access (offline package), update, going back"
+        if: matrix.database == 'sqlite'
+        run: IMAGE_UNDER_TEST=probant:local bash docker/test_offline.sh
+      # Company network: a test authority signs a server certificate; ./install.sh --domain --cert --key --ca-cert with
+      # Caddy (curl --cacert, health page through HTTPS, no ACME), outgoing HTTPS call of the tool, renewal; the same
+      # without Internet access (offline package with the image of Caddy). Ports 80 and 443 of the runner.
+      - name: "Certificate of the company (HTTPS) and internal authority, online and offline"
+        if: matrix.database == 'sqlite'
+        run: IMAGE_UNDER_TEST=probant:local bash docker/test_custom_certificate.sh
+      # Automatic updates (auto-update.sh, docs/installation.md "Automatic updates"): a local registry, versions of the image
+      # built above (signed, unsigned, signed with another key, that does not start, that migrates then fails), a test
+      # key of cosign instead of the identity of the workflow (that check runs in image.yml, at each published version),
+      # with SQLite and with PostgreSQL: going back with and without restore, lock, window, notify only, update.
+      - name: "Automatic updates: signature, window, going back with and without restore, lock"
+        run: IMAGE_UNDER_TEST=probant:local TEST_DATABASE=${{ matrix.database }} bash docker/test_auto_update.sh
       - name: Logs of the containers (after a failure)
         if: failure()
         run: |
           docker compose ps -a || true
           docker compose logs --no-color --tail 300 || true
+
+  update-published:
+    # "You can update from any published version directly": nothing here names a version. The versions are read from
+    # CHANGELOG.md and their code from the tags vX.Y.Z (fetch-depth: 0 brings the tags), so each new published version is
+    # taken by the next run. The script builds each old database with the code of that version, in its own folder and
+    # with its own packages when requirements.txt differs, and gives it to qa/migration_rehearsal.py.
+    name: Update from every published version – ${{ matrix.database }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        database: [sqlite, postgresql]
+    services:
+      # started for both variants (a few seconds); only the postgresql variant uses it
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: essai
+          POSTGRES_PASSWORD: essai
+          POSTGRES_DB: essai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U essai -d essai"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+          cache-dependency-path: requirements*.txt
+      - run: pip install -r requirements.txt
+      - name: Versions and code that will be tried
+        run: git tag --list 'v*' --sort=version:refname
+      - name: Update from every published version to this commit, then compare and start
+        run: >-
+          python qa/update_from_published.py
+          --database ${{ matrix.database }}
+          --postgres postgres://essai:essai@127.0.0.1:5432/postgres
+          --pg-prefix update_check
+          --port 8603
 
   lint:
     name: Code check (ruff)

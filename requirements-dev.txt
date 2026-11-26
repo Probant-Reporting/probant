@@ -28,10 +28,7 @@ pydantic_core==2.50.4
 annotated-types==0.8.0
 typing-inspection==0.4.5
 typing_extensions==4.16.0 ; python_version >= "3.13"
-PyJWT==2.15.1
-cryptography==50.0.2
-cffi==2.1.1
-pycparser==3.12
+# PyJWT, cryptography, cffi, pycparser: also needed by the MCP client, already in requirements.txt (company sign-in)
 python-multipart==0.0.33
 sse-starlette==3.7.0
 starlette==1.10.0

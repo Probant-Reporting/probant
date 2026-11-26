@@ -30,6 +30,7 @@ The tool organises the data folder itself. A `README.txt` file in the folder rem
 ├── db.sqlite3                   database of the main space (SQLite; with PostgreSQL, the database lives elsewhere)
 ├── shared.sqlite3               account registry, shared by all spaces
 ├── .secret_key                  installation key: never share it
+├── .secret_key_all_in_one       key of the all-in-one version: never share it (a server makes its own)
 ├── files/                       DOCUMENTS UPLOADED IN THE TOOL (main space)
 │   ├── evidence/                contributors' evidence files
 │   │   └── <period>/<organisation>/<KPI>/<file>
@@ -40,6 +41,7 @@ The tool organises the data folder itself. A `README.txt` file in the folder rem
 │   └── exports/                 large exports made in the background; deleted after 7 days (setting), never backed up
 ├── sign-in-attempts/            count of failed sign-ins, shared by all the server processes (never backed up)
 ├── ai-keys/<code>.key           key of the AI assistant of each space (docs/ai_socket.md): never in the database, never backed up
+├── ca-bundle.pem                certificate authorities of the system and those added by the IT, joined at each start (only when the IT adds authorities, docs/installation.md, "Company network"); never backed up
 ├── backups/                     DATED ARCHIVES (database + files)
 │   ├── backup-YYYYMMDD-HHMMSS-<reason>.zip    main space
 │   ├── restores.jsonl           restore history
@@ -80,6 +82,7 @@ The table shows who adds each kind of document, where it goes, and if the backup
 | Logo | Administrator (**Administration › Settings › Identity**) | `files/settings/logo/` | Yes |
 | Import file (values, configuration, framework, data migration) | Administrator | `files/pending-imports/`, deleted after the import or after one day | No (temporary) |
 | Backup archive | Automatic, or administrator / IT | `backups/` | — |
+| Copy of a backup archive outside the server | The tool, when a destination is set (**Settings › Hosting › External copy**) | At the destination: `<folder or prefix>/<identifier of the installation>/`, with the same layout as `backups/` (`backup-….zip`, `spaces/<code>/`, `shared/`). What is already copied is noted in the shared account registry, never in a file of the data folder. | — |
 | Excel or CSV export | Any user | Downloaded directly, never kept on the server | — |
 | Large export (above the threshold of **Settings › Hosting › Large exports**) | Any user who can export | `files/exports/<random name>.xlsx` or `.csv`, until the person downloads it within 7 days (setting); then deleted by the scheduler, also at startup | No (made again on request) |
 
