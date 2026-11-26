@@ -2,7 +2,8 @@
 
 You tried Probant with the all-in-one version on a computer, and you entered real data. This page tells you how to
 move this data to a server without losing anything. Part 1 is for the person who uses the tool on the computer. Part 2
-is for the IT team that installs the server. French version: [`docs/fr/du_pc_au_serveur.md`](fr/du_pc_au_serveur.md).
+is for the IT team that installs the server. Without an IT team, give part 2 to the person or the provider who
+installs the server. French version: [`docs/fr/du_pc_au_serveur.md`](fr/du_pc_au_serveur.md).
 
 The method is simple: you send the whole `data` folder of the all-in-one version. The server uses it as its data
 folder.
@@ -12,13 +13,13 @@ folder.
 | Item | Moves | Comment |
 |---|---|---|
 | Accounts and passwords | Yes | Each person signs in with the same password. |
-| Values, frameworks, campaigns, history, settings | Yes | |
+| Values, frameworks, campaigns, history, settings | Yes | Except the password of the email server, if it is saved in the tool: enter it again on the server. |
 | Evidence files and logo | Yes | |
 | Other spaces | Yes | |
 | Key of the AI assistant | Yes | |
 | Assistant tokens (MCP) | Yes | |
 | Sign-in sessions | No | Each person signs in again once. |
-| Secret key | No | The all-in-one version keeps its own key in `data/.secret_key_all_in_one`. The server never uses it: it makes its own key at its first start. Step 4 deletes the copy of the computer's key. |
+| Secret key | No | The all-in-one version keeps its own key in `data/.secret_key_all_in_one`. The server never uses it: it makes its own key at its first start. Step 4 of part 2 deletes the copy of the computer's key. |
 | Backups made on the computer | Yes, as files | The server lists them, but **Restore…** refuses them: another installation signed them. IT can still restore one, see [Restore a backup](installation.md#restore-a-backup). |
 
 ## Before you start
@@ -102,8 +103,15 @@ computers must run the same version of the tool.
 ### If you have only a backup file
 
 If the person cannot send the `data` folder, the backup of step 2 of part 1 also moves the data, with these limits:
-the passwords do not move, and only the space of the backup moves. Restore it on a server with SQLite, before anyone
-uses the setup wizard:
+the passwords do not move, and only the space of the backup moves.
+
+The simplest way is in the tool. Install the server empty. The administrator creates their account at step 1 of the
+setup wizard, then opens **Start from a backup** at step 2, chooses the file, and confirms. This administrator keeps
+their password and stays an administrator. They then give the other accounts a temporary password in
+**Administration › Accounts**. See
+[Restore a backup from another installation](installation.md#restore-a-backup-from-another-installation).
+
+IT can also restore it from the command line, on a server with SQLite, before anyone uses the setup wizard:
 
 1. Copy the archive into the volume: `docker compose cp <archive>.zip web:/data/backups/`.
 2. Run `docker compose exec web python manage.py restore <archive>.zip --unsigned --other-space --yes`, then
@@ -115,7 +123,9 @@ uses the setup wizard:
 
 | Message | What to do |
 |---|---|
-| “This backup was not made by this installation, or it was changed after it was made” (page **Hosting**) | Normal for a backup made on the computer. Use the `data` folder, or restore the backup from the command line with `--unsigned`. |
+| “This backup was not made by this installation, or it was changed after it was made” (page **Hosting**) | Normal for a backup made on the computer, when the person who adds the file is not a space manager. A space manager can restore it from the tool. Or use the `data` folder, or restore the backup from the command line with `--unsigned`. |
+| “This backup does not come from this installation” (page **Hosting**, or **Start from a backup** in the setup wizard) | Normal for a backup made on the computer. Read the page, select the two boxes, and enter the word. |
+| “… other accounts will have no password” (same page) | The backup carries no passwords. After the restore, give these accounts a temporary password in **Administration › Accounts**. |
 | “This backup comes from another installation of the tool” (`restore`) | Normal for a backup made on the computer. Add `--other-space` (section [If you have only a backup file](#if-you-have-only-a-backup-file)). |
 | “… account(s) of this space have no password on this server” | The backup carries no passwords. Do step 3 of [If you have only a backup file](#if-you-have-only-a-backup-file). |
 | `WARNING: this is the demo database` (startup summary) | The folder comes from the demo. Install the server empty: see [Before you start](#before-you-start). |

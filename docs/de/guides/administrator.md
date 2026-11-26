@@ -20,6 +20,8 @@ Beim ersten Start öffnet sich ein Assistent mit 8 Schritten. Er beginnt mit Ihr
 
 Wenn Sie den Assistenten verlassen, klicken Sie auf **Administration › Einstellungen › Einrichtung fortsetzen**, um weiterzumachen.
 
+Haben Sie eine Sicherung des Tools, die ein anderer Server oder die All-in-one-Version erstellt hat? Erstellen Sie Ihr Konto in Schritt 1. Ab Schritt 2 öffnen Sie, solange die Installation leer ist, **Mit einer Sicherung beginnen**, wählen die Datei aus und bestätigen. Sie behalten Ihr Passwort und bleiben Administrator. Die anderen Konten der Sicherung haben kein Passwort: Legen Sie unter **Administration › Konten** ein vorläufiges Passwort für sie an. In einer laufenden Installation macht eine Bereichsverwaltung dasselbe unter **Administration › Einstellungen › Hosting**.
+
 ## Einen Berichtsrahmen hinzufügen {#framework}
 
 1. Klicken Sie in der oberen Leiste auf **Administration**. Klicken Sie im **Überblick** in der Zeile **Berichtsrahmen und KPIs** auf **Berichtsrahmen hinzufügen**.
@@ -86,6 +88,19 @@ Ein Leser oder ein Auditor erfasst und validiert nichts. Wenn Sie die Rolle eine
 ![Administration, Konten](../../screenshots/de/admin-accounts.png)
 
 Um zu sehen, wer sich wann angemeldet hat, klicken Sie unter **Administration › Konten** auf **Anmeldeverlauf**. Jede Zeile zeigt das Datum, das Konto und das Ergebnis: **Erfolgreich**, **Fehlgeschlagen** oder **Gesperrt: zu viele Versuche**. Ein Benutzername, der zu keinem Konto des Bereichs passt, erscheint nur mit einer Referenz, nie mit dem eingegebenen Text. Filtern Sie nach Ergebnis oder Zeitraum, oder suchen Sie einen Namen. Wie lange das Tool den Verlauf aufbewahrt, stellen Sie unter **Administration › Einstellungen › Hosting** ein (standardmäßig 180 Tage).
+
+## Administrator oder Bereichsverwaltung {#space-manager}
+
+Ein Administrator richtet seinen Bereich ein: die Konten, die Berichtsrahmen, die Kampagnen und die Einstellungen des Bereichs. Die Bereichsverwaltung richtet die gesamte Installation ein. Nur die Bereichsverwaltung kann:
+
+- Bereiche anlegen, umbenennen und archivieren und die Anmeldung in allen Bereichen sperren (**Administration › Einstellungen › Bereiche**);
+- den E-Mail-Server, die E-Mail-Warnungen, die externe Kopie der Sicherungen und die automatischen Updates ändern (**Einstellungen › Hosting** und **Einstellungen › Zustand**);
+- die Firmenanmeldung einrichten;
+- eine Sicherung aus einer anderen Installation wiederherstellen.
+
+Nur die Bereichsverwaltung kann auch den Namen, die E-Mail-Adresse oder das Passwort einer anderen Person der Bereichsverwaltung ändern.
+
+In **Administration › Konten** steht die Kennzeichnung **Bereichsverwaltung** neben der Rolle. Um jemanden zur Bereichsverwaltung zu ernennen oder daraus zu entfernen, öffnen Sie das Konto und verwenden Sie den Kasten **Administrator oder Bereichsverwaltung**. Nur die Bereichsverwaltung sieht die Schaltfläche, und nur ein aktiver Administrator des Hauptbereichs kann ernannt werden. Wer kein aktiver Administrator des Hauptbereichs mehr ist (andere Rolle, deaktiviertes Konto, gesperrte Anmeldung), verliert die Rolle in der Bereichsverwaltung: Die Kontoseite fragt vor dem Speichern nach einer Bestätigung. Das Tool behält immer eine Person der Bereichsverwaltung, die handeln kann: Niemand kann die letzte deaktivieren, ihre Rolle ändern, sie löschen oder sperren, und das Tool bittet, zuerst eine andere Person zu ernennen. Sie können sich diese Rolle nicht selbst entziehen. Jede Änderung fügt dem **Verlauf** eine Zeile hinzu.
 
 ## Die KPIs zuweisen {#assign}
 
@@ -236,13 +251,13 @@ Jede Antwort ist ein Vorschlag mit der Kennzeichnung „Von der KI vorgeschlagen
 
 ## Hosting und Sicherungen prüfen {#hosting}
 
-Gehen Sie zu **Administration › Einstellungen › Hosting**. Die Seite zeigt die Version, die automatische Sicherung, die Datenprüfung und die E-Mail-Einrichtung. Klicken Sie auf **Sicherung erstellen und herunterladen**, um sofort eine Sicherung zu erstellen. Das IT-Team kopiert die Sicherungen an einen anderen Ort. Oder die Bereichsverwaltung richtet die **Kopie außerhalb des Servers** ein: Das Tool kopiert dann jede Sicherung selbst in einen S3-kompatiblen Speicher oder auf einen SFTP-Server, den das IT-Team bereitstellt, und warnt Sie, wenn eine Kopie fehlschlägt.
+Gehen Sie zu **Administration › Einstellungen › Hosting**. Die Seite zeigt die Version, die automatische Sicherung, die Datenprüfung und die E-Mail-Einrichtung. Klicken Sie auf **Sicherung erstellen und herunterladen**, um sofort eine Sicherung zu erstellen. Das IT-Team kopiert die Sicherungen an einen anderen Ort. Oder die Bereichsverwaltung richtet im Block **Kopie außerhalb des Servers** eine Kopie ein: Das Tool kopiert dann jede Sicherung selbst in einen S3-kompatiblen Speicher oder auf einen SFTP-Server, den das IT-Team bereitstellt, und warnt Sie, wenn eine Kopie fehlschlägt.
 
 ![Einstellungen, Hosting](../../screenshots/de/hosting.png)
 
 ![Einstellungen, Hosting, Kopie außerhalb des Servers](../../screenshots/de/hosting-external-copy.png)
 
-Um den E-Mail-Server einzurichten, verwenden Sie den Block **E-Mails** derselben Seite. Geben Sie den Server, den Port, die Sicherheit, den Benutzernamen, das Passwort und die Absenderadresse ein, die Ihnen das IT-Team nennt. Klicken Sie auf **Speichern** und dann auf **Test-E-Mail senden**. Wird die E-Mail nicht gesendet, nennt eine Meldung den Grund in einfachen Worten. Diese Einstellungen gelten für alle Bereiche: Nur die Bereichsverwaltung kann sie ändern. Das Passwort wird nie wieder angezeigt. Hat das IT-Team die E-Mails in der Einstellungsdatei festgelegt, zeigt der Block diese Einstellungen schreibgeschützt an.
+Um den E-Mail-Server einzurichten, verwenden Sie den Block **E-Mails** derselben Seite. Diese Einstellungen gelten für alle Bereiche: Nur die Bereichsverwaltung kann sie ändern. Geben Sie den Server, den Port, die Sicherheit, den Benutzernamen, das Passwort und die Absenderadresse ein, die Ihnen das IT-Team nennt. Klicken Sie auf **Speichern** und dann auf **Test-E-Mail senden**. Wird die E-Mail nicht gesendet, nennt eine Meldung den Grund in einfachen Worten. Das Passwort wird nie wieder angezeigt. Hat das IT-Team die E-Mails in der Einstellungsdatei festgelegt, zeigt der Block diese Einstellungen schreibgeschützt an.
 
 ![Einstellungen, Hosting, E-Mails](../../screenshots/de/hosting-emails.png)
 
@@ -250,11 +265,11 @@ Um auf einen Blick zu sehen, ob alles in Ordnung ist, gehen Sie zu **Administrat
 
 ![Einstellungen, Zustand](../../screenshots/de/admin-health.png)
 
-Das Tool kann Sie auch per E-Mail warnen. Unten auf **Einstellungen › Zustand** schaltet die Bereichsverwaltung die **E-Mail-Warnungen** ein und wählt die Empfänger: standardmäßig die Administration des Hauptbereichs und die Bereichsverwaltung, dazu weitere Adressen, zum Beispiel das Postfach der IT. Wenn ein Problem auftritt (fehlgeschlagene oder verspätete Sicherung, fast voller Datenträger, beendete Hintergrundaufgabe, fehlgeschlagene E-Mails…), erhalten die Empfänger eine E-Mail mit dem, was zu tun ist. Danach erhalten sie höchstens einmal am Tag eine Erinnerung, solange das Problem besteht, und eine E-Mail, wenn es behoben ist. Bei einer neuen Installation sind die Warnungen von Anfang an eingeschaltet; eine Installation, die schon vor ihnen bestand, lässt sie ausgeschaltet, bis jemand sie einschaltet. Die Seite sagt, welcher Fall gilt. Klicken Sie auf **Testwarnung senden**, um sie zu prüfen. Wenn der Server ausgeschaltet ist, kann das Tool niemanden warnen.
+Das Tool kann Sie auch per E-Mail warnen. Unten auf **Einstellungen › Zustand** schaltet die Bereichsverwaltung die **E-Mail-Warnungen** ein und wählt die Empfänger: standardmäßig die Administration des Hauptbereichs und die Bereichsverwaltung, dazu weitere Adressen, zum Beispiel das Postfach der IT. Wenn ein Problem auftritt (fehlgeschlagene oder verspätete Sicherung, fast voller Datenträger, beendete Hintergrundaufgabe, fehlgeschlagene E-Mails…), erhalten die Empfänger eine E-Mail mit dem, was zu tun ist. Danach erhalten sie höchstens einmal am Tag eine Erinnerung, solange das Problem besteht, und eine E-Mail, wenn es behoben ist. Bei einer neuen Installation sind die Warnungen von Anfang an eingeschaltet. Eine Installation, die schon vor ihnen bestand, lässt sie ausgeschaltet, bis die Bereichsverwaltung sie einschaltet. Die Seite sagt, welcher Fall gilt. Klicken Sie auf **Testwarnung senden**, um sie zu prüfen. Wenn der Server ausgeschaltet ist, kann das Tool niemanden warnen.
 
 ![Einstellungen, Zustand, E-Mail-Warnungen](../../screenshots/de/admin-health-alerts.png)
 
-Der Block **Automatische Updates** unter **Einstellungen › Hosting** zeigt die letzte Prüfung des Servers und ihr Ergebnis. Die Bereichsverwaltung wählt, was bei einer neuen Version passiert: **Automatisch installieren** (nachts, nach einer Sicherung; funktioniert die neue Version nicht, kehrt der Server zur vorherigen Version zurück), **Nur benachrichtigen** (die IT installiert sie) oder **Aus**, und wie viele Tage nach der Veröffentlichung gewartet wird (standardmäßig 3). Die Arbeit macht eine Aufgabe des Servers, nie das Tool selbst. Wenn der Bildschirm sagt, dass die Aufgabe nicht installiert ist, bitten Sie Ihre IT, sie einzurichten.
+Der Block **Automatische Updates** unter **Einstellungen › Hosting** zeigt die letzte Prüfung des Servers und ihr Ergebnis. Die Bereichsverwaltung wählt, was bei einer neuen Version passiert: **Automatisch installieren** (nachts, nach einer Sicherung; funktioniert die neue Version nicht, kehrt der Server zur vorherigen Version zurück), **Nur benachrichtigen** (die IT installiert sie) oder **Aus**, und wie viele Tage nach der Veröffentlichung gewartet wird (standardmäßig 3). Nach einer neuen Installation mit einem einzigen Befehl ist **Automatisch installieren** gewählt. Die Arbeit macht eine Aufgabe des Servers, nie das Tool selbst. Wenn der Bildschirm sagt, dass die Aufgabe nicht installiert ist, bitten Sie Ihre IT, sie einzurichten.
 
 ![Einstellungen, Hosting, Automatische Updates](../../screenshots/de/hosting-auto-updates.png)
 

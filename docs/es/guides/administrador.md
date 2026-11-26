@@ -20,6 +20,8 @@ El primer arranque abre un asistente de 8 pasos. Empieza por su propia cuenta de
 
 Si sale del asistente, haga clic en **Administración › Configuración › Retomar la puesta en marcha** para continuar.
 
+¿Tiene una copia de seguridad de la herramienta, hecha por otro servidor o por la versión todo en uno? Cree su cuenta en el paso 1. A partir del paso 2, mientras la instalación esté vacía, abra **Partir de una copia de seguridad**, elija el archivo y confirme. Conserva su contraseña y sigue siendo administrador. Las demás cuentas de la copia de seguridad no tienen contraseña: asígneles una contraseña provisional en **Administración › Cuentas**. En una instalación en servicio, un gestor de espacios hace lo mismo en **Administración › Configuración › Alojamiento**.
+
 ## Añadir un marco de referencia {#framework}
 
 1. Haga clic en **Administración** en la barra superior. En la **Vista general**, haga clic en **Añadir un marco de referencia** en la línea **Marcos de referencia y KPI**.
@@ -86,6 +88,19 @@ Un lector o un auditor no introduce ni valida nada. Cuando cambie el rol de una 
 ![Administración, Cuentas](../../screenshots/es/admin-accounts.png)
 
 Para ver quién inició sesión y cuándo, haga clic en **Historial de inicios de sesión** en **Administración › Cuentas**. Cada línea da la fecha, la cuenta y el resultado: **Correcto**, **Fallido** o **Bloqueado: demasiados intentos**. Un usuario que no corresponde a ninguna cuenta del espacio solo aparece con una referencia, nunca con el texto escrito. Filtre por resultado o por periodo, o busque un nombre. Configure cuánto tiempo se guarda el historial en **Administración › Configuración › Alojamiento** (180 días por defecto).
+
+## Administrador o gestor de espacios {#space-manager}
+
+Un administrador configura su espacio: las cuentas, los marcos de referencia, las campañas y los ajustes del espacio. Un gestor de espacios configura toda la instalación. Solo un gestor de espacios puede:
+
+- crear, cambiar el nombre y archivar los espacios, y bloquear el inicio de sesión en todos los espacios (**Administración › Configuración › Espacios**);
+- cambiar el servidor de correo, las alertas por correo, la copia externa de las copias de seguridad y las actualizaciones automáticas (**Configuración › Alojamiento** y **Configuración › Estado**);
+- configurar el inicio de sesión de empresa;
+- restaurar una copia de seguridad procedente de otra instalación.
+
+Solo un gestor de espacios puede también cambiar el nombre, el correo o la contraseña de otro gestor de espacios.
+
+En **Administración › Cuentas**, la etiqueta **Gestor de espacios** aparece junto al rol. Para nombrar o retirar a un gestor de espacios, abra la cuenta y use el recuadro **Administrador o gestor de espacios**. Solo un gestor de espacios ve el botón, y solo se puede nombrar a un administrador activo del espacio principal. Un gestor de espacios que deja de ser administrador activo del espacio principal (otro rol, cuenta desactivada, inicio de sesión bloqueado) pierde este rol: la ficha de la cuenta pide una confirmación antes de guardar. La herramienta siempre conserva un gestor de espacios que puede actuar: nadie puede desactivar, cambiar de rol, eliminar ni bloquear al último, y la herramienta pide nombrar primero a otro gestor de espacios. No puede retirarse este rol. Cada cambio añade una línea al **Historial**.
 
 ## Asignar los KPI {#assign}
 
@@ -236,13 +251,13 @@ Cada respuesta es una propuesta marcada «Propuesto por IA». Nada se guarda has
 
 ## Comprobar el alojamiento y las copias de seguridad {#hosting}
 
-Vaya a **Administración › Configuración › Alojamiento**. La página muestra la versión, la copia de seguridad automática, el control de los datos y la configuración del correo. Haga clic en **Crear y descargar una copia de seguridad** para hacer una de inmediato. El equipo informático copia las copias de seguridad en otro lugar. O un gestor de espacios configura la **Copia fuera del servidor**: la herramienta copia entonces ella misma cada copia de seguridad a un almacenamiento compatible con S3 o a un servidor SFTP que proporciona el equipo informático, y le avisa si una copia falla.
+Vaya a **Administración › Configuración › Alojamiento**. La página muestra la versión, la copia de seguridad automática, el control de los datos y la configuración del correo. Haga clic en **Crear y descargar una copia de seguridad** para hacer una de inmediato. El equipo informático copia las copias de seguridad en otro lugar. O un gestor de espacios configura una copia en el bloque **Copia fuera del servidor**: la herramienta copia entonces ella misma cada copia de seguridad a un almacenamiento compatible con S3 o a un servidor SFTP que proporciona el equipo informático, y le avisa si una copia falla.
 
 ![Configuración, Alojamiento](../../screenshots/es/hosting.png)
 
 ![Configuración, Alojamiento, Copia fuera del servidor](../../screenshots/es/hosting-external-copy.png)
 
-Para configurar el servidor de correo, use el bloque **Correos electrónicos** de la misma página. Introduzca el servidor, el puerto, la seguridad, el usuario, la contraseña y la dirección de envío que le proporciona el equipo informático. Haga clic en **Guardar** y luego en **Enviar un correo de prueba**. Si el correo no se envía, un mensaje da la causa con palabras sencillas. Estos ajustes valen para todos los espacios: solo un gestor de espacios puede cambiarlos. La contraseña no se vuelve a mostrar nunca. Si el equipo informático configuró el correo en el archivo de ajustes, el bloque muestra estos ajustes en solo lectura.
+Para configurar el servidor de correo, use el bloque **Correos electrónicos** de la misma página. Estos ajustes valen para todos los espacios: solo un gestor de espacios puede cambiarlos. Introduzca el servidor, el puerto, la seguridad, el usuario, la contraseña y la dirección de envío que le proporciona el equipo informático. Haga clic en **Guardar** y luego en **Enviar un correo de prueba**. Si el correo no se envía, un mensaje da la causa con palabras sencillas. La contraseña no se vuelve a mostrar nunca. Si el equipo informático configuró el correo en el archivo de ajustes, el bloque muestra estos ajustes en solo lectura.
 
 ![Configuración, Alojamiento, Correos electrónicos](../../screenshots/es/hosting-emails.png)
 
@@ -250,11 +265,11 @@ Para ver de un vistazo si todo va bien, vaya a **Administración › Configuraci
 
 ![Configuración, Estado](../../screenshots/es/admin-health.png)
 
-La herramienta también puede avisarle por correo. Al final de **Configuración › Estado**, un gestor de espacios activa las **Alertas por correo** y elige los destinatarios: por defecto los administradores del espacio principal y los gestores de espacios, más otras direcciones, por ejemplo el buzón del equipo de TI. Cuando aparece un problema (copia de seguridad fallida o con retraso, disco casi lleno, tarea en segundo plano detenida, correos fallidos…), los destinatarios reciben un correo que dice qué hacer. Después reciben un recordatorio como máximo una vez al día mientras dure el problema, y un correo cuando se resuelve. En una instalación nueva, las alertas están activadas desde el principio; una instalación que ya existía antes de ellas las mantiene desactivadas hasta que alguien las activa. La página dice qué caso se aplica. Haga clic en **Enviar una alerta de prueba** para comprobarlas. Cuando el servidor está apagado, la herramienta no puede avisar a nadie.
+La herramienta también puede avisarle por correo. Al final de **Configuración › Estado**, un gestor de espacios activa las **Alertas por correo** y elige los destinatarios: por defecto los administradores del espacio principal y los gestores de espacios, más otras direcciones, por ejemplo el buzón del equipo de TI. Cuando aparece un problema (copia de seguridad fallida o con retraso, disco casi lleno, tarea en segundo plano detenida, correos fallidos…), los destinatarios reciben un correo que dice qué hacer. Después reciben un recordatorio como máximo una vez al día mientras dure el problema, y un correo cuando se resuelve. En una instalación nueva, las alertas están activadas desde el principio. Una instalación que ya existía antes de ellas las mantiene desactivadas hasta que un gestor de espacios las activa. La página dice qué caso se aplica. Haga clic en **Enviar una alerta de prueba** para comprobarlas. Cuando el servidor está apagado, la herramienta no puede avisar a nadie.
 
 ![Configuración, Estado, Alertas por correo](../../screenshots/es/admin-health-alerts.png)
 
-El bloque **Actualizaciones automáticas** de **Configuración › Alojamiento** muestra la última comprobación del servidor y su resultado. Un gestor de espacios elige lo que ocurre cuando se publica una nueva versión: **Instalarla automáticamente** (por la noche, después de una copia de seguridad; si la nueva versión no funciona, el servidor vuelve a la versión anterior), **Solo avisar** (el equipo de TI la instala) o **Desactivado**, y cuántos días esperar después de la publicación (3 por defecto). Es una tarea del servidor la que hace el trabajo, nunca la herramienta. Si la pantalla dice que la tarea no está instalada, pida al equipo de TI que la instale.
+El bloque **Actualizaciones automáticas** de **Configuración › Alojamiento** muestra la última comprobación del servidor y su resultado. Un gestor de espacios elige lo que ocurre cuando se publica una nueva versión: **Instalarla automáticamente** (por la noche, después de una copia de seguridad; si la nueva versión no funciona, el servidor vuelve a la versión anterior), **Solo avisar** (el equipo de TI la instala) o **Desactivado**, y cuántos días esperar después de la publicación (3 por defecto). Tras una instalación nueva con un solo comando, la opción es **Instalarla automáticamente**. Es una tarea del servidor la que hace el trabajo, nunca la herramienta. Si la pantalla dice que la tarea no está instalada, pida al equipo de TI que la instale.
 
 ![Configuración, Alojamiento, Actualizaciones automáticas](../../screenshots/es/hosting-auto-updates.png)
 

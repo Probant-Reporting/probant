@@ -20,6 +20,8 @@ Bij de eerste start opent een assistent met 8 stappen. Die begint met uw eigen b
 
 Als u de assistent verlaat, klikt u op **Beheer › Instellingen › De installatie hervatten** om verder te gaan.
 
+Hebt u een back-up van de tool, gemaakt door een andere server of door de alles-in-één-versie? Maak uw account aan in stap 1. Open vanaf stap 2, zolang de installatie leeg is, **Beginnen met een back-up**, kies het bestand en bevestig. U houdt uw wachtwoord en blijft beheerder. De andere accounts van de back-up hebben geen wachtwoord: maak er een tijdelijk wachtwoord voor aan in **Beheer › Accounts**. In een installatie in gebruik doet een ruimtebeheerder hetzelfde in **Beheer › Instellingen › Hosting**.
+
 ## Een kader toevoegen {#framework}
 
 1. Klik in de bovenbalk op **Beheer**. Klik op het **Overzicht** op de regel **Kaders en KPI’s** op **Een kader toevoegen**.
@@ -86,6 +88,19 @@ Een lezer of een auditor voert niets in en valideert niets. Als u de rol van een
 ![Beheer, Accounts](../../screenshots/nl/admin-accounts.png)
 
 Om te zien wie wanneer heeft ingelogd, klikt u op **Inloggeschiedenis** in **Beheer › Accounts**. Elke regel geeft de datum, het account en het resultaat: **Geslaagd**, **Mislukt** of **Geblokkeerd: te veel pogingen**. Een gebruikersnaam die bij geen account van de ruimte hoort, verschijnt alleen met een referentie, nooit met de getypte tekst. Filter op resultaat of periode, of zoek een naam. Hoelang de tool de geschiedenis bewaart, stelt u in bij **Beheer › Instellingen › Hosting** (standaard 180 dagen).
+
+## Beheerder of ruimtebeheerder {#space-manager}
+
+Een beheerder richt de eigen ruimte in: de accounts, de kaders, de campagnes en de instellingen van de ruimte. Een ruimtebeheerder richt de hele installatie in. Alleen een ruimtebeheerder kan:
+
+- ruimtes aanmaken, hernoemen en archiveren, en het inloggen in alle ruimtes blokkeren (**Beheer › Instellingen › Ruimtes**);
+- de e-mailserver, de waarschuwingen per e-mail, de externe kopie van de back-ups en de automatische updates wijzigen (**Instellingen › Hosting** en **Instellingen › Status**);
+- de bedrijfslogin instellen;
+- een back-up van een andere installatie terugzetten.
+
+Alleen een ruimtebeheerder kan ook de naam, het e-mailadres of het wachtwoord van een andere ruimtebeheerder wijzigen.
+
+In **Beheer › Accounts** staat het label **Ruimtebeheerder** naast de rol. Open het account en gebruik het kader **Beheerder of ruimtebeheerder** om een ruimtebeheerder aan te wijzen of weg te halen. Alleen een ruimtebeheerder ziet de knop, en alleen een actieve beheerder van de hoofdruimte kan worden aangewezen. Een ruimtebeheerder die geen actieve beheerder van de hoofdruimte meer is (andere rol, gedeactiveerd account, geblokkeerde aanmelding), verliest deze rol: de accountpagina vraagt om een bevestiging voordat ze opslaat. De tool houdt altijd een ruimtebeheerder die kan handelen: niemand kan de laatste deactiveren, een andere rol geven, verwijderen of blokkeren, en de tool vraagt eerst een andere ruimtebeheerder aan te wijzen. U kunt deze rol niet bij uzelf weghalen. Elke wijziging voegt een regel toe aan de **Geschiedenis**.
 
 ## De KPI’s toewijzen {#assign}
 
@@ -236,13 +251,13 @@ Elk antwoord is een voorstel met de markering “Voorgesteld door AI”. Er word
 
 ## De hosting en de back-ups controleren {#hosting}
 
-Ga naar **Beheer › Instellingen › Hosting**. De pagina toont de versie, de automatische back-up, de controle van de gegevens en de e-mailinstellingen. Klik op **Een back-up maken en downloaden** om meteen een back-up te maken. Het IT-team kopieert de back-ups naar een andere plek. Of een ruimtebeheerder stelt de **Kopie buiten de server** in: de tool kopieert dan zelf elke back-up naar S3-compatibele opslag of een SFTP-server die het IT-team levert, en waarschuwt u als een kopie mislukt.
+Ga naar **Beheer › Instellingen › Hosting**. De pagina toont de versie, de automatische back-up, de controle van de gegevens en de e-mailinstellingen. Klik op **Een back-up maken en downloaden** om meteen een back-up te maken. Het IT-team kopieert de back-ups naar een andere plek. Of een ruimtebeheerder stelt een kopie in, in het blok **Kopie buiten de server**: de tool kopieert dan zelf elke back-up naar S3-compatibele opslag of een SFTP-server die het IT-team levert, en waarschuwt u als een kopie mislukt.
 
 ![Instellingen, Hosting](../../screenshots/nl/hosting.png)
 
 ![Instellingen, Hosting, Kopie buiten de server](../../screenshots/nl/hosting-external-copy.png)
 
-Om de e-mailserver in te stellen, gebruikt u het blok **E-mail** van dezelfde pagina. Voer de server, de poort, de beveiliging, de gebruikersnaam, het wachtwoord en het verzendadres in die het IT-team u geeft. Klik op **Opslaan** en daarna op **Een test-e-mail sturen**. Als de e-mail niet vertrekt, geeft een bericht de oorzaak in eenvoudige woorden. Deze instellingen gelden voor alle ruimtes: alleen een ruimtebeheerder kan ze wijzigen. Het wachtwoord wordt nooit meer getoond. Als het IT-team de e-mails in het instellingenbestand heeft ingesteld, toont het blok deze instellingen alleen-lezen.
+Om de e-mailserver in te stellen, gebruikt u het blok **E-mail** van dezelfde pagina. Deze instellingen gelden voor alle ruimtes: alleen een ruimtebeheerder kan ze wijzigen. Voer de server, de poort, de beveiliging, de gebruikersnaam, het wachtwoord en het verzendadres in die het IT-team u geeft. Klik op **Opslaan** en daarna op **Een test-e-mail sturen**. Als de e-mail niet vertrekt, geeft een bericht de oorzaak in eenvoudige woorden. Het wachtwoord wordt nooit meer getoond. Als het IT-team de e-mails in het instellingenbestand heeft ingesteld, toont het blok deze instellingen alleen-lezen.
 
 ![Instellingen, Hosting, E-mail](../../screenshots/nl/hosting-emails.png)
 
@@ -250,11 +265,11 @@ Om in één oogopslag te zien of alles in orde is, gaat u naar **Beheer › Inst
 
 ![Instellingen, Status](../../screenshots/nl/admin-health.png)
 
-De tool kan u ook per e-mail waarschuwen. Onderaan **Instellingen › Status** zet een ruimtebeheerder de **Waarschuwingen per e-mail** aan en kiest de ontvangers: standaard de beheerders van de hoofdruimte en de ruimtebeheerders, plus andere adressen, bijvoorbeeld de mailbox van het IT-team. Als er een probleem verschijnt (mislukte of te late back-up, schijf bijna vol, gestopte achtergrondtaak, mislukte e-mails…), krijgen de ontvangers een e-mail met wat ze moeten doen. Daarna krijgen ze hoogstens één keer per dag een herinnering zolang het probleem duurt, en een e-mail als het is opgelost. Op een nieuwe installatie staan de waarschuwingen meteen aan; een installatie die al vóór de waarschuwingen bestond, houdt ze uit tot iemand ze aanzet. De pagina zegt welk geval geldt. Klik op **Testwaarschuwing sturen** om ze te controleren. Als de server uit staat, kan de tool niemand waarschuwen.
+De tool kan u ook per e-mail waarschuwen. Onderaan **Instellingen › Status** zet een ruimtebeheerder de **Waarschuwingen per e-mail** aan en kiest de ontvangers: standaard de beheerders van de hoofdruimte en de ruimtebeheerders, plus andere adressen, bijvoorbeeld de mailbox van het IT-team. Als er een probleem verschijnt (mislukte of te late back-up, schijf bijna vol, gestopte achtergrondtaak, mislukte e-mails…), krijgen de ontvangers een e-mail met wat ze moeten doen. Daarna krijgen ze hoogstens één keer per dag een herinnering zolang het probleem duurt, en een e-mail als het is opgelost. Op een nieuwe installatie staan de waarschuwingen meteen aan. Een installatie die al vóór de waarschuwingen bestond, houdt ze uit tot een ruimtebeheerder ze aanzet. De pagina zegt welk geval geldt. Klik op **Testwaarschuwing sturen** om ze te controleren. Als de server uit staat, kan de tool niemand waarschuwen.
 
 ![Instellingen, Status, Waarschuwingen per e-mail](../../screenshots/nl/admin-health-alerts.png)
 
-Het blok **Automatische updates** van **Instellingen › Hosting** toont de laatste controle van de server en het resultaat. Een ruimtebeheerder kiest wat er gebeurt als er een nieuwe versie verschijnt: **Automatisch installeren** ('s nachts, na een back-up; als de nieuwe versie niet werkt, gaat de server terug naar de vorige versie), **Alleen melden** (het IT-team installeert hem) of **Uit**, en hoeveel dagen er na de publicatie wordt gewacht (standaard 3). Een taak van de server doet het werk, nooit de tool zelf. Als het scherm zegt dat de taak niet is geïnstalleerd, vraag het IT-team dan om haar in te stellen.
+Het blok **Automatische updates** van **Instellingen › Hosting** toont de laatste controle van de server en het resultaat. Een ruimtebeheerder kiest wat er gebeurt als er een nieuwe versie verschijnt: **Automatisch installeren** ('s nachts, na een back-up; als de nieuwe versie niet werkt, gaat de server terug naar de vorige versie), **Alleen melden** (het IT-team installeert hem) of **Uit**, en hoeveel dagen er na de publicatie wordt gewacht (standaard 3). Na een nieuwe installatie met één opdracht is **Automatisch installeren** gekozen. Een taak van de server doet het werk, nooit de tool zelf. Als het scherm zegt dat de taak niet is geïnstalleerd, vraag het IT-team dan om haar in te stellen.
 
 ![Instellingen, Hosting, Automatische updates](../../screenshots/nl/hosting-auto-updates.png)
 

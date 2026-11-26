@@ -181,7 +181,7 @@ def nom_installation():
     return ligne[0] if ligne else ""
 
 
-def _identifiant_installation():
+def identifiant_de_l_installation():
     from espaces import comptes as EC
 
     i = EC.installation()
@@ -193,7 +193,7 @@ def controler_espace(d, autre_espace=False):
     l'IT ``autre_espace``). Une archive d'avant les espaces (sans marque) ne va que dans l'espace principal."""
     if autre_espace:
         return
-    ici, ident = ESP.code_courant(), _identifiant_installation()
+    ici, ident = ESP.code_courant(), identifiant_de_l_installation()
     source = d.get("espace") or ESP.PRINCIPAL
     if source != ici:
         raise ErreurSauvegarde(libelle("admin.sauvegarde.autre_espace", source=source, ici=ici))
@@ -265,7 +265,7 @@ def creer(motif="", format_base=None, accepter_abimee=False):
             descriptif = {
                 "format": FORMAT, "outil": OUTIL, "version": settings.VERSION, "date": maintenant.isoformat(),
                 "motif": motif, "moteur": ESP.connexion().vendor, "contenu_base": format_base, "installation": nom_installation(),
-                "espace": ESP.code_courant(), "identifiant_installation": _identifiant_installation(),
+                "espace": ESP.code_courant(), "identifiant_installation": identifiant_de_l_installation(),
                 "migrations": migrations if migrations is not None else migrations_appliquees(),
                 "tables": tables if tables is not None else comptes(), "fichiers": nb_fichiers,
                 "integrite": integrite or "not checked",
@@ -426,6 +426,9 @@ def nettoyer_restes():
                 n += 1
         except OSError:
             continue
+    from . import sauvegardes_ailleurs as SA
+
+    n += SA.nettoyer()  # archive d'une autre installation déposée et pas restaurée depuis un jour
     if not restauration_en_cours():  # extraction interrompue avant tout changement : dossiers de passage inutiles
         for reste in (NOUVEAUX, ANCIENS_FICHIERS):
             if (ESP.dossier_medias() / reste).exists():
@@ -800,7 +803,7 @@ def lire_descriptif(chemin):
         with zipfile.ZipFile(chemin) as z:
             noms = set(z.namelist())
             d = json.loads(z.read(nom_dans(noms, DESCRIPTIF) or DESCRIPTIF))
-    except (zipfile.BadZipFile, KeyError, json.JSONDecodeError, OSError) as e:
+    except (zipfile.BadZipFile, KeyError, json.JSONDecodeError, OSError, RecursionError) as e:
         raise ErreurSauvegarde(libelle("admin.sauvegarde.pas_une_sauvegarde", erreur=str(e))) from e
     if not isinstance(d, dict) or d.get("outil") not in OUTILS_ACCEPTES or d.get("format") != FORMAT:
         raise ErreurSauvegarde(libelle("admin.sauvegarde.format_inconnu"))
@@ -813,10 +816,14 @@ def lire_descriptif(chemin):
     return d
 
 
-def deposer(fichier):
-    """Range dans le dossier des sauvegardes une archive déposée depuis l'outil (après vérification) et la renvoie."""
+def deposer(fichier, autre_installation_permise=False):
+    """Range dans le dossier des sauvegardes une archive déposée depuis l'outil (après vérification) et la renvoie.
+    ``autre_installation_permise`` (gestionnaire des espaces) : une archive au bon format mais sans signature valide de
+    cette installation est rangée à part, dans le dossier caché des archives d'ailleurs (``sauvegardes_ailleurs``)."""
     if (getattr(fichier, "size", 0) or 0) > settings.SAUVEGARDE_DEPOT_MAX:
         raise ErreurSauvegarde(libelle("messages.envoi.trop_gros", mo=f"{settings.SAUVEGARDE_DEPOT_MAX / 1024 / 1024:.0f}"))
+    if restauration_en_cours():  # jamais pendant une restauration (son archive ne doit ni bouger ni changer)
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.restauration_en_cours"))
     d = dossier()
     d.mkdir(parents=True, exist_ok=True)
     partiel = d / f".depot-{os.getpid()}-{time.monotonic_ns()}.partiel"
@@ -830,8 +837,12 @@ def deposer(fichier):
                 raise ErreurSauvegarde(libelle("admin.sauvegarde.disque_plein", dossier=str(d),
                                                libre=taille_lisible(_place_libre(d)))) from e
             raise
-        lire_descriptif(partiel)
-        controler_signature(partiel)  # seules les archives de cette installation, intactes, entrent par l'outil
+        descriptif = lire_descriptif(partiel)
+        from . import sauvegardes_ailleurs as SA
+
+        if autre_installation_permise and SA.origine(partiel, descriptif) == "ailleurs":  # signée ou non (même clé)
+            return SA.ranger(partiel)
+        controler_signature(partiel)  # seules les archives de cette installation, intactes, entrent dans la liste
         nom = f"backup-{timezone.localtime():%Y%m%d-%H%M%S}-uploaded.zip"
         while (d / nom).exists():
             time.sleep(1)
@@ -870,10 +881,13 @@ def historique_restaurations():
     return sortie[::-1]
 
 
-def _noter_restauration(chemin, d, avant, par, origine):
+def _noter_restauration(chemin, d, avant, par, origine, autre_installation=False):
     dossier().mkdir(parents=True, exist_ok=True)
     e = {"date": timezone.localtime().isoformat(), "archive": Path(chemin).name, "date_sauvegarde": d.get("date", ""),
          "version": d.get("version", ""), "avant": avant.nom if avant else "", "par": par or "", "origine": origine}
+    if autre_installation:  # archive sans signature valide de cette installation, restaurée depuis l'écran
+        e["autre_installation"] = True
+        e["installation"] = str(d.get("installation") or "")[:200]
     with open(_historique(), "a", encoding="utf-8") as f:
         f.write(json.dumps(e, ensure_ascii=False) + "\n")
 
@@ -950,6 +964,136 @@ def _controler_base_extraite(fichier, d):
         raise ErreurSauvegarde(libelle("admin.sauvegarde.incomplete"))
 
 
+def controler_base_piegee(fichier):
+    """Toute restauration (écran et ligne de commande) : refuse une base SQLite qui contient ce que l'outil ne crée jamais
+    et qui agirait après la restauration : déclencheur (qui remettrait une empreinte ou un rôle après nos écritures), vue,
+    table virtuelle, colonne cachée ou calculée, objet dont le type a été réécrit (« writable_schema »), comparé sans
+    tenir compte de la casse (``schema_base.objets_interdits``). Rien n'est encore changé."""
+    from . import schema_base as SB
+
+    try:
+        source = sqlite3.connect(f"file:{fichier}?mode=ro", uri=True)
+        try:
+            pieges = SB.objets_interdits(source)
+        finally:
+            source.close()
+    except sqlite3.Error as e:
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.pas_une_sauvegarde", erreur=str(e))) from e
+    if pieges:
+        raise ErreurSauvegarde(libelle("admin.ailleurs.base_piegee"))
+
+
+def _migrations_de_la_copie(connexion_sqlite):
+    return {tuple(x) for x in paires_actuelles(connexion_sqlite.execute("SELECT app, name FROM django_migrations"))}
+
+
+def controler_base_sqlite(fichier, d):
+    """Toute restauration d'une base SQLite (écran et ligne de commande), avant tout changement : base de l'outil
+    lisible avec les migrations annoncées (``_controler_base_extraite``), aucun objet interdit
+    (``controler_base_piegee``) et, quand la copie a déjà les migrations de la base de l'espace, exactement le schéma
+    que le code attend (``schema_base.ecarts``). Une copie d'une version antérieure est contrôlée de la même façon juste
+    après la migration qui suit le remplacement (``_verifier_lisible``), avec retour automatique à l'état d'avant (les
+    migrations de données écrivent dans la base de l'espace activé : jamais lancées sur une copie à part)."""
+    from . import schema_base as SB
+
+    _controler_base_extraite(fichier, d)
+    controler_base_piegee(fichier)
+    try:
+        source = sqlite3.connect(f"file:{fichier}?mode=ro", uri=True)
+        try:
+            meme_version = _migrations_de_la_copie(source) == {tuple(x) for x in migrations_comparables()}
+            ecarts = SB.ecarts(source) if meme_version else []
+        finally:
+            source.close()
+    except sqlite3.Error as e:
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.pas_une_sauvegarde", erreur=str(e))) from e
+    if ecarts:
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.schema_inattendu", detail="; ".join(ecarts[:3])[:400]))
+
+
+def _neutraliser_copie(cible):
+    """Archive d'une autre installation, copie SQLite extraite : droits du mode expert recalculés d'après le rôle (règle
+    de l'écran Comptes, ``CompteForm.save`` : administrateur = ``is_superuser`` et ``is_staff`` ; aucun autre rôle n'a ni
+    l'un ni l'autre), groupes et permissions vidés, assistant IA et assistants (MCP) de l'espace éteints (réglages qui
+    envoient des données hors de l'installation : à rallumer par quelqu'un d'ici). Table ou colonne absente (version
+    antérieure) : ignorée, la migration la crée avec sa valeur par défaut (éteint, vide)."""
+    from django.contrib.auth.models import Group
+
+    from referentiel.models import Utilisateur
+    from serveur_mcp.models import ReglageMCP
+
+    from .models import Instance
+
+    def colonnes(table):
+        return {r[1] for r in cible.execute(f'PRAGMA table_info("{table}")')}
+
+    cible.execute(f'UPDATE "{Utilisateur._meta.db_table}" SET is_superuser = (role = ?), is_staff = (role = ?)',
+                  ["admin", "admin"])
+    for table in (Utilisateur.groups.through._meta.db_table, Utilisateur.user_permissions.through._meta.db_table,
+                  Group.permissions.through._meta.db_table, Group._meta.db_table):
+        if colonnes(table):
+            cible.execute(f'DELETE FROM "{table}"')
+    for modele, champs in ((Instance, ("ia_active", "ia_kpi_sensibles", "relance_auto")), (ReglageMCP, ("actif", "ecriture"))):
+        presents = [c for c in champs if c in colonnes(modele._meta.db_table)]
+        if presents:
+            cible.execute(f'UPDATE "{modele._meta.db_table}" SET ' + ", ".join(f'"{c}" = 0' for c in presents))
+    # imports et exports en arrière-plan en attente : jamais lancés tout seuls après la restauration
+    from collecte.models import TacheExport, TacheImport
+
+    for modele in (TacheImport, TacheExport):
+        if "statut" in colonnes(modele._meta.db_table):
+            cible.execute(f'UPDATE "{modele._meta.db_table}" SET statut = ? WHERE statut IN (?, ?)',
+                          ["interrompue", "attente", "en_cours"])
+    cible.commit()
+
+
+def assainir_copie(fichier):
+    """Archive d'une autre installation : dans la copie SQLite extraite (jamais dans la base vivante), droits neutralisés
+    (``_neutraliser_copie``), empreintes des mots de passe, jetons des assistants et sessions retirés
+    (``vider_dans_la_copie``, qui finit par un VACUUM), puis tout relu : aucune empreinte, aucun droit hors du rôle,
+    aucun objet interdit recréé par le VACUUM."""
+    from django.contrib.auth.models import Group
+
+    from referentiel.models import Utilisateur
+
+    from . import schema_base as SB
+
+    cible = sqlite3.connect(fichier)
+    try:
+        _neutraliser_copie(cible)
+        vider_dans_la_copie(cible)
+        t = Utilisateur._meta.db_table
+        restes = cible.execute(f'SELECT count(*) FROM "{t}" WHERE password != ? OR is_superuser != (role = ?) '
+                               "OR is_staff != (role = ?)", [MOT_DE_PASSE_RETIRE, "admin", "admin"]).fetchone()[0]
+        for table in (Utilisateur.groups.through._meta.db_table, Utilisateur.user_permissions.through._meta.db_table,
+                      Group._meta.db_table):
+            restes += cible.execute(f'SELECT count(*) FROM "{table}"').fetchone()[0]
+        restes += SB.objets_interdits(cible)
+    finally:
+        cible.close()
+    if restes:
+        raise ErreurSauvegarde(libelle("admin.ailleurs.base_piegee"))
+
+
+def controler_compatibilite(chemin, d):
+    """Contrôles d'une archive d'une autre installation avant toute restauration, sans rien changer : liste des
+    migrations, version plus récente que le code, base SQLite vers PostgreSQL, archive PostgreSQL d'une autre version.
+    Mêmes messages que ``restaurer``, qui refait ces contrôles plus loin."""
+    m = d.get("migrations")
+    if not isinstance(m, list) or not m or not all(
+            isinstance(x, (list, tuple)) and len(x) == 2 and all(isinstance(y, str) for y in x) for x in m):
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.incomplete"))
+    connues = {(a, n) for a, n in MigrationLoader(None, ignore_no_migrations=True).disk_migrations}
+    if any((a, n) not in connues for a, n in m):
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.version_recente", version=d.get("version")))
+    with zipfile.ZipFile(chemin) as z:
+        en_sqlite = bool(nom_dans(set(z.namelist()), BASE_SQLITE))
+    if en_sqlite and ESP.connexion().vendor != "sqlite":
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.sqlite_vers_postgres"))
+    if not en_sqlite and paires_actuelles(m) != migrations_comparables():
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.autre_version_postgres", version=d.get("version")))
+
+
 def migrations_du_code():
     """Migrations que le code installé connaît (toutes applications), en paires [application, nom]."""
     return sorted([a, n] for a, n in MigrationLoader(None, ignore_no_migrations=True).graph.nodes)
@@ -1004,7 +1148,8 @@ def _reconstruire_et_charger(fichier_json, d):
 
 
 def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_espace=False, _reprise=None,
-              reconstruire=False, exiger_signature=False):
+              reconstruire=False, exiger_signature=False, autre_installation=False, restaurateur=None, empreinte=None,
+              _retour=False):
     """Remplace la base et les fichiers déposés par ceux de l'archive. Une sauvegarde de l'état actuel est faite avant
     (motif « before-restore »). Chaque restauration est notée dans l'historique (fichier du dossier des sauvegardes).
     Renvoie le descriptif de l'archive.
@@ -1020,9 +1165,19 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
     (``_reconstruire_et_charger``).
 
     ``exiger_signature`` (restauration depuis l'outil, et commande sans « --unsigned ») : une archive sans signature
-    valide de cette installation est refusée avant tout changement (``controler_signature``)."""
+    valide de cette installation est refusée avant tout changement (``controler_signature``).
+
+    ``autre_installation`` (écran, gestionnaire des espaces : ``sauvegardes_ailleurs``) : archive sans signature valide,
+    restaurée dans l'espace courant ; ``restaurateur`` {pk, email} : la personne qui restaure. Contenu non fiable :
+    comptes contrôlés avant (``controler_plan``), base SQLite piégée refusée, aucune empreinte de mot de passe ni aucun
+    jeton lus dans l'archive, puis registre remis d'accord compte par compte (``_apres_restauration``)."""
     chemin = Path(chemin)
     d = lire_descriptif(chemin)
+    if autre_installation:
+        if not restaurateur or not restaurateur.get("email") or reconstruire:
+            raise ErreurSauvegarde(libelle("admin.ailleurs.restaurateur_absent"))
+        autre_espace, exiger_signature = True, False  # dans l'espace courant, comme « restore --other-space »
+        controler_compatibilite(chemin, d)
     if exiger_signature:
         controler_signature(chemin)
     m = d.get("migrations")
@@ -1036,7 +1191,7 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
         raise ErreurSauvegarde(libelle("admin.sauvegarde.version_recente", version=d.get("version")))
     if ESP.connexion().in_atomic_block:
         raise ErreurSauvegarde(libelle("admin.sauvegarde.restauration_transaction"))
-    if _reprise is None and restauration_en_cours():
+    if _reprise is None and not _retour and restauration_en_cours():
         raise ErreurSauvegarde(libelle("admin.sauvegarde.restauration_en_cours"))
     if _reprise is not None:  # restes de la tentative interrompue : refaits depuis l'archive
         for reste in (NOUVEAUX, ANCIENS_FICHIERS):
@@ -1045,42 +1200,61 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
     lisible = _base_lisible()
     jetons_avant = empreintes_jetons_mcp() if lisible and _reprise is None else set()
     avant = None
-    if _reprise is not None:
-        avant = Archive(dossier() / _reprise["avant"]) if _reprise.get("avant") else None
-    elif sauvegarder_avant and lisible and not base_vide():
-        avant = creer("before-restore", accepter_abimee=True)
     racine = ESP.dossier_medias()
     racine.mkdir(parents=True, exist_ok=True)
     dossier().mkdir(parents=True, exist_ok=True)
     repere = dossier() / EN_COURS
     with tempfile.TemporaryDirectory(prefix=TEMPORAIRE) as tmp, zipfile.ZipFile(chemin) as z:
         noms = set(z.namelist())
+        source_db = fichier_json = None
         try:
+            if empreinte is not None:
+                from . import sauvegardes_ailleurs as SA
+
+                if SA.empreinte(chemin) != empreinte:  # pas le fichier contrôlé sur la page de confirmation
+                    raise ErreurSauvegarde(libelle("admin.ailleurs.empreinte_changee"))
             _extraire_fichiers(z, racine)  # rien n'est encore changé si cela échoue (disque plein…)
-            if nom_dans(noms, BASE_SQLITE):
-                if ESP.connexion().vendor != "sqlite":
-                    raise ErreurSauvegarde(libelle("admin.sauvegarde.sqlite_vers_postgres"))
-                z.extract(nom_dans(noms, BASE_SQLITE), tmp)
-                _controler_base_extraite(Path(tmp) / nom_dans(noms, BASE_SQLITE), d)
-            else:
+            if nom_dans(noms, BASE_SQLITE) and ESP.connexion().vendor != "sqlite":
+                raise ErreurSauvegarde(libelle("admin.sauvegarde.sqlite_vers_postgres"))
+            if not nom_dans(noms, BASE_SQLITE):
                 if paires_actuelles(d["migrations"]) == migrations_comparables():
                     reconstruire = False  # même structure : chargement ordinaire
                 elif not (reconstruire and reconstruction_possible(d)):
                     raise ErreurSauvegarde(libelle("admin.sauvegarde.autre_version_postgres", version=d.get("version")))
+            if autre_installation:
+                from . import sauvegardes_ailleurs as SA
+
+                # une seule lecture, la même que la page de confirmation : ce qui est contrôlé est ce qui est chargé
+                contenu = SA.preparer(z, noms, d, tmp)
+                SA.controler_plan(contenu.comptes, restaurateur)  # un compte mêlerait deux personnes : refusé
+                source_db, fichier_json = (contenu.fichier, None) if contenu.sqlite else (None, contenu.fichier)
+            elif nom_dans(noms, BASE_SQLITE):
+                z.extract(nom_dans(noms, BASE_SQLITE), tmp)
+                source_db = Path(tmp) / nom_dans(noms, BASE_SQLITE)
+                controler_base_sqlite(source_db, d)  # base de l'outil, sans objet interdit, schéma attendu
+            else:
                 z.extract(nom_dans(noms, BASE_JSON), tmp)
+                fichier_json = Path(tmp) / nom_dans(noms, BASE_JSON)
+            # tout est contrôlé : état actuel sauvegardé, puis seulement remplacé
+            if _reprise is not None:
+                avant = Archive(dossier() / _reprise["avant"]) if _reprise.get("avant") else None
+            elif sauvegarder_avant and lisible and not base_vide():
+                avant = creer("before-restore", accepter_abimee=True)
         except BaseException as e:
             shutil.rmtree(racine / NOUVEAUX, ignore_errors=True)
             if isinstance(e, OSError) and getattr(e, "errno", None) in (errno.ENOSPC, errno.EDQUOT):
                 raise ErreurSauvegarde(libelle("admin.sauvegarde.disque_plein_restauration",
                                                libre=taille_lisible(_place_libre(racine)))) from e
+            if isinstance(e, (zipfile.BadZipFile, sqlite3.Error)):
+                raise ErreurSauvegarde(libelle("admin.sauvegarde.pas_une_sauvegarde", erreur=str(e)[:200])) from e
             raise
         _ecrire_atomique(repere, json.dumps({
             "archive": str(chemin.resolve()), "avant": avant.nom if avant else "", "par": par or "", "origine": origine,
             "autre_espace": bool(autre_espace), "reconstruire": bool(reconstruire), "date": timezone.localtime().isoformat(),
-            "pid": os.getpid()}))
+            "pid": os.getpid(), "autre_installation": bool(autre_installation),
+            "restaurateur": restaurateur if autre_installation else None}))
         try:  # remplacement de la base en une étape : en cas d'échec, elle est telle qu'avant (rien à reprendre)
-            if nom_dans(noms, BASE_SQLITE):
-                source_db = Path(tmp) / nom_dans(noms, BASE_SQLITE)
+            if source_db is not None:
                 if lisible:
                     source = sqlite3.connect(source_db)
                     try:
@@ -1091,14 +1265,14 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
                 else:
                     _remplacer_fichier_base(source_db)
             elif reconstruire:
-                _reconstruire_et_charger(Path(tmp) / nom_dans(noms, BASE_JSON), d)
+                _reconstruire_et_charger(fichier_json, d)
             else:
                 alias = ESP.alias_courant()
                 # tout ou rien : un contenu refusé par loaddata (lien cassé, donnée invalide) laisse la base telle
                 # qu'elle était, au lieu d'une base vidée sans aucun compte pour se reconnecter
                 with transaction.atomic(using=alias):
                     call_command("flush", interactive=False, verbosity=0, database=alias)
-                    call_command("loaddata", str(Path(tmp) / nom_dans(noms, BASE_JSON)), verbosity=0, database=alias)
+                    call_command("loaddata", str(fichier_json), verbosity=0, database=alias)
                     # tables vidées par TRUNCATE, sans statistiques : ANALYZE après la validation (PostgreSQL ; test :
                     # parametres/test_statistiques_a_jour_restaurer_postgresql.py)
                     statistiques_a_jour(alias)
@@ -1106,14 +1280,24 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
             shutil.rmtree(racine / NOUVEAUX, ignore_errors=True)
             repere.unlink(missing_ok=True)
             raise
-        # la base est remplacée : à partir d'ici, une interruption est terminée au démarrage suivant (repère gardé)
-        if nom_dans(noms, BASE_SQLITE):
-            ESP.connexion().close()
-            call_command("migrate", interactive=False, verbosity=0, database=ESP.connexion().alias)
-            harmoniser(ESP.connexion(), autres_bases(ESP.connexion().alias))  # migration renommée (version d'avant)
-        _echanger_fichiers(racine)
-    retirer_jetons_mcp(jetons_avant)
-    _apres_restauration(d, autre_espace)
+        # la base est remplacée : une interruption brutale est terminée au démarrage suivant (repère gardé) ; une erreur
+        # ramène tout à l'état d'avant (archive « before-restore »), registre commun compris
+        try:
+            if source_db is not None:
+                ESP.connexion().close()
+                # travaux d'après mise à jour de l'archive (``TravailApresMiseAJour``) gardés, même d'ailleurs : ils
+                # n'appellent que le code de l'outil (code inconnu : ignoré), une archive d'une version antérieure en a
+                # besoin (posés par une migration déjà passée), un échec les laisse posés et la base est vérifiée après
+                call_command("migrate", interactive=False, verbosity=0, database=ESP.connexion().alias)
+                harmoniser(ESP.connexion(), autres_bases(ESP.connexion().alias))  # migration renommée (version d'avant)
+            _verifier_lisible(source_db is not None)  # avant de toucher au registre
+            _echanger_fichiers(racine)
+            retirer_jetons_mcp(jetons_avant)
+            etat_restaurateur = _apres_restauration(d, autre_espace, restaurateur if autre_installation else None)
+            if autre_installation:
+                d["restaurateur"] = etat_restaurateur
+        except Exception as e:
+            _revenir_avant(e, chemin, avant, repere, par)
     d["comptes_sans_mot_de_passe"] = comptes_sans_mot_de_passe()
     if d["comptes_sans_mot_de_passe"]:
         journal.warning("Restore: %s account(s) without a password (backups hold no password and the shared registry "
@@ -1121,12 +1305,61 @@ def restaurer(chemin, sauvegarder_avant=True, par="", origine="commande", autre_
                         d["comptes_sans_mot_de_passe"])
     _expirer_exports_absents()
     noter_base_abimee("")
-    _noter_restauration(chemin, d, avant, par, origine)
+    _noter_restauration(chemin, d, avant, par, origine, autre_installation)
     repere.unlink(missing_ok=True)
     journal.info("Restore of %s (version %s, %s)%s%s", chemin.name, d.get("version"), d.get("date"),
                  f"; previous state kept in {avant.nom}" if avant else "",
                  " (interrupted restore finished)" if _reprise is not None else "")
     return d
+
+
+class ErreurApresRemplacement(ErreurSauvegarde):
+    """La restauration a échoué APRÈS le remplacement de la base : le message dit ce qui a été fait (retour à l'état
+    d'avant, ou retour impossible) ; jamais « rien n'a changé »."""
+
+
+def _verifier_lisible(sqlite_):
+    """Après le remplacement (et la migration) : la base de l'espace a le schéma que le code attend (SQLite,
+    ``schema_base.ecarts``) et chaque table de l'outil se lit par l'ORM. Sinon ErreurSauvegarde : retour à l'état d'avant,
+    avant que le registre commun ait été touché."""
+    from django.db import DatabaseError
+
+    from . import schema_base as SB
+
+    c = ESP.connexion()
+    if sqlite_:
+        c.ensure_connection()
+        ecarts = SB.ecarts(c.connection)
+        if ecarts:
+            raise ErreurSauvegarde(libelle("admin.sauvegarde.schema_inattendu", detail="; ".join(ecarts[:3])[:400]))
+    try:
+        for m in SB.modeles_d_espace():
+            m._base_manager.using(c.alias).order_by().first()
+    except DatabaseError as e:
+        raise ErreurSauvegarde(libelle("admin.sauvegarde.schema_inattendu", detail=str(e)[:400])) from e
+
+
+def _revenir_avant(erreur, chemin, avant, repere, par):
+    """Échec après le remplacement de la base : retour automatique à l'état d'avant par l'archive « before-restore »
+    (archive de cette installation), repère retiré par ce retour une fois réussi, puis ErreurApresRemplacement qui le dit. Sans archive d'avant (base
+    vide ou illisible, « --no-backup-before ») ou si le retour échoue lui aussi : le repère reste (l'IT décide,
+    ``/sante/`` le signale) et le message le dit. Une interruption brutale (KeyboardInterrupt…) n'arrive jamais ici : elle
+    garde la reprise au démarrage."""
+    journal.error("Restore of %s failed after the database was replaced (%s)", Path(chemin).name, erreur, exc_info=erreur)
+    if avant is None or not avant.chemin.is_file():
+        raise ErreurApresRemplacement(libelle("admin.restauration.erreur.retour_impossible", erreur=str(erreur)[:500],
+                                              avant="-")) from erreur
+    # le repère reste tant que le retour n'a pas réussi : un échec du retour, même avant qu'il écrive son propre repère
+    # (disque plein), laisse la restauration signalée (/sante/) et reprise au démarrage suivant
+    try:
+        restaurer(avant.chemin, sauvegarder_avant=False, par=par, origine="retour-automatique", _retour=True)
+    except Exception as e2:  # noqa: BLE001 - le second échec est dit à l'écran et au journal du serveur
+        journal.exception("Going back to %s after a failed restore failed too", avant.nom)
+        raise ErreurApresRemplacement(libelle("admin.restauration.erreur.retour_impossible", erreur=str(erreur)[:500],
+                                              avant=avant.nom)) from e2
+    journal.warning("Restore of %s failed: the space is back to the state before it (%s)", Path(chemin).name, avant.nom)
+    raise ErreurApresRemplacement(libelle("admin.restauration.erreur.retour", erreur=str(erreur)[:500],
+                                          avant=avant.nom)) from erreur
 
 
 def reprendre_restauration():
@@ -1142,7 +1375,8 @@ def reprendre_restauration():
         if not chemin.is_file():
             raise ErreurSauvegarde(libelle("admin.sauvegarde.introuvable", nom=chemin.name))
         restaurer(chemin, par=e.get("par", ""), origine=e.get("origine", "commande"),
-                  autre_espace=e.get("autre_espace", False), _reprise=e, reconstruire=e.get("reconstruire", False))
+                  autre_espace=e.get("autre_espace", False), _reprise=e, reconstruire=e.get("reconstruire", False),
+                  autre_installation=e.get("autre_installation", False), restaurateur=e.get("restaurateur"))
     except Exception as x:  # signalé (démarrage, /sante/) ; le repère reste : l'IT décide
         journal.exception("Interrupted restore of %s could not be finished", chemin.name)
         return chemin.name, str(x) or type(x).__name__
@@ -1196,9 +1430,11 @@ def _expirer_exports_absents():
         journal.info("After the restore: %s background export(s) whose file is no longer there marked as expired", n)
 
 
-def _apres_restauration(d, autre_espace):
+def _apres_restauration(d, autre_espace, restaurateur=None):
     """Marque de la base remise à cet espace (archive d'un autre espace forcée par l'IT), puis registre des comptes remis
-    d'accord avec la base restaurée (le registre n'est jamais restauré avec un espace)."""
+    d'accord avec la base restaurée (le registre n'est jamais restauré avec un espace). ``restaurateur`` (archive d'une
+    autre installation, écran) : comptes de cet espace seulement retirés du registre avant, personne qui restaure remise
+    administratrice après (``sauvegardes_ailleurs``) ; renvoie alors son état (« admin », « remis_admin », « ajoute »)."""
     from django.db import connections
 
     from espaces import comptes as EC
@@ -1211,10 +1447,20 @@ def _apres_restauration(d, autre_espace):
         if ESP.est_principal():
             EC.amorcer()
             return
-    if autre_espace and _identifiant_installation():
+    if autre_espace and identifiant_de_l_installation():
         MarqueEspace.objects.all().delete()
-        MarqueEspace.objects.create(code=ESP.code_courant(), installation=_identifiant_installation())
+        MarqueEspace.objects.create(code=ESP.code_courant(), installation=identifiant_de_l_installation())
+    if restaurateur:
+        from . import sauvegardes_ailleurs as SA
+
+        # une seule transaction du registre commun : un échec (ici ou dans la réconciliation) n'y laisse rien, et la
+        # base de l'espace revient à l'état d'avant (``_revenir_avant``)
+        with ESP.toutes_les_bases(), transaction.atomic(using=ESP.COMMUN):
+            info = SA.preparer_registre(restaurateur)
+            EC.reconcilier([ESP.code_courant()])
+            return SA.assurer_restaurateur(info)
     EC.reconcilier([ESP.code_courant()])
+    return None
 
 
 def _extraire_fichiers(z, racine):
@@ -1463,7 +1709,7 @@ def creer_registre(motif=""):
             migrations = sorted([a, n] for a, n in enregistreur.applied_migrations()) if enregistreur.has_table() else []
             z.writestr(DESCRIPTIF, json.dumps({"format": FORMAT, "outil": OUTIL, "contenu": "registre",
                                                       "version": settings.VERSION, "date": maintenant.isoformat(),
-                                                      "identifiant_installation": _identifiant_installation(),
+                                                      "identifiant_installation": identifiant_de_l_installation(),
                                                       "migrations": migrations}, indent=1))
         os.replace(partiel, d / nom)
     finally:

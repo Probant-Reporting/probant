@@ -86,5 +86,8 @@
  "espaces.selecteur.ici": "aktueller Bereich",
  "espaces.selecteur.titre": "Bereich wechseln",
  "espaces.liste.aide_bouton": "Um den Bereich zu wechseln, verwenden Sie die Schaltfläche mit dem Namen des Bereichs in der oberen Leiste. Sie erscheint, sobald Sie Zugriff auf zwei Bereiche haben.",
- "espaces.personnes.aide_droits": "Die Bereichsverwaltung legt die Bereiche an und verwaltet sie. Eine hier gesperrte Anmeldung ist in allen Bereichen gesperrt."
+ "espaces.personnes.aide_droits": "Die Bereichsverwaltung legt die Bereiche an und verwaltet sie. Eine hier gesperrte Anmeldung ist in allen Bereichen gesperrt.",
+ "espaces.erreur.dernier_gestionnaire": "{nom} ist die letzte Person der Bereichsverwaltung, die handeln kann. Ernennen Sie zuerst eine andere Person zur Bereichsverwaltung.",
+ "espaces.erreur.archive_dernier_gestionnaire": "Dieser Bereich enthält das einzige aktive Konto der letzten Person der Bereichsverwaltung, die handeln kann. Ernennen Sie zuerst eine andere Person zur Bereichsverwaltung.",
+ "espaces.erreur.pas_admin_principal": "{nom} kann nicht zur Bereichsverwaltung gehören: Nur ein aktiver Administrator des Hauptbereichs kann dazugehören."
 }

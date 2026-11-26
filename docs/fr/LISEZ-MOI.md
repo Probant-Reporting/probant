@@ -1,7 +1,7 @@
 # Probant (lisez-moi en français)
 
-> Version courte, en français, du [README.md](../../README.md) anglais, qui fait référence. Le README anglais donne en
-> plus l'état d'avancement détaillé, les pages, les règles de calcul et de saisie, la structure du code et les tests.
+> Lisez-moi en français. Le [README.md](../../README.md) anglais présente l'outil. Ce lisez-moi donne en plus les
+> commandes principales et les repères pour l'IT.
 
 Cette page vous indique comment essayer, lancer et installer Probant.
 
@@ -31,29 +31,28 @@ Ces guides sont la traduction française des guides anglais. **Le reste de la do
 - bibliothèque de référentiels : [library.md](../library.md)
 - traductions : [translation.md](../translation.md)
 
-L'équipe qui pilote le reporting développe l'outil avec Claude. Cette équipe crée et gère les comptes dans l'outil.
-Chacun peut aussi se connecter avec son compte d'entreprise (OpenID Connect, éteint par défaut,
+Les administrateurs créent et gèrent les comptes dans l'outil. Chacun peut aussi se connecter avec son compte d'entreprise (OpenID Connect, éteint par défaut,
 [connexion_entreprise.md](connexion_entreprise.md)) : le fournisseur prouve seulement l'identité, l'outil ne crée aucun
 compte. L'IT fournit l'hébergement, le nom de domaine avec HTTPS, le compte SMTP
-pour les e-mails et la copie externe des sauvegardes.
+pour les e-mails et la destination de la copie externe des sauvegardes.
 
 ## Essayer l'outil sur un ordinateur
 
 Vous pouvez essayer l'outil sur un ordinateur Windows ou Mac, sans droits administrateur. La version tout-en-un
-contient un Python portable : vous n'installez rien. Elle démarre avec les données de démo.
+contient un Python portable : vous n'installez rien. C'est un essai pour une personne sur un ordinateur, pas pour une
+équipe : pour travailler à plusieurs, installez l'outil sur un serveur.
 
 Pour lancer la version tout-en-un :
 
 1. Sur la page du dépôt, ouvrez **Releases**, puis la dernière version.
 2. Téléchargez `probant-windows.zip`. Sur un Mac, téléchargez `probant-mac.zip` (processeurs Apple et Intel).
-3. C'est un essai pour une personne sur un ordinateur, pas pour une équipe : pour travailler à plusieurs, installez l'outil sur un serveur.
-4. Extrayez le fichier.
-5. Double-cliquez sur `Start.bat`. Sur un Mac, double-cliquez sur `Start.command`. Le premier démarrage demande ce
+3. Extrayez le fichier.
+4. Double-cliquez sur `Start.bat`. Sur un Mac, double-cliquez sur `Start.command`. Le premier démarrage demande ce
    que vous voulez essayer : la démo (Exemplia, une société fictive avec ses données) ou un outil vide (vous mettez en
    place votre propre structure).
    La fenêtre montre chaque étape du démarrage avec une ligne qui avance (barre, part faite, temps écoulé) : le premier
    démarrage prend quelques minutes, les suivants moins. Le navigateur s'ouvre quand l'outil est prêt.
-6. Démo : la fenêtre liste un compte par rôle (`admin`, `validateur`, `contributeur`, `lecteur`, `auditeur`), tous
+5. Démo : la fenêtre liste un compte par rôle (`admin`, `validateur`, `contributeur`, `lecteur`, `auditeur`), tous
    avec le mot de passe `demo-probant-2026`. Déconnectez-vous pour essayer un autre compte. Outil vide : l'assistant de
    mise en place s'ouvre, et sa première étape crée votre compte administrateur.
 
@@ -115,8 +114,8 @@ Pour récupérer les dernières modifications dans le Codespace :
 
 ## Lancer l'outil sur un poste de travail
 
-Avec Docker (recommandé), saisissez `./install.sh`, puis ouvrez l'adresse affichée. Pour HTTPS sur un serveur,
-saisissez plutôt `./install.sh --domain reporting.example.com`. Le guide complet pour l'IT est
+Avec Docker (recommandé), saisissez `./install.sh`, puis ouvrez l'adresse affichée. Sur un serveur, installez plutôt
+l'outil en une commande, avec l'image publiée (voir « Commandes principales »). Le guide complet pour l'IT est
 [installation.md](installation.md).
 
 La base est vide. À la première ouverture, l'assistant **Mise en place** s'ouvre à la place de la page de connexion.
@@ -191,7 +190,6 @@ Pour surveiller l'outil, utilisez ces repères :
 - L'outil envoie lui-même des alertes par e-mail sur sa santé (**Administration › Paramètres › Santé**), allumées dès le
   départ sur une installation neuve. Le serveur d'e-mails se règle dans **Administration › Paramètres › Hébergement**,
   ou dans `.env` (`SMTP_HOST` passe alors en premier).
-
 - `GET /sante/` répond `200` quand tout va bien, et `503` sinon (base ou stockage indisponible). Cette adresse ne
   demande pas de connexion et ne montre aucune donnée sensible.
 - Pour lire le journal, saisissez `docker compose logs -f web`.

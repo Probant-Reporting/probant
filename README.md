@@ -38,7 +38,9 @@ the tool, email alerts, automatic updates, and an external copy of the backups. 
 
 ## Try Probant in 5 minutes
 
-You need a computer with [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2.24 or later.
+You need a computer with Git, [Docker](https://docs.docker.com/get-docker/) and Docker Compose v2.24 or later. On
+Windows or Mac without Docker, download the all-in-one version instead (`probant-windows.zip` or `probant-mac.zip`,
+attached to the latest release).
 
 1. Get the code and start the tool:
 
@@ -81,10 +83,10 @@ is missing on Debian or Ubuntu, the command offers to install it:
 curl -fsSL https://github.com/Probant-Reporting/probant/raw/main/get.sh | sudo sh
 ```
 
-To check the server first, without any change, add `--check` (after `sh -s --`). To read the script before you run
-it, download it first, then run `sudo sh get.sh`. For HTTPS with a domain name, add `--domain reporting.example.com`
-(after `sh -s --` in the command above). The command checks each file against the signed list of the release, and
-sets up the automatic updates (`--auto-update off` to install without them).
+The options go after `sh -s --`. `--check` checks the server and changes nothing. `--domain reporting.example.com`
+sets up HTTPS with a domain name. The automatic updates are on by default: `--auto-update off` installs without them.
+The command checks each file against the signed list of the release. To read the script before you run it, download
+it first, then run `sudo sh get.sh`.
 
 The installation guide tells you, step by step, how to install the tool on a server with Docker, set up HTTPS and
 emails, back up and restore: [`docs/installation.md`](docs/installation.md). French version:
@@ -107,11 +109,11 @@ demo first, load it before that step: the guide says how, and how to start empty
 
 ## Update Probant
 
-To update an installation, run `./update.sh` in the folder of the tool. After an installation with one command, it
-installs the latest published version, and a timer of the server can install each new version at night, with a
-backup first and a way back if the new version does not start. The script backs up each space first, then the
-tool applies the changes to the database when it starts. You can update from any published version directly. The changes of each version are in
-[`CHANGELOG.md`](CHANGELOG.md).
+To update an installation, run `./update.sh` in the folder of the tool. The script backs up each space first, then
+the tool applies the changes to the database when it starts. You can update from any published version directly.
+After an installation with one command, `./update.sh` installs the latest published version. A timer of the server
+also installs each new version at night, with a backup first and a way back if the new version does not start. The
+changes of each version are in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Languages
 

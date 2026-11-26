@@ -44,6 +44,8 @@ urlpatterns = [
     path("administration/parametres/hebergement/restaurer/", vues_hebergement.sauvegarde_restaurer, name="sauvegarde_deposer"),
     path("administration/parametres/hebergement/restaurer/<str:nom>/", vues_hebergement.sauvegarde_restaurer,
          name="sauvegarde_restaurer"),
+    path("administration/parametres/hebergement/restaurer-autre-installation/<str:nom>/",
+         vues_hebergement.sauvegarde_restaurer_ailleurs, name="sauvegarde_restaurer_ailleurs"),
     path("sante/", vues_hebergement.sante, name="sante"),
     path("identite/logo/", views.logo, name="logo"),
     path("mise-en-place/", mise_en_place.mise_en_place, name="mise_en_place"),

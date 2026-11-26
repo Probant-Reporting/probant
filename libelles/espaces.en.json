@@ -86,5 +86,8 @@
  "espaces.selecteur.ici": "current space",
  "espaces.selecteur.titre": "Change space",
  "espaces.liste.aide_bouton": "To change space, use the button with the name of the space, in the top bar. It appears as soon as you have access to two spaces.",
- "espaces.personnes.aide_droits": "A space manager creates and manages the spaces. A sign-in blocked here is blocked in all spaces."
+ "espaces.personnes.aide_droits": "A space manager creates and manages the spaces. A sign-in blocked here is blocked in all spaces.",
+ "espaces.erreur.dernier_gestionnaire": "{nom} is the last space manager who can act. Appoint another space manager first.",
+ "espaces.erreur.archive_dernier_gestionnaire": "This space has the only active account of the last space manager who can act. Appoint another space manager first.",
+ "espaces.erreur.pas_admin_principal": "{nom} cannot be a space manager: only an active administrator of the main space can be one."
 }

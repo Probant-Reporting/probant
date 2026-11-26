@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "restaurou uma cópia de segurança",
  "admin.hebergement.smtp.form.en_clair": "Enviar a palavra-passe sem encriptação",
  "admin.hebergement.smtp.en_clair_aide": "Com a segurança «Nenhuma», a palavra-passe circula sem encriptação na rede: qualquer pessoa no percurso a pode ler. Escolha STARTTLS ou SSL/TLS se o servidor o oferecer. Um relé sem palavra-passe não pede confirmação.",
- "admin.hebergement.smtp.erreur.en_clair": "Com a segurança «Nenhuma», a palavra-passe circularia sem encriptação na rede. Escolha STARTTLS ou SSL/TLS, retire a palavra-passe ou confirme com a caixa abaixo."
+ "admin.hebergement.smtp.erreur.en_clair": "Com a segurança «Nenhuma», a palavra-passe circularia sem encriptação na rede. Escolha STARTTLS ou SSL/TLS, retire a palavra-passe ou confirme com a caixa abaixo.",
+ "admin.compte.gestionnaire.titre": "Administrador ou gestor de espaços",
+ "admin.compte.gestionnaire.est": "{nom} é gestor de espaços.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} não é gestor de espaços.",
+ "admin.compte.gestionnaire.admin": "Um administrador define o seu espaço: as contas, os referenciais, as campanhas e as definições do espaço.",
+ "admin.compte.gestionnaire.gestionnaire": "Um gestor de espaços define toda a instalação: os espaços, o servidor de email, os alertas por email, a cópia externa das cópias de segurança, as atualizações automáticas e o início de sessão da empresa.",
+ "admin.compte.gestionnaire.restauration": "Também restaura uma cópia de segurança vinda de outra instalação.",
+ "admin.compte.gestionnaire.nommer": "Nomear gestor de espaços",
+ "admin.compte.gestionnaire.nommer_confirmer": "Nomear {nom} gestor de espaços? Esta pessoa poderá então definir toda a instalação.",
+ "admin.compte.gestionnaire.retirer": "Retirar a função de gestor de espaços",
+ "admin.compte.gestionnaire.reserve": "Só um gestor de espaços pode nomear ou retirar um gestor de espaços.",
+ "admin.compte.gestionnaire.vous": "Não pode retirar esta função a si próprio. Outro gestor de espaços pode fazê-lo.",
+ "admin.journal.champ.gestionnaire": "gestor de espaços",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} deixará de ser administrador ativo do espaço principal e perde, por isso, a função de gestor de espaços. Selecione a caixa abaixo para confirmar.",
+ "admin.compte.gestionnaire.perte_case": "Retirar a {nom} a função de gestor de espaços",
+ "admin.compte.gestionnaire.perte_aide": "Um gestor de espaços tem de ser administrador ativo do espaço principal. Um gestor de espaços poderá nomear de novo esta pessoa mais tarde.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} deixou de ser gestor de espaços.",
+ "admin.compte.gestionnaire.ancien": "{nom} não é administrador ativo do espaço principal. Esta pessoa perde a função de gestor de espaços na próxima mudança da sua função ou do seu estado.",
+ "admin.compte.gestionnaire.pas_eligible": "Só se pode nomear um administrador ativo do espaço principal.",
+ "admin.ailleurs.titre": "Restaurar uma cópia de segurança de outra instalação",
+ "admin.ailleurs.titre_h1": "Restaurar a cópia de segurança de {date} de outra instalação",
+ "admin.ailleurs.danger_titre": "Esta cópia de segurança não vem desta instalação",
+ "admin.ailleurs.non_verifiable": "<strong>A ferramenta não pode verificar que ninguém alterou este ficheiro.</strong> Restaure-o apenas se souber de onde vem. O nome, a data e a versão acima são o que o ficheiro indica.",
+ "admin.ailleurs.remplace": "<strong>Todo o conteúdo do espaço «{espace}» é substituído</strong>: valores, evidências, organizações, KPI, campanhas, definições do espaço, histórico e contas do espaço.",
+ "admin.ailleurs.garde": "Os outros espaços e as definições de toda a instalação não mudam: servidor de e-mail, cópia externa, alertas por e-mail, início de sessão empresarial e chave da IA. A cópia de segurança não os contém, nem os seus segredos.",
+ "admin.ailleurs.assistants": "Os tokens dos assistentes (MCP) deste espaço deixam de funcionar. Cada pessoa cria um novo.",
+ "admin.ailleurs.comptes_titre": "As contas depois do restauro",
+ "admin.ailleurs.vous.admin": "A sua conta ({email}) é de administrador na cópia de segurança. Mantém a sua palavra-passe.",
+ "admin.ailleurs.vous.remis_admin": "A sua conta ({email}) está na cópia de segurança, mas não como administrador ativo. Depois do restauro, a ferramenta volta a torná-la administrador ativo e regista-o no histórico. Mantém a sua palavra-passe.",
+ "admin.ailleurs.vous.ajoute": "A sua conta ({email}) não está na cópia de segurança. Depois do restauro, a ferramenta adiciona-a como administrador deste espaço e regista-o no histórico. Mantém a sua palavra-passe.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 outra conta não terá palavra-passe, porque as cópias de segurança nunca contêm palavras-passe. Depois do restauro, crie uma palavra-passe provisória para ela em Administração › Contas.",
+  "other": "{n} outras contas não terão palavra-passe, porque as cópias de segurança nunca contêm palavras-passe. Depois do restauro, crie uma palavra-passe provisória para elas em Administração › Contas."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 conta tem o mesmo número e o mesmo e-mail que uma conta de outro espaço desta instalação. Mantém a sua palavra-passe.",
+  "other": "{n} contas têm o mesmo número e o mesmo e-mail que uma conta de outro espaço desta instalação. Mantêm a sua palavra-passe."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 conta existe hoje apenas neste espaço e não é a sua. As contas da cópia de segurança substituem-na.",
+  "other": "{n} contas existem hoje apenas neste espaço e não são a sua. As contas da cópia de segurança substituem-nas."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 outro gestor de espaços tem conta apenas neste espaço. Depois do restauro, esta pessoa deixa de ser gestor de espaços. Pode voltar a dar-lhe esta função em Espaços › Pessoas e acessos.",
+  "other": "{n} outros gestores de espaços têm conta apenas neste espaço. Depois do restauro, deixam de ser gestores de espaços. Pode voltar a dar-lhes esta função em Espaços › Pessoas e acessos."
+ },
+ "admin.ailleurs.admins": "Administradores na cópia de segurança: {liste}.",
+ "admin.ailleurs.compris_origine": "Sei de onde vem esta cópia de segurança. Aceito que a ferramenta não a possa verificar.",
+ "admin.ailleurs.compris": "Compreendo que o conteúdo desta cópia de segurança substitui todo o conteúdo do espaço «{espace}».",
+ "admin.ailleurs.erreur_confirmation": "Para restaurar, assinale as duas caixas e escreva {mot} em maiúsculas.",
+ "admin.ailleurs.reussie": "Restauro concluído. Este espaço voltou ao estado da cópia de segurança de {date}. Inicie sessão de novo com a sua própria palavra-passe. Depois, crie uma palavra-passe provisória para as outras contas em Administração › Contas. Os lembretes automáticos, o assistente de IA e os assistentes (MCP) estão desligados: volte a ligá-los na página Lembretes e em Definições.",
+ "admin.ailleurs.reserve": "Apenas um gestor de espaços pode restaurar uma cópia de segurança de outra instalação.",
+ "admin.ailleurs.conflits": {
+  "one": "1 conta desta cópia de segurança tem o número, o e-mail ou o nome de utilizador de outra pessoa, que tem conta noutro espaço ({exemples}). A ferramenta não pode restaurar esta cópia de segurança a partir desta página sem misturar duas pessoas. Nada mudou. A equipa de informática pode restaurá-la na linha de comandos (guia de instalação, «Restore a backup»).",
+  "other": "{n} contas desta cópia de segurança têm o número, o e-mail ou o nome de utilizador de outras pessoas, que têm conta noutro espaço ({exemples}). A ferramenta não pode restaurar esta cópia de segurança a partir desta página sem misturar duas pessoas. Nada mudou. A equipa de informática pode restaurá-la na linha de comandos (guia de instalação, «Restore a backup»)."
+ },
+ "admin.ailleurs.restaurateur_absent": "A ferramenta não encontra a conta da pessoa que restaura na lista comum de contas. Contacte a sua equipa de informática (guia de instalação, «Restore a backup»).",
+ "admin.ailleurs.base_piegee": "A base de dados desta cópia de segurança contém elementos que a ferramenta nunca cria (gatilhos, vistas ou colunas calculadas). A ferramenta não a restaura. Nada mudou.",
+ "admin.ailleurs.aide_depot": "Como gestor de espaços, também pode restaurar uma cópia de segurança de outra instalação, por exemplo depois de uma mudança de servidor. A ferramenta mostra o que muda antes de substituir seja o que for.",
+ "admin.ailleurs.historique": "(outra instalação «{nom}»)",
+ "admin.ailleurs.modele_refuse": "Esta cópia de segurança contém dados que uma cópia de segurança da ferramenta nunca contém ({modele}). A ferramenta não a restaura. Nada mudou.",
+ "admin.ailleurs.empreinte_changee": "O ficheiro mudou depois de a página de confirmação ser apresentada. Nada mudou. Adicione o ficheiro de novo.",
+ "admin.ailleurs.ia_eteinte": "Depois do restauro, os lembretes automáticos, o assistente de IA e os assistentes (MCP) deste espaço ficam desligados, e as importações e exportações em segundo plano em espera são paradas. Volte a ligá-los na página Lembretes e em Definições se precisar deles.",
+ "admin.sauvegarde.schema_inattendu": "A base de dados desta cópia de segurança não tem a estrutura que esta versão da ferramenta espera ({detail}). A ferramenta não a utiliza.",
+ "admin.restauration.erreur.retour": "O restauro falhou depois de a base de dados ser substituída: {erreur} A ferramenta voltou ao estado anterior ao restauro (cópia de segurança «{avant}»). Os seus dados estão como antes, mas os tokens dos assistentes (MCP) deste espaço deixam de funcionar: cada pessoa cria um novo.",
+ "admin.restauration.erreur.retour_impossible": "O restauro falhou depois de a base de dados ser substituída: {erreur} A ferramenta não conseguiu voltar ao estado anterior ao restauro (cópia de segurança «{avant}»). Contacte a sua equipa de informática (guia de instalação, «If a restore is interrupted»)."
 }

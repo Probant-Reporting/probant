@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Adicioná-los também aos exercícios anteriores?",
  "referentiels.depuis.aide": "Por predefinição, a partir do período em curso: nenhum exercício passado muda. Um exercício fechado recebe o KPI ao reabrir. Pode alterá-lo depois no conteúdo do referencial.",
  "referentiels.apercu.depuis": "Os KPI novos neste referencial são pedidos",
- "referentiels.depuis.fichier_confirmer": "{code}: esta data remove células (vazias) de um período em curso. Altere-a no conteúdo do referencial, onde a confirma."
+ "referentiels.depuis.fichier_confirmer": "{code}: esta data remove células (vazias) de um período em curso. Altere-a no conteúdo do referencial, onde a confirma.",
+ "referentiels.mep.depart.titre": "Começar a partir de uma cópia de segurança",
+ "referentiels.mep.depart.aide": "Tem uma cópia de segurança da ferramenta, feita noutro servidor ou noutro computador? Restaure-a agora. Substitui o que definiu neste assistente. Mantém a sua conta e a sua palavra-passe.",
+ "referentiels.mep.depart.compte_d_abord": "Tem uma cópia de segurança da ferramenta? Crie primeiro a sua conta. O passo seguinte permite começar a partir dessa cópia de segurança."
 }

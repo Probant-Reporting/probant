@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Add them to previous years too?",
  "referentiels.depuis.aide": "By default, from the current period: no past year changes. A closed year gets the KPI when you reopen it. You can change it later in the framework content.",
  "referentiels.apercu.depuis": "KPIs new to this framework are requested",
- "referentiels.depuis.fichier_confirmer": "{code}: this date removes cells (empty) from a period in progress. Change it in the framework content, where you confirm it."
+ "referentiels.depuis.fichier_confirmer": "{code}: this date removes cells (empty) from a period in progress. Change it in the framework content, where you confirm it.",
+ "referentiels.mep.depart.titre": "Start from a backup",
+ "referentiels.mep.depart.aide": "Do you have a backup of the tool, from another server or another computer? Restore it now. It replaces what you set in this wizard. You keep your account and your password.",
+ "referentiels.mep.depart.compte_d_abord": "Do you have a backup of the tool? Create your account first. The next step lets you start from the backup."
 }

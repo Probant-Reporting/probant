@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "Sicherung wiederhergestellt",
  "admin.hebergement.smtp.form.en_clair": "Passwort unverschlüsselt senden",
  "admin.hebergement.smtp.en_clair_aide": "Mit der Sicherheit „Keine“ wird das Passwort unverschlüsselt über das Netzwerk gesendet: Jeder auf dem Weg kann es lesen. Wählen Sie STARTTLS oder SSL/TLS, wenn der Server es anbietet. Ein Relay ohne Passwort braucht keine Bestätigung.",
- "admin.hebergement.smtp.erreur.en_clair": "Mit der Sicherheit „Keine“ würde das Passwort unverschlüsselt über das Netzwerk gesendet. Wählen Sie STARTTLS oder SSL/TLS, entfernen Sie das Passwort oder bestätigen Sie mit dem Kästchen unten."
+ "admin.hebergement.smtp.erreur.en_clair": "Mit der Sicherheit „Keine“ würde das Passwort unverschlüsselt über das Netzwerk gesendet. Wählen Sie STARTTLS oder SSL/TLS, entfernen Sie das Passwort oder bestätigen Sie mit dem Kästchen unten.",
+ "admin.compte.gestionnaire.titre": "Administrator oder Bereichsverwaltung",
+ "admin.compte.gestionnaire.est": "{nom} gehört zur Bereichsverwaltung.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} gehört nicht zur Bereichsverwaltung.",
+ "admin.compte.gestionnaire.admin": "Ein Administrator richtet seinen Bereich ein: die Konten, die Berichtsrahmen, die Kampagnen und die Einstellungen des Bereichs.",
+ "admin.compte.gestionnaire.gestionnaire": "Die Bereichsverwaltung richtet die gesamte Installation ein: die Bereiche, den E-Mail-Server, die E-Mail-Warnungen, die externe Kopie der Sicherungen, die automatischen Updates und die Firmenanmeldung.",
+ "admin.compte.gestionnaire.restauration": "Sie stellt auch eine Sicherung aus einer anderen Installation wieder her.",
+ "admin.compte.gestionnaire.nommer": "Zur Bereichsverwaltung ernennen",
+ "admin.compte.gestionnaire.nommer_confirmer": "{nom} zur Bereichsverwaltung ernennen? Diese Person kann dann die gesamte Installation einrichten.",
+ "admin.compte.gestionnaire.retirer": "Aus der Bereichsverwaltung entfernen",
+ "admin.compte.gestionnaire.reserve": "Nur die Bereichsverwaltung kann jemanden zur Bereichsverwaltung ernennen oder daraus entfernen.",
+ "admin.compte.gestionnaire.vous": "Sie können sich diese Rolle nicht selbst entziehen. Eine andere Person der Bereichsverwaltung kann das tun.",
+ "admin.journal.champ.gestionnaire": "Bereichsverwaltung",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} ist danach kein aktiver Administrator des Hauptbereichs mehr und verliert daher die Rolle in der Bereichsverwaltung. Aktivieren Sie das Kontrollkästchen unten, um zu bestätigen.",
+ "admin.compte.gestionnaire.perte_case": "{nom} aus der Bereichsverwaltung entfernen",
+ "admin.compte.gestionnaire.perte_aide": "Wer zur Bereichsverwaltung gehört, muss ein aktiver Administrator des Hauptbereichs sein. Die Bereichsverwaltung kann diese Person später wieder ernennen.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} gehört nicht mehr zur Bereichsverwaltung.",
+ "admin.compte.gestionnaire.ancien": "{nom} ist kein aktiver Administrator des Hauptbereichs. Diese Person verliert die Rolle in der Bereichsverwaltung bei der nächsten Änderung ihrer Rolle oder ihres Status.",
+ "admin.compte.gestionnaire.pas_eligible": "Nur ein aktiver Administrator des Hauptbereichs kann ernannt werden.",
+ "admin.ailleurs.titre": "Sicherung einer anderen Installation wiederherstellen",
+ "admin.ailleurs.titre_h1": "Sicherung vom {date} einer anderen Installation wiederherstellen",
+ "admin.ailleurs.danger_titre": "Diese Sicherung stammt nicht von dieser Installation",
+ "admin.ailleurs.non_verifiable": "<strong>Das Tool kann nicht prüfen, ob jemand diese Datei geändert hat.</strong> Stellen Sie sie nur wieder her, wenn Sie wissen, woher sie stammt. Name, Datum und Version oben sind die Angaben der Datei.",
+ "admin.ailleurs.remplace": "<strong>Der gesamte Inhalt des Bereichs „{espace}“ wird ersetzt</strong>: Werte, Nachweise, Organisationen, KPIs, Kampagnen, Einstellungen des Bereichs, Verlauf und Konten des Bereichs.",
+ "admin.ailleurs.garde": "Die anderen Bereiche und die Einstellungen der gesamten Installation ändern sich nicht: E-Mail-Server, externe Kopie, E-Mail-Warnungen, Unternehmensanmeldung und KI-Schlüssel. Die Sicherung enthält sie nicht und auch nicht ihre Geheimnisse.",
+ "admin.ailleurs.assistants": "Die Assistenten-Token (MCP) dieses Bereichs funktionieren nicht mehr. Jede Person erstellt ein neues.",
+ "admin.ailleurs.comptes_titre": "Die Konten nach der Wiederherstellung",
+ "admin.ailleurs.vous.admin": "Ihr Konto ({email}) ist in der Sicherung ein Administratorkonto. Sie behalten Ihr Passwort.",
+ "admin.ailleurs.vous.remis_admin": "Ihr Konto ({email}) ist in der Sicherung, aber nicht als aktives Administratorkonto. Nach der Wiederherstellung macht das Tool es wieder zu einem aktiven Administratorkonto und schreibt das in den Verlauf. Sie behalten Ihr Passwort.",
+ "admin.ailleurs.vous.ajoute": "Ihr Konto ({email}) ist nicht in der Sicherung. Nach der Wiederherstellung fügt das Tool es als Administratorkonto dieses Bereichs hinzu und schreibt das in den Verlauf. Sie behalten Ihr Passwort.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 weiteres Konto hat kein Passwort, denn Sicherungen enthalten nie Passwörter. Legen Sie nach der Wiederherstellung unter Administration › Konten ein vorläufiges Passwort dafür an.",
+  "other": "{n} weitere Konten haben kein Passwort, denn Sicherungen enthalten nie Passwörter. Legen Sie nach der Wiederherstellung unter Administration › Konten ein vorläufiges Passwort für sie an."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 Konto hat dieselbe Nummer und dieselbe E-Mail-Adresse wie ein Konto eines anderen Bereichs dieser Installation. Es behält sein Passwort.",
+  "other": "{n} Konten haben dieselbe Nummer und dieselbe E-Mail-Adresse wie ein Konto eines anderen Bereichs dieser Installation. Sie behalten ihr Passwort."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 Konto gibt es heute nur in diesem Bereich, und es ist nicht Ihres. Die Konten der Sicherung ersetzen es.",
+  "other": "{n} Konten gibt es heute nur in diesem Bereich, und sie sind nicht Ihres. Die Konten der Sicherung ersetzen sie."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 weitere Bereichsverwaltung hat nur in diesem Bereich ein Konto. Nach der Wiederherstellung ist diese Person keine Bereichsverwaltung mehr. Sie können die Rolle unter Bereiche › Personen und Zugriff wieder vergeben.",
+  "other": "{n} weitere Bereichsverwaltungen haben nur in diesem Bereich ein Konto. Nach der Wiederherstellung sind sie keine Bereichsverwaltung mehr. Sie können die Rolle unter Bereiche › Personen und Zugriff wieder vergeben."
+ },
+ "admin.ailleurs.admins": "Administratoren in der Sicherung: {liste}.",
+ "admin.ailleurs.compris_origine": "Ich weiß, woher diese Sicherung stammt. Ich akzeptiere, dass das Tool sie nicht prüfen kann.",
+ "admin.ailleurs.compris": "Ich verstehe, dass der Inhalt dieser Sicherung den gesamten Inhalt des Bereichs „{espace}“ ersetzt.",
+ "admin.ailleurs.erreur_confirmation": "Zum Wiederherstellen wählen Sie beide Kästchen aus und geben {mot} in Großbuchstaben ein.",
+ "admin.ailleurs.reussie": "Wiederherstellung abgeschlossen. Dieser Bereich ist wieder im Zustand der Sicherung vom {date}. Melden Sie sich mit Ihrem eigenen Passwort wieder an. Legen Sie dann unter Administration › Konten ein vorläufiges Passwort für die anderen Konten an. Die automatischen Erinnerungen, der KI-Assistent und die Assistenten (MCP) sind ausgeschaltet: Schalten Sie sie auf der Seite Erinnerungen und unter Einstellungen wieder ein.",
+ "admin.ailleurs.reserve": "Nur eine Bereichsverwaltung kann eine Sicherung einer anderen Installation wiederherstellen.",
+ "admin.ailleurs.conflits": {
+  "one": "1 Konto dieser Sicherung hat die Nummer, die E-Mail-Adresse oder den Benutzernamen einer anderen Person, die ein Konto in einem anderen Bereich hat ({exemples}). Das Tool kann diese Sicherung auf dieser Seite nicht wiederherstellen, ohne zwei Personen zu vermischen. Es wurde nichts geändert. Das IT-Team kann sie über die Befehlszeile wiederherstellen (Installationsanleitung, „Restore a backup“).",
+  "other": "{n} Konten dieser Sicherung haben die Nummer, die E-Mail-Adresse oder den Benutzernamen anderer Personen, die ein Konto in einem anderen Bereich haben ({exemples}). Das Tool kann diese Sicherung auf dieser Seite nicht wiederherstellen, ohne zwei Personen zu vermischen. Es wurde nichts geändert. Das IT-Team kann sie über die Befehlszeile wiederherstellen (Installationsanleitung, „Restore a backup“)."
+ },
+ "admin.ailleurs.restaurateur_absent": "Das Tool findet das Konto der Person, die wiederherstellt, nicht in der gemeinsamen Kontenliste. Wenden Sie sich an Ihr IT-Team (Installationsanleitung, „Restore a backup“).",
+ "admin.ailleurs.base_piegee": "Die Datenbank dieser Sicherung enthält Elemente, die das Tool nie erstellt (Trigger, Ansichten oder berechnete Spalten). Das Tool stellt sie nicht wieder her. Es wurde nichts geändert.",
+ "admin.ailleurs.aide_depot": "Als Bereichsverwaltung können Sie auch eine Sicherung einer anderen Installation wiederherstellen, zum Beispiel nach einem Serverwechsel. Das Tool zeigt, was sich ändert, bevor es etwas ersetzt.",
+ "admin.ailleurs.historique": "(andere Installation „{nom}“)",
+ "admin.ailleurs.modele_refuse": "Diese Sicherung enthält Daten, die eine Sicherung des Tools nie enthält ({modele}). Das Tool stellt sie nicht wieder her. Es wurde nichts geändert.",
+ "admin.ailleurs.empreinte_changee": "Die Datei hat sich geändert, nachdem die Bestätigungsseite angezeigt wurde. Es wurde nichts geändert. Fügen Sie die Datei erneut hinzu.",
+ "admin.ailleurs.ia_eteinte": "Nach der Wiederherstellung sind die automatischen Erinnerungen, der KI-Assistent und die Assistenten (MCP) dieses Bereichs ausgeschaltet, und wartende Importe und Exporte im Hintergrund werden angehalten. Schalten Sie sie auf der Seite Erinnerungen und unter Einstellungen wieder ein, wenn Sie sie brauchen.",
+ "admin.sauvegarde.schema_inattendu": "Die Datenbank dieser Sicherung hat nicht die Struktur, die diese Version des Tools erwartet ({detail}). Das Tool verwendet sie nicht.",
+ "admin.restauration.erreur.retour": "Die Wiederherstellung ist nach dem Ersetzen der Datenbank fehlgeschlagen: {erreur} Das Tool ist zum Zustand vor der Wiederherstellung zurückgekehrt (Sicherung „{avant}“). Ihre Daten sind wie vorher, aber die Assistenten-Token (MCP) dieses Bereichs funktionieren nicht mehr: Jede Person erstellt ein neues.",
+ "admin.restauration.erreur.retour_impossible": "Die Wiederherstellung ist nach dem Ersetzen der Datenbank fehlgeschlagen: {erreur} Das Tool konnte nicht zum Zustand vor der Wiederherstellung zurückkehren (Sicherung „{avant}“). Wenden Sie sich an Ihr IT-Team (Installationsanleitung, „If a restore is interrupted“)."
 }

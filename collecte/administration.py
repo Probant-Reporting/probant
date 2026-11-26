@@ -40,6 +40,7 @@ from .calcul import chiffres_gardes, figee, recalculer
 from .models import Campagne, Journal, ReglageExport, Reponse, SelectionKPI, VueVisu
 from .templatetags.collecte import arrondi, entier, nom_porte_niveau, nombre
 from .vues_communes import est_script, exiger_admin, identifiant
+from espaces import comptes as EC
 from espaces import contexte as ESP
 
 CENT = Decimal(100)
@@ -889,6 +890,10 @@ class CompteForm(forms.ModelForm):
     # passage en lecture seule d'un compte qui a des attributions : elles seront retirées,
     # après une confirmation qui annonce leur nombre (case montrée seulement dans ce cas)
     confirmer_retrait = forms.BooleanField(required=False)
+    # gestionnaire des espaces qui ne sera plus administrateur actif de l'espace principal : il perd ce rôle,
+    # après une confirmation (case montrée seulement dans ce cas)
+    confirmer_gestionnaire = forms.BooleanField(required=False)
+    gestionnaire_perdu = False
 
     compte_existant = None
     retrait_a_confirmer = 0  # nombre d'attributions retirées à l'enregistrement (0 : aucune)
@@ -962,6 +967,20 @@ class CompteForm(forms.ModelForm):
             self.retrait_a_confirmer = nc + nv
             if self.retrait_a_confirmer and not d.get("confirmer_retrait"):
                 raise ValidationError(libelle("admin.compte.retrait.confirmer_requis", n=nc + nv, nc=nc, nv=nv, nom=str(avant)))
+        # gestionnaire des espaces (espaces.comptes.simuler, la règle de toutes les portes) : jamais sans gestionnaire
+        # capable d'agir (refus) ; un gestionnaire qui n'est plus administrateur actif de l'espace principal perd ce
+        # rôle, annoncé et confirmé avant l'enregistrement (case montrée seulement dans ce cas)
+        if avant is not None and {"role", "is_active"} & set(self.changed_data):
+            from espaces import comptes as EC
+
+            role = d.get("role") or avant.role
+            role = "admin" if role == Utilisateur.Role.ADMIN or (avant.is_superuser and role == avant.role) else role
+            refus, self.gestionnaire_perdu = EC.simuler(avant.pk, code=ESP.code_courant(), role=role,
+                                                        actif=bool(d.get("is_active")))
+            if refus:
+                raise ValidationError(refus)
+            if self.gestionnaire_perdu and not d.get("confirmer_gestionnaire"):
+                raise ValidationError(libelle("admin.compte.gestionnaire.perte_confirmer_requis", nom=str(avant)))
         mdp = d.get("mot_de_passe")
         if mdp and len(mdp) < 8:
             self.add_error("mot_de_passe", libelle("admin.compte.erreur.mdp_court"))
@@ -1032,8 +1051,13 @@ def comptes(request):
         nb_valid=Count("attributions", filter=Q(attributions__role=Attribution.Role.VALIDATEUR)),
     ).order_by("-is_active", "first_name", "last_name", "email")
     liste = list(liste)
+    from espaces.models import Compte
+
+    # gestionnaires des espaces (registre commun) : étiquette à côté du rôle, visible de tout administrateur
+    gestionnaires = set(Compte.objects.filter(gestionnaire=True).values_list("pk", flat=True))
     return render(request, "collecte/administration/comptes.html", {
         "page": "administration", "rubrique": "comptes", "comptes": liste, "campagne": S.campagne_courante(),
+        "gestionnaires": gestionnaires,
         "nb_actifs": sum(u.is_active for u in liste), "nb_inactifs": sum(not u.is_active for u in liste),
         "nb_en_attente": sum(u.is_active and (u.doit_changer_mdp or u.last_login is None) for u in liste),  # comme la colonne « Connexion »
         "par_role": [(code, libelle(f"admin.comptes.filtre.{code}"), sum(u.role == code for u in liste)) for code, _, _ in ROLES_EXPLIQUES],
@@ -1071,31 +1095,31 @@ def compte(request, user_id=None):
             form = CompteForm(request.POST, instance=u, moi=request.user)
             if form.is_valid():
                 nouveau = not u.pk
-                avant = {f: form.initial.get(f) for f in form.changed_data if f not in ("mot_de_passe", "confirmer_retrait")}
+                avant = {f: form.initial.get(f) for f in form.changed_data
+                         if f not in ("mot_de_passe", "confirmer_retrait", "confirmer_gestionnaire")}
                 retirees = 0
-                with ESP.atomic():  # rôle et retrait des attributions (passage en lecture seule) : tout ou rien
-                    u = form.save()
-                    for champ, valeur in avant.items():
-                        apres = getattr(u, champ)
-                        if champ == "perimetre_lecture":  # organisations consultées : leurs noms (aucune = toutes)
-                            valeur = ", ".join(str(o) for o in valeur or []) or "toutes"
-                            apres = ", ".join(str(o) for o in u.perimetre_lecture.all()) or "toutes"
-                        Journal.ecrire(request.user, "creation_compte" if nouveau else "reglage_compte", u, champ,
-                                       "" if nouveau else valeur, apres)
-                    if not nouveau and u.lecture_seule and "role" in form.changed_data:
-                        from . import attributions_lecture_seule as ALS
-
-                        retirees = ALS.retirer(request.user, u)  # relues sous verrou : toutes celles d'aujourd'hui
-                if nouveau and rattache(u):
-                    succes = libelle("admin.compte.rattache")
-                elif nouveau:
-                    mdp_donne = donner_mot_de_passe(u, form.cleaned_data.get("mot_de_passe"))
-                    succes = libelle("admin.compte.cree")
+                try:
+                    u, retirees = _enregistrer_compte(request, form, avant, nouveau)
+                except EC.DernierGestionnaire as x:  # changé entre-temps : relu sous verrou à l'enregistrement
+                    form.add_error(None, x.message)
+                    u = Utilisateur.objects.get(pk=u.pk)  # l'en-tête montre le compte tel qu'il est resté
                 else:
-                    succes = libelle("admin.compte.enregistre")
-                    if retirees:
-                        succes += " " + libelle("admin.compte.retrait.fait", n=retirees)
-                form = CompteForm(instance=u, moi=request.user)
+                    if nouveau and rattache(u):
+                        succes = libelle("admin.compte.rattache")
+                    elif nouveau:
+                        mdp_donne = donner_mot_de_passe(u, form.cleaned_data.get("mot_de_passe"))
+                        succes = libelle("admin.compte.cree")
+                    else:
+                        succes = libelle("admin.compte.enregistre")
+                        if retirees:
+                            succes += " " + libelle("admin.compte.retrait.fait", n=retirees)
+                        if form.gestionnaire_perdu:
+                            succes += " " + libelle("admin.compte.gestionnaire.perte_faite", nom=u)
+                    form = CompteForm(instance=u, moi=request.user)
+        elif action == "gestionnaire" and u.pk:
+            # même écriture que la page Espaces (règle, verrou, historique) ; refus (403) à qui n'est pas gestionnaire
+            fait, message = EC.changer_gestionnaire(request.user, u.pk, request.POST.get("valeur") == "1")
+            succes, erreur = (message, "") if fait else ("", message)
         elif action == "reinitialiser" and u.pk and form.identite_verrouillee:
             erreur = identite_verrouillee_message(form.identite_verrouillee)
         elif action == "reinitialiser" and u.pk:
@@ -1104,16 +1128,23 @@ def compte(request, user_id=None):
             succes = libelle("admin.compte.mdp_reinitialise")
         elif action == "supprimer" and u.pk:
             if supprimable(u, request.user):
-                Journal.ecrire(request.user, "suppression_compte", u, "e-mail", u.email, "")
-                u.delete()
-                if est_script(request):
-                    return JsonResponse({"html": render_to_string("collecte/administration/_compte_supprime.html", {}, request=request), "ok": True})
-                return redirect("collecte:admin_comptes")
-            erreur = libelle("admin.compte.erreur.deja_servi")
+                try:
+                    with ESP.atomic():
+                        Journal.ecrire(request.user, "suppression_compte", u, "e-mail", u.email, "")
+                        u.delete()
+                except EC.DernierGestionnaire as x:
+                    erreur = x.message
+                else:
+                    if est_script(request):
+                        return JsonResponse({"html": render_to_string("collecte/administration/_compte_supprime.html", {}, request=request), "ok": True})
+                    return redirect("collecte:admin_comptes")
+            else:
+                erreur = libelle("admin.compte.erreur.deja_servi")
         if not est_script(request) and succes and not mdp_donne:
             return redirect("collecte:admin_comptes")
     nb_spoc = u.attributions.filter(role=Attribution.Role.CONTRIBUTEUR).count() if u.pk else 0
     return _panneau(request, "collecte/administration/_compte.html", {
+        "gestion": _gestion_espaces(u, request.user),
         "titre_page": libelle("admin.compte.titre_page", nom=u) if u.pk else libelle("admin.compte.nouveau"), "u": u, "form": form, "succes": succes, "erreur": erreur, "mdp_donne": mdp_donne, "roles": ROLES_EXPLIQUES,
         "role_choisi": form["role"].value(), "nb_spoc": nb_spoc,
         "nb_valid": u.attributions.filter(role=Attribution.Role.VALIDATEUR).count() if u.pk else 0,
@@ -1121,6 +1152,47 @@ def compte(request, user_id=None):
         "moi": u.pk == request.user.pk, "perimetre": _arbre_perimetre(form),
         "identite_verrouillee": identite_verrouillee_message(form.identite_verrouillee) if form.identite_verrouillee else "",
     })
+
+
+def _enregistrer_compte(request, form, avant, nouveau):
+    """Compte enregistré avec ses lignes d'historique et, au passage en lecture seule, le retrait des attributions :
+    tout ou rien (refus ``DernierGestionnaire`` compris). Renvoie (compte, attributions retirées)."""
+    retirees = 0
+    with ESP.atomic():  # rôle et retrait des attributions (passage en lecture seule) : tout ou rien
+        u = form.save()
+        for champ, valeur in avant.items():
+            apres = getattr(u, champ)
+            if champ == "perimetre_lecture":  # organisations consultées : leurs noms (aucune = toutes)
+                valeur = ", ".join(str(o) for o in valeur or []) or "toutes"
+                apres = ", ".join(str(o) for o in u.perimetre_lecture.all()) or "toutes"
+            Journal.ecrire(request.user, "creation_compte" if nouveau else "reglage_compte", u, champ,
+                           "" if nouveau else valeur, apres)
+        if not nouveau and u.lecture_seule and "role" in form.changed_data:
+            from . import attributions_lecture_seule as ALS
+
+            retirees = ALS.retirer(request.user, u)  # relues sous verrou : toutes celles d'aujourd'hui
+    return u, retirees
+
+
+def _gestion_espaces(u, moi):
+    """Encadré « Administrateur ou gestionnaire des espaces » de la fiche : montré pour un administrateur de l'espace
+    ou un gestionnaire des espaces (None : pas d'encadré). Boutons seulement pour un gestionnaire des espaces
+    (``espaces.comptes.changer_gestionnaire`` refuse tout autre envoi) : « Nommer » pour un administrateur actif de
+    l'espace principal (``admin_actif_principal``, la règle de l'envoi), « Retirer » pour tout gestionnaire, sauf
+    soi-même. ``ancien`` : gestionnaire d'avant la règle, qui n'est pas administrateur actif de l'espace principal (il
+    garde le rôle jusqu'au prochain changement de son rôle ou de son état)."""
+    from espaces.models import Compte
+
+    if not u.pk:
+        return None
+    c = Compte.objects.filter(pk=u.pk).values("gestionnaire", "actif").first() or {"gestionnaire": False, "actif": False}
+    if not (u.est_admin or c["gestionnaire"]):
+        return None
+    peut, soi, eligible = EC.est_gestionnaire(moi), u.pk == moi.pk, EC.admin_actif_principal(u.pk)
+    return {"est": c["gestionnaire"], "peut": peut, "soi": soi, "ancien": c["gestionnaire"] and not eligible,
+            "pas_eligible": peut and not c["gestionnaire"] and not eligible,
+            "nommer": peut and not c["gestionnaire"] and eligible,
+            "retirer": peut and c["gestionnaire"] and not soi}
 
 
 def _arbre_perimetre(form):
@@ -1641,6 +1713,23 @@ def _groupe_affiche(request, niveau, orgs, arbre, personne="", role=Attribution.
     return groupes, choisi, len(orgs)
 
 
+def _remplacer(request, de, par):
+    """Attributions de ``de`` données à ``par`` et, sur demande, ``de`` désactivé : tout ou rien (refus
+    ``DernierGestionnaire`` compris : désactiver le dernier gestionnaire capable d'agir). Renvoie le nombre transféré."""
+    with ESP.atomic():
+        n = 0
+        for a in list(Attribution.objects.filter(utilisateur=de)):
+            Attribution.objects.get_or_create(kpi_id=a.kpi_id, organisation_id=a.organisation_id, utilisateur=par, role=a.role)
+            a.delete()
+            n += 1
+        Journal.ecrire(request.user, "remplacement_personne", par, "attributions", f"{de} ({de.email})", f"{par} ({par.email}) : {n}")
+        if request.POST.get("desactiver") == "on" and de.pk != request.user.pk:
+            de.is_active = False
+            de.save(update_fields=["is_active"])
+            Journal.ecrire(request.user, "reglage_compte", de, "is_active", True, False)
+    return n
+
+
 @login_required
 def remplacer_personne(request):
     """Transférer toutes les attributions d'une personne à une autre (départ, changement de poste)."""
@@ -1656,17 +1745,11 @@ def remplacer_personne(request):
         elif par.lecture_seule:
             erreur = libelle("admin.remplacer.erreur.lecture_seule")
         else:
-            with ESP.atomic():
-                n = 0
-                for a in list(Attribution.objects.filter(utilisateur=de)):
-                    Attribution.objects.get_or_create(kpi_id=a.kpi_id, organisation_id=a.organisation_id, utilisateur=par, role=a.role)
-                    a.delete()
-                    n += 1
-                Journal.ecrire(request.user, "remplacement_personne", par, "attributions", f"{de} ({de.email})", f"{par} ({par.email}) : {n}")
-                if request.POST.get("desactiver") == "on" and de.pk != request.user.pk:
-                    de.is_active = False
-                    de.save(update_fields=["is_active"])
-                    Journal.ecrire(request.user, "reglage_compte", de, "is_active", True, False)
+            try:
+                n = _remplacer(request, de, par)
+            except EC.DernierGestionnaire as x:  # désactiver le dernier gestionnaire capable d'agir : rien n'est fait
+                erreur = x.message
+        if request.method == "POST" and not erreur:
             from django.contrib import messages
             texte = libelle("admin.remplacer.transferees", n=n, de=str(de), par=str(par))
             if request.POST.get("desactiver") == "on" and de.pk != request.user.pk:  # son propre compte n'est pas désactivé

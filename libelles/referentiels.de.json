@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Auch zu früheren Berichtsjahren hinzufügen?",
  "referentiels.depuis.aide": "Standardmäßig ab der laufenden Periode: Kein vergangenes Berichtsjahr ändert sich. Ein abgeschlossenes Berichtsjahr erhält die KPI beim erneuten Öffnen. Später im Inhalt des Berichtsrahmens änderbar.",
  "referentiels.apercu.depuis": "Neue KPIs in diesem Berichtsrahmen werden angefordert",
- "referentiels.depuis.fichier_confirmer": "{code}: Dieses Datum entfernt (leere) Felder aus einer laufenden Periode. Ändern Sie es im Inhalt des Berichtsrahmens, wo Sie es bestätigen."
+ "referentiels.depuis.fichier_confirmer": "{code}: Dieses Datum entfernt (leere) Felder aus einer laufenden Periode. Ändern Sie es im Inhalt des Berichtsrahmens, wo Sie es bestätigen.",
+ "referentiels.mep.depart.titre": "Mit einer Sicherung beginnen",
+ "referentiels.mep.depart.aide": "Haben Sie eine Sicherung des Tools, die auf einem anderen Server oder einem anderen Computer erstellt wurde? Stellen Sie sie jetzt wieder her. Sie ersetzt, was Sie in diesem Assistenten eingestellt haben. Sie behalten Ihr Konto und Ihr Passwort.",
+ "referentiels.mep.depart.compte_d_abord": "Haben Sie eine Sicherung des Tools? Erstellen Sie zuerst Ihr Konto. Im nächsten Schritt können Sie mit dieser Sicherung beginnen."
 }

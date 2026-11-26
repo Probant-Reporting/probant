@@ -1,26 +1,35 @@
 # Install Probant
 
-This guide tells you how to install, set up, back up, update, and monitor Probant with Docker. It is for the
-IT team. You do not need to know Django or Python.
+This guide is for the IT team. It tells you how to install Probant on a Linux server with Docker, then how to set it
+up, back it up, update it, and monitor it. You do not need to know Django or Python.
 
 The tool runs in **a single Docker container**. All its data is in **a single volume**, `/data`: database, evidence
 files, logo, backups, and secret key.
 
-This table shows the main operations:
+This table shows which way to follow:
+
+| Your case | Follow | Duration |
+|---|---|---|
+| A Linux server with Internet access (the usual case) | [Install with one command](#install-with-one-command) | About 2 minutes |
+| You want the server to build the image from the code | [Install with Git](#install-with-git) | 3 to 5 minutes |
+| A server without Internet access | [Install without Internet access](#install-without-internet-access) | |
+| You do not want to manage a server | [Managed hosting (Clever Cloud)](managed_hosting.md) | About 30 minutes |
+| A trial by one person on one Windows or Mac computer | The all-in-one version: `probant-windows.zip` or `probant-mac.zip` on the page of the latest release (https://github.com/Probant-Reporting/probant/releases/latest). It needs no installation and no administrator rights. To move its data to a server later, see [From the all-in-one version to a server](from_pc_to_server.md). | |
+
+Before you start, you need a 64-bit Linux server with 1 GB of memory, and an account that can use `sudo`. On Debian or
+Ubuntu, you do not have to install Docker first: the installer offers to install it. The full list is in section 1.
+The list of what IT prepares is in [What to prepare](it_request.md), and the file for a security review is in
+[Security overview](security_overview.md).
+
+Right after the installation, open the address of the tool and create the administrator account (section 3).
+
+This table shows the everyday operations, in the folder of the tool:
 
 | Operation | Command | Duration |
 |---|---|---|
-| Install, with one command | `curl -fsSL https://github.com/Probant-Reporting/probant/raw/main/get.sh \| sudo sh` | About 2 minutes |
-| Install, with Git | `./install.sh` (the server builds the image) | 3 to 5 minutes |
 | Update | `./update.sh` | 1 to 3 minutes |
-| Back up | Automatic every night, or `docker compose exec web python manage.py backup` | A few seconds |
+| Back up | Nothing: automatic every night. Now: `docker compose exec web python manage.py backup` | A few seconds |
 | Restore | `docker compose exec web python manage.py restore <archive>` | A few seconds |
-
-If you do not want to manage a server, see [Managed hosting (Clever Cloud)](managed_hosting.md).
-To move the data of the all-in-one version from a computer to a server, see [From the all-in-one version to a server](from_pc_to_server.md).
-
-Before the installation, the list of what IT prepares is in [What to prepare](it_request.md), and the file for a
-security review is in [Security overview](security_overview.md).
 
 ## 1. Prerequisites
 
@@ -28,13 +37,14 @@ This table shows what you need before you install the tool:
 
 | Need | Recommended minimum |
 |---|---|
-| Server | 64-bit Linux (Debian 12, Ubuntu 22.04 or later), 1 CPU, 1 GB of memory, 5 GB of disk |
-| Software | Docker Engine 24 or later with the Compose plugin v2.24 or later (`docker compose version`), and `curl`. If Docker is missing on Debian or Ubuntu, the installer offers to install it. Git only to install with Git |
+| Server | 64-bit Linux on `x86_64` (on `arm64`, install with Git only), for example Debian 12 or later, or Ubuntu 22.04 or later. 1 CPU, 1 GB of memory, 5 GB of disk |
+| Software | On Debian or Ubuntu: nothing to install first, except `curl` if it is missing. The installer offers to install Docker, and waits for your yes. On another Linux system: first install Docker Engine 24 or later with the Compose plugin v2.24 or later (`docker compose version`). Git only to install with Git |
+| Account | An account that can use `sudo` |
 | Network, internal access | 1 port open to the server (8000 by default) |
-| Network, HTTPS access | A domain name that points to the server (for example, `reporting.example.com`), and ports 80 and 443 open from the Internet (automatic Let's Encrypt certificate) |
-| Network, downloads | Outgoing HTTPS (TCP 443) from the server, during the installation and the updates: `github.com` and `raw.githubusercontent.com` (files), `objects.githubusercontent.com` and `release-assets.githubusercontent.com` (list of the sums of the files, attached to the release), `ghcr.io` and `pkg-containers.githubusercontent.com` (image and container of cosign), `tuf-repo-cdn.sigstore.dev` (trusted root of Sigstore, to verify the signatures). With the automatic updates (section 6), the server opens the same connections at night. To install Docker with the installer: `download.docker.com` and the package mirrors of the system. Without Internet access: none (see “Install without Internet access”) |
+| Network, HTTPS access | A domain name that points to the server (for example, `reporting.example.com`), and ports 80 and 443 (TCP, and UDP 443 for HTTP/3) open from the Internet (automatic Let's Encrypt certificate). With the certificate of your company, the Internet does not need to reach the server: see “Company network” |
+| Network, downloads | Outgoing HTTPS (TCP 443) from the server, during the installation and each update: `github.com` and `raw.githubusercontent.com` (files), `objects.githubusercontent.com` and `release-assets.githubusercontent.com` (list of the sums of the files, attached to the release), `ghcr.io` and `pkg-containers.githubusercontent.com` (image of the tool and container of cosign), `tuf-repo-cdn.sigstore.dev` (trusted root of Sigstore, to verify the signatures). With HTTPS (`--domain`): also Docker Hub (image of Caddy). With Git: also Docker Hub and PyPI (the server builds the image). With the automatic updates (section 6), the server opens the same connections at night. To install Docker with the installer: `download.docker.com` and the package mirrors of the system. Without Internet access: none (see “Install without Internet access”) |
 | Emails (optional) | An SMTP account (server, port, username, password, sender address) |
-| AI assistant (optional) | Outgoing HTTPS (TCP 443) from the server to `api.anthropic.com`, only if the client turns the assistant on. See “AI assistant” in section 4 |
+| AI assistant (optional) | Outgoing HTTPS (TCP 443) from the server to `api.anthropic.com`, only if an administrator turns the assistant on. See “AI assistant” in section 4 |
 
 The server does not need Python, a web server, or a database. Everything is in the image.
 
@@ -61,18 +71,19 @@ and sign in again. A member of this group has the same rights as `root` on the s
 
 You can install the tool in two ways. This table compares them:
 
-| Way | What you need on the server | Duration |
+| Way | What the server needs, besides Docker | Duration |
 |---|---|---|
 | With one command (recommended) | `curl` | About 2 minutes: the server downloads the published image |
 | With Git | Git | 3 to 5 minutes: the server builds the image |
 
-The two ways give the same tool, with the same settings, backups and updates. For a server without Internet
-access, see “Install without Internet access”.
+The two ways give the same tool, with the same settings and backups. Only the installation with one command sets up
+the automatic updates (section 6). For a server without Internet access, see “Install without Internet access”.
 
 ### Check the server before you install
 
-The check reads the server and tells you what is missing for the installation. It changes nothing on the server.
-It is the script `check.sh`, in the files of each version.
+You do not have to run this check yourself: the installer runs it at the start of a new installation. Run it before,
+if you want to know what is missing without installing anything. The check reads the server and changes nothing. It
+is the script `check.sh`, in the files of each version.
 
 To check the server before an installation with one command, run the command of the installation with `--check`:
 
@@ -107,10 +118,10 @@ The check shows one line for each check:
 At the end, the check shows `Ready`, or `Here is what is missing` with the list of the points to fix. It ends with the
 exit code 0 (ready) or 1 (something is missing).
 
-The installer runs the same check at the start of a new installation (a folder without `.env`). If a point is to
-fix, the installer stops and installs nothing. A missing Docker does not stop it: the installer offers to install
-Docker next. To install without the check, add `--skip-check`. Use this option only if you know why the check fails.
-For example, behind a proxy that the check cannot use.
+At the start of a new installation (a folder without `.env`), if a point is to fix, the installer stops and installs
+nothing. A missing Docker does not stop it: the installer offers to install Docker next. To install without the
+check, add `--skip-check`. Use this option only if you know why the check fails. For example, behind a proxy that the
+check cannot use.
 
 If the network uses a proxy, set it before the check: `sudo HTTPS_PROXY=http://proxy.example.com:3128 sh …`. With
 `sudo`, the variables of your session do not pass to the script. Docker downloads the image itself: set the proxy of
@@ -124,7 +135,7 @@ anything, and it does not need Git.
 To install the tool:
 
 1. Sign in to the server with an account that can use `sudo`.
-2. Go to the folder where you want the folder of the tool (for example, `cd /opt`).
+2. Go to the folder that will contain the folder of the tool (for example, `cd /opt`).
 3. Run the command:
 
    ```bash
@@ -140,21 +151,25 @@ To install the tool:
    The command shows the address to open and the folder of the installation.
 4. Go to the folder of the tool: `cd probant`. Run the other commands of this guide in this folder.
 
+> **Note:** The automatic updates are on after this installation: the server installs each new version at night,
+> 3 days after its publication. To install without them, add `--auto-update off`. See “Automatic updates”
+> (section 6).
+
 The command does these steps, in this order:
 
 1. It finds the latest published version of the tool.
 2. It creates the folder `probant`. If this folder already contains an installation, the command stops and changes
    nothing.
 3. It downloads into this folder only the files that run the tool: `docker-compose.yml`, `.env.example`,
-   `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile` and `auto-update.sh`. They come from the tag of this version in the public repository
-   (https://github.com/Probant-Reporting/probant), over HTTPS only. Before it puts them in place, it checks each file
-   against the list of the SHA-256 sums attached to the release of this version (`probant-X.Y.Z-files.sha256`). It
-   also verifies the signature of this list when cosign is on the server, or when Docker responds (it then uses the
-   official container of cosign). If the list is missing, if its signature is refused, or if one file does not match,
-   the command stops and installs nothing. The command says what it verified.
-4. It runs `./install.sh` with the published image of this version. See “What the installer does”.
-5. It sets up the timer of the automatic updates, and the tool starts with the choice “Install it automatically”.
-   See “Automatic updates” (section 6). To install without them, add `--auto-update off`.
+   `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile` and `auto-update.sh`. They come from the tag of this
+   version in the public repository (https://github.com/Probant-Reporting/probant), over HTTPS only.
+4. It checks each file against the list of the SHA-256 sums (one fingerprint per file) attached to the release of
+   this version (`probant-X.Y.Z-files.sha256`). The release is the page of the version on GitHub, with its files. The
+   command also verifies the signature of this list with cosign (the signature tool of Sigstore), when cosign is on
+   the server or when Docker responds. If the list is missing, if its signature is refused, or if one file does not
+   match, the command stops and installs nothing. The command says what it verified.
+5. It runs `./install.sh` with the published image of this version. See “What the installer does”.
+6. It sets up the timer of the automatic updates (see the note above).
 
 This table shows the options of the command:
 
@@ -170,9 +185,10 @@ The check of the files gives this protection:
 
 - It finds a file changed or damaged on the way (a proxy, a mirror, a cache), and a tag moved after the release.
 - With the signature verified, only the workflow `image.yml` of the public repository, for this tag, can make the
-  list, and each signature is in the public transparency log of Sigstore.
-- It does not protect against a person who can change the repository and run its workflow, and it does not check
-  `get.sh` itself: see “Read the script before you run it”.
+  list. Each signature is in the public transparency log of Sigstore.
+- It does not protect against a person who can change the repository and run its workflow.
+- It does not check `get.sh` itself (see “Read the script before you run it”), or the signature of the image (see
+  “Verify the image”).
 
 The versions published before these lists (1.0.0 and 1.0.1) have none: the command refuses them. Just after a
 publication, the list can be missing for up to an hour: try again later.
@@ -182,12 +198,13 @@ publication, the list can be missing for up to an hour: try again later.
 If your security rules do not allow a script to run as soon as it is downloaded, do these steps:
 
 1. Download the script: `curl -fsSLO https://github.com/Probant-Reporting/probant/raw/main/get.sh`.
-2. Read it: `less get.sh`. The script is short, and comments explain each step. It changes nothing outside the folder
-   of the installation, except Docker if you accept to install it.
+2. Read it: `less get.sh`. The script is short, and comments explain each step. Outside the folder of the
+   installation, it changes only two things: Docker, if you accept to install it, and the timer of the automatic
+   updates (unless you add `--auto-update off`).
 3. Run it, with the same options as the command: `sudo sh get.sh` (or `sudo sh get.sh --domain reporting.example.com`).
 
-The script then runs `install.sh` of the version. You can read `install.sh` and `update.sh` in the public repository
-before, at the tag of the version (`vX.Y.Z`).
+The script then runs `install.sh` of the version. Before, you can read `install.sh` and `update.sh` in the public
+repository, at the tag of the version (`vX.Y.Z`).
 
 To verify the script before you run it, download it from the tag of the version, with the list of the SHA-256 sums
 of the release. Replace `X.Y.Z` with the version (the latest one is on
@@ -230,10 +247,10 @@ This table shows the options of `./install.sh`:
 | Option | Effect |
 |---|---|
 | No option | The tool opens over HTTP at `http://SERVER-ADDRESS:8000`. Use it for an internal network or a trial. |
-| `--domain reporting.example.com` | The tool opens over HTTPS. The script adds Caddy in front of the tool, and Caddy gets the certificate automatically. Port 8000 is then open only to the server itself. |
+| `--domain reporting.example.com` | The tool opens over HTTPS. The installer adds Caddy, the HTTPS proxy provided, in front of the tool. Caddy gets the certificate from Let's Encrypt automatically. Port 8000 is then open only to the server itself. |
 | `--port 8080` | The tool uses another HTTP port. |
 | `--image ghcr.io/probant-reporting/probant:X.Y.Z` | The tool uses this published image (the setting `IMAGE` in `.env`). The server downloads it and does not build it. |
-| `--yes` | If Docker is missing, the script installs it without the question. |
+| `--yes` | If Docker is missing, the installer installs it without the question. |
 | `--check` | Only checks the server, with the other options, and installs nothing. |
 | `--skip-check` | Installs without the check of the server. |
 | `--offline probant-image-X.Y.Z.tar.gz` | Installs without Internet access, with the image of the offline package. See “Install without Internet access”. |
@@ -260,8 +277,9 @@ To install the tool with Git:
    ./install.sh                      # or: ./install.sh --domain reporting.example.com
    ```
 
-   The server builds the image. To use the published image instead, add
-   `--image ghcr.io/probant-reporting/probant:X.Y.Z`, with the version of the code.
+   The server builds the image. For this, it downloads the base image from Docker Hub and the Python packages from
+   PyPI. To use the published image instead, add `--image ghcr.io/probant-reporting/probant:X.Y.Z`, with the version
+   of the code.
 
 ### Install without the script
 
@@ -273,13 +291,16 @@ To do the same installation by hand, in the folder of the code (see “Install w
 
 ### Verify the image
 
-This part is for an installation that uses the published image (`IMAGE` in `.env`, see section 4). Each image,
-from version 1.1.0, has these three items (the images of versions 1.0.0 and 1.0.1 have none):
+This part is optional. It is for an installation that uses the published image (`IMAGE` in `.env`, see section 4).
+The installation and `./update.sh` do not verify the signature of the image: do it yourself here if your security
+rules ask for it. The automatic updates verify it before each installation (section 6).
+
+Each image, from version 1.1.0, has these three items (the images of versions 1.0.0 and 1.0.1 have none):
 
 | Item | What it is | Where to find it |
 |---|---|---|
 | Signature | Proof that the image comes from the workflow `image.yml` of the repository `Probant-Reporting/probant`, for the tag of the version. It is made with cosign, without a key: the certificate names the workflow and the tag. | In the registry, next to the image |
-| SBOM | The list of the components of the image (system packages and Python libraries), in SPDX JSON. It is also attached to the image as a signed attestation. | Release of the version: `probant-<version>-sbom.spdx.json` |
+| SBOM (software bill of materials) | The list of the components of the image (system packages and Python libraries), in SPDX JSON. It is also attached to the image as a signed attestation. | Release of the version: `probant-<version>-sbom.spdx.json` |
 | Vulnerability report | The known vulnerabilities of those components on the day of the build, made by Grype. A text table and a JSON file. | Release of the version: `probant-<version>-vulnerabilities.txt` and `.json` |
 
 The release page is `https://github.com/Probant-Reporting/probant/releases`. If a file is not in the release, it is
@@ -329,7 +350,8 @@ To read the vulnerability report:
 
 Use this way for a server that cannot reach the Internet. Each version, from 1.1.0, has an offline package:
 the image of the tool and the files that install and update it, in one file. Nothing is downloaded during the
-installation.
+installation. There are no automatic updates: to update, use the package of the new version (see “Update without
+Internet access”, section 6).
 
 This table shows the files of the offline package, on the release page of the version
 (`https://github.com/Probant-Reporting/probant/releases`):
@@ -340,7 +362,7 @@ This table shows the files of the offline package, on the release page of the ve
 | `probant-X.Y.Z-offline.tar.sha256` | The SHA-256 sum of the package |
 | `probant-X.Y.Z-offline.tar.sigstore.json` | The signature of the package (cosign bundle). It contains everything that cosign needs to verify the package without network. |
 
-This works today without Internet access:
+Without Internet access, you can use:
 
 - The tool, with its SQLite database (the default). The package holds the image of the tool and the image of Caddy.
   It does not hold the image of PostgreSQL (`postgres` profile): see “PostgreSQL without Internet access” below.
@@ -418,9 +440,10 @@ bring the image yourself:
 
 ### Company network
 
-This part is for a server on the network of a company: a certificate that your company gives for the HTTPS address,
-a certificate authority of the company for the outgoing connections, and a proxy. An installation that uses none of
-them works as before.
+This part is optional. It is for a server on the network of a company, with one or more of these items: a
+certificate that your company gives for the HTTPS address, a certificate authority of your company (the certificate
+that signs its internal certificates) for the outgoing connections, and a proxy. If your network uses none of them,
+skip this part.
 
 The files of this part go into the folder `certificates/` of the installation, next to `.env`:
 
@@ -450,7 +473,7 @@ To install the tool with this certificate:
 ./install.sh --domain reporting.example.com --cert reporting.pem --key reporting.key
 ```
 
-With the one-line installation, add the same options after `sh -s --`. Without Internet access, add
+With the installation with one command, add the same options after `sh -s --`. Without Internet access, add
 `--offline probant-image-X.Y.Z.tar.gz`: the installer loads the image of Caddy from the package.
 
 Before any change, the installer checks the files (with `check.sh`, which needs the `openssl` command). This table
@@ -501,7 +524,7 @@ connection. The public authorities stay trusted.
 The tool uses only the certificate of an authority. A file that it cannot read, that holds no certificate, or that
 holds a server certificate, is written in the log at the start (`docker compose logs web`) and ignored: the tool
 starts all the same. **Administration › Settings › Health** shows the authorities in use, with their expiry dates,
-to the space manager and to the administrators of the main space. The line becomes “To look at” 30 days before an
+to the space managers and to the administrators of the main space. The line becomes “To check” 30 days before an
 authority expires.
 
 To remove an authority, delete its file from `certificates/ca/`, then run `docker compose restart web`.
@@ -521,7 +544,7 @@ Python packages during the build: behind such a proxy, use the published image o
 
 #### Use a proxy for the outgoing connections
 
-The tool already supports a proxy for its outgoing HTTPS connections. This table shows what to set:
+The tool can use a proxy for its outgoing HTTPS connections. This table shows what to set:
 
 | What | How |
 |---|---|
@@ -539,31 +562,14 @@ When you first open the tool, it has no account yet. The **Setup** wizard opens 
 > **Important: create the administrator account right away.** Until step 1 is done, the first person who opens the
 > address of the tool creates the administrator account. After step 1, the wizard opens only for that account.
 
-### Start empty, or with the demo
-
-A new installation is empty: you set up your own structure with the wizard. This is the way to start for real.
-
-To look at the tool first, you can load the demo instead: Exemplia, a fictitious company, with its organisations,
-its KPIs and three reporting years. Do it before step 1 of the wizard, on the empty database:
-
-```bash
-docker compose exec web python manage.py load_demo
-```
-
-The command shows the demo accounts and their password.
-
-> **Important:** the password of the demo accounts is public. Load the demo only on an installation that you use for
-> an evaluation, and do not leave it open to the internet. The command refuses a database that already holds your
-> data. To start for real afterwards, delete the evaluation and its data (`docker compose down -v`), then install
-> again: the tool starts empty.
-
 The tool asks for no installation code. As long as nothing is created, the tool holds no sensitive data. What
 protects it is the order of the steps: you create the administrator account right after the installation, and
 before you share the address.
 
 To set up the tool:
 
-1. Right after the installation (or deployment), open the address of the tool. The **Setup** wizard opens.
+1. Right after the installation (or deployment), open the address of the tool. The **Setup** wizard opens. To look at
+   the demo instead, load it now, before step 1: see “Start empty, or with the demo”.
 2. Complete step 1, **Administrator account**, before you share the address.
 3. Complete the other steps, or give the address to the person who does the setup.
 
@@ -586,6 +592,10 @@ This table shows the 8 steps of the wizard:
 You can stop and continue later. The person who does the setup does not need the IT team, except for emails
 (section 7).
 
+The account of step 1 is also the first **space manager**. Only the space managers change the settings of the whole
+installation: the email server, the email alerts, the automatic updates, the external copy of the backups, and the
+company sign-in. The other administrators cannot change them. See [docs/spaces.md](spaces.md).
+
 ![First launch: the wizard opens on the administrator account](screenshots/en/setup-admin-account.png)
 
 ![Step 5: choose a framework from the library, compose it or import your own](screenshots/en/setup-frameworks.png)
@@ -603,11 +613,30 @@ Data entry also works on a phone:
 
 ![Data entry on a phone](screenshots/en/entry-phone.png)
 
+### Start empty, or with the demo
+
+A new installation is empty: you set up your own structure with the wizard. This is the way to start for real.
+
+To look at the tool first, you can load the demo instead: Exemplia, a fictitious company, with its organisations,
+its KPIs and three reporting years. Do it before step 1 of the wizard, on the empty database:
+
+```bash
+docker compose exec web python manage.py load_demo
+```
+
+The command shows the demo accounts and their password.
+
+> **Important:** the password of the demo accounts is public. Load the demo only on an installation that you use for
+> an evaluation, and do not leave it open to the internet. The command refuses a database that already holds your
+> data. To start for real afterwards, delete the evaluation and its data (`docker compose down -v`), then install
+> again: the tool starts empty.
+
 ### Have the translated texts proofread
 
 The interface exists in French, English, Spanish, German, Italian, Dutch, and Portuguese. An AI translated the texts
-that are not in French or English. Before you open a language to users, ask a person who speaks it in the company to
-proofread its texts. The texts are in the files `libelles/*.<code>.json` (for example `libelles/*.es.json`). The person needs no technical skills: they only read the texts.
+that are not in French or English. Before you open a language to users, ask a person in the company who speaks it to
+proofread its texts. The texts are in the files `libelles/*.<code>.json` of the public repository (for example
+`libelles/*.es.json`). The person needs no technical skills: they only read the texts.
 
 ## 4. Change the settings (`.env` file)
 
@@ -701,22 +730,24 @@ With `report-only`, the protection is off: keep this value only for the time of 
 
 ### AI assistants (MCP): nothing to do
 
-The tool includes a server for AI assistants (Model Context Protocol), at the address `/mcp/` of each space
-(`/espace/<code>/mcp/` for another space). It runs in the same container, on the same port, behind the same HTTPS: there
-is no service, no port, no variable and nothing to install. It stays off until an administrator turns it on in
-**Administration › Settings › Assistants**. The only condition is that the reverse proxy passes the `Authorization`
-header to the tool: Caddy (the `https` profile) and Clever Cloud do it without any setting. Assistant tokens are never in
-the backups. The log of the tool shows the refused tokens (`serveur_mcp: MCP: token refused`). Details:
-[`docs/mcp.md`](mcp.md), section 7.
+A person can connect their own AI assistant to the tool, with the Model Context Protocol (MCP). The assistant then
+reads and changes data with the rights of this person. The MCP server is part of the tool, at the address `/mcp/` of each
+space (`/espace/<code>/mcp/` for another space). It runs in the same container, on the same port, behind the same
+HTTPS: there is no service, no port, no variable and nothing to install. It stays off until an administrator turns it
+on in **Administration › Settings › Assistants**. The only condition is that the reverse proxy passes the
+`Authorization` header to the tool: Caddy (the `https` profile) and Clever Cloud do it without any setting. Assistant
+tokens are never in the backups. The log of the tool shows the refused tokens (`serveur_mcp: MCP: token refused`).
+Details: [`docs/mcp.md`](mcp.md), section 7.
 
 ### AI assistant (optional)
 
-The tool can ask an AI provider (Claude, by Anthropic) for proposals: explain a consistency alert, match the KPIs of a
-former file, translate labels. It is **off** in every space. An administrator of the space turns it on in
-**Administration › Settings › AI assistant**, with the API key of the client's own provider account. The page lists
-exactly what each use sends. Full description: `docs/ai_socket.md`.
+This is a different function: here, the tool itself calls an AI provider (Claude, by Anthropic). The tool asks it for
+proposals: explain a consistency alert, match the KPIs of a former file, translate labels. It is **off** in every
+space. An administrator of the space turns it on in **Administration › Settings › AI assistant**, with the API key of
+your organisation's own account at the provider. The page lists exactly what each use sends. Full description:
+`docs/ai_socket.md`.
 
-What the IT does:
+What IT does:
 
 | Item | Value |
 |---|---|
@@ -729,7 +760,8 @@ While the assistant is off in a space, the tool opens no connection to the provi
 
 ### Sign-in with a company account
 
-People can sign in with their company account (single sign-on, OpenID Connect). It is off by default. A space manager sets it up in **Administration › Settings › Company sign-in**. What IT does:
+People can sign in with their company account (single sign-on, OpenID Connect). It is off by default. A space
+manager sets it up in **Administration › Settings › Company sign-in**. What IT does:
 
 | Item | Value |
 |---|---|
@@ -783,10 +815,10 @@ This table shows how to back up the tool:
 
 | To… | Do |
 |---|---|
-| Back up automatically | Nothing. By default, the tool makes a backup every day at 02:30 and keeps 14 archives. The team in charge sets the frequency in **Administration › Settings › Hosting**. **Copy the backups off the server**: in the tool, or by your own means (see [Copy the backups outside the server](#copy-the-backups-outside-the-server)). |
+| Back up automatically | Nothing. By default, the tool makes a backup every day at 02:30 and keeps 14 archives. An administrator sets the frequency in **Administration › Settings › Hosting**. |
 | Back up now | Run `docker compose exec web python manage.py backup`. An administrator can also click **Create and download a backup** in **Administration › Settings › Hosting**. |
 | List the backups | Run `docker compose exec web python manage.py backup --list`. |
-| Copy the backups off the server | In the tool: see [Copy the backups outside the server](#copy-the-backups-outside-the-server). By your own means: run `docker compose cp web:/data/backups/. ../probant-backups/`. This copies the archives, subfolders included, to the folder `probant-backups` next to the folder of the tool. Do not copy them into the folder of the tool: the update builds the image from this folder. Then copy `probant-backups` off the server with your usual backup tool (rsync, Veeam…), on a schedule. The copied files keep their rights: only the account that ran `docker compose cp` can read them (files `0600`, folders `0700`). If your backup tool runs under another account, give this account access to `probant-backups`, for example with `chown -R`. Do not change the rights inside the volume. |
+| Copy the backups outside the server | **To do by IT**: by default, the backups stay on the same server as the tool. Copy them in the tool, or by your own means: see [Copy the backups outside the server](#copy-the-backups-outside-the-server). |
 
 **Without Docker**, schedule the same backup with cron: `30 2 * * * cd /opt/reporting && python manage.py backup`.
 
@@ -795,11 +827,12 @@ This table shows how to back up the tool:
 ### Copy the backups outside the server
 
 The backups stay in the `/data` volume, on the same server as the tool. If the server is lost, they are lost too. Copy
-them outside the server in one of these two ways.
+them outside the server in one of these two ways. Both ways can run together.
 
 #### In the tool
 
-The tool can copy each backup itself to a storage that IT provides. A space manager sets it in
+This copy is off until a space manager sets it up. The tool can then copy each backup itself to a storage that IT
+provides. A space manager sets it in
 **Administration › Settings › Hosting**, box **Copy outside the server**, with **Set up a copy outside the server**:
 
 - **S3-compatible object storage**: a bucket at a provider, or MinIO on your network. Give the address of the service
@@ -814,8 +847,8 @@ The tool can copy each backup itself to a storage that IT provides. A space mana
 Then click **Test the destination**. The tool writes a small test file, reads it back, and deletes it. With SFTP, the
 first test shows the SHA-256 fingerprint of the key of the server. Compare it with the fingerprint that the server
 gives (on the server: `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`), then click **Confirm this key**. After that,
-the tool refuses any other key, before it sends the password or the key: if the server changes its key, the copy stops
-and sends an alert, until an administrator confirms the new key.
+the tool refuses any other key, before it sends the password or the key. If the server changes its key, the copy stops
+and sends an alert, until a space manager confirms the new key.
 
 What the tool does next:
 
@@ -828,7 +861,7 @@ What the tool does next:
 - If a copy fails (network, rights, full storage…), it tries again later (after 5 minutes, then 15 minutes, up to
   6 hours) and copies everything that waits. **Settings › Health** and `/sante/` (`external_copy`) show the last copy
   and the archives that wait; an email alert leaves if the alerts are on (section 9).
-- By default, it **deletes nothing** at the destination. If the administrator sets **Copies kept per space**, the tool
+- By default, it **deletes nothing** at the destination. If a space manager sets **Copies kept per space**, the tool
   keeps that number of the most recent copies of each space and of the registry, and deletes only the older archives
   that it made itself (folder and name that it recognises). It never deletes another file, and never the last archive
   made. To keep the copies safe from deletion, give the account the right to write but not to delete, and keep `0`.
@@ -841,7 +874,7 @@ What the tool does next:
 > can open. The tool does not encrypt the archives.
 
 The tool saves the secret key of S3, and the password or the private key of SFTP, encrypted with the secret key of the
-installation. It never shows them again. After a restore on another server, an administrator enters them again.
+installation. It never shows them again. After a restore on another server, a space manager enters them again.
 To keep them, leave the fields empty when you save. If you change the destination (S3: address, region, bucket or
 access key ID; SFTP: server, port or username), the tool asks for the secret again, so that it never goes to another
 destination. With SFTP, a new server or port also forgets the confirmed key of the server.
@@ -856,8 +889,16 @@ The all-in-one version (Windows or Mac) does not have this function: copy the ba
 
 #### By your own means
 
-Copy the `/data/backups` folder, with all its subfolders, with your usual backup tool, on a schedule: see the row
-**Copy the backups off the server** in the table above. Both ways can run together.
+To copy the `/data/backups` folder with your usual backup tool, do these steps:
+
+1. Copy the archives out of the container: `docker compose cp web:/data/backups/. ../probant-backups/`. This copies
+   the archives, subfolders included, to the folder `probant-backups` next to the folder of the tool. Do not copy
+   them into the folder of the tool: the update builds the image from this folder.
+2. Copy `probant-backups` outside the server with your usual backup tool (rsync, Veeam…), on a schedule.
+
+The copied files keep their rights: only the account that ran `docker compose cp` can read them (files `0600`,
+folders `0700`). If your backup tool runs under another account, give this account access to `probant-backups`, for
+example with `chown -R`. Do not change the rights inside the volume.
 
 ### Rebuild a server from the external copy
 
@@ -880,9 +921,13 @@ If the server is lost, IT rebuilds the installation on a new server from the cop
 
    The archives were signed by the old server: `--unsigned` is needed, unless you put back the old secret key
    (`/data/.secret_key` or `DJANGO_SECRET_KEY`).
-4. People sign in with their usual password. An administrator enters the secrets again: the password of the email
-   server, and the secret of the external copy. They can be read only with the secret key of the old server. If you
-   kept that key in a safe place and put it back before step 3, they work at once.
+4. People sign in with their usual password. A space manager enters the secrets again: the password of the email
+   server, and the secret of the external copy. Only the secret key of the old server can read them. If you kept that
+   key in a safe place and put it back before step 3, they work at once.
+
+If you have only the backup of a space, and not the backup of the shared registry, a space manager can also restore it
+from the tool, on the new server: see [Restore a backup from another installation](#restore-a-backup-from-another-installation).
+The passwords do not move in this case: only the person who restores keeps theirs.
 
 ### Backups and deleted evidence
 
@@ -925,7 +970,15 @@ installation, or it was changed after it was made”. These archives have no val
 - Archives that someone changed after the backup
 
 IT can still restore such an archive from the command line, if it trusts the archive: add `--unsigned` to the
-`restore` command. Without this option, the command refuses the archive and changes nothing.
+`restore` command. Without this option, the command refuses the archive and changes nothing. A space manager can also
+restore it from the tool: see [Restore a backup from another installation](#restore-a-backup-from-another-installation).
+
+Every restore of an SQLite database, from the tool or from the command line, with or without `--unsigned`, refuses a
+database with triggers, views, or calculated columns, or with another structure than the tool expects (columns,
+constraints, indexes, and foreign keys, as SQLite reads them). The backups that the tool makes never have them. If a
+restore fails after the database was replaced, the tool goes back to the “before-restore” archive by itself. Without
+this archive (`--no-backup-before`, or a database that could not be read), it cannot: the restore stays marked as
+interrupted, `/sante/` reports it, and IT restores an archive from the command line.
 
 To restore an archive from the server (if the tool no longer starts):
 
@@ -961,6 +1014,75 @@ To restore a PostgreSQL archive made by an older version after an update:
 2. Go back to the version that made the archive (the restore shows its version, also in `backup.json`), and restore the
    archive with that version: see [Going back to the previous version](#going-back-to-the-previous-version).
 3. Update the tool again with `./update.sh`. The update brings the restored data to the new version.
+
+### Restore a backup from another installation
+
+A space manager can restore from the tool a backup that this installation did not make: after a change of server,
+after the loss of a server, or with a backup of the all-in-one version. The command line does not change.
+
+The tool cannot check such a file, because the secret key of the other installation never leaves its server. So the
+tool does not trust its content, and these rules apply:
+
+- A backup counts as made by this installation only if its signature is valid and it names this installation and
+  this space. A backup of another installation that has the same secret key (a server rebuilt with the same
+  `DJANGO_SECRET_KEY`, a copied `.env`) has a valid signature, but it is from another installation: these rules apply
+  to it too. A backup of another space of this installation stays for IT (`restore --other-space`).
+
+- Only a space manager can do it. For the other administrators and the other roles, the page refuses the file, as
+  before. A backup that this installation made keeps the usual checks, for everyone.
+- **Empty installation.** IT installs the tool. An administrator creates their account at step 1 of the setup wizard.
+  From step 2, the wizard shows **Start from a backup** while the installation is empty: main space only, one
+  account, no organisation, no KPI, no campaign, no value, and the wizard is not finished. A visitor who is not signed
+  in never sees it.
+- **Installation in service.** In **Administration › Settings › Hosting**, open **Restore from a .zip file downloaded
+  earlier**, choose the file, then click **Check the file**. The tool keeps the file apart: it is not in the list of
+  backups, and the external copy does not copy it. The tool deletes it after the restore, or after one day.
+- The backup goes into the current space, as with `restore --other-space`. The other spaces and the shared account
+  registry do not change.
+
+The confirmation page shows the name of the installation, the date, and the version that the file gives. It says that
+the tool cannot check the file, what the backup replaces, what happens to the accounts, and the administrators of the
+backup. Select the two boxes, enter `RESTORE`, then click **Restore this backup**. The tool backs up the current state
+of the space first (“before-restore” archive). Then it signs you out: sign in again with your own password.
+
+What happens to the accounts:
+
+- You keep your account, your password, and your role of space manager. After the restore, your account is an active
+  administrator of the space: the tool adds it, or gives the role back, and writes it in the history.
+- The other accounts of the backup have no password. Backups never contain passwords, and the tool reads no password
+  from such a file. Give them a temporary password in **Administration › Accounts**.
+- An account with the same number and the same email as an account of another space of this installation is the same
+  person. It keeps its password and its role in the other spaces.
+- The accounts that existed only in this space, except yours, leave the shared registry: the accounts of the backup
+  replace them. Their sessions and their links with a company account are deleted. A space manager among them loses
+  this role.
+- If an account of the backup has the number, the email, or the user name of another person who has an account in
+  another space, the tool refuses the backup and changes nothing. IT can restore it from the command line.
+
+What else changes:
+
+- The assistant tokens (MCP) of the space stop working. Each person creates a new one.
+- The automatic reminders, the AI assistant, and the assistants (MCP) of the space are off after the restore, and the
+  background imports and exports that were waiting are stopped. Turn them on again on the **Reminders** page and in
+  **Settings** if you need them.
+- The rights of each account come from its role only: an administrator of the backup has the expert mode, no other
+  account has it. The groups and permissions written in the file are not kept.
+- The settings of the whole installation stay as they are: email server, external copy, email alerts, company sign-in,
+  and AI key. The backup of a space contains none of them, and none of their secrets.
+
+The tool also refuses, before it changes anything: a backup made by a more recent version, a PostgreSQL backup made
+with other database migrations, an SQLite backup on PostgreSQL, a file too large for the free disk space, a file that
+changed after the confirmation page, a JSON file with data that a backup of the tool never contains, and an SQLite
+database with triggers, views, or calculated columns, or with another structure than the tool expects. In an SQLite
+database, an extra table (left by an earlier version) is accepted: the tool does not read it. A backup made by an
+earlier version is checked just after its update, before the shared account registry changes. If anything fails after
+the database was replaced, the tool goes back to the state before the restore by itself, and the page says so; the
+assistant tokens (MCP) of the space are then lost.
+
+With several spaces, restore the backup of each space in its own space, the main space first. The backups of the
+spaces of one installation give the same number to a person who works in several spaces, so the tool recognises this
+person. The history of the restores (**Hosting** page and `restores.jsonl`) notes “other installation” and its name.
+To move the passwords too, IT uses [Rebuild a server from the external copy](#rebuild-a-server-from-the-external-copy).
 
 ### If a restore is interrupted
 
@@ -1004,12 +1126,11 @@ The script does these steps, in this order:
    a space fails, the update stops and changes nothing.
 2. It gets the new version:
    - After an installation with one command (a folder without Git, with `IMAGE` set to a version of
-     `ghcr.io/probant-reporting/probant`): it downloads the files of the new version, as the installation did, then
-     sets `IMAGE` in `.env` to the image of this version and downloads it. It keeps the other settings of `.env` and
-     the data. If a download fails, the update stops and changes nothing. Before it puts the files in place, it checks
-     each one against the list of the SHA-256 sums of the release, and the signature of this list when it can, as the
-     installation does (see “Install with one command”). If the list is missing, if its signature is refused, or if
-     one file does not match, the update stops and changes nothing (exit code 3).
+     `ghcr.io/probant-reporting/probant`): it downloads the files of the new version and checks them, as the
+     installation does (see “Install with one command”). Then it sets `IMAGE` in `.env` to the image of this version
+     and downloads it. It keeps the other settings of `.env` and the data. If a download fails, if the list of the
+     sums is missing, if its signature is refused, or if one file does not match, the update stops and changes
+     nothing (exit code 3 for the check of the files).
    - After an installation with Git: with `git pull`, followed by a new build of the image
    - Or, if `IMAGE` is set in `.env` to another image, with `docker compose pull`
 3. It restarts the tool. The tool applies the changes to the database structure automatically at startup. If the
@@ -1036,10 +1157,12 @@ changes nothing.
 
 ### Automatic updates
 
-After an installation with one command, a timer of the server installs each new version at night, and goes back to
-the previous version if the new one does not work. The script `auto-update.sh` of the folder of the tool does all the
-work, on the server. The tool itself never connects to the Internet, never compares two versions, and has no access to
-Docker: no Docker socket is given to its container, and no other tool (such as Watchtower) is used.
+After an installation with one command, the automatic updates are on. A timer of the server (shown as **Task of the
+server** in the tool) installs each new version at night, and goes back to the previous version if the new one does
+not work. The other installations do not have them: see the table below. The script `auto-update.sh` of the folder of
+the tool does all the work, on the server. The tool itself never connects to the Internet, never compares two
+versions, and has no access to Docker: no Docker socket is given to its container, and no other tool (such as
+Watchtower) is used.
 
 The choice is in **Administration › Settings › Hosting**, “Automatic updates”. Only the space managers can change
 it:
@@ -1070,9 +1193,12 @@ This table shows the setting at the start:
    is the digest of the image that runs, there is nothing to do.
 3. It verifies the signature of the new image (see “Signature of the new image”). If the signature is absent or not
    correct, or if the verification is not possible, nothing is installed.
-4. It stops here with “Notify only”, during the wait after the publication, for an image whose automatic update failed
-   before, and for a version that changes the shared registry of the accounts (that change cannot be undone
-   automatically: IT installs this version with `./update.sh`).
+4. It stops here in these cases:
+   - The choice is “Notify only”.
+   - The wait after the publication is not over.
+   - The automatic update of this image failed before.
+   - The version changes the shared registry of the accounts. That change cannot be undone automatically: IT
+     installs this version with `./update.sh`.
 5. It does not update during a restore, a backup, a large import or a large export of the tool. It tries again the
    next night.
 6. It downloads the list of the SHA-256 sums of the files of this version, from its release, and verifies the
@@ -1093,11 +1219,11 @@ If the new version does not respond, the script goes back automatically:
 3. It starts the version of before and checks `/sante/`.
 
 The screen then says “The server went back to version X.Y.Z”, and so do the page **Settings › Health** and the email
-alerts. The same image is not tried
-again: when the cause is known, IT runs `sudo ./auto-update.sh --retry`. If going back does not work completely (a
-restore fails, the shared registry changed, or the version of before does not respond), the result is a failure, the
-email alert says “call IT”, and IT follows “Going back to the previous version”. Nothing more is done automatically,
-not even the next nights, until IT runs `sudo ./auto-update.sh --retry`.
+alerts. The same image is not tried again: when the cause is known, IT runs `sudo ./auto-update.sh --retry`.
+
+If going back does not work completely (a restore fails, the shared registry changed, or the version of before does
+not respond), the result is a failure. The email alert says “Call your IT team now”, and IT follows “Going back to the previous
+version”. Nothing more is done automatically, not even the next nights, until IT runs `sudo ./auto-update.sh --retry`.
 
 #### Signature of the new image
 
@@ -1124,7 +1250,7 @@ In the folder of the tool, as root (`sudo`):
 - `./install.sh --auto-update off` removes the timer. Nothing else changes.
 
 On an installation that already exists, these commands change only the timer: the choice in the tool stays the choice
-of the administrators. Before you delete the folder of the tool, run `./install.sh --auto-update off`. If the folder is
+of the space managers. Before you delete the folder of the tool, run `./install.sh --auto-update off`. If the folder is
 already deleted, remove the timer by hand: `sudo systemctl disable --now probant-auto-update-<number>.timer`, then
 delete the two files `/etc/systemd/system/probant-auto-update-<number>.*` (or the file in `/etc/cron.d/`).
 
@@ -1140,11 +1266,8 @@ has not run for 3 days, the page **Settings › Health** says so, and so do the 
 
 #### Network of the server
 
-The script needs outgoing HTTPS (TCP 443) from the server, not from the container: `github.com` and
-`raw.githubusercontent.com` (the latest version and its files), `objects.githubusercontent.com` and
-`release-assets.githubusercontent.com` (the list of the sums of the files, attached to the release),
-`ghcr.io` and `pkg-containers.githubusercontent.com` (the image and the container of cosign), and `tuf-repo-cdn.sigstore.dev` (the trusted root of Sigstore, read by
-cosign). Through a proxy, set `HTTPS_PROXY` in the environment of the timer (for example
+The script needs the same outgoing HTTPS (TCP 443) as the installation, from the server, not from the container: see
+“Network, downloads” in section 1. Through a proxy, set `HTTPS_PROXY` in the environment of the timer (for example
 `systemctl edit probant-auto-update-<number>.service`), and the proxy of Docker for the downloads of images.
 
 ### Update without Internet access
@@ -1239,8 +1362,8 @@ and 4 above). The new server has another secret key: add `--unsigned` to the res
 
 ## 7. Set up emails (SMTP)
 
-The tool sends emails through the email server (SMTP) of your company: reminders and test emails. You can set up
-this server in two ways. The settings apply to the whole installation, for all spaces.
+The tool sends emails through the email server (SMTP) of your company: reminders, email alerts (section 9), and test
+emails. You can set up this server in two ways. The settings apply to the whole installation, for all spaces.
 
 | Way | Who | When to use it |
 |---|---|---|
@@ -1275,7 +1398,8 @@ The password works like this:
   file that you export.
 - To keep the saved password, leave the field empty when you save. To remove it, click **Remove the password**.
 - If you change the server, the port or the username, or set the security to “None”, the tool deletes the saved
-  password, so that it never goes to another server. Enter it again in the same save; the screen says so if you do not.
+  password, so that it never goes to another server. Enter it again in the same save. If you do not, the screen says
+  so.
 - The tool keeps the password encrypted with the secret key of the installation (`DJANGO_SECRET_KEY`, or the file
   `/data/.secret_key`). The backup of a space never contains the email settings. The backup of the shared registry
   (`backups/shared`, only for IT) contains them, with the password encrypted.
@@ -1315,11 +1439,11 @@ To set up emails in the `.env` file:
 
 ### Reminders
 
-The team in charge manages the reminder emails in **Dashboard › Remind…**. Each person receives a single email, with
-no copy. The email lists what the person still has to enter. Before the tool sends the email, it shows the exact
-preview of the message. The team in charge sets the template.
+The administrators and the validators send the reminder emails in **Dashboard › Remind…**. Each person receives a
+single email, with no copy. The email lists what the person still has to enter. Before the tool sends the email, it
+shows the exact preview of the message. An administrator sets the template.
 
-The team in charge can turn on automatic reminders on the same page. The tool sends them on the chosen days before
+An administrator can turn on automatic reminders on the same page. The tool sends them on the chosen days before
 the end of data entry. It checks for them every day at `REMINDER_TIME` (09:00 by default). `PUBLIC_URL` gives the
 address in these emails. By default, the tool takes this address from `DOMAIN`.
 
@@ -1327,8 +1451,9 @@ address in these emails. By default, the tool takes this address from `DOMAIN`.
 
 ## 8. Use PostgreSQL (optional)
 
-SQLite is the default database. You do not need to manage a database server. SQLite writes one save at a time. The
-other saves wait for their turn, for up to 60 seconds.
+SQLite is the default database. You do not need to manage a database server.
+SQLite writes one save at a time. The other saves wait for their turn, for up to 60 seconds. When many people save at
+the same moment, use PostgreSQL: see “Capacity”.
 
 ### Capacity
 
@@ -1407,8 +1532,8 @@ step 7. This way, the tool creates the registry again from the accounts of the m
 name of the space or the accounts that exist only in another space.
 
 The command `python manage.py shell` in step 2 is the only way to make an archive of the registry on demand. The tool does not
-have a command for it. We compared the data of the PostgreSQL installation with the SQLite installation, table by table, for
-two spaces: it is identical (only the numbers of the access rows of the registry change).
+have a command for it. A test of this move compared the data of the PostgreSQL installation with the SQLite installation,
+table by table, for two spaces: it is identical (only the numbers of the access rows of the registry change).
 
 ### Several spaces with PostgreSQL
 
@@ -1419,11 +1544,14 @@ connection limit of your plan (small Clever Cloud plans). See [docs/spaces.md](s
 
 ### Get an email when something goes wrong
 
-The tool alerts you by email: you have no monitoring to connect. A space manager turns the alerts on in **Administration › Settings › Health**, box **Email alerts**, and chooses the recipients:
-by default the administrators of the main space and the space managers, plus other addresses, for example the mailbox
-of the IT team. On a new installation, the alerts are on from the start; an installation that existed before the
-email alerts keeps them off after an update, until someone turns them on. Turned off, they stay off. They need the
-email server (section 7): without it, the tool sends nothing.
+The tool alerts you by email: you have no monitoring to connect. On a new installation, the email alerts are on from
+the start. They need the email server (section 7): without it, the tool sends nothing. An installation that existed
+before the email alerts keeps them off after an update, until a space manager turns them on. Once turned off, they
+stay off.
+
+A space manager sets the alerts in **Administration › Settings › Health**, box **Email alerts**, and chooses the
+recipients: by default the administrators of the main space and the space managers, plus other addresses, for example
+the mailbox of the IT team.
 
 ![Administration › Settings › Health, Email alerts box: alerts on, recipients and test alert](screenshots/en/admin-health-alerts.png)
 
@@ -1628,6 +1756,9 @@ This table shows common problems, their likely cause, and the solution:
 | Start again from scratch (trial) | **Warning:** this **deletes all the data**. Run `docker compose down -v`, then `./install.sh`. |
 
 ## 11. Test the installation
+
+This part is for the people who change the code of the tool. You do not need it to install the tool. The test
+scripts are in the code (folder `docker/`), not in the folder of an installation with one command.
 
 The script `bash docker/test_installation.sh` reproduces an installation on a blank machine. It copies the repository
 into an empty folder and runs `./install.sh`. Then it checks these points:

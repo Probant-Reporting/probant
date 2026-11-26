@@ -35,5 +35,5 @@ class DocumentationAlertesTests(SimpleTestCase):
         self.assertIn("en plus des alertes par\ne-mail", lire("docs/fr/installation.md"))
         self.assertIn("in addition to the email alerts of the tool", lire("docs/security_overview.md"))
         self.assertIn("en plus des alertes par e-mail de l'outil", lire("docs/fr/dossier_securite.md"))
-        self.assertIn("**Settings › Health**", lire("docs/it_request.md"))
-        self.assertIn("**Paramètres › Santé**", lire("docs/fr/demande_it.md"))
+        self.assertIn("**Administration › Settings › Health**", lire("docs/it_request.md"))
+        self.assertIn("**Administration › Paramètres › Santé**", lire("docs/fr/demande_it.md"))

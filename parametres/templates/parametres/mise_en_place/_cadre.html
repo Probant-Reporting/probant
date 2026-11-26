@@ -24,6 +24,19 @@
       <h1>{{ etape.titre }}</h1>
       {% block intro %}{% endblock %}
     </div>
+    {% if depart_sauvegarde %}
+    <details class="aide-repliable depart-sauvegarde"><summary>{% libelle "referentiels.mep.depart.titre" %}</summary>
+      <p>{% libelle "referentiels.mep.depart.aide" %}</p>
+      <form method="post" action="{% url 'parametres:sauvegarde_deposer' %}" enctype="multipart/form-data" class="depot-sauvegarde">{% csrf_token %}
+        <input type="hidden" name="depuis" value="mise_en_place">
+        <input type="file" name="fichier" accept=".zip" {% libelle "admin.hebergement.fichier_sauvegarde" as t_fs %}required aria-label="{{ t_fs }}">
+        <button type="submit" class="secondaire">{% libelle "admin.fichiers.verifier" %}</button>
+      </form>
+      <p class="aide-champ">{% libelle "admin.hebergement.depuis_zip_aide" %}</p>
+    </details>
+    {% elif etape.numero == 1 and not user.is_authenticated %}
+    <p class="discret">{% libelle "referentiels.mep.depart.compte_d_abord" %}</p>
+    {% endif %}
     {% block etape %}{% endblock %}
     <p class="discret ensuite-mep">{% libelle "referentiels.mep.cadre.modifiable_ensuite" ou=etape.ensuite %}</p>
   </section>

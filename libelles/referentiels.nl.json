@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Ook aan eerdere verslagjaren toevoegen?",
  "referentiels.depuis.aide": "Standaard vanaf de lopende periode: geen enkel vorig verslagjaar verandert. Een afgesloten verslagjaar krijgt de KPI bij heropenen. Later te wijzigen in de inhoud van het kader.",
  "referentiels.apercu.depuis": "KPI's die nieuw zijn in dit kader worden gevraagd",
- "referentiels.depuis.fichier_confirmer": "{code}: deze datum haalt (lege) cellen weg uit een lopende periode. Wijzig hem in de inhoud van het kader, waar u hem bevestigt."
+ "referentiels.depuis.fichier_confirmer": "{code}: deze datum haalt (lege) cellen weg uit een lopende periode. Wijzig hem in de inhoud van het kader, waar u hem bevestigt.",
+ "referentiels.mep.depart.titre": "Beginnen met een back-up",
+ "referentiels.mep.depart.aide": "Hebt u een back-up van de tool, gemaakt op een andere server of een andere computer? Herstel hem nu. Hij vervangt wat u in deze wizard hebt ingesteld. U houdt uw account en uw wachtwoord.",
+ "referentiels.mep.depart.compte_d_abord": "Hebt u een back-up van de tool? Maak eerst uw account aan. In de volgende stap kunt u met die back-up beginnen."
 }

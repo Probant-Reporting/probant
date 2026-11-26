@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "¿Añadirlos también a los ejercicios anteriores?",
  "referentiels.depuis.aide": "Por defecto, a partir del periodo en curso: ningún ejercicio pasado cambia. Un ejercicio cerrado recibe el KPI al reabrirlo. Puede modificarlo después en el contenido del marco de referencia.",
  "referentiels.apercu.depuis": "Los KPI nuevos en este marco de referencia se solicitan",
- "referentiels.depuis.fichier_confirmer": "{code}: esta fecha quita casillas (vacías) de un periodo en curso. Modifíquela en el contenido del marco de referencia, donde la confirma."
+ "referentiels.depuis.fichier_confirmer": "{code}: esta fecha quita casillas (vacías) de un periodo en curso. Modifíquela en el contenido del marco de referencia, donde la confirma.",
+ "referentiels.mep.depart.titre": "Partir de una copia de seguridad",
+ "referentiels.mep.depart.aide": "¿Tiene una copia de seguridad de la herramienta, hecha en otro servidor u otro ordenador? Restáurela ahora. Sustituye lo que haya configurado en este asistente. Conserva su cuenta y su contraseña.",
+ "referentiels.mep.depart.compte_d_abord": "¿Tiene una copia de seguridad de la herramienta? Cree primero su cuenta. El paso siguiente le permite partir de esa copia de seguridad."
 }

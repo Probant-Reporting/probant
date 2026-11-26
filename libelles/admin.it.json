@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "ha ripristinato un backup",
  "admin.hebergement.smtp.form.en_clair": "Inviare la password senza cifratura",
  "admin.hebergement.smtp.en_clair_aide": "Con la sicurezza «Nessuna», la password viaggia in chiaro sulla rete: chiunque lungo il percorso può leggerla. Scegliete STARTTLS o SSL/TLS se il server lo offre. Un relay senza password non richiede conferma.",
- "admin.hebergement.smtp.erreur.en_clair": "Con la sicurezza «Nessuna», la password viaggerebbe in chiaro sulla rete. Scegliete STARTTLS o SSL/TLS, rimuovete la password o confermate con la casella qui sotto."
+ "admin.hebergement.smtp.erreur.en_clair": "Con la sicurezza «Nessuna», la password viaggerebbe in chiaro sulla rete. Scegliete STARTTLS o SSL/TLS, rimuovete la password o confermate con la casella qui sotto.",
+ "admin.compte.gestionnaire.titre": "Amministratore o gestore degli spazi",
+ "admin.compte.gestionnaire.est": "{nom} è gestore degli spazi.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} non è gestore degli spazi.",
+ "admin.compte.gestionnaire.admin": "Un amministratore configura il proprio spazio: gli account, i quadri di riferimento, le campagne e le impostazioni dello spazio.",
+ "admin.compte.gestionnaire.gestionnaire": "Un gestore degli spazi configura l'intera installazione: gli spazi, il server di posta, gli avvisi via e-mail, la copia esterna dei backup, gli aggiornamenti automatici e l'accesso aziendale.",
+ "admin.compte.gestionnaire.restauration": "Ripristina anche un backup proveniente da un'altra installazione.",
+ "admin.compte.gestionnaire.nommer": "Nomina gestore degli spazi",
+ "admin.compte.gestionnaire.nommer_confirmer": "Nominare {nom} gestore degli spazi? Questa persona potrà poi configurare l'intera installazione.",
+ "admin.compte.gestionnaire.retirer": "Rimuovi il ruolo di gestore degli spazi",
+ "admin.compte.gestionnaire.reserve": "Solo un gestore degli spazi può nominare o rimuovere un gestore degli spazi.",
+ "admin.compte.gestionnaire.vous": "Non è possibile rimuovere questo ruolo a se stessi. Un altro gestore degli spazi può farlo.",
+ "admin.journal.champ.gestionnaire": "gestore degli spazi",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} non sarà più amministratore attivo dello spazio principale e perde quindi il ruolo di gestore degli spazi. Selezionare la casella qui sotto per confermare.",
+ "admin.compte.gestionnaire.perte_case": "Rimuovi il ruolo di gestore degli spazi a {nom}",
+ "admin.compte.gestionnaire.perte_aide": "Un gestore degli spazi deve essere amministratore attivo dello spazio principale. Un gestore degli spazi potrà nominare di nuovo questa persona in seguito.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} non è più gestore degli spazi.",
+ "admin.compte.gestionnaire.ancien": "{nom} non è amministratore attivo dello spazio principale. Questa persona perde il ruolo di gestore degli spazi alla prossima modifica del suo ruolo o del suo stato.",
+ "admin.compte.gestionnaire.pas_eligible": "Si può nominare solo un amministratore attivo dello spazio principale.",
+ "admin.ailleurs.titre": "Ripristinare un backup di un'altra installazione",
+ "admin.ailleurs.titre_h1": "Ripristinare il backup del {date} di un'altra installazione",
+ "admin.ailleurs.danger_titre": "Questo backup non proviene da questa installazione",
+ "admin.ailleurs.non_verifiable": "<strong>Lo strumento non può verificare che nessuno abbia modificato questo file.</strong> Ripristinarlo solo se se ne conosce la provenienza. Il nome, la data e la versione indicati sopra sono quelli dichiarati dal file.",
+ "admin.ailleurs.remplace": "<strong>Tutto il contenuto dello spazio «{espace}» viene sostituito</strong>: valori, evidenze, organizzazioni, KPI, campagne, impostazioni dello spazio, cronologia e account dello spazio.",
+ "admin.ailleurs.garde": "Gli altri spazi e le impostazioni dell'intera installazione non cambiano: server e-mail, copia esterna, avvisi via e-mail, accesso aziendale e chiave dell'IA. Il backup non li contiene, né contiene i loro segreti.",
+ "admin.ailleurs.assistants": "I token degli assistenti (MCP) di questo spazio smettono di funzionare. Ogni persona ne crea uno nuovo.",
+ "admin.ailleurs.comptes_titre": "Gli account dopo il ripristino",
+ "admin.ailleurs.vous.admin": "Il proprio account ({email}) è amministratore nel backup. La password resta la stessa.",
+ "admin.ailleurs.vous.remis_admin": "Il proprio account ({email}) è nel backup, ma non come amministratore attivo. Dopo il ripristino, lo strumento lo rende di nuovo amministratore attivo e lo registra nella cronologia. La password resta la stessa.",
+ "admin.ailleurs.vous.ajoute": "Il proprio account ({email}) non è nel backup. Dopo il ripristino, lo strumento lo aggiunge come amministratore di questo spazio e lo registra nella cronologia. La password resta la stessa.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 altro account non avrà password, perché i backup non contengono mai password. Dopo il ripristino, creare per esso una password provvisoria in Amministrazione › Account.",
+  "other": "{n} altri account non avranno password, perché i backup non contengono mai password. Dopo il ripristino, creare per loro una password provvisoria in Amministrazione › Account."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 account ha lo stesso numero e lo stesso indirizzo e-mail di un account di un altro spazio di questa installazione. Mantiene la propria password.",
+  "other": "{n} account hanno lo stesso numero e lo stesso indirizzo e-mail di un account di un altro spazio di questa installazione. Mantengono la propria password."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 account esiste oggi solo in questo spazio e non è il proprio. Gli account del backup lo sostituiscono.",
+  "other": "{n} account esistono oggi solo in questo spazio e non sono il proprio. Gli account del backup li sostituiscono."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 altro gestore degli spazi ha un account solo in questo spazio. Dopo il ripristino, questa persona non è più gestore degli spazi. È possibile assegnarle di nuovo il ruolo in Spazi › Persone e accessi.",
+  "other": "{n} altri gestori degli spazi hanno un account solo in questo spazio. Dopo il ripristino, non sono più gestori degli spazi. È possibile assegnare loro di nuovo il ruolo in Spazi › Persone e accessi."
+ },
+ "admin.ailleurs.admins": "Amministratori nel backup: {liste}.",
+ "admin.ailleurs.compris_origine": "So da dove proviene questo backup. Accetto che lo strumento non possa verificarlo.",
+ "admin.ailleurs.compris": "Ho compreso che il contenuto di questo backup sostituisce tutto il contenuto dello spazio «{espace}».",
+ "admin.ailleurs.erreur_confirmation": "Per ripristinare, selezionare le due caselle e inserire {mot} in maiuscolo.",
+ "admin.ailleurs.reussie": "Ripristino completato. Questo spazio è tornato allo stato del backup del {date}. Accedere di nuovo con la propria password. Poi creare una password provvisoria per gli altri account in Amministrazione › Account. I promemoria automatici, l'assistente IA e gli assistenti (MCP) sono spenti: riaccenderli nella pagina Promemoria e in Impostazioni.",
+ "admin.ailleurs.reserve": "Solo un gestore degli spazi può ripristinare un backup di un'altra installazione.",
+ "admin.ailleurs.conflits": {
+  "one": "1 account di questo backup ha il numero, l'indirizzo e-mail o il nome utente di un'altra persona, che ha un account in un altro spazio ({exemples}). Lo strumento non può ripristinare questo backup da questa pagina senza confondere due persone. Non è cambiato nulla. Il team IT può ripristinarlo dalla riga di comando (guida di installazione, «Restore a backup»).",
+  "other": "{n} account di questo backup hanno il numero, l'indirizzo e-mail o il nome utente di altre persone, che hanno un account in un altro spazio ({exemples}). Lo strumento non può ripristinare questo backup da questa pagina senza confondere due persone. Non è cambiato nulla. Il team IT può ripristinarlo dalla riga di comando (guida di installazione, «Restore a backup»)."
+ },
+ "admin.ailleurs.restaurateur_absent": "Lo strumento non trova l'account della persona che esegue il ripristino nell'elenco comune degli account. Contattare il team IT (guida di installazione, «Restore a backup»).",
+ "admin.ailleurs.base_piegee": "Il database di questo backup contiene elementi che lo strumento non crea mai (trigger, viste o colonne calcolate). Lo strumento non lo ripristina. Non è cambiato nulla.",
+ "admin.ailleurs.aide_depot": "In quanto gestore degli spazi, è possibile ripristinare anche un backup di un'altra installazione, per esempio dopo un cambio di server. Lo strumento mostra cosa cambia prima di sostituire qualsiasi cosa.",
+ "admin.ailleurs.historique": "(altra installazione «{nom}»)",
+ "admin.ailleurs.modele_refuse": "Questo backup contiene dati che un backup dello strumento non contiene mai ({modele}). Lo strumento non lo ripristina. Non è cambiato nulla.",
+ "admin.ailleurs.empreinte_changee": "Il file è cambiato dopo la visualizzazione della pagina di conferma. Non è cambiato nulla. Aggiungere di nuovo il file.",
+ "admin.ailleurs.ia_eteinte": "Dopo il ripristino, i promemoria automatici, l'assistente IA e gli assistenti (MCP) di questo spazio sono spenti, e le importazioni ed esportazioni in background in attesa vengono fermate. Riaccenderli nella pagina Promemoria e in Impostazioni se servono.",
+ "admin.sauvegarde.schema_inattendu": "Il database di questo backup non ha la struttura che questa versione dello strumento si aspetta ({detail}). Lo strumento non lo utilizza.",
+ "admin.restauration.erreur.retour": "Il ripristino non è riuscito dopo la sostituzione del database: {erreur} Lo strumento è tornato allo stato precedente al ripristino (backup «{avant}»). I dati sono come prima, ma i token degli assistenti (MCP) di questo spazio non funzionano più: ogni persona ne crea uno nuovo.",
+ "admin.restauration.erreur.retour_impossible": "Il ripristino non è riuscito dopo la sostituzione del database: {erreur} Lo strumento non è riuscito a tornare allo stato precedente al ripristino (backup «{avant}»). Contattare il team IT (guida di installazione, «If a restore is interrupted»)."
 }

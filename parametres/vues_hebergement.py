@@ -769,7 +769,7 @@ def hebergement(request):
         "maj_auto": maj_auto, "form_maj_auto": form_maj_auto, "messages_maj_auto": messages_maj_auto,
         "contenu": [libelle(c) for c in CONTENU], "hors_contenu": [libelle(c) for c in HORS_CONTENU],
         "dossier_sauvegardes": str(SV.dossier()) if detail else "", "docker": os.environ.get("DANS_DOCKER") == "1",
-        "controle": controle, "copie": _copie(ecrire),
+        "controle": controle, "copie": _copie(ecrire), "gestionnaire": ecrire,
     })
 
 
@@ -961,6 +961,24 @@ def motif_mot(mot):
     return "".join(f"[{c.upper()}{c.lower()}]" if c.upper() != c.lower() else re.escape(c) for c in mot)
 
 
+def texte_erreur_restauration(e):
+    """Message d'une restauration refusée ou échouée : « rien n'a changé » seulement si l'erreur est survenue avant le
+    remplacement de la base ; après, le message de ``ErreurApresRemplacement`` dit ce qui a été fait (retour à l'état
+    d'avant, ou retour impossible)."""
+    if isinstance(e, SV.ErreurApresRemplacement):
+        return str(e)
+    return libelle("admin.restauration.erreur.impossible", erreur=str(e))
+
+
+def langue_de_la_connexion():
+    """Langue de la page de connexion qui suit la déconnexion d'une restauration (session vidée : langue par défaut de
+    l'installation, relue dans la base restaurée) : les messages de réussite y sont écrits, jamais dans la langue du
+    compte qui vient de partir."""
+    from . import langues as L
+
+    return L.activer_interface(L.interface_de("", L.calculer()))
+
+
 TABLES_RESUME = [("referentiel.Utilisateur", "comptes"), ("referentiel.Organisation", "organisations"), ("referentiel.KPI", "kpi"),
                  ("collecte.Campagne", "campagnes"), ("collecte.Reponse", "valeurs"), ("collecte.Preuve", "preuves"),
                  ("collecte.Journal", "journal")]  # (table, fin de la clé admin.restauration.table.*)
@@ -970,20 +988,33 @@ TABLES_RESUME = [("referentiel.Utilisateur", "comptes"), ("referentiel.Organisat
 def sauvegarde_restaurer(request, nom=None):
     """Restaurer une sauvegarde depuis l'outil : choisie dans la liste (GET : page de confirmation ; POST : restauration)
     ou déposée (fichier .zip téléchargé auparavant, rangé dans le dossier des sauvegardes puis confirmé)."""
+    from espaces.comptes import est_gestionnaire
+
+    from . import sauvegardes_ailleurs as SA
+
     exiger_admin_reglages(request)
     if nom is None:  # dépôt d'un fichier
+        retour = "parametres:mise_en_place" if request.POST.get("depuis") == "mise_en_place" else "parametres:hebergement"
         if request.method != "POST" or not request.FILES.get("fichier"):
-            return redirect("parametres:hebergement")
+            return redirect(retour)
         try:
-            a = SV.deposer(request.FILES["fichier"])
+            # sans signature valide de cette installation : rangée à part pour un gestionnaire des espaces seulement
+            a = SV.deposer(request.FILES["fichier"], autre_installation_permise=est_gestionnaire(request.user))
         except SV.ErreurSauvegarde as e:
             messages.error(request, str(e))
-            return redirect("parametres:hebergement")
+            return redirect(retour)
         Journal.ecrire(request.user, "depot_sauvegarde", Instance.courante(), "sauvegarde", "", a.nom)
+        if SA.est_d_ailleurs(a.chemin):
+            return redirect("parametres:sauvegarde_restaurer_ailleurs", nom=a.nom)
         return redirect("parametres:sauvegarde_restaurer", nom=a.nom)
     try:
         a = SV.archive(nom)
         d = SV.lire_descriptif(a.chemin)
+        if est_gestionnaire(request.user) and SA.origine(a.chemin, d) == "ailleurs":
+            # archive d'une autre installation dans la liste (copiée par l'IT, déposée par un autre) : jamais par ce
+            # chemin ; une copie mise à part passe par la page d'une autre installation, avec toutes ses protections
+            copie = SA.mettre_a_part(a.chemin)
+            return redirect("parametres:sauvegarde_restaurer_ailleurs", nom=copie.nom)
         SV.controler_signature(a.chemin)  # seules les archives de cette installation, intactes (IT : « restore --unsigned »)
     except SV.ErreurSauvegarde as e:
         messages.error(request, str(e))
@@ -996,8 +1027,8 @@ def sauvegarde_restaurer(request, nom=None):
             auteur = request.user.get_full_name() or request.user.email
             try:
                 fait = SV.restaurer(a.chemin, par=auteur, origine="outil", exiger_signature=True)
-            except (SV.ErreurSauvegarde, OSError, DatabaseError, DeserializationError) as e:  # base laissée telle quelle
-                erreur = libelle("admin.restauration.erreur.impossible", erreur=str(e))
+            except (SV.ErreurSauvegarde, OSError, DatabaseError, DeserializationError) as e:
+                erreur = texte_erreur_restauration(e)
             else:
                 from referentiel.models import Utilisateur
 
@@ -1008,9 +1039,10 @@ def sauvegarde_restaurer(request, nom=None):
                 # passé. Le message passe par le cookie (la session vient d'être vidée). Après la reconnexion, retour à
                 # Hébergement avec la confirmation détaillée.
                 logout(request)
-                messages.success(request, libelle("admin.restauration.reussie", date=_date_texte(d.get("date", ""))))
-                if fait.get("comptes_sans_mot_de_passe"):  # comptes inconnus du registre : les sauvegardes n'ont aucun mot de passe
-                    messages.warning(request, libelle("admin.restauration.sans_mot_de_passe", n=fait["comptes_sans_mot_de_passe"]))
+                with langue_de_la_connexion():
+                    messages.success(request, libelle("admin.restauration.reussie", date=_date_texte(d.get("date", ""))))
+                    if fait.get("comptes_sans_mot_de_passe"):  # comptes inconnus du registre : les sauvegardes n'ont aucun mot de passe
+                        messages.warning(request, libelle("admin.restauration.sans_mot_de_passe", n=fait["comptes_sans_mot_de_passe"]))
                 suite = reverse("parametres:hebergement") + f"?restauree={a.nom}"
                 return redirect(reverse("login") + "?" + urlencode({"next": suite}))
     actuel = SV.comptes()
@@ -1025,4 +1057,77 @@ def sauvegarde_restaurer(request, nom=None):
         "meme_installation": (d.get("installation") or "") in ("", Instance.courante().nom),
         "refus_espace": _refus_espace(d), "espace_archive": _nom_espace(d.get("espace") or ESP.PRINCIPAL),
         "version_differente": d.get("version") != settings.VERSION, "version_installee": settings.VERSION, "date_texte": _date_texte(date),
+    })
+
+
+@login_required
+def sauvegarde_restaurer_ailleurs(request, nom):
+    """Restaurer une sauvegarde d'une autre installation (archive déposée sans signature valide de cette installation,
+    ``sauvegardes_ailleurs``) : gestionnaire des espaces seulement, GET comme POST (adresse directe comprise). Page de
+    confirmation renforcée : origine annoncée par le fichier, ce qui est remplacé, ce que deviennent les comptes, deux
+    cases et le mot à écrire. Restaurée dans l'espace courant ; la personne qui restaure reste administratrice."""
+    from espaces.comptes import est_gestionnaire
+
+    from . import sauvegardes_ailleurs as SA
+
+    exiger_admin_reglages(request)
+    if not est_gestionnaire(request.user):
+        raise PermissionDenied(libelle("admin.ailleurs.reserve"))
+    try:
+        a = SA.archive(nom)
+        d = SV.lire_descriptif(a.chemin)
+    except SV.ErreurSauvegarde as e:
+        messages.error(request, str(e))
+        return redirect("parametres:hebergement")
+    restaurateur = {"pk": request.user.pk, "email": request.user.email}
+    erreur = ""
+    if request.method == "POST":
+        if request.POST.get("confirmation", "").strip().upper() != mot_confirmation().upper() \
+                or not request.POST.get("compris") or not request.POST.get("origine_connue"):
+            erreur = libelle("admin.ailleurs.erreur_confirmation", mot=mot_confirmation().upper())
+        elif not re.fullmatch(r"[0-9a-f]{64}", request.POST.get("empreinte", "")):
+            erreur = libelle("admin.ailleurs.empreinte_changee")
+        else:
+            auteur = request.user.get_full_name() or request.user.email
+            try:
+                # la confirmation porte sur le fichier contrôlé par la page : son empreinte, revérifiée avant l'extraction
+                fait = SV.restaurer(a.chemin, par=auteur, origine="outil", autre_installation=True,
+                                    restaurateur=restaurateur, empreinte=request.POST["empreinte"])
+            except (SV.ErreurSauvegarde, OSError, DatabaseError, DeserializationError) as e:
+                erreur = texte_erreur_restauration(e)
+            else:
+                from referentiel.models import Utilisateur
+
+                u = Utilisateur.objects.filter(email__iexact=request.user.email).first()
+                origine = str(d.get("installation") or "")[:100]
+                Journal.ecrire(u, "restauration", Instance.courante(), "sauvegarde", "",
+                               f"{a.nom} (par {auteur}, autre installation « {origine} »)")
+                a.chemin.unlink(missing_ok=True)  # contenu non fiable, pas gardé : l'état d'avant est dans « before-restore »
+                logout(request)
+                with langue_de_la_connexion():
+                    messages.success(request, libelle("admin.ailleurs.reussie", date=_date_texte(str(d.get("date") or ""))))
+                    if fait.get("comptes_sans_mot_de_passe"):
+                        messages.warning(request, libelle("admin.restauration.sans_mot_de_passe", n=fait["comptes_sans_mot_de_passe"]))
+                suite = reverse("parametres:hebergement") + f"?restauree={a.nom}"
+                return redirect(reverse("login") + "?" + urlencode({"next": suite}))
+    try:
+        empreinte = SA.empreinte(a.chemin)
+        plan, refus = SA.apercu(a.chemin, d, restaurateur)
+        if SA.empreinte(a.chemin) != empreinte:  # fichier changé pendant la lecture : rien n'est proposé
+            plan, refus = None, libelle("admin.ailleurs.empreinte_changee")
+    except OSError:
+        messages.error(request, libelle("admin.sauvegarde.introuvable", nom=a.nom))
+        return redirect("parametres:hebergement")
+    actuel = SV.comptes()
+    sauve = d.get("tables") if isinstance(d.get("tables"), dict) else {}
+    resume = [(libelle(f"admin.restauration.table.{nom_table}"), actuel.get(cle), sauve.get(cle))
+              for cle, nom_table in TABLES_RESUME if cle in actuel or cle in sauve]
+    return render(request, "parametres/restauration_ailleurs.html", {
+        "page": "administration", "rubrique": "parametres", "sous_rubrique": "hebergement", "campagne": campagne_courante(),
+        "archive": a, "installation_origine": str(d.get("installation") or "")[:200],
+        "version_origine": str(d.get("version") or "")[:40], "date_texte": _date_texte(str(d.get("date") or "")),
+        "plan": plan, "refus": refus, "resume": resume, "erreur": erreur, "mot": mot_confirmation().upper(),
+        "motif_mot": motif_mot(mot_confirmation().upper()), "email": request.user.email, "empreinte": empreinte,
+        "espace_courant": _nom_espace(ESP.code_courant()),
+        "version_differente": str(d.get("version") or "") != settings.VERSION, "version_installee": settings.VERSION,
     })

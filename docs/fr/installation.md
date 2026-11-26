@@ -2,27 +2,37 @@
 
 > Version française du guide anglais [docs/installation.md](../installation.md), qui fait référence.
 
-Ce guide explique comment installer, mettre en place, sauvegarder, mettre à jour et superviser Probant avec
-Docker. Il s'adresse à l'équipe informatique. Vous n'avez pas besoin de connaître Django ni Python.
+Ce guide s'adresse à l'équipe informatique. Il explique comment installer Probant sur un serveur Linux avec Docker,
+puis comment le mettre en place, le sauvegarder, le mettre à jour et le superviser. Vous n'avez pas besoin de
+connaître Django ni Python.
 
 L'outil tourne dans **un seul conteneur Docker**. Toutes ses données sont dans **un seul volume**, `/data` : base,
 preuves, logo, sauvegardes et clé secrète.
 
-Ce tableau présente les principales opérations :
+Ce tableau indique la façon de faire selon votre cas :
+
+| Votre cas | Suivez | Durée |
+|---|---|---|
+| Un serveur Linux qui a accès à Internet (le cas courant) | [Installer en une commande](#installer-en-une-commande) | 2 minutes environ |
+| Vous voulez que le serveur construise l'image à partir du code | [Installer avec Git](#installer-avec-git) | 3 à 5 minutes |
+| Un serveur sans accès à Internet | [Installer sans accès à Internet](#installer-sans-accès-à-internet) | |
+| Vous ne voulez pas gérer de serveur | [Hébergement clé en main (Clever Cloud)](hebergement_cle_en_main.md) | 30 minutes environ |
+| Un essai par une personne, sur un ordinateur Windows ou Mac | La version tout-en-un : `probant-windows.zip` ou `probant-mac.zip` sur la page de la dernière release (https://github.com/Probant-Reporting/probant/releases/latest). Elle ne demande ni installation, ni droits d'administration. Pour passer ensuite ses données sur un serveur, voir [De la version tout-en-un à un serveur](du_pc_au_serveur.md). | |
+
+Avant de commencer, il vous faut un serveur Linux 64 bits avec 1 Go de mémoire, et un compte qui peut utiliser
+`sudo`. Sur Debian ou Ubuntu, vous n'avez pas à installer Docker d'abord : l'installeur propose de l'installer. La
+liste complète est à la section 1. La liste de ce que l'IT prépare est dans [Ce qu'il faut préparer](demande_it.md),
+et le dossier pour une revue de sécurité est dans le [Dossier de sécurité](dossier_securite.md).
+
+Juste après l'installation, ouvrez l'adresse de l'outil et créez le compte administrateur (section 3).
+
+Ce tableau présente les opérations courantes, dans le dossier de l'outil :
 
 | Opération | Commande | Durée |
 |---|---|---|
-| Installer, en une commande | `curl -fsSL https://github.com/Probant-Reporting/probant/raw/main/get.sh \| sudo sh` | 2 minutes environ |
-| Installer, avec Git | `./install.sh` (le serveur construit l'image) | 3 à 5 minutes |
 | Mettre à jour | `./update.sh` | 1 à 3 minutes |
-| Sauvegarder | Automatique chaque nuit, ou `docker compose exec web python manage.py backup` | Quelques secondes |
+| Sauvegarder | Rien : automatique chaque nuit. Tout de suite : `docker compose exec web python manage.py backup` | Quelques secondes |
 | Restaurer | `docker compose exec web python manage.py restore <archive>` | Quelques secondes |
-
-Si vous ne voulez pas gérer de serveur, voir [Hébergement clé en main (Clever Cloud)](hebergement_cle_en_main.md).
-Pour passer les données de la version tout-en-un d'un ordinateur à un serveur, voir [De la version tout-en-un à un serveur](du_pc_au_serveur.md).
-
-Avant l'installation, la liste de ce que l'IT prépare est dans [Ce qu'il faut préparer](demande_it.md), et le dossier
-pour une revue de sécurité est dans le [Dossier de sécurité](dossier_securite.md).
 
 ## 1. Prérequis
 
@@ -30,13 +40,14 @@ Ce tableau présente ce qu'il faut avant d'installer l'outil :
 
 | Besoin | Minimum conseillé |
 |---|---|
-| Serveur | Linux 64 bits (Debian 12, Ubuntu 22.04 ou plus récent), 1 processeur, 1 Go de mémoire, 5 Go de disque |
-| Logiciels | Docker Engine 24 ou plus récent avec le module Compose v2.24 ou plus récent (`docker compose version`), et `curl`. Si Docker manque sur Debian ou Ubuntu, l'installeur propose de l'installer. Git seulement pour installer avec Git |
+| Serveur | Linux 64 bits sur `x86_64` (sur `arm64`, seulement avec l'installation par Git), par exemple Debian 12 ou plus récent, ou Ubuntu 22.04 ou plus récent. 1 processeur, 1 Go de mémoire, 5 Go de disque |
+| Logiciels | Sur Debian ou Ubuntu : rien à installer d'avance, sauf `curl` s'il manque. L'installeur propose d'installer Docker, et attend votre oui. Sur un autre système Linux : installez d'abord Docker Engine 24 ou plus récent avec l'extension Compose v2.24 ou plus récente (`docker compose version`). Git seulement pour installer avec Git |
+| Compte | Un compte qui peut utiliser `sudo` |
 | Réseau, accès interne | 1 port ouvert vers le serveur (8000 par défaut) |
-| Réseau, accès HTTPS | Un nom de domaine qui pointe vers le serveur (par exemple `reporting.example.com`), et les ports 80 et 443 ouverts depuis Internet (certificat Let's Encrypt automatique) |
-| Réseau, téléchargements | Connexions HTTPS sortantes (TCP 443) du serveur, pendant l'installation et les mises à jour : `github.com` et `raw.githubusercontent.com` (fichiers), `objects.githubusercontent.com` et `release-assets.githubusercontent.com` (liste des empreintes des fichiers, jointe à la release), `ghcr.io` et `pkg-containers.githubusercontent.com` (image et conteneur de cosign), `tuf-repo-cdn.sigstore.dev` (racine de confiance de Sigstore, pour vérifier les signatures). Avec les mises à jour automatiques (section 6), le serveur ouvre les mêmes connexions la nuit. Pour installer Docker par l'installeur : `download.docker.com` et les miroirs de paquets du système. Sans accès à Internet : aucune (voir « Installer sans accès à Internet ») |
+| Réseau, accès HTTPS | Un nom de domaine qui pointe vers le serveur (par exemple `reporting.example.com`), et les ports 80 et 443 (TCP, et UDP 443 pour HTTP/3) ouverts depuis Internet (certificat Let's Encrypt automatique). Avec le certificat de votre entreprise, Internet n'a pas besoin de joindre le serveur : voir « Réseau d'entreprise » |
+| Réseau, téléchargements | Connexions HTTPS sortantes (TCP 443) du serveur, pendant l'installation et chaque mise à jour : `github.com` et `raw.githubusercontent.com` (fichiers), `objects.githubusercontent.com` et `release-assets.githubusercontent.com` (liste des empreintes des fichiers, jointe à la release), `ghcr.io` et `pkg-containers.githubusercontent.com` (image de l'outil et conteneur de cosign), `tuf-repo-cdn.sigstore.dev` (racine de confiance de Sigstore, pour vérifier les signatures). Avec le HTTPS (`--domain`) : aussi Docker Hub (image de Caddy). Avec Git : aussi Docker Hub et PyPI (le serveur construit l'image). Avec les mises à jour automatiques (section 6), le serveur ouvre les mêmes connexions la nuit. Pour installer Docker par l'installeur : `download.docker.com` et les miroirs de paquets du système. Sans accès à Internet : aucune (voir « Installer sans accès à Internet ») |
 | E-mails (facultatif) | Un compte SMTP (serveur, port, identifiant, mot de passe, adresse d'expédition) |
-| Assistant IA (facultatif) | Connexions HTTPS sortantes (TCP 443) du serveur vers `api.anthropic.com`, seulement si le client allume l'assistant. Voir « Assistant IA » à la section 4 |
+| Assistant IA (facultatif) | Connexions HTTPS sortantes (TCP 443) du serveur vers `api.anthropic.com`, seulement si un administrateur allume l'assistant. Voir « Assistant IA » à la section 4 |
 
 Le serveur n'a besoin ni de Python, ni d'un serveur web, ni d'une base de données. Tout est dans l'image.
 
@@ -63,17 +74,19 @@ déconnectez-vous et reconnectez-vous. Un membre de ce groupe a les mêmes droit
 
 Vous pouvez installer l'outil de deux façons. Ce tableau les compare :
 
-| Façon | Ce qu'il faut sur le serveur | Durée |
+| Façon | Ce qu'il faut sur le serveur, en plus de Docker | Durée |
 |---|---|---|
 | En une commande (conseillé) | `curl` | 2 minutes environ : le serveur télécharge l'image publiée |
 | Avec Git | Git | 3 à 5 minutes : le serveur construit l'image |
 
-Les deux façons donnent le même outil, avec les mêmes réglages, sauvegardes et mises à jour. Pour un serveur sans
-accès à Internet, voir « Installer sans accès à Internet ».
+Les deux façons donnent le même outil, avec les mêmes réglages et les mêmes sauvegardes. Seule l'installation en une
+commande pose les mises à jour automatiques (section 6). Pour un serveur sans accès à Internet, voir « Installer sans
+accès à Internet ».
 
 ### Vérifier le serveur avant d'installer
 
-Le contrôle lit le serveur et indique ce qui manque pour l'installation. Il ne change rien sur le serveur. C'est le
+Vous n'avez pas à lancer ce contrôle vous-même : l'installeur le lance au début d'une installation neuve. Lancez-le
+avant si vous voulez savoir ce qui manque sans rien installer. Le contrôle lit le serveur et ne change rien. C'est le
 script `check.sh`, dans les fichiers de chaque version.
 
 Pour vérifier le serveur avant une installation en une commande, lancez la commande de l'installation avec
@@ -112,9 +125,9 @@ Le contrôle affiche une ligne par contrôle :
 À la fin, le contrôle affiche `Ready` (prêt), ou `Here is what is missing` (ce qui manque) avec la liste des points à
 corriger. Il se termine avec le code de sortie 0 (prêt) ou 1 (il manque quelque chose).
 
-L'installeur lance le même contrôle au début d'une installation neuve (un dossier sans `.env`). Si un point est à
-corriger, l'installeur s'arrête et n'installe rien. Un Docker absent ne l'arrête pas : l'installeur propose ensuite
-d'installer Docker. Pour installer sans le contrôle, ajoutez `--skip-check`. N'utilisez cette option que si vous savez
+Au début d'une installation neuve (un dossier sans `.env`), si un point est à corriger, l'installeur s'arrête et
+n'installe rien. Un Docker absent ne l'arrête pas : l'installeur propose ensuite d'installer Docker. Pour installer
+sans le contrôle, ajoutez `--skip-check`. N'utilisez cette option que si vous savez
 pourquoi le contrôle échoue. Par exemple, derrière un proxy que le contrôle ne sait pas utiliser.
 
 Si le réseau passe par un proxy, réglez-le avant le contrôle : `sudo HTTPS_PROXY=http://proxy.example.com:3128 sh …`.
@@ -129,7 +142,7 @@ il n'a pas besoin de Git.
 Pour installer l'outil :
 
 1. Connectez-vous au serveur avec un compte qui peut utiliser `sudo`.
-2. Allez dans le dossier où vous voulez le dossier de l'outil (par exemple `cd /opt`).
+2. Allez dans le dossier qui contiendra le dossier de l'outil (par exemple `cd /opt`).
 3. Lancez la commande :
 
    ```bash
@@ -145,23 +158,25 @@ Pour installer l'outil :
    La commande affiche l'adresse à ouvrir et le dossier de l'installation.
 4. Allez dans le dossier de l'outil : `cd probant`. Lancez les autres commandes de ce guide dans ce dossier.
 
+> **Remarque :** les mises à jour automatiques sont allumées après cette installation : le serveur installe chaque
+> nouvelle version la nuit, 3 jours après sa publication. Pour installer sans elles, ajoutez `--auto-update off`.
+> Voir « Mises à jour automatiques » (section 6).
+
 La commande effectue ces étapes, dans cet ordre :
 
 1. Elle trouve la dernière version publiée de l'outil.
 2. Elle crée le dossier `probant`. Si ce dossier contient déjà une installation, la commande s'arrête et ne change
    rien.
 3. Elle télécharge dans ce dossier les seuls fichiers qui font tourner l'outil : `docker-compose.yml`, `.env.example`,
-   `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile` et `auto-update.sh`. Ils viennent de l'étiquette de cette version dans le dépôt public
-   (https://github.com/Probant-Reporting/probant), en HTTPS seulement. Avant de les mettre en place, elle contrôle
-   chaque fichier avec la liste des empreintes SHA-256 jointe à la release de cette version
-   (`probant-X.Y.Z-files.sha256`). Elle vérifie aussi la signature de cette liste quand cosign est sur le serveur, ou
-   quand Docker répond (elle utilise alors le conteneur officiel de cosign). Si la liste manque, si sa signature est
-   refusée, ou si un seul fichier ne correspond pas, la commande s'arrête et n'installe rien. La commande dit ce
-   qu'elle a vérifié.
-4. Elle lance `./install.sh` avec l'image publiée de cette version. Voir « Ce que fait l'installeur ».
-5. Elle pose la minuterie des mises à jour automatiques, et l'outil démarre avec le choix « L'installer
-   automatiquement ». Voir « Mises à jour automatiques » (section 6). Pour installer sans elles, ajoutez
-   `--auto-update off`.
+   `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile` et `auto-update.sh`. Ils viennent de l'étiquette de
+   cette version dans le dépôt public (https://github.com/Probant-Reporting/probant), en HTTPS seulement.
+4. Elle contrôle chaque fichier avec la liste des empreintes SHA-256 (une empreinte par fichier) jointe à la release
+   de cette version (`probant-X.Y.Z-files.sha256`). La release est la page de la version sur GitHub, avec ses
+   fichiers. La commande vérifie aussi la signature de cette liste avec cosign (l'outil de signature de Sigstore),
+   quand cosign est sur le serveur ou quand Docker répond. Si la liste manque, si sa signature est refusée, ou si un
+   seul fichier ne correspond pas, la commande s'arrête et n'installe rien. La commande dit ce qu'elle a vérifié.
+5. Elle lance `./install.sh` avec l'image publiée de cette version. Voir « Ce que fait l'installeur ».
+6. Elle pose la minuterie des mises à jour automatiques (voir la remarque plus haut).
 
 Ce tableau présente les options de la commande :
 
@@ -177,10 +192,11 @@ Le contrôle des fichiers apporte cette protection :
 
 - Il trouve un fichier changé ou abîmé en chemin (un proxy, un miroir, un cache), et une étiquette déplacée après la
   release.
-- Avec la signature vérifiée, seul le workflow `image.yml` du dépôt public, pour cette étiquette, peut faire la liste,
-  et chaque signature est inscrite dans le journal public de transparence de Sigstore.
-- Il ne protège pas d'une personne qui peut changer le dépôt et lancer son workflow, et il ne contrôle pas `get.sh`
-  lui-même : voir « Lire le script avant de le lancer ».
+- Avec la signature vérifiée, seul le workflow `image.yml` du dépôt public, pour cette étiquette, peut faire la liste.
+  Chaque signature est inscrite dans le journal public de transparence de Sigstore.
+- Il ne protège pas d'une personne qui peut changer le dépôt et lancer son workflow.
+- Il ne contrôle ni `get.sh` lui-même (voir « Lire le script avant de le lancer »), ni la signature de l'image (voir
+  « Vérifier l'image »).
 
 Les versions publiées avant ces listes (1.0.0 et 1.0.1) n'en ont pas : la commande les refuse. Juste après une
 publication, la liste peut manquer pendant une heure au plus : réessayez plus tard.
@@ -190,12 +206,13 @@ publication, la liste peut manquer pendant une heure au plus : réessayez plus t
 Si vos règles de sécurité n'autorisent pas un script à se lancer dès son téléchargement, suivez ces étapes :
 
 1. Téléchargez le script : `curl -fsSLO https://github.com/Probant-Reporting/probant/raw/main/get.sh`.
-2. Lisez-le : `less get.sh`. Le script est court, et des commentaires expliquent chaque étape. Il ne change rien hors
-   du dossier de l'installation, sauf Docker si vous acceptez de l'installer.
+2. Lisez-le : `less get.sh`. Le script est court, et des commentaires expliquent chaque étape. Hors du dossier de
+   l'installation, il ne change que deux choses : Docker, si vous acceptez de l'installer, et la minuterie des mises
+   à jour automatiques (sauf avec `--auto-update off`).
 3. Lancez-le, avec les mêmes options que la commande : `sudo sh get.sh` (ou `sudo sh get.sh --domain reporting.example.com`).
 
-Le script lance ensuite le `install.sh` de la version. Vous pouvez lire `install.sh` et `update.sh` dans le dépôt
-public avant, à l'étiquette de la version (`vX.Y.Z`).
+Le script lance ensuite le `install.sh` de la version. Avant, vous pouvez lire `install.sh` et `update.sh` dans le
+dépôt public, à l'étiquette de la version (`vX.Y.Z`).
 
 Pour vérifier le script avant de le lancer, téléchargez-le depuis l'étiquette de la version, avec la liste des
 empreintes SHA-256 de la release. Remplacez `X.Y.Z` par la version (la dernière est sur
@@ -238,10 +255,10 @@ Ce tableau présente les options de `./install.sh` :
 | Option | Effet |
 |---|---|
 | Sans option | L'outil s'ouvre en HTTP sur `http://ADRESSE-DU-SERVEUR:8000`. Utilisez-la pour un réseau interne ou un essai. |
-| `--domain reporting.example.com` | L'outil s'ouvre en HTTPS. Le script ajoute Caddy devant l'outil, et Caddy obtient le certificat automatiquement. Le port 8000 n'est alors ouvert qu'au serveur lui-même. |
+| `--domain reporting.example.com` | L'outil s'ouvre en HTTPS. L'installeur ajoute Caddy, le proxy HTTPS fourni, devant l'outil. Caddy obtient le certificat auprès de Let's Encrypt automatiquement. Le port 8000 n'est alors ouvert qu'au serveur lui-même. |
 | `--port 8080` | L'outil utilise un autre port HTTP. |
 | `--image ghcr.io/probant-reporting/probant:X.Y.Z` | L'outil utilise cette image publiée (le réglage `IMAGE` de `.env`). Le serveur la télécharge et ne la construit pas. |
-| `--yes` | Si Docker manque, le script l'installe sans poser la question. |
+| `--yes` | Si Docker manque, l'installeur l'installe sans poser la question. |
 | `--check` | Vérifie seulement le serveur, avec les autres options, et n'installe rien. |
 | `--skip-check` | Installe sans le contrôle du serveur. |
 | `--offline probant-image-X.Y.Z.tar.gz` | Installe sans accès à Internet, avec l'image du paquet hors ligne. Voir « Installer sans accès à Internet ». |
@@ -268,8 +285,9 @@ Pour installer l'outil avec Git :
    ./install.sh                      # ou : ./install.sh --domain reporting.example.com
    ```
 
-   Le serveur construit l'image. Pour utiliser l'image publiée à la place, ajoutez
-   `--image ghcr.io/probant-reporting/probant:X.Y.Z`, avec la version du code.
+   Le serveur construit l'image. Pour cela, il télécharge l'image de base depuis Docker Hub et les paquets Python
+   depuis PyPI. Pour utiliser l'image publiée à la place, ajoutez `--image ghcr.io/probant-reporting/probant:X.Y.Z`,
+   avec la version du code.
 
 ### Installer sans le script
 
@@ -281,13 +299,16 @@ Pour faire la même installation à la main, dans le dossier du code (voir « In
 
 ### Vérifier l'image
 
-Cette partie concerne une installation qui utilise l'image publiée (`IMAGE` dans `.env`, voir la section 4). Chaque
-image, depuis la version 1.1.0, a ces trois éléments (les images des versions 1.0.0 et 1.0.1 n'en ont aucun) :
+Cette partie est facultative. Elle concerne une installation qui utilise l'image publiée (`IMAGE` dans `.env`, voir
+la section 4). L'installation et `./update.sh` ne vérifient pas la signature de l'image : faites-le vous-même ici si
+vos règles de sécurité le demandent. Les mises à jour automatiques la vérifient avant chaque installation (section 6).
+
+Chaque image, depuis la version 1.1.0, a ces trois éléments (les images des versions 1.0.0 et 1.0.1 n'en ont aucun) :
 
 | Élément | Ce que c'est | Où le trouver |
 |---|---|---|
 | Signature | La preuve que l'image vient du workflow `image.yml` du dépôt `Probant-Reporting/probant`, pour l'étiquette de la version. Elle est faite avec cosign, sans clé : le certificat nomme le workflow et l'étiquette. | Dans le registre, à côté de l'image |
-| SBOM | La liste des composants de l'image (paquets du système et bibliothèques Python), au format SPDX JSON. Elle est aussi attachée à l'image sous forme d'attestation signée. | Release de la version : `probant-<version>-sbom.spdx.json` |
+| SBOM (nomenclature logicielle) | La liste des composants de l'image (paquets du système et bibliothèques Python), au format SPDX JSON. Elle est aussi attachée à l'image sous forme d'attestation signée. | Release de la version : `probant-<version>-sbom.spdx.json` |
 | Rapport des failles | Les failles connues de ces composants le jour de la construction, établies par Grype. Un tableau en texte et un fichier JSON. | Release de la version : `probant-<version>-vulnerabilities.txt` et `.json` |
 
 La page des releases est `https://github.com/Probant-Reporting/probant/releases`. Si un fichier n'est pas dans la
@@ -296,7 +317,7 @@ release, il est dans l'artefact `probant-image-reports` de l'exécution « Docke
 
 Pour vérifier la signature d'une image :
 
-1. Installez cosign, version 3 ou ultérieure (https://docs.sigstore.dev/cosign/system_config/installation/).
+1. Installez cosign, version 3 ou plus récente (https://docs.sigstore.dev/cosign/system_config/installation/).
 2. Lancez cette commande. Remplacez `X.Y.Z` par la version (par exemple `1.1.0`), dans l'image et dans l'étiquette :
 
    ```bash
@@ -338,18 +359,19 @@ Pour lire le rapport des failles :
 
 Utilisez cette façon pour un serveur qui ne peut pas joindre Internet. Chaque version, depuis la 1.1.0, a
 un paquet hors ligne : l'image de l'outil et les fichiers qui l'installent et le mettent à jour, en un seul fichier.
-Rien n'est téléchargé pendant l'installation.
+Rien n'est téléchargé pendant l'installation. Il n'y a pas de mises à jour automatiques : pour mettre à jour, prenez
+le paquet de la nouvelle version (voir « Mettre à jour sans accès à Internet », section 6).
 
 Ce tableau présente les fichiers du paquet hors ligne, sur la page de la version
 (`https://github.com/Probant-Reporting/probant/releases`) :
 
 | Fichier | Ce que c'est |
 |---|---|
-| `probant-X.Y.Z-offline.tar` | Le paquet : un dossier `probant` avec l'archive de l'image (`probant-image-X.Y.Z.tar.gz`), l'archive de l'image de Caddy (`caddy-image.tar.gz`, pour le HTTPS), `docker-compose.yml`, `.env.example`, `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile`, `VERSION` et `SHA256SUMS` (la somme SHA-256 de chaque fichier) |
-| `probant-X.Y.Z-offline.tar.sha256` | La somme SHA-256 du paquet |
+| `probant-X.Y.Z-offline.tar` | Le paquet : un dossier `probant` avec l'archive de l'image (`probant-image-X.Y.Z.tar.gz`), l'archive de l'image de Caddy (`caddy-image.tar.gz`, pour le HTTPS), `docker-compose.yml`, `.env.example`, `install.sh`, `update.sh`, `check.sh`, `docker/Caddyfile`, `VERSION` et `SHA256SUMS` (l'empreinte SHA-256 de chaque fichier) |
+| `probant-X.Y.Z-offline.tar.sha256` | L'empreinte SHA-256 du paquet |
 | `probant-X.Y.Z-offline.tar.sigstore.json` | La signature du paquet (paquet de signature cosign). Il contient tout ce dont cosign a besoin pour vérifier le paquet sans réseau. |
 
-Ce qui marche aujourd'hui sans accès à Internet :
+Sans accès à Internet, vous pouvez utiliser :
 
 - L'outil, avec sa base SQLite (le réglage par défaut). Le paquet contient l'image de l'outil et l'image de Caddy.
   Il ne contient pas l'image de PostgreSQL (profil `postgres`) : voir « PostgreSQL sans accès à Internet » plus bas.
@@ -366,7 +388,7 @@ Pour installer l'outil sans accès à Internet :
 
 1. Sur un ordinateur qui a accès à Internet, téléchargez les trois fichiers de la version depuis la page de la version.
 2. Sur cet ordinateur, vérifiez le paquet :
-   - La somme : `sha256sum -c probant-X.Y.Z-offline.tar.sha256`. La commande affiche `OK`.
+   - L'empreinte : `sha256sum -c probant-X.Y.Z-offline.tar.sha256`. La commande affiche `OK`.
    - La signature, avec cosign version 3 ou plus récente. Remplacez `X.Y.Z` par la version, dans les noms des fichiers
      et dans l'étiquette :
 
@@ -428,9 +450,10 @@ apportez l'image vous-même :
 
 ### Réseau d'entreprise
 
-Cette partie concerne un serveur sur le réseau d'une entreprise : un certificat que votre entreprise donne pour
-l'adresse HTTPS, une autorité de certification de l'entreprise pour les connexions sortantes, et un proxy. Une
-installation qui n'utilise rien de cela marche comme avant.
+Cette partie est facultative. Elle concerne un serveur sur le réseau d'une entreprise, avec un ou plusieurs de ces
+éléments : un certificat que votre entreprise donne pour l'adresse HTTPS, une autorité de certification de votre
+entreprise (le certificat qui signe ses certificats internes) pour les connexions sortantes, et un proxy. Si votre
+réseau n'utilise rien de cela, passez cette partie.
 
 Les fichiers de cette partie vont dans le dossier `certificates/` de l'installation, à côté de `.env` :
 
@@ -512,7 +535,7 @@ toute autre connexion HTTPS. Les autorités publiques restent de confiance.
 L'outil n'utilise que le certificat d'une autorité. Un fichier qu'il ne peut pas lire, qui ne contient aucun
 certificat, ou qui contient un certificat de serveur, est écrit dans le journal au démarrage (`docker compose logs web`)
 et laissé de côté : l'outil démarre quand même. **Administration › Paramètres › Santé** montre les autorités en
-service, avec leur date d'expiration, au gestionnaire des espaces et aux administrateurs de l'espace principal. La
+service, avec leur date d'expiration, aux gestionnaires des espaces et aux administrateurs de l'espace principal. La
 ligne passe à « À regarder » 30 jours avant l'expiration d'une autorité.
 
 Pour retirer une autorité, supprimez son fichier de `certificates/ca/`, puis lancez `docker compose restart web`.
@@ -534,7 +557,7 @@ paquet hors ligne.
 
 #### Utiliser un proxy pour les connexions sortantes
 
-L'outil sait déjà passer par un proxy pour ses connexions HTTPS sortantes. Ce tableau montre quoi régler :
+L'outil peut passer par un proxy pour ses connexions HTTPS sortantes. Ce tableau montre quoi régler :
 
 | Quoi | Comment |
 |---|---|
@@ -553,25 +576,6 @@ de connexion. Il compte 8 étapes.
 > personne qui ouvre l'adresse de l'outil crée le compte administrateur. Après l'étape 1, l'assistant ne s'ouvre plus
 > qu'à ce compte.
 
-### Démarrer vide, ou avec la démo
-
-Une nouvelle installation est vide : vous mettez en place votre propre structure avec l'assistant. C'est la façon de
-démarrer pour de bon.
-
-Pour d'abord faire le tour de l'outil, vous pouvez charger la démo à la place : Exemplia, une société fictive, avec
-ses organisations, ses KPI et trois exercices. Faites-le avant l'étape 1 de l'assistant, sur la base vide :
-
-```bash
-docker compose exec web python manage.py load_demo
-```
-
-La commande affiche les comptes de démonstration et leur mot de passe.
-
-> **Important :** le mot de passe des comptes de démonstration est public. Ne chargez la démo que sur une installation
-> qui sert à une évaluation, et ne la laissez pas ouverte sur internet. La commande refuse une base qui contient déjà
-> vos données. Pour démarrer ensuite pour de bon, supprimez l'évaluation et ses données (`docker compose down -v`),
-> puis installez de nouveau : l'outil démarre vide.
-
 L'outil ne demande aucun code d'installation. Tant que rien n'est créé, l'outil ne contient aucune donnée sensible.
 Ce qui le protège, c'est l'ordre des étapes : vous créez le compte administrateur juste après l'installation, avant de
 communiquer l'adresse.
@@ -579,7 +583,8 @@ communiquer l'adresse.
 Pour mettre en place l'outil :
 
 1. Juste après l'installation (ou le déploiement), ouvrez l'adresse de l'outil. L'assistant **Mise en place**
-   s'ouvre.
+   s'ouvre. Pour voir plutôt la démo, chargez-la maintenant, avant l'étape 1 : voir « Démarrer vide, ou avec la
+   démo ».
 2. Faites l'étape 1, **Compte administrateur**, avant de communiquer l'adresse.
 3. Faites les autres étapes, ou donnez l'adresse à la personne qui fait la mise en place.
 
@@ -602,6 +607,11 @@ Ce tableau présente les 8 étapes de l'assistant :
 Vous pouvez vous arrêter et reprendre plus tard. La personne qui fait la mise en place n'a pas besoin de l'équipe
 informatique, sauf pour les e-mails (section 7).
 
+Le compte de l'étape 1 est aussi le premier **gestionnaire des espaces**. Seuls les gestionnaires des espaces changent
+les réglages de toute l'installation : le serveur d'e-mails, les alertes par e-mail, les mises à jour automatiques, la
+copie externe des sauvegardes et la connexion d'entreprise. Les autres administrateurs ne peuvent pas les changer. Voir
+[docs/spaces.md](../spaces.md) (en anglais).
+
 ![Premier lancement : l'assistant s'ouvre sur le compte administrateur](../screenshots/fr/setup-admin-account.png)
 
 ![Étape 5 : choisir un référentiel dans la bibliothèque, le composer ou importer le sien](../screenshots/fr/setup-frameworks.png)
@@ -619,12 +629,32 @@ La saisie fonctionne aussi sur téléphone :
 
 ![Saisie sur téléphone](../screenshots/fr/entry-phone.png)
 
+### Démarrer vide, ou avec la démo
+
+Une nouvelle installation est vide : vous mettez en place votre propre structure avec l'assistant. C'est la façon de
+démarrer pour de bon.
+
+Pour d'abord faire le tour de l'outil, vous pouvez charger la démo à la place : Exemplia, une société fictive, avec
+ses organisations, ses KPI et trois exercices. Faites-le avant l'étape 1 de l'assistant, sur la base vide :
+
+```bash
+docker compose exec web python manage.py load_demo
+```
+
+La commande affiche les comptes de démonstration et leur mot de passe.
+
+> **Important :** le mot de passe des comptes de démonstration est public. Ne chargez la démo que sur une installation
+> qui sert à une évaluation, et ne la laissez pas ouverte sur internet. La commande refuse une base qui contient déjà
+> vos données. Pour démarrer ensuite pour de bon, supprimez l'évaluation et ses données (`docker compose down -v`),
+> puis installez de nouveau : l'outil démarre vide.
+
 ### Faire relire les textes traduits
 
 L'interface existe en français, anglais, espagnol, allemand, italien, néerlandais et portugais. Une IA a traduit les
 textes qui ne sont ni en français ni en anglais. Avant d'ouvrir une langue aux utilisateurs, demandez à une personne de
-l'entreprise qui la parle de relire ses textes. Les textes sont dans les fichiers `libelles/*.<code>.json` (par exemple
-`libelles/*.es.json`). La personne n'a besoin d'aucune compétence technique : elle relit seulement les textes.
+l'entreprise qui la parle de relire ses textes. Les textes sont dans les fichiers `libelles/*.<code>.json` du dépôt
+public (par exemple `libelles/*.es.json`). La personne n'a besoin d'aucune compétence technique : elle relit seulement
+les textes.
 
 ## 4. Modifier les réglages (fichier `.env`)
 
@@ -650,13 +680,13 @@ Ce tableau présente chaque réglage, sa valeur par défaut et son rôle :
 | `AI_SOCKET` | `on` | `off` coupe l'assistant IA facultatif pour toute l'installation : aucun bouton IA et rien n'est envoyé, quels que soient les réglages des administrateurs. Voir « Assistant IA » plus bas. |
 | `DEFAULT_LANGUAGE` | `en` | La langue d'une nouvelle installation (interface et contenus) : l'une des sept langues de l'interface (`en`, `fr`, `es`, `de`, `it`, `nl`, `pt`). L'outil ne la lit qu'à la création de la base. Ensuite, changez-la dans **Administration › Paramètres › Langues**. Pour une installation en français, mettez `fr` avant le premier démarrage. |
 | `GUIDED_TOUR` | `on` | `off` retire la courte visite guidée que les personnes voient à leur première connexion. La visite ne change que l'affichage. |
+| `TIME_ZONE` | `Europe/Brussels` | Le fuseau horaire de l'installation, sous la forme d'un nom de la liste IANA, par exemple `Europe/Paris` ou `America/New_York`. L'heure des relances automatiques, de la sauvegarde automatique et du contrôle de chaque nuit, « aujourd'hui », et les dates des exports et du journal suivent ce fuseau. **Administration › Paramètres › Hébergement** l'affiche à côté de l'heure du serveur. Si le nom est inconnu, l'outil ne démarre pas et le journal montre l'erreur. |
 | `MAX_EVIDENCE_SIZE_MB`, `MAX_IMPORT_SIZE_MB` | `5`, `10` | La taille maximale, en Mo, d'une preuve et d'un fichier d'import. |
 | `MAX_BACKUP_UPLOAD_MB` | `2048` | La taille maximale, en Mo, d'une sauvegarde déposée dans l'outil par un administrateur (**Hébergement** › **Restaurer**). L'outil refuse toute autre requête plus grosse que la plus grande des tailles `MAX_EVIDENCE_SIZE_MB` et `MAX_IMPORT_SIZE_MB` (plus 1 Mo), avant de la recevoir. Avec le proxy HTTPS, `CADDY_MAX_SIZE` (50 Mo par défaut) s'applique aussi : augmentez-le pour déposer une sauvegarde plus grosse. |
 | `MAX_XLSX_UNCOMPRESSED_MB` | 20 × `MAX_IMPORT_SIZE_MB` | La taille maximale, en Mo, d'un fichier Excel une fois décompressé. L'outil refuse un fichier plus gros avant de l'ouvrir. Un texte de cellule de plus de 32 767 caractères (la limite d'Excel) est aussi refusé. Les mêmes limites s'appliquent aux commandes d'import lancées sur le serveur (`import_kpi`, `import_organisations`, `import_valeurs`) : pour importer un fichier plus gros par une commande, augmentez `MAX_XLSX_UNCOMPRESSED_MB` le temps de cette commande. |
 | `BACKGROUND_IMPORT_ROWS` | `5000` | Un import de valeurs (**Import / Export › Importer des valeurs**) de plus de lignes que ce nombre se fait en arrière-plan. La personne voit une barre d'avancement, et peut quitter la page et revenir. Le processus `run_imports --schedule` fait ces imports. L'image le lance d'elle-même : vous n'installez rien. `0` veut dire jamais : tout import se fait dans la page, qui ne peut durer que 120 s. |
 | `DISK_ALERT_MB` | `100` | Quand la place libre sur le disque des données passe sous cette valeur, en Mo, `/sante/` répond `503` (« disk almost full »). |
 | `BACKUP_AUTO`, `BACKUP_TIME`, `BACKUPS_KEEP` | `1`, `02:30`, `14` | Valeurs de départ seulement. Ensuite, ces valeurs se règlent dans l'outil, dans **Administration › Paramètres › Hébergement** : sauvegarde automatique activée ou non, fréquence (6 h, 12 h, jour, semaine), heure et nombre de sauvegardes gardées. |
-| `TIME_ZONE` | `Europe/Brussels` | Le fuseau horaire de l'installation, sous la forme d'un nom de la liste IANA, par exemple `Europe/Paris` ou `America/New_York`. L'heure des relances automatiques, de la sauvegarde automatique et du contrôle de chaque nuit, « aujourd'hui », et les dates des exports et du journal suivent ce fuseau. **Administration › Paramètres › Hébergement** l'affiche à côté de l'heure du serveur. Si le nom est inconnu, l'outil ne démarre pas et le journal montre l'erreur. |
 | `DATA_CHECK_TIME` | `03:30` | L'heure du contrôle et du ménage de chaque nuit. Le contrôle lit la base et ne modifie rien. Le ménage efface les sessions terminées et les éléments supprimés depuis plus longtemps que le délai de la corbeille. Voir la section 9. |
 | `GUNICORN_WORKERS`, `GUNICORN_THREADS` | 1 processus par processeur (de 2 à 4), `4` | Capacité du serveur. Un processus utilise 1 processeur à la fois et environ 170 Mo de mémoire. La valeur par défaut convient à un serveur de 2 à 4 processeurs. Voir « Capacité » à la section 8. |
 | `GUNICORN_TIMEOUT`, `GUNICORN_KEEPALIVE` | `120`, `75` | La durée maximale d'une requête, en secondes, et la durée pendant laquelle une connexion inutilisée reste ouverte. Gardez `GUNICORN_KEEPALIVE` au-dessus du délai du proxy placé devant l'outil. Le Caddy fourni ferme les connexions inutilisées après 60 s. Si la valeur est plus basse, un enregistrement peut de temps en temps échouer avec l'erreur 502. |
@@ -719,21 +749,22 @@ Avec `report-only`, la protection est coupée : ne gardez cette valeur que le te
 
 ### Assistants IA (MCP) : rien à faire
 
-L'outil contient un serveur pour les assistants IA (Model Context Protocol), à l'adresse `/mcp/` de chaque espace
-(`/espace/<code>/mcp/` pour un autre espace). Il tourne dans le même conteneur, sur le même port, derrière le même
-HTTPS : aucun service, aucun port, aucune variable, rien à installer. Il reste éteint tant qu'un administrateur ne l'a
-pas permis dans **Administration › Paramètres › Assistants**. Seule condition : le proxy transmet l'en-tête
-`Authorization` à l'outil (Caddy, profil `https`, et Clever Cloud le font sans réglage). Les jetons des assistants ne
-sont jamais dans les sauvegardes. Le journal de l'outil montre les jetons refusés (`serveur_mcp: MCP: token refused`).
-Détails : [`assistants_mcp.md`](assistants_mcp.md), section 7.
+Une personne peut brancher son propre assistant IA sur l'outil, par le Model Context Protocol (MCP). L'assistant lit
+et modifie alors les données avec les droits de cette personne. Le serveur MCP fait partie de l'outil, à l'adresse
+`/mcp/` de chaque espace (`/espace/<code>/mcp/` pour un autre espace). Il tourne dans le même conteneur, sur le même
+port, derrière le même HTTPS : aucun service, aucun port, aucune variable, rien à installer. Il reste éteint tant
+qu'un administrateur ne l'a pas allumé dans **Administration › Paramètres › Assistants**. Seule condition : le proxy
+transmet l'en-tête `Authorization` à l'outil (Caddy, profil `https`, et Clever Cloud le font sans réglage). Les jetons
+des assistants ne sont jamais dans les sauvegardes. Le journal de l'outil montre les jetons refusés
+(`serveur_mcp: MCP: token refused`). Détails : [`assistants_mcp.md`](assistants_mcp.md), section 7.
 
 ### Assistant IA (facultatif)
 
-L'outil peut demander des propositions à un fournisseur d'IA (Claude, d'Anthropic) : expliquer une alerte de
-cohérence, relier les KPI d'un ancien fichier, traduire des libellés. Il est **éteint** dans chaque espace. Un
-administrateur de l'espace l'allume dans **Administration › Paramètres › Assistant IA**, avec la clé d'API du compte du
-client chez le fournisseur. La page dit exactement ce que chaque usage envoie. Description complète :
-`docs/fr/prise_ia.md`.
+C'est une autre fonction : ici, c'est l'outil lui-même qui appelle un fournisseur d'IA (Claude, d'Anthropic). L'outil
+lui demande des propositions : expliquer une alerte de cohérence, relier les KPI d'un ancien fichier, traduire des
+libellés. Il est **éteint** dans chaque espace. Un administrateur de l'espace l'allume dans **Administration ›
+Paramètres › Assistant IA**, avec la clé d'API du compte de votre organisation chez le fournisseur. La page dit
+exactement ce que chaque usage envoie. Description complète : `docs/fr/prise_ia.md`.
 
 Ce que fait l'IT :
 
@@ -748,7 +779,9 @@ Tant que l'assistant est éteint dans un espace, l'outil n'ouvre aucune connexio
 
 ### Connexion avec le compte d'entreprise
 
-Chacun peut se connecter avec son compte d'entreprise (connexion unique, OpenID Connect). Elle est éteinte par défaut. Un gestionnaire des espaces la règle dans **Administration › Paramètres › Connexion d'entreprise**. Ce que fait l'IT :
+Chacun peut se connecter avec son compte d'entreprise (connexion unique, OpenID Connect). Elle est éteinte par
+défaut. Un gestionnaire des espaces la règle dans **Administration › Paramètres › Connexion d'entreprise**. Ce que
+fait l'IT :
 
 | Élément | Valeur |
 |---|---|
@@ -804,10 +837,10 @@ Ce tableau présente comment sauvegarder l'outil :
 
 | Pour… | Faire |
 |---|---|
-| Sauvegarder automatiquement | Rien. Par défaut, l'outil fait une sauvegarde chaque jour à 02:30 et garde 14 archives. L'équipe responsable règle la fréquence dans **Administration › Paramètres › Hébergement**. **Copiez les sauvegardes hors du serveur** : dans l'outil, ou par vos propres moyens (voir [Copier les sauvegardes hors du serveur](#copier-les-sauvegardes-hors-du-serveur)). |
+| Sauvegarder automatiquement | Rien. Par défaut, l'outil fait une sauvegarde chaque jour à 02:30 et garde 14 archives. Un administrateur règle la fréquence dans **Administration › Paramètres › Hébergement**. |
 | Sauvegarder maintenant | Lancez `docker compose exec web python manage.py backup`. Un administrateur peut aussi cliquer sur **Créer et télécharger une sauvegarde** dans **Administration › Paramètres › Hébergement**. |
 | Lister les sauvegardes | Lancez `docker compose exec web python manage.py backup --list`. |
-| Copier les sauvegardes hors du serveur | Dans l'outil : voir [Copier les sauvegardes hors du serveur](#copier-les-sauvegardes-hors-du-serveur). Par vos propres moyens : lancez `docker compose cp web:/data/backups/. ../probant-backups/`. Cette commande copie les archives, sous-dossiers compris, dans le dossier `probant-backups` à côté du dossier de l'outil. Ne les copiez pas dans le dossier de l'outil : la mise à jour construit l'image à partir de ce dossier. Copiez ensuite `probant-backups` hors du serveur avec votre outil de sauvegarde habituel (rsync, Veeam…), de façon planifiée. Les fichiers copiés gardent leurs droits : seul le compte qui a lancé `docker compose cp` peut les lire (fichiers `0600`, dossiers `0700`). Si votre outil de sauvegarde tourne sous un autre compte, donnez à ce compte l'accès à `probant-backups`, par exemple avec `chown -R`. Ne changez pas les droits dans le volume. |
+| Copier les sauvegardes hors du serveur | **À faire par l'IT** : par défaut, les sauvegardes restent sur le même serveur que l'outil. Copiez-les dans l'outil, ou par vos propres moyens : voir [Copier les sauvegardes hors du serveur](#copier-les-sauvegardes-hors-du-serveur). |
 
 **Sans Docker**, planifiez la même sauvegarde avec cron : `30 2 * * * cd /opt/reporting && python manage.py backup`.
 
@@ -816,11 +849,12 @@ Ce tableau présente comment sauvegarder l'outil :
 ### Copier les sauvegardes hors du serveur
 
 Les sauvegardes restent dans le volume `/data`, sur le même serveur que l'outil. Si le serveur est perdu, elles le
-sont aussi. Copiez-les hors du serveur d'une de ces deux façons.
+sont aussi. Copiez-les hors du serveur d'une de ces deux façons. Les deux façons peuvent fonctionner ensemble.
 
 #### Dans l'outil
 
-L'outil peut copier lui-même chaque sauvegarde vers un stockage que l'IT fournit. Un gestionnaire des espaces le
+Cette copie est éteinte tant qu'un gestionnaire des espaces ne l'a pas réglée. L'outil peut alors copier lui-même
+chaque sauvegarde vers un stockage que l'IT fournit. Un gestionnaire des espaces le
 règle dans **Administration › Paramètres › Hébergement**, encart **Copie hors du serveur**, avec **Régler une copie hors du serveur** :
 
 - **Stockage objet compatible S3** : un compartiment chez un hébergeur, ou MinIO sur votre réseau. Indiquez l'adresse du
@@ -835,8 +869,8 @@ règle dans **Administration › Paramètres › Hébergement**, encart **Copie 
 Cliquez ensuite sur **Essayer la destination**. L'outil dépose un petit fichier d'essai, le relit, puis le supprime.
 Avec SFTP, le premier essai montre l'empreinte SHA-256 de la clé du serveur. Comparez-la à l'empreinte que donne le
 serveur (sur le serveur : `ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`), puis cliquez sur **Confirmer cette
-clé**. Ensuite, l'outil refuse toute autre clé, avant d'envoyer le mot de passe ou la clé : si le serveur change de
-clé, la copie s'arrête et part en alerte, jusqu'à ce qu'un administrateur confirme la nouvelle clé.
+clé**. Ensuite, l'outil refuse toute autre clé, avant d'envoyer le mot de passe ou la clé. Si le serveur change de
+clé, la copie s'arrête et part en alerte, jusqu'à ce qu'un gestionnaire des espaces confirme la nouvelle clé.
 
 Ce que fait ensuite l'outil :
 
@@ -850,7 +884,7 @@ Ce que fait ensuite l'outil :
 - Si une copie échoue (réseau, droits, stockage plein…), il réessaie plus tard (après 5 minutes, puis 15 minutes,
   jusqu'à 6 heures) et copie tout ce qui attend. **Paramètres › Santé** et `/sante/` (`external_copy`) montrent la
   dernière copie et les archives qui attendent ; une alerte par e-mail part si les alertes sont allumées (section 9).
-- Par défaut, il **ne supprime rien** à la destination. Si l'administrateur règle **Copies gardées par espace**,
+- Par défaut, il **ne supprime rien** à la destination. Si un gestionnaire des espaces règle **Copies gardées par espace**,
   l'outil garde ce nombre de copies les plus récentes de chaque espace et du registre, et ne supprime que les archives
   plus anciennes qu'il a faites lui-même (dossier et nom qu'il reconnaît). Il ne supprime jamais un autre fichier, ni la
   dernière archive faite. Pour protéger les copies de toute suppression, donnez au compte le droit d'écrire mais pas
@@ -864,8 +898,8 @@ Ce que fait ensuite l'outil :
 > destination privée que seule l'IT peut ouvrir. L'outil ne chiffre pas les archives.
 
 L'outil enregistre la clé secrète S3, et le mot de passe ou la clé privée SFTP, chiffrés avec la clé secrète de
-l'installation. Il ne les réaffiche jamais. Après une restauration sur un autre serveur, un administrateur les saisit
-de nouveau. Pour les garder, laissez les champs vides quand vous enregistrez. Si vous changez la destination (S3 :
+l'installation. Il ne les réaffiche jamais. Après une restauration sur un autre serveur, un gestionnaire des espaces
+les saisit de nouveau. Pour les garder, laissez les champs vides quand vous enregistrez. Si vous changez la destination (S3 :
 adresse, région, compartiment ou identifiant de la clé d'accès ; SFTP : serveur, port ou compte), l'outil redemande le
 secret, pour qu'il ne parte jamais vers une autre destination. En SFTP, un autre serveur ou un autre port oublie aussi
 la clé du serveur confirmée.
@@ -880,9 +914,17 @@ La version tout-en-un (Windows ou Mac) n'a pas cette fonction : copiez vous-mêm
 
 #### Par vos propres moyens
 
-Copiez le dossier `/data/backups`, avec tous ses sous-dossiers, avec votre outil de sauvegarde habituel, de façon
-planifiée : voir la ligne **Copier les sauvegardes hors du serveur** du tableau ci-dessus. Les deux façons peuvent
-fonctionner ensemble.
+Pour copier le dossier `/data/backups` avec votre outil de sauvegarde habituel, suivez ces étapes :
+
+1. Copiez les archives hors du conteneur : `docker compose cp web:/data/backups/. ../probant-backups/`. Cette
+   commande copie les archives, sous-dossiers compris, dans le dossier `probant-backups` à côté du dossier de l'outil.
+   Ne les copiez pas dans le dossier de l'outil : la mise à jour construit l'image à partir de ce dossier.
+2. Copiez `probant-backups` hors du serveur avec votre outil de sauvegarde habituel (rsync, Veeam…), de façon
+   planifiée.
+
+Les fichiers copiés gardent leurs droits : seul le compte qui a lancé `docker compose cp` peut les lire (fichiers
+`0600`, dossiers `0700`). Si votre outil de sauvegarde tourne sous un autre compte, donnez à ce compte l'accès à
+`probant-backups`, par exemple avec `chown -R`. Ne changez pas les droits dans le volume.
 
 ### Reconstruire un serveur à partir de la copie externe
 
@@ -905,9 +947,14 @@ Si le serveur est perdu, l'IT reconstruit l'installation sur un nouveau serveur 
 
    Les archives ont été signées par l'ancien serveur : `--unsigned` est nécessaire, sauf si vous remettez l'ancienne
    clé secrète (`/data/.secret_key` ou `DJANGO_SECRET_KEY`).
-4. Chacun se connecte avec son mot de passe habituel. Un administrateur saisit de nouveau les secrets : le mot de passe
-   du serveur d'e-mails et le secret de la copie externe. Ils ne se lisent qu'avec la clé secrète de l'ancien serveur.
+4. Chacun se connecte avec son mot de passe habituel. Un gestionnaire des espaces saisit de nouveau les secrets : le
+   mot de passe du serveur d'e-mails et le secret de la copie externe. Seule la clé secrète de l'ancien serveur les lit.
    Si vous avez gardé cette clé en lieu sûr et l'avez remise avant l'étape 3, ils fonctionnent tout de suite.
+
+Si vous n'avez que la sauvegarde d'un espace, sans celle du registre commun, un gestionnaire des espaces peut aussi la
+restaurer depuis l'outil, sur le nouveau serveur : voyez
+[Restaurer une sauvegarde d'une autre installation](#restaurer-une-sauvegarde-dune-autre-installation). Les mots de
+passe ne passent pas dans ce cas : seule la personne qui restaure garde le sien.
 
 ### Sauvegardes et preuves supprimées
 
@@ -952,7 +999,16 @@ faite par cette installation, ou elle a été modifiée après sa création ». 
 - Les archives que quelqu'un a modifiées après la sauvegarde
 
 L'IT peut toujours restaurer une telle archive en ligne de commande, si elle lui fait confiance : ajoutez `--unsigned`
-à la commande `restore`. Sans cette option, la commande refuse l'archive et ne change rien.
+à la commande `restore`. Sans cette option, la commande refuse l'archive et ne change rien. Un gestionnaire des espaces
+peut aussi la restaurer depuis l'outil : voyez
+[Restaurer une sauvegarde d'une autre installation](#restaurer-une-sauvegarde-dune-autre-installation).
+
+Toute restauration d'une base SQLite, depuis l'outil ou en ligne de commande, avec ou sans `--unsigned`, refuse une base
+avec des déclencheurs, des vues ou des colonnes calculées, ou d'une autre structure que celle que l'outil attend
+(colonnes, contraintes, index et clés étrangères, tels que SQLite les lit). Les sauvegardes faites par l'outil n'en ont
+jamais. Si une restauration échoue après le remplacement de la base, l'outil revient seul à l'archive
+« before-restore ». Sans cette archive (`--no-backup-before`, ou base illisible), il ne le peut pas : la restauration
+reste notée comme interrompue, `/sante/` le signale, et l'IT restaure une archive en ligne de commande.
 
 Pour restaurer une archive du serveur (si l'outil ne démarre plus) :
 
@@ -989,6 +1045,82 @@ Pour restaurer, après une mise à jour, une archive PostgreSQL faite par une ve
 2. Revenez à la version qui a fait l'archive (la restauration affiche sa version, aussi dans `backup.json`), et
    restaurez l'archive avec cette version : voyez [Revenir à la version précédente](#revenir-à-la-version-précédente).
 3. Mettez de nouveau l'outil à jour avec `./update.sh`. La mise à jour amène les données restaurées à la nouvelle version.
+
+### Restaurer une sauvegarde d'une autre installation
+
+Un gestionnaire des espaces peut restaurer depuis l'outil une sauvegarde que cette installation n'a pas faite : après un
+changement de serveur, après la perte d'un serveur, ou avec une sauvegarde de la version tout-en-un. La ligne de
+commande ne change pas.
+
+L'outil ne peut pas vérifier un tel fichier, car la clé secrète de l'autre installation ne quitte jamais son serveur.
+L'outil ne fait donc pas confiance à son contenu, et ces règles s'appliquent :
+
+- Une sauvegarde ne compte comme faite par cette installation que si sa signature est valide et qu'elle nomme cette
+  installation et cet espace. La sauvegarde d'une autre installation qui a la même clé secrète (serveur reconstruit
+  avec le même `DJANGO_SECRET_KEY`, `.env` recopié) a une signature valide, mais vient d'une autre installation : ces
+  règles s'appliquent à elle aussi. La sauvegarde d'un autre espace de cette installation reste pour l'IT
+  (`restore --other-space`).
+
+- Seul un gestionnaire des espaces peut le faire. Pour les autres administrateurs et les autres rôles, la page refuse
+  le fichier, comme avant. Une sauvegarde faite par cette installation garde les contrôles habituels, pour tout le monde.
+- **Installation vide.** L'IT installe l'outil. Un administrateur crée son compte à l'étape 1 de l'assistant de mise en
+  place. À partir de l'étape 2, l'assistant propose **Partir d'une sauvegarde** tant que l'installation est vide :
+  espace principal seul, un seul compte, aucune organisation, aucun KPI, aucune campagne, aucune valeur, et l'assistant
+  n'est pas terminé. Un visiteur non connecté ne le voit jamais.
+- **Installation en service.** Dans **Administration › Paramètres › Hébergement**, ouvrez **Restaurer depuis un fichier
+  .zip téléchargé auparavant**, choisissez le fichier, puis cliquez sur **Vérifier le fichier**. L'outil range le
+  fichier à part : il n'est pas dans la liste des sauvegardes, et la copie externe ne le copie pas. L'outil l'efface
+  après la restauration, ou au bout d'un jour.
+- La sauvegarde va dans l'espace courant, comme avec `restore --other-space`. Les autres espaces et le registre commun
+  des comptes ne changent pas.
+
+La page de confirmation affiche le nom de l'installation, la date et la version que donne le fichier. Elle dit que
+l'outil ne peut pas vérifier le fichier, ce que la sauvegarde remplace, ce que deviennent les comptes, et les
+administrateurs de la sauvegarde. Cochez les deux cases, saisissez `RESTAURER`, puis cliquez sur **Restaurer cette
+sauvegarde**. L'outil sauvegarde d'abord l'état actuel de l'espace (archive « before-restore »). Ensuite, il vous
+déconnecte : reconnectez-vous avec votre propre mot de passe.
+
+Ce que deviennent les comptes :
+
+- Vous gardez votre compte, votre mot de passe et votre rôle de gestionnaire des espaces. Après la restauration, votre
+  compte est administrateur actif de l'espace : l'outil l'ajoute, ou lui rend ce rôle, et l'écrit dans l'historique.
+- Les autres comptes de la sauvegarde n'ont pas de mot de passe. Les sauvegardes ne contiennent jamais de mot de passe,
+  et l'outil ne lit aucun mot de passe dans un tel fichier. Donnez-leur un mot de passe provisoire dans
+  **Administration › Comptes**.
+- Un compte qui a le même numéro et le même e-mail qu'un compte d'un autre espace de cette installation est la même
+  personne. Il garde son mot de passe et son rôle dans les autres espaces.
+- Les comptes qui n'existaient que dans cet espace, sauf le vôtre, quittent le registre commun : les comptes de la
+  sauvegarde les remplacent. Leurs sessions et leurs liens avec un compte d'entreprise sont supprimés. Un gestionnaire
+  des espaces parmi eux perd ce rôle.
+- Si un compte de la sauvegarde a le numéro, l'e-mail ou l'identifiant d'une autre personne qui a un compte dans un
+  autre espace, l'outil refuse la sauvegarde et ne change rien. L'IT peut la restaurer en ligne de commande.
+
+Ce qui change aussi :
+
+- Les jetons des assistants (MCP) de l'espace ne fonctionnent plus. Chaque personne en crée un nouveau.
+- Les relances automatiques, l'assistant IA et les assistants (MCP) de l'espace sont éteints après la restauration, et
+  les imports et exports en arrière-plan qui attendaient sont arrêtés. Rallumez-les dans la page **Relances** et dans
+  **Paramètres** si besoin.
+- Les droits de chaque compte viennent de son seul rôle : un administrateur de la sauvegarde a le mode expert, aucun
+  autre compte ne l'a. Les groupes et permissions écrits dans le fichier ne sont pas repris.
+- Les réglages de toute l'installation restent tels quels : serveur d'e-mails, copie externe, alertes par e-mail,
+  connexion d'entreprise et clé de l'IA. La sauvegarde d'un espace n'en contient aucun, ni aucun de leurs secrets.
+
+L'outil refuse aussi, avant de changer quoi que ce soit : une sauvegarde faite par une version plus récente, une
+sauvegarde PostgreSQL faite avec d'autres migrations de la base, une sauvegarde SQLite sur PostgreSQL, un fichier trop
+gros pour la place libre du disque, un fichier modifié après la page de confirmation, un fichier JSON avec des données
+qu'une sauvegarde de l'outil ne contient jamais, et une base SQLite avec des déclencheurs, des vues ou des colonnes
+calculées, ou d'une autre structure que celle que l'outil attend. Dans une base SQLite, une table en plus (laissée par
+une version antérieure) est admise : l'outil ne la lit pas. Une sauvegarde d'une version antérieure est contrôlée juste
+après sa mise à jour, avant que le registre commun des comptes change. Si quoi que ce soit échoue après le remplacement
+de la base, l'outil revient seul à l'état d'avant la restauration, et la page le dit ; les jetons des assistants (MCP)
+de l'espace sont alors perdus.
+
+Avec plusieurs espaces, restaurez la sauvegarde de chaque espace dans son propre espace, l'espace principal d'abord. Les
+sauvegardes des espaces d'une même installation donnent le même numéro à une personne qui travaille dans plusieurs
+espaces : l'outil reconnaît donc cette personne. L'historique des restaurations (page **Hébergement** et
+`restores.jsonl`) note « autre installation » et son nom. Pour faire passer aussi les mots de passe, l'IT suit
+[Reconstruire un serveur à partir de la copie externe](#reconstruire-un-serveur-à-partir-de-la-copie-externe).
 
 ### Si une restauration est interrompue
 
@@ -1033,13 +1165,11 @@ Le script effectue ces étapes, dans cet ordre :
    espace échoue, la mise à jour s'arrête et ne change rien.
 2. Il récupère la nouvelle version :
    - Après une installation en une commande (un dossier sans Git, avec `IMAGE` réglé sur une version de
-     `ghcr.io/probant-reporting/probant`) : il télécharge les fichiers de la nouvelle version, comme l'installation,
-     puis règle `IMAGE` dans `.env` sur l'image de cette version et la télécharge. Il garde les autres réglages de
-     `.env` et les données. Si un téléchargement échoue, la mise à jour s'arrête et ne change rien. Avant de mettre
-     les fichiers en place, il contrôle chacun avec la liste des empreintes SHA-256 de la release, et la signature de
-     cette liste quand il le peut, comme l'installation (voir « Installer en une commande »). Si la liste manque, si
-     sa signature est refusée, ou si un seul fichier ne correspond pas, la mise à jour s'arrête et ne change rien
-     (code de sortie 3).
+     `ghcr.io/probant-reporting/probant`) : il télécharge les fichiers de la nouvelle version et les contrôle, comme
+     l'installation (voir « Installer en une commande »). Il règle ensuite `IMAGE` dans `.env` sur l'image de cette
+     version et la télécharge. Il garde les autres réglages de `.env` et les données. Si un téléchargement échoue, si
+     la liste des empreintes manque, si sa signature est refusée, ou si un seul fichier ne correspond pas, la mise à
+     jour s'arrête et ne change rien (code de sortie 3 pour le contrôle des fichiers).
    - Après une installation avec Git : avec `git pull`, puis une nouvelle construction de l'image
    - Ou, si `IMAGE` est renseigné dans `.env` avec une autre image, avec `docker compose pull`
 3. Il redémarre l'outil. L'outil applique les changements de structure de la base automatiquement au démarrage. Si
@@ -1067,9 +1197,10 @@ Une seule mise à jour tourne à la fois : si la mise à jour automatique tourne
 
 ### Mises à jour automatiques
 
-Après une installation en une commande, une minuterie du serveur installe chaque nouvelle version la nuit, et revient
-à la version précédente si la nouvelle ne fonctionne pas. Le script `auto-update.sh` du dossier de l'outil fait tout le
-travail, sur le serveur. L'outil lui-même ne se connecte jamais à Internet, ne compare jamais deux versions et n'a
+Après une installation en une commande, les mises à jour automatiques sont allumées. Une minuterie du serveur (appelée
+**Tâche du serveur** dans l'outil) installe chaque nouvelle version la nuit, et revient à la version précédente si la
+nouvelle ne fonctionne pas. Les autres installations ne les ont pas : voir le tableau plus bas. Le script
+`auto-update.sh` du dossier de l'outil fait tout le travail, sur le serveur. L'outil lui-même ne se connecte jamais à Internet, ne compare jamais deux versions et n'a
 aucun accès à Docker : aucun socket Docker n'est donné à son conteneur, et aucun autre outil (comme Watchtower) n'est
 utilisé.
 
@@ -1103,9 +1234,12 @@ Ce tableau montre le réglage au départ :
    cette image est celle de l'image qui tourne, il n'y a rien à faire.
 3. Il vérifie la signature de la nouvelle image (voir « Signature de la nouvelle image »). Si la signature manque, si
    elle n'est pas correcte, ou si la vérification est impossible, rien n'est installé.
-4. Il s'arrête là avec « Prévenir seulement », pendant l'attente après la publication, pour une image dont la mise à
-   jour automatique a déjà échoué, et pour une version qui change le registre commun des comptes (ce changement ne se
-   défait pas automatiquement : l'IT installe cette version avec `./update.sh`).
+4. Il s'arrête là dans ces cas :
+   - Le choix est « Prévenir seulement ».
+   - L'attente après la publication n'est pas finie.
+   - La mise à jour automatique de cette image a déjà échoué.
+   - La version change le registre commun des comptes. Ce changement ne se défait pas automatiquement : l'IT installe
+     cette version avec `./update.sh`.
 5. Il ne met pas à jour pendant une restauration, une sauvegarde, un gros import ou un gros export de l'outil. Il
    réessaie la nuit suivante.
 6. Il télécharge la liste des empreintes SHA-256 des fichiers de cette version, depuis sa release, et vérifie la
@@ -1126,11 +1260,12 @@ Si la nouvelle version ne répond pas, le script revient en arrière automatique
 3. Il démarre la version d'avant et contrôle `/sante/`.
 
 L'écran dit alors « Le serveur est revenu à la version X.Y.Z », comme la page **Paramètres › Santé** et les alertes par
-e-mail. La même image n'est pas réessayée : quand la cause est connue, l'IT lance `sudo ./auto-update.sh --retry`. Si
-le retour arrière ne réussit pas entièrement (une restauration échoue, le registre commun a changé, ou la version
-d'avant ne répond pas), le résultat est un échec, l'alerte dit « appelez votre équipe IT », et l'IT suit « Revenir à la
-version précédente ». Plus rien n'est fait automatiquement, pas même les nuits suivantes, tant que l'IT n'a pas lancé
-`sudo ./auto-update.sh --retry`.
+e-mail. La même image n'est pas réessayée : quand la cause est connue, l'IT lance `sudo ./auto-update.sh --retry`.
+
+Si le retour arrière ne réussit pas entièrement (une restauration échoue, le registre commun a changé, ou la version
+d'avant ne répond pas), le résultat est un échec. L'alerte dit « Appelez votre équipe IT maintenant », et l'IT suit
+« Revenir à la version précédente ». Plus rien n'est fait automatiquement, pas même les nuits suivantes, tant que l'IT
+n'a pas lancé `sudo ./auto-update.sh --retry`.
 
 #### Signature de la nouvelle image
 
@@ -1158,7 +1293,7 @@ Dans le dossier de l'outil, en root (`sudo`) :
 - `./install.sh --auto-update off` retire la minuterie. Rien d'autre ne change.
 
 Sur une installation existante, ces commandes ne changent que la minuterie : le choix dans l'outil reste celui des
-administrateurs. Avant de supprimer le dossier de l'outil, lancez `./install.sh --auto-update off`. Si le dossier est
+gestionnaires des espaces. Avant de supprimer le dossier de l'outil, lancez `./install.sh --auto-update off`. Si le dossier est
 déjà supprimé, retirez la minuterie à la main : `sudo systemctl disable --now probant-auto-update-<numéro>.timer`, puis
 supprimez les deux fichiers `/etc/systemd/system/probant-auto-update-<numéro>.*` (ou le fichier de `/etc/cron.d/`).
 
@@ -1175,11 +1310,8 @@ e-mail si elles sont allumées.
 
 #### Réseau du serveur
 
-Le script a besoin du HTTPS sortant (TCP 443) depuis le serveur, pas depuis le conteneur : `github.com` et
-`raw.githubusercontent.com` (la dernière version et ses fichiers), `objects.githubusercontent.com` et
-`release-assets.githubusercontent.com` (la liste des empreintes des fichiers, jointe à la release),
-`ghcr.io` et `pkg-containers.githubusercontent.com` (l'image et le conteneur de cosign), et `tuf-repo-cdn.sigstore.dev` (la racine de confiance de Sigstore, lue par
-cosign). Derrière un proxy, réglez `HTTPS_PROXY` dans l'environnement de la minuterie (par exemple
+Le script a besoin du même HTTPS sortant (TCP 443) que l'installation, depuis le serveur, pas depuis le conteneur :
+voir « Réseau, téléchargements » à la section 1. Derrière un proxy, réglez `HTTPS_PROXY` dans l'environnement de la minuterie (par exemple
 `systemctl edit probant-auto-update-<numéro>.service`), et le proxy de Docker pour le téléchargement des images.
 
 ### Mettre à jour sans accès à Internet
@@ -1277,8 +1409,8 @@ le premier démarrage.
 
 ## 7. Configurer les e-mails (SMTP)
 
-L'outil envoie les e-mails par le serveur d'e-mails (SMTP) de votre entreprise : relances et e-mails de test. Vous
-pouvez régler ce serveur de deux façons. Les réglages valent pour toute l'installation, pour tous les espaces.
+L'outil envoie les e-mails par le serveur d'e-mails (SMTP) de votre entreprise : relances, alertes par e-mail
+(section 9) et e-mails de test. Vous pouvez régler ce serveur de deux façons. Les réglages valent pour toute l'installation, pour tous les espaces.
 
 | Façon | Qui | Quand l'utiliser |
 |---|---|---|
@@ -1317,7 +1449,7 @@ Le mot de passe fonctionne ainsi :
   **Effacer le mot de passe**.
 - Si vous changez le serveur, le port ou l'identifiant, ou si vous passez la sécurité à « Aucune », l'outil efface le
   mot de passe enregistré, pour qu'il ne parte jamais vers un autre serveur. Saisissez-le de nouveau dans le même
-  enregistrement ; sinon, l'écran vous le dit.
+  enregistrement. Sinon, l'écran vous le dit.
 - L'outil garde le mot de passe chiffré avec la clé secrète de l'installation (`DJANGO_SECRET_KEY`, ou le fichier
   `/data/.secret_key`). La sauvegarde d'un espace ne contient jamais les réglages des e-mails. La sauvegarde du registre
   commun (`backups/shared`, réservée à l'IT) les contient, avec le mot de passe chiffré.
@@ -1358,11 +1490,11 @@ Pour configurer les e-mails dans le fichier `.env` :
 
 ### Relances
 
-L'équipe responsable gère les e-mails de relance dans **Tableau de bord › Relancer…**. Chaque personne reçoit un seul
-e-mail, sans copie. L'e-mail liste ce qui lui reste à saisir. Avant d'envoyer l'e-mail, l'outil affiche l'aperçu exact
-du message. L'équipe responsable règle le modèle.
+Les administrateurs et les validateurs envoient les e-mails de relance dans **Tableau de bord › Relancer…**. Chaque
+personne reçoit un seul e-mail, sans copie. L'e-mail liste ce qui lui reste à saisir. Avant d'envoyer l'e-mail,
+l'outil affiche l'aperçu exact du message. Un administrateur règle le modèle.
 
-L'équipe responsable peut activer les relances automatiques dans la même page. L'outil les envoie aux jours choisis
+Un administrateur peut activer les relances automatiques dans la même page. L'outil les envoie aux jours choisis
 avant la fin de la saisie. Il les vérifie chaque jour à `REMINDER_TIME` (09:00 par défaut). `PUBLIC_URL` donne
 l'adresse mise dans ces e-mails. Par défaut, l'outil déduit cette adresse de `DOMAIN`.
 
@@ -1371,7 +1503,8 @@ l'adresse mise dans ces e-mails. Par défaut, l'outil déduit cette adresse de `
 ## 8. Utiliser PostgreSQL (facultatif)
 
 SQLite est la base par défaut. Vous n'avez aucun serveur de base de données à gérer. SQLite écrit un enregistrement à
-la fois. Les autres enregistrements attendent leur tour, jusqu'à 60 secondes.
+la fois. Les autres enregistrements attendent leur tour, jusqu'à 60 secondes. Quand beaucoup de personnes
+enregistrent au même moment, passez à PostgreSQL : voir « Capacité ».
 
 ### Capacité
 
@@ -1454,8 +1587,9 @@ Si l'installation n'a que l'espace principal, vous pouvez faire plus court. Saut
 nom de l'espace, ni les comptes qui n'existent que dans un autre espace.
 
 La commande `python manage.py shell` de l'étape 2 est le seul moyen de faire une archive du registre à la demande : l'outil n'a
-pas de commande pour cela. Nous avons comparé les données de l'installation PostgreSQL à celles de l'installation SQLite,
-table par table, pour deux espaces : elles sont identiques (seuls les numéros des lignes d'accès du registre changent).
+pas de commande pour cela. Un essai de ce passage a comparé les données de l'installation PostgreSQL à celles de
+l'installation SQLite, table par table, pour deux espaces : elles sont identiques (seuls les numéros des lignes d'accès
+du registre changent).
 
 ### Plusieurs espaces avec PostgreSQL
 
@@ -1466,13 +1600,14 @@ limite de connexions de votre offre (petites offres Clever Cloud). Voir [docs/sp
 
 ### Recevoir un e-mail quand quelque chose ne va pas
 
-L'outil vous prévient par e-mail : vous n'avez aucune supervision à brancher. Un gestionnaire des espaces allume les
-alertes dans **Administration › Paramètres › Santé**, encart
-**Alertes par e-mail**, et choisit les destinataires : par défaut les administrateurs de l'espace principal et les
-gestionnaires des espaces, plus d'autres adresses, par exemple la boîte de l'équipe IT. Sur une installation neuve, les
-alertes sont allumées d'office ; une installation qui existait avant les alertes par e-mail les garde éteintes après
-une mise à jour, tant que personne ne les allume. Éteintes, elles le restent. Elles ont besoin du serveur d'e-mails
-(section 7) : sans lui, l'outil n'envoie rien.
+L'outil vous prévient par e-mail : vous n'avez aucune supervision à brancher. Sur une installation neuve, les alertes
+par e-mail sont allumées d'office. Elles ont besoin du serveur d'e-mails (section 7) : sans lui, l'outil n'envoie
+rien. Une installation qui existait avant les alertes par e-mail les garde éteintes après une mise à jour, tant qu'un
+gestionnaire des espaces ne les allume pas. Une fois éteintes, elles le restent.
+
+Un gestionnaire des espaces règle les alertes dans **Administration › Paramètres › Santé**, encart **Alertes par
+e-mail**, et choisit les destinataires : par défaut les administrateurs de l'espace principal et les gestionnaires des
+espaces, plus d'autres adresses, par exemple la boîte de l'équipe IT.
 
 ![Administration › Paramètres › Santé, encart Alertes par e-mail : alertes allumées, destinataires et alerte d'essai](../screenshots/fr/admin-health-alerts.png)
 
@@ -1626,12 +1761,11 @@ seul espace). Pour effacer les sessions terminées à la main, lancez
 
 ### Vérifier qu'un gros import n'est pas bloqué
 
-Le même processus fabrique les gros exports (au-delà du seuil que l'administrateur règle dans **Administration ›
-Paramètres › Hébergement › Gros exports**) : leurs fichiers sont dans `files/exports/` du dossier des données, effacés
-après 7 jours, jamais dans les sauvegardes (rien à copier).
-
 Les gros imports de valeurs se font en arrière-plan, dans le processus `run_imports --schedule`. L'image lance ce
-processus à côté des sauvegardes, des relances et du contrôle des données. Le détail de `/sante/` donne
+processus à côté des sauvegardes, des relances et du contrôle des données. Le même processus fabrique les gros exports
+(au-delà du seuil que l'administrateur règle dans **Administration › Paramètres › Hébergement › Gros exports**). Leurs
+fichiers sont dans `files/exports/` du dossier des données, effacés après 7 jours, et jamais dans les sauvegardes :
+rien à copier. Le détail de `/sante/` donne
 `background_imports` pour les imports et `background_exports` pour les gros exports, avec les trois mêmes champs :
 
 - `running` : le nombre d'imports (ou d'exports) qui tournent
@@ -1687,6 +1821,10 @@ Ce tableau présente les problèmes courants, leur cause probable et la solution
 | Tout recommencer depuis zéro (essai) | **Avertissement :** cela **efface toutes les données**. Lancez `docker compose down -v`, puis `./install.sh`. |
 
 ## 11. Tester l'installation
+
+Cette partie s'adresse aux personnes qui modifient le code de l'outil. Vous n'en avez pas besoin pour installer
+l'outil. Les scripts d'essai sont dans le code (dossier `docker/`), pas dans le dossier d'une installation en une
+commande.
 
 Le script `bash docker/test_installation.sh` reproduit une installation sur une machine vierge. Il copie le dépôt dans
 un dossier vide et lance `./install.sh`. Ensuite, il vérifie ces points :

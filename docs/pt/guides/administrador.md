@@ -20,6 +20,8 @@ O primeiro arranque abre um assistente com 8 passos. Começa pela sua própria c
 
 Se sair do assistente, clique em **Administração › Definições › Retomar a configuração inicial** para continuar.
 
+Tem uma cópia de segurança da ferramenta, feita por outro servidor ou pela versão tudo-em-um? Crie a sua conta no passo 1. A partir do passo 2, enquanto a instalação estiver vazia, abra **Começar a partir de uma cópia de segurança**, escolha o ficheiro e confirme. Mantém a sua palavra-passe e continua administrador. As outras contas da cópia de segurança não têm palavra-passe: crie uma palavra-passe provisória para elas em **Administração › Contas**. Numa instalação em serviço, um gestor de espaços faz o mesmo em **Administração › Definições › Alojamento**.
+
 ## Adicionar um referencial {#framework}
 
 1. Clique em **Administração** na barra superior. Na **Visão geral**, clique em **Adicionar um referencial** na linha **Referenciais e KPI**.
@@ -86,6 +88,19 @@ Um leitor ou um auditor não introduz nem valida nada. Quando mudar a função d
 ![Administração, Contas](../../screenshots/pt/admin-accounts.png)
 
 Para ver quem iniciou sessão e quando, clique em **Histórico de inícios de sessão** em **Administração › Contas**. Cada linha indica a data, a conta e o resultado: **Bem-sucedido**, **Falhado** ou **Bloqueado: demasiadas tentativas**. Um nome de utilizador que não corresponde a nenhuma conta do espaço só aparece com uma referência, nunca com o texto escrito. Filtre por resultado ou por período, ou pesquise um nome. Defina durante quanto tempo a ferramenta guarda o histórico em **Administração › Definições › Alojamento** (180 dias por predefinição).
+
+## Administrador ou gestor de espaços {#space-manager}
+
+Um administrador define o seu espaço: as contas, os referenciais, as campanhas e as definições do espaço. Um gestor de espaços define toda a instalação. Só um gestor de espaços pode:
+
+- criar, mudar o nome e arquivar os espaços, e bloquear o início de sessão em todos os espaços (**Administração › Definições › Espaços**);
+- alterar o servidor de email, os alertas por email, a cópia externa das cópias de segurança e as atualizações automáticas (**Definições › Alojamento** e **Definições › Estado**);
+- configurar o início de sessão da empresa;
+- restaurar uma cópia de segurança vinda de outra instalação.
+
+Só um gestor de espaços pode também alterar o nome, o email ou a palavra-passe de outro gestor de espaços.
+
+Em **Administração › Contas**, a etiqueta **Gestor de espaços** aparece ao lado da função. Para nomear ou retirar um gestor de espaços, abra a conta e use a caixa **Administrador ou gestor de espaços**. Só um gestor de espaços vê o botão, e só se pode nomear um administrador ativo do espaço principal. Um gestor de espaços que deixa de ser administrador ativo do espaço principal (outra função, conta desativada, início de sessão bloqueado) perde esta função: a ficha da conta pede uma confirmação antes de guardar. A ferramenta mantém sempre um gestor de espaços que pode agir: ninguém pode desativar, mudar a função, eliminar ou bloquear o último, e a ferramenta pede para nomear primeiro outro gestor de espaços. Não pode retirar esta função a si próprio. Cada alteração acrescenta uma linha ao **Histórico**.
 
 ## Atribuir os KPI {#assign}
 
@@ -236,13 +251,13 @@ Cada resposta é uma proposta marcada «Proposto pela IA». Nada é guardado enq
 
 ## Verificar o alojamento e as cópias de segurança {#hosting}
 
-Aceda a **Administração › Definições › Alojamento**. A página mostra a versão, a cópia de segurança automática, o controlo dos dados e a configuração do email. Clique em **Criar e transferir uma cópia de segurança** para fazer uma de imediato. A equipa de informática copia as cópias de segurança para outro local. Ou um gestor de espaços define a **Cópia fora do servidor**: a ferramenta copia então ela própria cada cópia de segurança para um armazenamento compatível com S3 ou um servidor SFTP fornecido pela equipa de informática, e avisa-o se uma cópia falhar.
+Aceda a **Administração › Definições › Alojamento**. A página mostra a versão, a cópia de segurança automática, o controlo dos dados e a configuração do email. Clique em **Criar e transferir uma cópia de segurança** para fazer uma de imediato. A equipa de informática copia as cópias de segurança para outro local. Ou um gestor de espaços define uma cópia no bloco **Cópia fora do servidor**: a ferramenta copia então ela própria cada cópia de segurança para um armazenamento compatível com S3 ou um servidor SFTP fornecido pela equipa de informática, e avisa-o se uma cópia falhar.
 
 ![Definições, Alojamento](../../screenshots/pt/hosting.png)
 
 ![Definições, Alojamento, Cópia fora do servidor](../../screenshots/pt/hosting-external-copy.png)
 
-Para configurar o servidor de email, use o bloco **Emails** da mesma página. Introduza o servidor, a porta, a segurança, o nome de utilizador, a palavra-passe e o endereço de envio que a equipa informática lhe indicar. Clique em **Guardar** e depois em **Enviar um email de teste**. Se o email não for enviado, uma mensagem indica a causa em palavras simples. Estas definições valem para todos os espaços: só um gestor de espaços as pode alterar. A palavra-passe nunca é mostrada novamente. Se a equipa informática definiu o email no ficheiro de definições, o bloco mostra estas definições só de leitura.
+Para configurar o servidor de email, use o bloco **Emails** da mesma página. Estas definições valem para todos os espaços: só um gestor de espaços as pode alterar. Introduza o servidor, a porta, a segurança, o nome de utilizador, a palavra-passe e o endereço de envio que a equipa informática lhe indicar. Clique em **Guardar** e depois em **Enviar um email de teste**. Se o email não for enviado, uma mensagem indica a causa em palavras simples. A palavra-passe nunca é mostrada novamente. Se a equipa informática definiu o email no ficheiro de definições, o bloco mostra estas definições só de leitura.
 
 ![Definições, Alojamento, Emails](../../screenshots/pt/hosting-emails.png)
 
@@ -250,11 +265,11 @@ Para ver num relance se está tudo bem, aceda a **Administração › Definiçõ
 
 ![Definições, Estado](../../screenshots/pt/admin-health.png)
 
-A ferramenta também o pode avisar por email. No fim de **Definições › Estado**, um gestor de espaços liga os **Alertas por email** e escolhe os destinatários: por omissão os administradores do espaço principal e os gestores de espaços, mais outros endereços, por exemplo a caixa de correio da equipa de IT. Quando aparece um problema (cópia de segurança falhada ou atrasada, disco quase cheio, tarefa em segundo plano parada, emails falhados…), os destinatários recebem um email que diz o que fazer. Depois recebem um lembrete no máximo uma vez por dia enquanto o problema durar, e um email quando estiver resolvido. Numa instalação nova, os alertas estão ligados desde o início; uma instalação que já existia antes deles mantém-nos desligados até alguém os ligar. A página diz que caso se aplica. Clique em **Enviar um alerta de teste** para os verificar. Quando o servidor está desligado, a ferramenta não consegue avisar ninguém.
+A ferramenta também o pode avisar por email. No fim de **Definições › Estado**, um gestor de espaços liga os **Alertas por email** e escolhe os destinatários: por omissão os administradores do espaço principal e os gestores de espaços, mais outros endereços, por exemplo a caixa de correio da equipa de IT. Quando aparece um problema (cópia de segurança falhada ou atrasada, disco quase cheio, tarefa em segundo plano parada, emails falhados…), os destinatários recebem um email que diz o que fazer. Depois recebem um lembrete no máximo uma vez por dia enquanto o problema durar, e um email quando estiver resolvido. Numa instalação nova, os alertas estão ligados desde o início. Uma instalação que já existia antes deles mantém-nos desligados até um gestor de espaços os ligar. A página diz que caso se aplica. Clique em **Enviar um alerta de teste** para os verificar. Quando o servidor está desligado, a ferramenta não consegue avisar ninguém.
 
 ![Definições, Estado, Alertas por email](../../screenshots/pt/admin-health-alerts.png)
 
-O bloco **Atualizações automáticas** de **Definições › Alojamento** mostra a última verificação do servidor e o seu resultado. Um gestor de espaços escolhe o que acontece quando é publicada uma nova versão: **Instalá-la automaticamente** (durante a noite, depois de uma cópia de segurança; se a nova versão não funcionar, o servidor volta à versão anterior), **Só avisar** (a equipa de IT instala-a) ou **Desligado**, e quantos dias esperar depois da publicação (3 por predefinição). É uma tarefa do servidor que faz o trabalho, nunca a própria ferramenta. Se o ecrã disser que a tarefa não está instalada, peça à equipa de IT que a instale.
+O bloco **Atualizações automáticas** de **Definições › Alojamento** mostra a última verificação do servidor e o seu resultado. Um gestor de espaços escolhe o que acontece quando é publicada uma nova versão: **Instalá-la automaticamente** (durante a noite, depois de uma cópia de segurança; se a nova versão não funcionar, o servidor volta à versão anterior), **Só avisar** (a equipa de IT instala-a) ou **Desligado**, e quantos dias esperar depois da publicação (3 por predefinição). Depois de uma instalação nova feita com um só comando, a opção é **Instalá-la automaticamente**. É uma tarefa do servidor que faz o trabalho, nunca a própria ferramenta. Se o ecrã disser que a tarefa não está instalada, peça à equipa de IT que a instale.
 
 ![Definições, Alojamento, Atualizações automáticas](../../screenshots/pt/hosting-auto-updates.png)
 

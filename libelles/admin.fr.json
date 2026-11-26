@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "a restauré une sauvegarde",
  "admin.hebergement.smtp.form.en_clair": "Envoyer le mot de passe sans chiffrement",
  "admin.hebergement.smtp.en_clair_aide": "Avec la sécurité « Aucune », le mot de passe circule en clair sur le réseau : toute personne sur le trajet peut le lire. Choisissez STARTTLS ou SSL/TLS si le serveur le propose. Un relais sans mot de passe ne demande aucune confirmation.",
- "admin.hebergement.smtp.erreur.en_clair": "Avec la sécurité « Aucune », le mot de passe circulerait en clair sur le réseau. Choisissez STARTTLS ou SSL/TLS, retirez le mot de passe, ou confirmez avec la case ci-dessous."
+ "admin.hebergement.smtp.erreur.en_clair": "Avec la sécurité « Aucune », le mot de passe circulerait en clair sur le réseau. Choisissez STARTTLS ou SSL/TLS, retirez le mot de passe, ou confirmez avec la case ci-dessous.",
+ "admin.compte.gestionnaire.titre": "Administrateur ou gestionnaire des espaces",
+ "admin.compte.gestionnaire.est": "{nom} est gestionnaire des espaces.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} n’est pas gestionnaire des espaces.",
+ "admin.compte.gestionnaire.admin": "Un administrateur règle son espace : les comptes, les référentiels, les campagnes et les paramètres de l’espace.",
+ "admin.compte.gestionnaire.gestionnaire": "Un gestionnaire des espaces règle toute l’installation : les espaces, le serveur d’e-mails, les alertes par e-mail, la copie externe des sauvegardes, les mises à jour automatiques et la connexion d’entreprise.",
+ "admin.compte.gestionnaire.restauration": "Il restaure aussi une sauvegarde venue d’une autre installation.",
+ "admin.compte.gestionnaire.nommer": "Nommer gestionnaire des espaces",
+ "admin.compte.gestionnaire.nommer_confirmer": "Nommer {nom} gestionnaire des espaces ? Cette personne pourra alors régler toute l’installation.",
+ "admin.compte.gestionnaire.retirer": "Retirer le rôle de gestionnaire",
+ "admin.compte.gestionnaire.reserve": "Seul un gestionnaire des espaces peut nommer ou retirer un gestionnaire des espaces.",
+ "admin.compte.gestionnaire.vous": "Vous ne pouvez pas vous retirer ce rôle. Un autre gestionnaire des espaces le peut.",
+ "admin.journal.champ.gestionnaire": "gestionnaire des espaces",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} ne sera plus administrateur actif de l’espace principal et perd donc le rôle de gestionnaire des espaces. Cochez la case ci-dessous pour confirmer.",
+ "admin.compte.gestionnaire.perte_case": "Retirer à {nom} le rôle de gestionnaire des espaces",
+ "admin.compte.gestionnaire.perte_aide": "Un gestionnaire des espaces doit être administrateur actif de l’espace principal. Un gestionnaire des espaces pourra de nouveau nommer cette personne plus tard.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} n’est plus gestionnaire des espaces.",
+ "admin.compte.gestionnaire.ancien": "{nom} n’est pas administrateur actif de l’espace principal. Cette personne perd le rôle de gestionnaire des espaces au prochain changement de son rôle ou de son état.",
+ "admin.compte.gestionnaire.pas_eligible": "Seul un administrateur actif de l’espace principal peut être nommé.",
+ "admin.ailleurs.titre": "Restaurer une sauvegarde d'une autre installation",
+ "admin.ailleurs.titre_h1": "Restaurer la sauvegarde du {date} d'une autre installation",
+ "admin.ailleurs.danger_titre": "Cette sauvegarde ne vient pas de cette installation",
+ "admin.ailleurs.non_verifiable": "<strong>L'outil ne peut pas vérifier que personne n'a modifié ce fichier.</strong> Ne la restaurez que si vous savez d'où elle vient. Le nom, la date et la version ci-dessus sont ce que dit le fichier.",
+ "admin.ailleurs.remplace": "<strong>Tout le contenu de l'espace « {espace} » est remplacé</strong> : valeurs, preuves, organisations, KPI, campagnes, réglages de l'espace, historique et comptes de l'espace.",
+ "admin.ailleurs.garde": "Les autres espaces et les réglages de toute l'installation ne changent pas : serveur d'e-mails, copie externe, alertes par e-mail, connexion d'entreprise et clé de l'IA. La sauvegarde ne les contient pas, ni leurs secrets.",
+ "admin.ailleurs.assistants": "Les jetons des assistants (MCP) de cet espace ne fonctionnent plus. Chaque personne en crée un nouveau.",
+ "admin.ailleurs.comptes_titre": "Les comptes après la restauration",
+ "admin.ailleurs.vous.admin": "Votre compte ({email}) est administrateur dans la sauvegarde. Vous gardez votre mot de passe.",
+ "admin.ailleurs.vous.remis_admin": "Votre compte ({email}) est dans la sauvegarde, mais pas comme administrateur actif. Après la restauration, l'outil le remet administrateur actif et l'écrit dans l'historique. Vous gardez votre mot de passe.",
+ "admin.ailleurs.vous.ajoute": "Votre compte ({email}) n'est pas dans la sauvegarde. Après la restauration, l'outil l'ajoute comme administrateur de cet espace et l'écrit dans l'historique. Vous gardez votre mot de passe.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 autre compte n'aura pas de mot de passe, car les sauvegardes ne contiennent jamais de mot de passe. Après la restauration, donnez-lui un mot de passe provisoire dans Administration › Comptes.",
+  "other": "{n} autres comptes n'auront pas de mot de passe, car les sauvegardes ne contiennent jamais de mot de passe. Après la restauration, donnez-leur un mot de passe provisoire dans Administration › Comptes."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 compte a le même numéro et le même e-mail qu'un compte d'un autre espace de cette installation. Il garde son mot de passe.",
+  "other": "{n} comptes ont le même numéro et le même e-mail qu'un compte d'un autre espace de cette installation. Ils gardent leur mot de passe."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 compte n'existe aujourd'hui que dans cet espace et n'est pas le vôtre. Les comptes de la sauvegarde le remplacent.",
+  "other": "{n} comptes n'existent aujourd'hui que dans cet espace et ne sont pas le vôtre. Les comptes de la sauvegarde les remplacent."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 autre gestionnaire des espaces n'a de compte que dans cet espace. Après la restauration, cette personne n'est plus gestionnaire des espaces. Vous pouvez lui redonner ce rôle dans Espaces › Personnes et accès.",
+  "other": "{n} autres gestionnaires des espaces n'ont de compte que dans cet espace. Après la restauration, ils ne sont plus gestionnaires des espaces. Vous pouvez leur redonner ce rôle dans Espaces › Personnes et accès."
+ },
+ "admin.ailleurs.admins": "Administrateurs dans la sauvegarde : {liste}.",
+ "admin.ailleurs.compris_origine": "Je sais d'où vient cette sauvegarde. J'accepte que l'outil ne puisse pas la vérifier.",
+ "admin.ailleurs.compris": "Je comprends que le contenu de cette sauvegarde remplace tout le contenu de l'espace « {espace} ».",
+ "admin.ailleurs.erreur_confirmation": "Pour restaurer, cochez les deux cases et saisissez {mot} en majuscules.",
+ "admin.ailleurs.reussie": "Restauration réussie. Cet espace est revenu à l'état de la sauvegarde du {date}. Reconnectez-vous avec votre propre mot de passe. Donnez ensuite un mot de passe provisoire aux autres comptes dans Administration › Comptes. Les relances automatiques, l'assistant IA et les assistants (MCP) sont éteints : rallumez-les dans la page Relances et dans Paramètres.",
+ "admin.ailleurs.reserve": "Seul un gestionnaire des espaces peut restaurer une sauvegarde d'une autre installation.",
+ "admin.ailleurs.conflits": {
+  "one": "1 compte de cette sauvegarde a le numéro, l'e-mail ou l'identifiant d'une autre personne, qui a un compte dans un autre espace ({exemples}). L'outil ne peut pas restaurer cette sauvegarde depuis cette page sans mêler deux personnes. Rien n'a changé. L'équipe informatique peut la restaurer en ligne de commande (guide d'installation, « Restaurer une sauvegarde »).",
+  "other": "{n} comptes de cette sauvegarde ont le numéro, l'e-mail ou l'identifiant d'autres personnes, qui ont un compte dans un autre espace ({exemples}). L'outil ne peut pas restaurer cette sauvegarde depuis cette page sans mêler deux personnes. Rien n'a changé. L'équipe informatique peut la restaurer en ligne de commande (guide d'installation, « Restaurer une sauvegarde »)."
+ },
+ "admin.ailleurs.restaurateur_absent": "L'outil ne trouve pas le compte de la personne qui restaure dans la liste commune des comptes. Contactez votre équipe informatique (guide d'installation, « Restaurer une sauvegarde »).",
+ "admin.ailleurs.base_piegee": "La base de cette sauvegarde contient des éléments que l'outil ne crée jamais (déclencheurs, vues ou colonnes calculées). L'outil ne la restaure pas. Rien n'a changé.",
+ "admin.ailleurs.aide_depot": "En tant que gestionnaire des espaces, vous pouvez aussi restaurer une sauvegarde d'une autre installation, par exemple après un changement de serveur. L'outil montre ce qui change avant de remplacer quoi que ce soit.",
+ "admin.ailleurs.historique": "(autre installation « {nom} »)",
+ "admin.ailleurs.modele_refuse": "Cette sauvegarde contient des données qu'une sauvegarde de l'outil ne contient jamais ({modele}). L'outil ne la restaure pas. Rien n'a changé.",
+ "admin.ailleurs.empreinte_changee": "Le fichier a changé après l'affichage de la page de confirmation. Rien n'a changé. Ajoutez de nouveau le fichier.",
+ "admin.ailleurs.ia_eteinte": "Après la restauration, les relances automatiques, l'assistant IA et les assistants (MCP) de cet espace sont éteints, et les imports et exports en arrière-plan qui attendaient sont arrêtés. Rallumez-les dans la page Relances et dans Paramètres si vous en avez besoin.",
+ "admin.sauvegarde.schema_inattendu": "La base de cette sauvegarde n'a pas la structure que cette version de l'outil attend ({detail}). L'outil ne l'utilise pas.",
+ "admin.restauration.erreur.retour": "La restauration a échoué après le remplacement de la base : {erreur} L'outil est revenu à l'état d'avant la restauration (sauvegarde « {avant} »). Vos données sont telles qu'avant, mais les jetons des assistants (MCP) de cet espace ne fonctionnent plus : chaque personne en crée un nouveau.",
+ "admin.restauration.erreur.retour_impossible": "La restauration a échoué après le remplacement de la base : {erreur} L'outil n'a pas pu revenir à l'état d'avant la restauration (sauvegarde « {avant} »). Contactez votre équipe informatique (guide d'installation, « Si une restauration est interrompue »)."
 }

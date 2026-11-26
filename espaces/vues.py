@@ -96,10 +96,12 @@ def liste(request):
                 e.nom = nom
                 e.save(update_fields=["nom"])
                 messages.success(request, libelle("espaces.liste.renomme", nom=nom))
+        elif action == "archiver" and not e.principal and _archiver(request, e):
+            pass  # refusé (dernier gestionnaire capable d'agir) : message déjà donné
         elif action in ("archiver", "reactiver") and not e.principal:
-            e.etat = Espace.Etat.ARCHIVE if action == "archiver" else Espace.Etat.ACTIF
-            e.save(update_fields=["etat"])
             if action == "reactiver":
+                e.etat = Espace.Etat.ACTIF
+                e.save(update_fields=["etat"])
                 from .comptes import reconcilier
 
                 reconcilier([e.code])  # comptes changés pendant l'archivage
@@ -123,9 +125,27 @@ def liste(request):
                                                   "sous_rubrique": "espaces", "lignes": lignes, **_personnes()})
 
 
+def _archiver(request, e):
+    """Archive l'espace ``e``, sauf s'il porte la seule copie active du dernier gestionnaire capable d'agir
+    (``comptes.appliquer``) : vrai si refusé (message donné)."""
+    from . import comptes as EC
+
+    def ecrire():
+        e.etat = Espace.Etat.ARCHIVE
+        e.save(update_fields=["etat"])
+
+    try:
+        EC.appliquer(None, acteur=request.user, archive=e.code, ecrire=ecrire)
+    except EC.DernierGestionnaire as x:
+        messages.error(request, x.message)
+        return True
+    return False
+
+
 def _personnes():
     """« Personnes et accès » : chaque compte, son rôle dans chaque espace (index des accès), gestionnaire ou non,
     connexion permise ou bloquée (tous les espaces)."""
+    from . import comptes as EC
     from .contexte_gabarits import role
     from .models import AccesEspace
 
@@ -141,23 +161,37 @@ def _personnes():
             roles.append("" if a is None else role(a.role) if a.actif else libelle("espaces.personnes.desactive",
                                                                                     role=role(a.role)))
         if any(roles) or c.gestionnaire:
-            personnes.append({"c": c, "roles": roles})
+            # « Nommer » proposé seulement à un administrateur actif de l'espace principal (même règle que l'envoi)
+            p = next((acces.get(c.pk, {}).get(e.pk) for e in espaces if e.principal), None)
+            personnes.append({"c": c, "roles": roles, "nommable": EC.admin_actif_principal(
+                c.pk, acces=(p.role, p.actif) if p else None, compte_actif=c.actif)})
     return {"espaces_colonnes": espaces, "personnes": personnes}
 
 
 def _personne(request):
-    """Gestionnaire des espaces oui / non ; connexion bloquée ou permise dans tous les espaces."""
-    c = Compte.objects.filter(pk=request.POST.get("compte") or 0).first()
+    """Gestionnaire des espaces oui / non (``comptes.changer_gestionnaire``, la même écriture que la fiche d'un compte) ;
+    connexion bloquée ou permise dans tous les espaces."""
+    from . import comptes as EC
+
     oui = request.POST.get("valeur") == "1"
+    if request.POST["action"] == "gestionnaire":
+        fait, message = EC.changer_gestionnaire(request.user, request.POST.get("compte"), oui)
+        (messages.success if fait else messages.error)(request, message)
+        return
+    compte = request.POST.get("compte") or ""
+    # numéro écrit en chiffres ASCII seulement (avant : erreur 500 pour un numéro illisible)
+    c = Compte.objects.filter(pk=compte).first() if compte.isascii() and compte.isdigit() and len(compte) < 19 else None
     if c is None:
         messages.error(request, libelle("espaces.erreur.compte_introuvable"))
-    elif c.pk == request.user.pk and not (oui if request.POST["action"] == "gestionnaire" else not oui):
+    elif c.pk == request.user.pk and oui:
         messages.error(request, libelle("espaces.erreur.soi_meme"))
-    elif request.POST["action"] == "gestionnaire":
-        Compte.objects.filter(pk=c.pk).update(gestionnaire=oui)
-        messages.success(request, libelle("espaces.personnes.nomme" if oui else "espaces.personnes.retire", nom=c))
     else:
-        Compte.objects.filter(pk=c.pk).update(actif=not oui)
+        try:  # bloquer le dernier gestionnaire capable d'agir : refusé ; un autre gestionnaire bloqué perd le rôle
+            EC.appliquer(c.pk, acteur=request.user, compte_actif=not oui,
+                         ecrire=lambda: Compte.objects.filter(pk=c.pk).update(actif=not oui))
+        except EC.DernierGestionnaire as x:
+            messages.error(request, x.message)
+            return
         messages.success(request, libelle("espaces.personnes.bloque" if oui else "espaces.personnes.debloque", nom=c))
 
 def _vers_le_nouvel_espace(request, e):

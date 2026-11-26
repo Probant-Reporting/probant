@@ -6,6 +6,7 @@ modifiée (comptes, rôles, valeurs) et déposée de nouveau par un administrate
 valide ; l'IT peut toujours la restaurer en ligne de commande avec « restore … --unsigned » (archives d'avant cette
 version, d'un autre serveur)."""
 import io
+import shutil
 import json
 import zipfile
 
@@ -103,8 +104,19 @@ class Signature(DossiersTemporaires, TransactionTestCase):
             self.assertTrue(SV.signature_valide(self.a.chemin))  # clé changée, l'ancienne gardée en secours
 
     def test_page_hebergement_refuse_une_archive_non_signee(self):
+        """Administrateur qui n'est pas gestionnaire des espaces. Un gestionnaire, lui, est envoyé vers la page d'une
+        autre installation (copie mise à part, version 1.1.1 : test_origine_archive_autre_installation)."""
+        from espaces.models import Compte
+
+        from . import sauvegardes_ailleurs as SA
+
         non_signee = self.archive("20", changer={"backup.json": sans_signature})
         self.client.force_login(self.admin)
+        rep = self.client.get(reverse("parametres:sauvegarde_restaurer", args=[non_signee.name]))
+        self.assertEqual(rep.status_code, 302)
+        self.assertIn("restaurer-autre-installation", rep["Location"])  # gestionnaire : jamais par cette page
+        shutil.rmtree(SA.dossier())
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=False)
         url = reverse("parametres:sauvegarde_restaurer", args=[non_signee.name])
         rep = self.client.get(url, follow=True)
         self.assertContains(rep, "pas été faite par cette installation")
@@ -115,6 +127,12 @@ class Signature(DossiersTemporaires, TransactionTestCase):
         self.assertFalse(SV.historique_restaurations())
 
     def test_depot_d_une_archive_non_signee_ou_modifiee_refuse(self):
+        """Administrateur qui n'est pas gestionnaire des espaces. Avec la version 1.1.1, un gestionnaire dépose
+        une telle archive à part, pour la page d'une autre installation (test_sauvegarde_restaurer_ailleurs_droits) :
+        elle n'entre pas non plus dans la liste (vérifié à la fin)."""
+        from espaces.models import Compte
+
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=False)
         self.client.force_login(self.admin)
         avant = {x.nom for x in SV.archives()}
         for nom in ("21", "22"):
@@ -132,6 +150,11 @@ class Signature(DossiersTemporaires, TransactionTestCase):
         deposee = next(x for x in SV.archives() if x.motif == "uploaded")
         self.assertRedirects(rep, reverse("parametres:sauvegarde_restaurer", args=[deposee.nom]),
                              fetch_redirect_response=False)
+        # gestionnaire des espaces : l'archive modifiée n'entre pas dans la liste non plus (rangée à part)
+        Compte.objects.filter(pk=self.admin.pk).update(gestionnaire=True)
+        contenu = self.archive("23", changer={"backup.json": sans_signature}).read_bytes()
+        self.client.post(reverse("parametres:sauvegarde_deposer"), {"fichier": SimpleUploadedFile("s.zip", contenu)})
+        self.assertEqual([x.nom for x in SV.archives() if x.motif == "uploaded"], [deposee.nom])
 
     def test_commande_unsigned_pour_l_it(self):
         non_signee = self.archive("30", changer={"backup.json": sans_signature})

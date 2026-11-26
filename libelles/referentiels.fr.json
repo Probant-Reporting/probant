@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Les ajouter aussi aux exercices précédents ?",
  "referentiels.depuis.aide": "Par défaut, à partir de la période en cours : aucun exercice passé ne change. Un exercice clos reçoit le KPI à sa réouverture. Modifiable ensuite dans le contenu du référentiel.",
  "referentiels.apercu.depuis": "Les KPI nouveaux dans ce référentiel sont demandés",
- "referentiels.depuis.fichier_confirmer": "{code} : cette date retire des cases (vides) d'une période en cours. Modifiez-la dans le contenu du référentiel, où vous la confirmez."
+ "referentiels.depuis.fichier_confirmer": "{code} : cette date retire des cases (vides) d'une période en cours. Modifiez-la dans le contenu du référentiel, où vous la confirmez.",
+ "referentiels.mep.depart.titre": "Partir d'une sauvegarde",
+ "referentiels.mep.depart.aide": "Vous avez une sauvegarde de l'outil, faite sur un autre serveur ou un autre ordinateur ? Restaurez-la maintenant. Elle remplace ce que vous avez réglé dans cet assistant. Vous gardez votre compte et votre mot de passe.",
+ "referentiels.mep.depart.compte_d_abord": "Vous avez une sauvegarde de l'outil ? Créez d'abord votre compte. L'étape suivante permet de partir de cette sauvegarde."
 }

@@ -45,6 +45,11 @@ class Command(BaseCommand):
                 if etat == Espace.Etat.ACTIF:
                     comptes.reconcilier([o[cle]])
                 self.stdout.write(f"Space \"{o[cle]}\": {ETATS_EN[etat]}.")
+        # commande de l'IT (secours) : nommer, retirer et archiver restent permis sans les règles de l'outil (seul un
+        # administrateur actif de l'espace principal, jamais sans gestionnaire capable d'agir) ; elle le dit
+        if any(o[k] for k in ("retirer_gestionnaire", "archiver", "gestionnaire")) and not comptes.gestionnaires_capables():
+            self.stdout.write("Warning: no space manager can act now. Appoint an active administrator of the main space "
+                              "with --manager EMAIL.")
         if o["liste"] or not any(o[k] for k in ("reconcilier", "gestionnaire", "retirer_gestionnaire", "archiver", "reactiver")):
             for e in Espace.objects.all():
                 n = e.acces.filter(actif=True).count()

@@ -309,6 +309,36 @@ class AutresRolesBalayageTests(Balayage):
                 self.client.force_login(u)
             self.assertEqual(self.client.get(reverse("entreprise_debut"))["Location"], reverse("login"))
 
+    def test_gestionnaire_des_espaces_par_la_fiche_dans_le_balayage(self):
+        """Nommer ou retirer un gestionnaire des espaces depuis la fiche d'un compte (Administration › Comptes, envoi
+        « gestionnaire », ``espaces.comptes.changer_gestionnaire``) : même adresse que la fiche, balayée ci-dessus ;
+        refusé à tous les rôles sauf l'administrateur, et seulement à un gestionnaire des espaces (refusé à
+        l'administrateur de l'espace principal qui ne l'est pas, comme la page Espaces) ; seul un administrateur actif
+        de l'espace principal peut être nommé (un validateur : refusé, avec un message). Le rôle est au registre
+        commun (``instantane`` ne le voit pas) : lu directement."""
+        from espaces.models import Compte
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertIn("collecte:admin_compte", admin)
+        autre = Utilisateur.objects.create(username="adm2", email="adm2@exemple.test", role=Utilisateur.Role.ADMIN,
+                                           is_superuser=True, is_staff=True)
+        url = reverse("collecte:admin_compte", args=[autre.pk])
+        corps = {"action": "gestionnaire", "valeur": "1"}
+        avant = instantane()
+        for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+            self.client.force_login(u)
+            self.assertEqual(self.client.post(url, corps).status_code, 403, u.role)
+        self.assertFalse(Compte.objects.get(pk=autre.pk).gestionnaire)
+        self.client.force_login(self.admin)
+        self.sans_gestionnaire(lambda: self.assertEqual(self.client.post(url, corps).status_code, 403))
+        self.assertFalse(Compte.objects.get(pk=autre.pk).gestionnaire)
+        self.assertEqual(instantane(), avant)
+        rep = self.client.post(reverse("collecte:admin_compte", args=[self.validateur.pk]), corps)
+        self.assertEqual(rep.status_code, 200)  # fiche redonnée avec le message (pas administrateur de l'espace principal)
+        self.assertFalse(Compte.objects.get(pk=self.validateur.pk).gestionnaire)
+        self.assertEqual(self.client.post(url, corps).status_code, 302)
+        self.assertTrue(Compte.objects.get(pk=autre.pk).gestionnaire)
+
     def test_comptes_en_lecture_seule_avec_attributions_dans_le_balayage(self):
         """Page des comptes en lecture seule qui ont encore des attributions : réservée à
         l'administrateur comme Comptes et Attributions ; balayée ci-dessus pour le contributeur et le validateur, et pour
@@ -440,6 +470,50 @@ class AutresRolesBalayageTests(Balayage):
             self.assertFalse(ReglageAlertes.objects.exists())
             self.assertEqual(self.client.post(url, {**corps, "action": "reglage_alertes"}).status_code, 302)
         self.assertEqual(ReglageAlertes.objects.get().adresses, "it@balayage.example")
+
+    def test_restauration_d_une_autre_installation_dans_le_balayage(self):
+        """Restauration d'une sauvegarde d'une autre installation (Paramètres › Hébergement, parametres/
+        sauvegardes_ailleurs.py) : sa page et le dépôt sont dans le balayage ci-dessus ; GET et POST
+        de la page sont refusés à tous les rôles sauf l'administrateur, et seulement à un gestionnaire des espaces :
+        refusés à l'administrateur de l'espace principal qui ne l'est pas, par l'adresse directe comme par le dépôt."""
+        import shutil
+        import tempfile
+        from pathlib import Path
+
+        from django.core.files.uploadedfile import SimpleUploadedFile
+        from django.test import override_settings
+
+        from parametres import sauvegardes_ailleurs as SA
+        from parametres.aides_tests.autre_installation import archive_d_ailleurs, compte
+
+        admin = {f"{ns}:{nom}" for ns, nom, _ in self.admin_seulement()}
+        self.assertTrue({"parametres:sauvegarde_restaurer_ailleurs", "parametres:sauvegarde_deposer"} <= admin)
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        with override_settings(MEDIA_ROOT=tmp / "media", SAUVEGARDES_DIR=tmp / "sauvegardes"):
+            f = archive_d_ailleurs(tmp / "a.zip", [compte(9000, "ailleurs@exemple.test", "admin")])
+            SA.dossier().mkdir(parents=True)
+            shutil.copy(f, SA.dossier() / "backup-20261126-100000-other-installation.zip")
+            url = reverse("parametres:sauvegarde_restaurer_ailleurs", args=["backup-20261126-100000-other-installation.zip"])
+            corps = {"compris": "on", "origine_connue": "on", "confirmation": "RESTAURER"}
+            avant = instantane()
+            for u in (self.contrib, self.validateur, self.lecteur, self.auditeur):
+                self.client.force_login(u)
+                self.assertEqual(self.client.get(url).status_code, 403, u.role)
+                self.assertEqual(self.client.post(url, corps).status_code, 403, u.role)
+                envoi = {"fichier": SimpleUploadedFile("b.zip", f.read_bytes(), "application/zip")}
+                self.assertEqual(self.client.post(reverse("parametres:sauvegarde_deposer"), envoi).status_code, 403, u.role)
+            self.client.force_login(self.admin)
+
+            def sans():
+                self.assertEqual(self.client.get(url).status_code, 403)
+                self.assertEqual(self.client.post(url, corps).status_code, 403)
+                envoi = {"fichier": SimpleUploadedFile("b.zip", f.read_bytes(), "application/zip")}
+                self.client.post(reverse("parametres:sauvegarde_deposer"), envoi)
+            self.sans_gestionnaire(sans)
+            self.assertEqual(instantane(), avant)
+            self.assertEqual(sorted(p.name for p in SA.dossier().iterdir()), ["backup-20261126-100000-other-installation.zip"])
+            self.assertEqual(self.client.get(url).status_code, 200)  # gestionnaire : la page de confirmation
 
     def test_mises_a_jour_automatiques_dans_le_balayage(self):
         """Mises à jour automatiques (Paramètres › Hébergement, parametres/mise_a_jour_auto.py) : même adresse que la page

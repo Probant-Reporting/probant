@@ -86,5 +86,8 @@
  "espaces.selecteur.ici": "espacio actual",
  "espaces.selecteur.titre": "Cambiar de espacio",
  "espaces.liste.aide_bouton": "Para cambiar de espacio, use el botón con el nombre del espacio, en la barra superior. Aparece en cuanto tiene acceso a dos espacios.",
- "espaces.personnes.aide_droits": "Un gestor crea y gestiona los espacios. Un inicio de sesión bloqueado aquí queda bloqueado en todos los espacios."
+ "espaces.personnes.aide_droits": "Un gestor crea y gestiona los espacios. Un inicio de sesión bloqueado aquí queda bloqueado en todos los espacios.",
+ "espaces.erreur.dernier_gestionnaire": "{nom} es el último gestor de espacios que puede actuar. Nombre primero a otro gestor de espacios.",
+ "espaces.erreur.archive_dernier_gestionnaire": "Este espacio tiene la única cuenta activa del último gestor de espacios que puede actuar. Nombre primero a otro gestor de espacios.",
+ "espaces.erreur.pas_admin_principal": "{nom} no puede ser gestor de espacios: solo un administrador activo del espacio principal puede serlo."
 }

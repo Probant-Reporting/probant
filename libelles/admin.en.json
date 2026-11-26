@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "restored a backup",
  "admin.hebergement.smtp.form.en_clair": "Send the password without encryption",
  "admin.hebergement.smtp.en_clair_aide": "With the security “None”, the password goes over the network in clear text: anyone on the network path can read it. Choose STARTTLS or SSL/TLS if the server offers it. A relay without a password needs no confirmation.",
- "admin.hebergement.smtp.erreur.en_clair": "With the security “None”, the password would go over the network in clear text. Choose STARTTLS or SSL/TLS, remove the password, or confirm with the box below."
+ "admin.hebergement.smtp.erreur.en_clair": "With the security “None”, the password would go over the network in clear text. Choose STARTTLS or SSL/TLS, remove the password, or confirm with the box below.",
+ "admin.compte.gestionnaire.titre": "Administrator or space manager",
+ "admin.compte.gestionnaire.est": "{nom} is a space manager.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} is not a space manager.",
+ "admin.compte.gestionnaire.admin": "An administrator sets up their space: the accounts, the frameworks, the campaigns and the settings of the space.",
+ "admin.compte.gestionnaire.gestionnaire": "A space manager sets up the whole installation: the spaces, the email server, the email alerts, the external copy of the backups, the automatic updates and the company sign-in.",
+ "admin.compte.gestionnaire.restauration": "A space manager also restores a backup from another installation.",
+ "admin.compte.gestionnaire.nommer": "Appoint as space manager",
+ "admin.compte.gestionnaire.nommer_confirmer": "Appoint {nom} as space manager? This person can then set up the whole installation.",
+ "admin.compte.gestionnaire.retirer": "Remove as space manager",
+ "admin.compte.gestionnaire.reserve": "Only a space manager can appoint or remove a space manager.",
+ "admin.compte.gestionnaire.vous": "You cannot remove this role from yourself. Another space manager can do it.",
+ "admin.journal.champ.gestionnaire": "space manager",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} will no longer be an active administrator of the main space and so loses the space manager role. Select the box below to confirm.",
+ "admin.compte.gestionnaire.perte_case": "Remove the space manager role from {nom}",
+ "admin.compte.gestionnaire.perte_aide": "A space manager must be an active administrator of the main space. A space manager can appoint this person again later.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} is no longer a space manager.",
+ "admin.compte.gestionnaire.ancien": "{nom} is not an active administrator of the main space. This person loses the space manager role at the next change of their role or status.",
+ "admin.compte.gestionnaire.pas_eligible": "Only an active administrator of the main space can be appointed.",
+ "admin.ailleurs.titre": "Restore a backup from another installation",
+ "admin.ailleurs.titre_h1": "Restore the backup of {date} from another installation",
+ "admin.ailleurs.danger_titre": "This backup does not come from this installation",
+ "admin.ailleurs.non_verifiable": "<strong>The tool cannot check that nobody changed this file.</strong> Restore it only if you know where it comes from. The name, the date and the version above are what the file says.",
+ "admin.ailleurs.remplace": "<strong>Everything in the space “{espace}” is replaced</strong>: values, evidence, organisations, KPIs, campaigns, settings of the space, history, and the accounts of the space.",
+ "admin.ailleurs.garde": "The other spaces and the settings of the whole installation do not change: email server, external copy, email alerts, company sign-in, and AI key. The backup does not contain them or their secrets.",
+ "admin.ailleurs.assistants": "The assistant tokens (MCP) of this space stop working. Each person creates a new one.",
+ "admin.ailleurs.comptes_titre": "Accounts after the restore",
+ "admin.ailleurs.vous.admin": "Your account ({email}) is an administrator in the backup. You keep your password.",
+ "admin.ailleurs.vous.remis_admin": "Your account ({email}) is in the backup, but not as an active administrator. After the restore, the tool makes it an active administrator again and writes it in the history. You keep your password.",
+ "admin.ailleurs.vous.ajoute": "Your account ({email}) is not in the backup. After the restore, the tool adds it as an administrator of this space and writes it in the history. You keep your password.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 other account will have no password, because backups never contain passwords. After the restore, give it a temporary password in Administration › Accounts.",
+  "other": "{n} other accounts will have no password, because backups never contain passwords. After the restore, give them a temporary password in Administration › Accounts."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 account has the same number and email as an account of another space of this installation. It keeps its password.",
+  "other": "{n} accounts have the same number and email as an account of another space of this installation. They keep their password."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 account exists only in this space today and is not yours. The accounts of the backup replace it.",
+  "other": "{n} accounts exist only in this space today and are not yours. The accounts of the backup replace them."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 other space manager has an account only in this space. After the restore, this person is no longer a space manager. You can give the role again in Spaces › People and access.",
+  "other": "{n} other space managers have an account only in this space. After the restore, they are no longer space managers. You can give the role again in Spaces › People and access."
+ },
+ "admin.ailleurs.admins": "Administrators in the backup: {liste}.",
+ "admin.ailleurs.compris_origine": "I know where this backup comes from. I accept that the tool cannot check it.",
+ "admin.ailleurs.compris": "I understand that the contents of this backup replace everything in the space “{espace}”.",
+ "admin.ailleurs.erreur_confirmation": "To restore, select both boxes and enter {mot} in capital letters.",
+ "admin.ailleurs.reussie": "Restore complete. This space is back to the state of the backup of {date}. Sign in again with your own password. Then give a temporary password to the other accounts in Administration › Accounts. The automatic reminders, the AI assistant, and the assistants (MCP) are off: turn them on again on the Reminders page and in Settings.",
+ "admin.ailleurs.reserve": "Only a space manager can restore a backup from another installation.",
+ "admin.ailleurs.conflits": {
+  "one": "1 account of this backup has the number, the email or the user name of another person, who has an account in another space ({exemples}). The tool cannot restore this backup from this page without mixing two people. Nothing has changed. IT can restore it from the command line (installation guide, “Restore a backup”).",
+  "other": "{n} accounts of this backup have the number, the email or the user name of other people, who have an account in another space ({exemples}). The tool cannot restore this backup from this page without mixing two people. Nothing has changed. IT can restore it from the command line (installation guide, “Restore a backup”)."
+ },
+ "admin.ailleurs.restaurateur_absent": "The tool cannot find the account of the person who restores in the shared list of accounts. Contact your IT team (installation guide, “Restore a backup”).",
+ "admin.ailleurs.base_piegee": "The database of this backup contains elements that the tool never makes (triggers, views, or calculated columns). The tool does not restore it. Nothing has changed.",
+ "admin.ailleurs.aide_depot": "As a space manager, you can also restore a backup from another installation, for example after a change of server. The tool shows what changes before it replaces anything.",
+ "admin.ailleurs.historique": "(other installation “{nom}”)",
+ "admin.ailleurs.modele_refuse": "This backup contains data that a backup of the tool never contains ({modele}). The tool does not restore it. Nothing has changed.",
+ "admin.ailleurs.empreinte_changee": "The file changed after the confirmation page was shown. Nothing has changed. Add the file again.",
+ "admin.ailleurs.ia_eteinte": "After the restore, the automatic reminders, the AI assistant, and the assistants (MCP) of this space are off, and the background imports and exports that were waiting are stopped. Turn them on again on the Reminders page and in Settings if you need them.",
+ "admin.sauvegarde.schema_inattendu": "The database of this backup does not have the structure that this version of the tool expects ({detail}). The tool does not use it.",
+ "admin.restauration.erreur.retour": "The restore failed after the database was replaced: {erreur} The tool went back to the state before the restore (backup “{avant}”). Your data is as it was, but the assistant tokens (MCP) of this space no longer work: each person creates a new one.",
+ "admin.restauration.erreur.retour_impossible": "The restore failed after the database was replaced: {erreur} The tool could not go back to the state before the restore (backup “{avant}”). Contact your IT team (installation guide, “If a restore is interrupted”)."
 }

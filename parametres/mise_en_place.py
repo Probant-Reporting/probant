@@ -164,7 +164,19 @@ def mise_en_place(request, etape=None):
         i.save(update_fields=["mise_en_place_etape"])
     return render(request, f"parametres/mise_en_place/{e.code}.html", {
         "page": "mise_en_place", "etape": e, "etapes": ETAPES, "atteinte": max(i.mise_en_place_etape, etape),
-        "terminee": i.mise_en_place_terminee, **preparer(request, i), **ctx})
+        "terminee": i.mise_en_place_terminee, "depart_sauvegarde": depart_sauvegarde_permis(request),
+        **preparer(request, i), **ctx})
+
+
+def depart_sauvegarde_permis(request):
+    """« Partir d'une sauvegarde » (version 1.1.1) : proposé à la personne connectée, gestionnaire des espaces
+    (le compte créé à l'étape 1 l'est), tant que l'installation est vide (``sauvegardes_ailleurs.installation_vide``).
+    Jamais à un visiteur non connecté : l'étape 1 crée d'abord le compte, la porte reste celle d'aujourd'hui."""
+    from espaces.comptes import est_gestionnaire
+
+    from .sauvegardes_ailleurs import installation_vide
+
+    return bool(request.user.is_authenticated and est_gestionnaire(request.user) and installation_vide())
 
 
 def _suivante(request, i, etape, message=""):

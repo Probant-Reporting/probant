@@ -86,5 +86,8 @@
  "espaces.selecteur.ici": "espace actuel",
  "espaces.selecteur.titre": "Changer d'espace",
  "espaces.liste.aide_bouton": "Pour changer d'espace, utilisez le bouton au nom de l'espace, dans la barre du haut. Il apparaît dès que vous avez accès à deux espaces.",
- "espaces.personnes.aide_droits": "Un gestionnaire crée et gère les espaces. Une connexion bloquée ici est bloquée dans tous les espaces."
+ "espaces.personnes.aide_droits": "Un gestionnaire crée et gère les espaces. Une connexion bloquée ici est bloquée dans tous les espaces.",
+ "espaces.erreur.dernier_gestionnaire": "{nom} est le dernier gestionnaire des espaces qui peut agir. Nommez d’abord un autre gestionnaire des espaces.",
+ "espaces.erreur.archive_dernier_gestionnaire": "Cet espace porte le seul compte actif du dernier gestionnaire des espaces qui peut agir. Nommez d’abord un autre gestionnaire des espaces.",
+ "espaces.erreur.pas_admin_principal": "{nom} ne peut pas être gestionnaire des espaces : seul un administrateur actif de l’espace principal peut l’être."
 }

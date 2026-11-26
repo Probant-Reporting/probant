@@ -5,6 +5,8 @@ from contextlib import contextmanager
 from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
+from espaces.comptes import gestionnaire_change
+
 from .models import Campagne, Reponse
 
 _lot = threading.local()
@@ -22,6 +24,21 @@ def campagne_creee(sender, instance, created, raw=False, **kwargs):
         # KPI des campagnes clôturées leurs chiffres, avec l'arbre de la clôture qu'ils suivaient
         if not figee(instance.periode):
             noter_figes_partiels(instance.periode, arbre_fige(instance.periode))
+
+
+@receiver(gestionnaire_change, dispatch_uid="collecte.gestionnaire_change_journal")
+def gestionnaire_change_journal(sender, acteur, compte, oui, **kwargs):
+    """Gestionnaire des espaces nommé ou retiré (``espaces.comptes.changer_gestionnaire``, page Espaces ou fiche d'un
+    compte), ou rôle perdu par qui n'est plus administrateur actif de l'espace principal
+    (``espaces.comptes.appliquer``) : une ligne d'historique dans l'espace où l'on agit, dans la même transaction.
+    ``acteur`` : la personne, son numéro (acteur de la requête) ou None (commande, système)."""
+    from referentiel.models import Utilisateur
+
+    from .models import Journal
+
+    if isinstance(acteur, int):
+        acteur = Utilisateur.objects.filter(pk=acteur).first()
+    Journal.ecrire(acteur, "reglage_compte", compte, "gestionnaire", not oui, oui)
 
 
 @receiver(post_delete, sender=Campagne, dispatch_uid="collecte.campagne_supprimee_figes")

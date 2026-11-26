@@ -20,6 +20,8 @@ Le premier lancement ouvre un assistant en 8 étapes. Il commence par votre prop
 
 Si vous quittez l'assistant, cliquez sur **Administration › Paramètres › Reprendre la mise en place** pour continuer.
 
+Vous avez une sauvegarde de l'outil, faite par un autre serveur ou par la version tout-en-un ? Créez votre compte à l'étape 1. À partir de l'étape 2, tant que l'installation est vide, ouvrez **Partir d'une sauvegarde**, choisissez le fichier et confirmez. Vous gardez votre mot de passe et restez administrateur. Les autres comptes de la sauvegarde n'ont pas de mot de passe : donnez-leur un mot de passe provisoire dans **Administration › Comptes**. Sur une installation en service, un gestionnaire des espaces fait de même dans **Administration › Paramètres › Hébergement**, avec **Restaurer depuis un fichier .zip téléchargé auparavant**.
+
 ## Ajouter un référentiel {#framework}
 
 1. Cliquez sur **Administration** dans la barre du haut. Sur la **Vue d'ensemble**, cliquez sur **Ajouter un référentiel** sur la ligne **Référentiels et KPI**.
@@ -89,6 +91,19 @@ Un lecteur ou un auditeur ne saisit et ne valide rien. Quand vous passez le rôl
 ![Administration, Comptes](../../screenshots/fr/admin-accounts.png)
 
 Pour voir qui s'est connecté et quand, cliquez sur **Historique des connexions** dans **Administration › Comptes**. Chaque ligne donne la date, le compte et le résultat : **Réussie**, **Manquée** ou **Bloquée : trop d'essais**. Un identifiant qui ne correspond à aucun compte de l'espace n'apparaît que par une référence, jamais par le texte tapé. Filtrez par résultat ou par période, ou cherchez un nom. Réglez la durée de conservation dans **Administration › Paramètres › Hébergement** (180 jours par défaut).
+
+## Administrateur ou gestionnaire des espaces {#space-manager}
+
+Un administrateur règle son espace : les comptes, les référentiels, les campagnes et les paramètres de l'espace. Un gestionnaire des espaces règle toute l'installation. Seul un gestionnaire des espaces peut :
+
+- créer, renommer et archiver les espaces, et bloquer la connexion d'une personne dans tous les espaces (**Administration › Paramètres › Espaces**) ;
+- changer le serveur d'e-mails, les alertes par e-mail, la copie externe des sauvegardes et les mises à jour automatiques (**Paramètres › Hébergement** et **Paramètres › Santé**) ;
+- régler la connexion d'entreprise ;
+- restaurer une sauvegarde venue d'une autre installation.
+
+Seul un gestionnaire des espaces peut aussi changer le nom, l'e-mail ou le mot de passe d'un autre gestionnaire des espaces.
+
+Dans **Administration › Comptes**, l'étiquette **Gestionnaire des espaces** s'affiche à côté du rôle. Pour nommer ou retirer un gestionnaire des espaces, ouvrez le compte et utilisez l'encadré **Administrateur ou gestionnaire des espaces**. Seul un gestionnaire des espaces voit le bouton, et seul un administrateur actif de l'espace principal peut être nommé. Un gestionnaire des espaces qui n'est plus administrateur actif de l'espace principal (autre rôle, compte désactivé, connexion bloquée) perd ce rôle : la fiche du compte demande une confirmation avant d'enregistrer. L'outil garde toujours un gestionnaire des espaces qui peut agir : personne ne peut désactiver, changer de rôle, supprimer ou bloquer le dernier, et l'outil demande de nommer d'abord un autre gestionnaire des espaces. Vous ne pouvez pas vous retirer ce rôle. Chaque changement ajoute une ligne à l'**Historique**.
 
 ## Attribuer les KPI {#assign}
 
@@ -252,13 +267,13 @@ Chaque réponse est une proposition marquée « Proposé par l'IA ». Rien n'est
 
 ## Vérifier l'hébergement et les sauvegardes {#hosting}
 
-Allez dans **Administration › Paramètres › Hébergement**. La page montre la version, la sauvegarde automatique, le contrôle des données et la configuration des e-mails. Cliquez sur **Créer et télécharger une sauvegarde** pour en faire une tout de suite. L'équipe informatique copie les sauvegardes ailleurs. Ou un gestionnaire des espaces règle la **Copie hors du serveur** : l'outil copie alors lui-même chaque sauvegarde vers un stockage compatible S3 ou un serveur SFTP que l'équipe informatique fournit, et vous prévient si une copie échoue.
+Allez dans **Administration › Paramètres › Hébergement**. La page montre la version, la sauvegarde automatique, le contrôle des données et la configuration des e-mails. Cliquez sur **Créer et télécharger une sauvegarde** pour en faire une tout de suite. L'équipe informatique copie les sauvegardes ailleurs. Ou un gestionnaire des espaces règle une copie dans le cadre **Copie hors du serveur** : l'outil copie alors lui-même chaque sauvegarde vers un stockage compatible S3 ou un serveur SFTP que l'équipe informatique fournit, et vous prévient si une copie échoue.
 
 ![Paramètres, Hébergement](../../screenshots/fr/hosting.png)
 
 ![Paramètres, Hébergement, Copie hors du serveur](../../screenshots/fr/hosting-external-copy.png)
 
-Pour régler le serveur d'e-mails, utilisez le cadre **E-mails** de la même page. Saisissez le serveur, le port, la sécurité, l'identifiant, le mot de passe et l'adresse d'expédition que l'équipe informatique vous donne. Cliquez sur **Enregistrer**, puis sur **Envoyer un e-mail de test**. Si l'e-mail ne part pas, un message donne la cause en clair. Ces réglages valent pour tous les espaces : seul un gestionnaire des espaces peut les changer. Le mot de passe n'est jamais réaffiché. Si l'équipe informatique a réglé les e-mails dans le fichier de réglages, le cadre montre ces réglages en lecture seule.
+Pour régler le serveur d'e-mails, utilisez le cadre **E-mails** de la même page. Ces réglages valent pour tous les espaces : seul un gestionnaire des espaces peut les changer. Saisissez le serveur, le port, la sécurité, l'identifiant, le mot de passe et l'adresse d'expédition que l'équipe informatique vous donne. Cliquez sur **Enregistrer**, puis sur **Envoyer un e-mail de test**. Si l'e-mail ne part pas, un message donne la cause en clair. Le mot de passe n'est jamais réaffiché. Si l'équipe informatique a réglé les e-mails dans le fichier de réglages, le cadre montre ces réglages en lecture seule.
 
 ![Paramètres, Hébergement, E-mails](../../screenshots/fr/hosting-emails.png)
 
@@ -266,11 +281,11 @@ Pour voir d'un coup d'œil si tout va bien, allez dans **Administration › Para
 
 ![Paramètres, Santé](../../screenshots/fr/admin-health.png)
 
-L'outil peut aussi vous prévenir par e-mail. En bas de **Paramètres › Santé**, un gestionnaire des espaces allume les **Alertes par e-mail** et choisit les destinataires : par défaut les administrateurs de l'espace principal et les gestionnaires des espaces, plus d'autres adresses, par exemple la boîte de l'équipe IT. Quand un problème apparaît (sauvegarde échouée ou en retard, disque presque plein, tâche de fond arrêtée, e-mails en échec…), les destinataires reçoivent un e-mail qui dit quoi faire. Ils reçoivent ensuite un rappel au plus une fois par jour tant que le problème dure, et un e-mail quand il est résolu. Sur une installation neuve, les alertes sont allumées d'office ; une installation qui existait avant elles les garde éteintes tant que personne ne les allume. La page dit quel cas s'applique. Cliquez sur **Envoyer une alerte d'essai** pour les vérifier. Quand le serveur est éteint, l'outil ne peut prévenir personne.
+L'outil peut aussi vous prévenir par e-mail. En bas de **Paramètres › Santé**, un gestionnaire des espaces allume les **Alertes par e-mail** et choisit les destinataires : par défaut les administrateurs de l'espace principal et les gestionnaires des espaces, plus d'autres adresses, par exemple la boîte de l'équipe IT. Quand un problème apparaît (sauvegarde échouée ou en retard, disque presque plein, tâche de fond arrêtée, e-mails en échec…), les destinataires reçoivent un e-mail qui dit quoi faire. Ils reçoivent ensuite un rappel au plus une fois par jour tant que le problème dure, et un e-mail quand il est résolu. Sur une installation neuve, les alertes sont allumées d'office. Une installation qui existait avant elles les garde éteintes tant qu'un gestionnaire des espaces ne les allume pas. La page dit quel cas s'applique. Cliquez sur **Envoyer une alerte d'essai** pour les vérifier. Quand le serveur est éteint, l'outil ne peut prévenir personne.
 
 ![Paramètres, Santé, Alertes par e-mail](../../screenshots/fr/admin-health-alerts.png)
 
-Le bloc **Mises à jour automatiques** de **Paramètres › Hébergement** montre la dernière vérification du serveur et son résultat. Un gestionnaire des espaces choisit ce qui se passe quand une nouvelle version est publiée : **L'installer automatiquement** (la nuit, après une sauvegarde ; si la nouvelle version ne fonctionne pas, le serveur revient à la version précédente), **Prévenir seulement** (l'équipe IT l'installe) ou **Éteint**, et combien de jours attendre après la publication (3 par défaut). C'est une tâche du serveur qui fait le travail, jamais l'outil lui-même. Si l'écran dit que la tâche n'est pas installée, demandez à l'équipe IT de la poser.
+Le cadre **Mises à jour automatiques** de **Paramètres › Hébergement** montre la dernière vérification du serveur et son résultat. Un gestionnaire des espaces choisit ce qui se passe quand une nouvelle version est publiée : **L'installer automatiquement** (la nuit, après une sauvegarde ; si la nouvelle version ne fonctionne pas, le serveur revient à la version précédente), **Prévenir seulement** (l'équipe IT l'installe) ou **Éteint**, et combien de jours attendre après la publication (3 par défaut). Après une installation neuve en une commande, le choix est **L'installer automatiquement**. C'est une tâche du serveur qui fait le travail, jamais l'outil lui-même. Si l'écran dit que la tâche n'est pas installée, demandez à l'équipe IT de la poser.
 
 ![Paramètres, Hébergement, Mises à jour automatiques](../../screenshots/fr/hosting-auto-updates.png)
 

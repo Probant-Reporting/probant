@@ -20,6 +20,8 @@ Al primo avvio si apre una procedura guidata in 8 passaggi. Inizia con il propri
 
 Se si esce dalla procedura, fare clic su **Amministrazione › Impostazioni › Riprendi la configurazione** per continuare.
 
+Si dispone di un backup dello strumento, creato da un altro server o dalla versione tutto in uno? Creare il proprio account al passaggio 1. Dal passaggio 2, finché l'installazione è vuota, aprire **Partire da un backup**, scegliere il file e confermare. La password resta la stessa e si resta amministratore. Gli altri account del backup non hanno password: creare per loro una password provvisoria in **Amministrazione › Account**. In un'installazione in servizio, un gestore degli spazi fa lo stesso in **Amministrazione › Impostazioni › Hosting**.
+
 ## Aggiungere un quadro di riferimento {#framework}
 
 1. Fare clic su **Amministrazione** nella barra superiore. Nella **Panoramica**, fare clic su **Aggiungi un quadro di riferimento** sulla riga **Quadri di riferimento e KPI**.
@@ -86,6 +88,19 @@ Un lettore o un auditor non inserisce e non convalida nulla. Quando si cambia il
 ![Amministrazione, Account](../../screenshots/it/admin-accounts.png)
 
 Per vedere chi ha effettuato l'accesso e quando, fare clic su **Cronologia degli accessi** in **Amministrazione › Account**. Ogni riga indica la data, l'account e l'esito: **Riuscito**, **Fallito** o **Bloccato: troppi tentativi**. Un nome utente che non corrisponde a nessun account dello spazio compare solo con un riferimento, mai con il testo digitato. Filtrare per esito o per periodo, o cercare un nome. Impostare per quanto tempo lo strumento conserva la cronologia in **Amministrazione › Impostazioni › Hosting** (180 giorni per impostazione predefinita).
+
+## Amministratore o gestore degli spazi {#space-manager}
+
+Un amministratore configura il proprio spazio: gli account, i quadri di riferimento, le campagne e le impostazioni dello spazio. Un gestore degli spazi configura l'intera installazione. Solo un gestore degli spazi può:
+
+- creare, rinominare e archiviare gli spazi, e bloccare l'accesso in tutti gli spazi (**Amministrazione › Impostazioni › Spazi**);
+- cambiare il server di posta, gli avvisi via e-mail, la copia esterna dei backup e gli aggiornamenti automatici (**Impostazioni › Hosting** e **Impostazioni › Stato**);
+- configurare l'accesso aziendale;
+- ripristinare un backup proveniente da un'altra installazione.
+
+Solo un gestore degli spazi può anche cambiare il nome, l'e-mail o la password di un altro gestore degli spazi.
+
+In **Amministrazione › Account**, l'etichetta **Gestore degli spazi** appare accanto al ruolo. Per nominare o rimuovere un gestore degli spazi, aprire l'account e usare il riquadro **Amministratore o gestore degli spazi**. Solo un gestore degli spazi vede il pulsante, e si può nominare solo un amministratore attivo dello spazio principale. Un gestore degli spazi che non è più amministratore attivo dello spazio principale (altro ruolo, account disattivato, accesso bloccato) perde questo ruolo: la scheda dell'account chiede una conferma prima di salvare. Lo strumento conserva sempre un gestore degli spazi che può agire: nessuno può disattivare, cambiare il ruolo, eliminare o bloccare l'ultimo, e lo strumento chiede di nominare prima un altro gestore degli spazi. Non è possibile rimuovere questo ruolo a se stessi. Ogni modifica aggiunge una riga alla **Cronologia**.
 
 ## Assegnare i KPI {#assign}
 
@@ -236,13 +251,13 @@ Ogni risposta è una proposta contrassegnata «Proposto dall'IA». Nulla viene s
 
 ## Controllare l'hosting e i backup {#hosting}
 
-Andare in **Amministrazione › Impostazioni › Hosting**. La pagina mostra la versione, il backup automatico, il controllo dei dati e la configurazione dell'e-mail. Fare clic su **Crea e scarica un backup** per farne uno subito. Il team informatico copia i backup in un altro luogo. Oppure un gestore degli spazi configura la **Copia fuori dal server**: lo strumento copia allora da sé ogni backup in un'archiviazione compatibile S3 o su un server SFTP fornito dal team informatico, e vi avvisa se una copia non riesce.
+Andare in **Amministrazione › Impostazioni › Hosting**. La pagina mostra la versione, il backup automatico, il controllo dei dati e la configurazione dell'e-mail. Fare clic su **Crea e scarica un backup** per farne uno subito. Il team informatico copia i backup in un altro luogo. Oppure un gestore degli spazi configura una copia nel riquadro **Copia fuori dal server**: lo strumento copia allora da sé ogni backup in un'archiviazione compatibile S3 o su un server SFTP fornito dal team informatico, e vi avvisa se una copia non riesce.
 
 ![Impostazioni, Hosting](../../screenshots/it/hosting.png)
 
 ![Impostazioni, Hosting, Copia fuori dal server](../../screenshots/it/hosting-external-copy.png)
 
-Per configurare il server e-mail, usare il riquadro **E-mail** della stessa pagina. Inserire il server, la porta, la sicurezza, il nome utente, la password e l'indirizzo di invio forniti dal team informatico. Fare clic su **Salva**, poi su **Invia un'e-mail di prova**. Se l'e-mail non parte, un messaggio ne indica la causa in parole semplici. Queste impostazioni valgono per tutti gli spazi: solo un gestore degli spazi può modificarle. La password non viene mai più mostrata. Se il team informatico ha configurato le e-mail nel file delle impostazioni, il riquadro mostra queste impostazioni in sola lettura.
+Per configurare il server e-mail, usare il riquadro **E-mail** della stessa pagina. Queste impostazioni valgono per tutti gli spazi: solo un gestore degli spazi può modificarle. Inserire il server, la porta, la sicurezza, il nome utente, la password e l'indirizzo di invio forniti dal team informatico. Fare clic su **Salva**, poi su **Invia un'e-mail di prova**. Se l'e-mail non parte, un messaggio ne indica la causa in parole semplici. La password non viene mai più mostrata. Se il team informatico ha configurato le e-mail nel file delle impostazioni, il riquadro mostra queste impostazioni in sola lettura.
 
 ![Impostazioni, Hosting, E-mail](../../screenshots/it/hosting-emails.png)
 
@@ -250,11 +265,11 @@ Per vedere a colpo d'occhio se tutto va bene, andare in **Amministrazione › Im
 
 ![Impostazioni, Stato](../../screenshots/it/admin-health.png)
 
-Lo strumento può anche avvisarvi via e-mail. In fondo a **Impostazioni › Stato**, un gestore degli spazi attiva gli **Avvisi via e-mail** e sceglie i destinatari: di base gli amministratori dello spazio principale e i gestori degli spazi, più altri indirizzi, per esempio la casella del team IT. Quando compare un problema (backup non riuscito o in ritardo, disco quasi pieno, attività in background ferma, e-mail non riuscite…), i destinatari ricevono un'e-mail che dice cosa fare. Poi ricevono un promemoria al massimo una volta al giorno finché il problema dura, e un'e-mail quando è risolto. In una nuova installazione gli avvisi sono attivi fin dall'inizio; un'installazione che esisteva prima di essi li lascia disattivati finché qualcuno non li attiva. La pagina dice quale caso si applica. Fare clic su **Inviare un avviso di prova** per controllarli. Quando il server è spento, lo strumento non può avvisare nessuno.
+Lo strumento può anche avvisarvi via e-mail. In fondo a **Impostazioni › Stato**, un gestore degli spazi attiva gli **Avvisi via e-mail** e sceglie i destinatari: di base gli amministratori dello spazio principale e i gestori degli spazi, più altri indirizzi, per esempio la casella del team IT. Quando compare un problema (backup non riuscito o in ritardo, disco quasi pieno, attività in background ferma, e-mail non riuscite…), i destinatari ricevono un'e-mail che dice cosa fare. Poi ricevono un promemoria al massimo una volta al giorno finché il problema dura, e un'e-mail quando è risolto. In una nuova installazione gli avvisi sono attivi fin dall'inizio. Un'installazione che esisteva prima di essi li lascia disattivati finché un gestore degli spazi non li attiva. La pagina dice quale caso si applica. Fare clic su **Inviare un avviso di prova** per controllarli. Quando il server è spento, lo strumento non può avvisare nessuno.
 
 ![Impostazioni, Stato, Avvisi via e-mail](../../screenshots/it/admin-health-alerts.png)
 
-Il blocco **Aggiornamenti automatici** di **Impostazioni › Hosting** mostra l'ultima verifica del server e il suo risultato. Un gestore degli spazi sceglie cosa succede quando viene pubblicata una nuova versione: **Installarla automaticamente** (di notte, dopo un backup; se la nuova versione non funziona, il server torna alla versione precedente), **Solo avvisare** (il team IT la installa) o **Disattivato**, e quanti giorni attendere dopo la pubblicazione (3 per impostazione predefinita). Il lavoro lo fa un'attività del server, mai lo strumento stesso. Se la schermata dice che l'attività non è installata, chiedete al team IT di installarla.
+Il riquadro **Aggiornamenti automatici** di **Impostazioni › Hosting** mostra l'ultima verifica del server e il suo risultato. Un gestore degli spazi sceglie cosa succede quando viene pubblicata una nuova versione: **Installarla automaticamente** (di notte, dopo un backup; se la nuova versione non funziona, il server torna alla versione precedente), **Solo avvisare** (il team IT la installa) o **Disattivato**, e quanti giorni attendere dopo la pubblicazione (3 per impostazione predefinita). Dopo una nuova installazione fatta con un solo comando, la scelta è **Installarla automaticamente**. Il lavoro lo fa un'attività del server, mai lo strumento stesso. Se la schermata dice che l'attività non è installata, chiedete al team IT di installarla.
 
 ![Impostazioni, Hosting, Aggiornamenti automatici](../../screenshots/it/hosting-auto-updates.png)
 

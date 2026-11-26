@@ -190,7 +190,9 @@ Each archive contains only the database and the files **of its space**, never th
 the code of the space and the identifier of the installation.
 
 - The tool **refuses** an archive from another space or from another installation. IT can force it on the command line
-  with `--other-space`, for example to clone a space.
+  with `--other-space`, for example to clone a space. A space manager can restore an archive from another installation
+  in the tool, into the current space: see
+  [Restore a backup from another installation](installation.md#restore-a-backup-from-another-installation).
 - You can restore an archive from before spaces only into the main space.
 - After a restore, the tool brings the registry back in line. Everyone keeps their current password. A person added
   to the space after the date of the archive loses access to that space, but keeps their account.

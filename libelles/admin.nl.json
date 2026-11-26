@@ -3446,5 +3446,70 @@
  "admin.journal.action.restauration": "back-up teruggezet",
  "admin.hebergement.smtp.form.en_clair": "Wachtwoord zonder versleuteling verzenden",
  "admin.hebergement.smtp.en_clair_aide": "Met de beveiliging “Geen” gaat het wachtwoord onversleuteld over het netwerk: iedereen onderweg kan het lezen. Kies STARTTLS of SSL/TLS als de server dat biedt. Een relay zonder wachtwoord vraagt geen bevestiging.",
- "admin.hebergement.smtp.erreur.en_clair": "Met de beveiliging “Geen” zou het wachtwoord onversleuteld over het netwerk gaan. Kies STARTTLS of SSL/TLS, verwijder het wachtwoord of bevestig met het vakje hieronder."
+ "admin.hebergement.smtp.erreur.en_clair": "Met de beveiliging “Geen” zou het wachtwoord onversleuteld over het netwerk gaan. Kies STARTTLS of SSL/TLS, verwijder het wachtwoord of bevestig met het vakje hieronder.",
+ "admin.compte.gestionnaire.titre": "Beheerder of ruimtebeheerder",
+ "admin.compte.gestionnaire.est": "{nom} is ruimtebeheerder.",
+ "admin.compte.gestionnaire.n_est_pas": "{nom} is geen ruimtebeheerder.",
+ "admin.compte.gestionnaire.admin": "Een beheerder richt de eigen ruimte in: de accounts, de kaders, de campagnes en de instellingen van de ruimte.",
+ "admin.compte.gestionnaire.gestionnaire": "Een ruimtebeheerder richt de hele installatie in: de ruimtes, de e-mailserver, de waarschuwingen per e-mail, de externe kopie van de back-ups, de automatische updates en de bedrijfslogin.",
+ "admin.compte.gestionnaire.restauration": "Een ruimtebeheerder zet ook een back-up van een andere installatie terug.",
+ "admin.compte.gestionnaire.nommer": "Aanwijzen als ruimtebeheerder",
+ "admin.compte.gestionnaire.nommer_confirmer": "{nom} aanwijzen als ruimtebeheerder? Deze persoon kan dan de hele installatie inrichten.",
+ "admin.compte.gestionnaire.retirer": "Weghalen als ruimtebeheerder",
+ "admin.compte.gestionnaire.reserve": "Alleen een ruimtebeheerder kan een ruimtebeheerder aanwijzen of weghalen.",
+ "admin.compte.gestionnaire.vous": "U kunt deze rol niet bij uzelf weghalen. Een andere ruimtebeheerder kan dat wel.",
+ "admin.journal.champ.gestionnaire": "ruimtebeheerder",
+ "admin.compte.gestionnaire.perte_confirmer_requis": "{nom} is daarna geen actieve beheerder van de hoofdruimte meer en verliest dus de rol van ruimtebeheerder. Selecteer het vakje hieronder om te bevestigen.",
+ "admin.compte.gestionnaire.perte_case": "De rol van ruimtebeheerder weghalen bij {nom}",
+ "admin.compte.gestionnaire.perte_aide": "Een ruimtebeheerder moet een actieve beheerder van de hoofdruimte zijn. Een ruimtebeheerder kan deze persoon later opnieuw aanwijzen.",
+ "admin.compte.gestionnaire.perte_faite": "{nom} is geen ruimtebeheerder meer.",
+ "admin.compte.gestionnaire.ancien": "{nom} is geen actieve beheerder van de hoofdruimte. Deze persoon verliest de rol van ruimtebeheerder bij de volgende wijziging van de rol of de status.",
+ "admin.compte.gestionnaire.pas_eligible": "Alleen een actieve beheerder van de hoofdruimte kan worden aangewezen.",
+ "admin.ailleurs.titre": "Een back-up van een andere installatie herstellen",
+ "admin.ailleurs.titre_h1": "De back-up van {date} van een andere installatie herstellen",
+ "admin.ailleurs.danger_titre": "Deze back-up komt niet van deze installatie",
+ "admin.ailleurs.non_verifiable": "<strong>De tool kan niet controleren of niemand dit bestand heeft gewijzigd.</strong> Herstel het alleen als u weet waar het vandaan komt. De naam, de datum en de versie hierboven zijn wat het bestand zegt.",
+ "admin.ailleurs.remplace": "<strong>Alles in de ruimte “{espace}” wordt vervangen</strong>: waarden, bewijsstukken, organisaties, KPI's, campagnes, instellingen van de ruimte, geschiedenis en de accounts van de ruimte.",
+ "admin.ailleurs.garde": "De andere ruimtes en de instellingen van de hele installatie veranderen niet: e-mailserver, externe kopie, e-mailmeldingen, bedrijfsaanmelding en AI-sleutel. De back-up bevat ze niet, en ook hun geheimen niet.",
+ "admin.ailleurs.assistants": "De assistent-tokens (MCP) van deze ruimte werken niet meer. Iedereen maakt een nieuw token aan.",
+ "admin.ailleurs.comptes_titre": "De accounts na het herstel",
+ "admin.ailleurs.vous.admin": "Uw account ({email}) is een beheerder in de back-up. U houdt uw wachtwoord.",
+ "admin.ailleurs.vous.remis_admin": "Uw account ({email}) staat in de back-up, maar niet als actieve beheerder. Na het herstel maakt de tool het opnieuw een actieve beheerder en schrijft dit in de geschiedenis. U houdt uw wachtwoord.",
+ "admin.ailleurs.vous.ajoute": "Uw account ({email}) staat niet in de back-up. Na het herstel voegt de tool het toe als beheerder van deze ruimte en schrijft dit in de geschiedenis. U houdt uw wachtwoord.",
+ "admin.ailleurs.sans_mot_de_passe": {
+  "one": "1 ander account heeft geen wachtwoord, want back-ups bevatten nooit wachtwoorden. Maak er na het herstel een tijdelijk wachtwoord voor aan in Beheer › Accounts.",
+  "other": "{n} andere accounts hebben geen wachtwoord, want back-ups bevatten nooit wachtwoorden. Maak er na het herstel een tijdelijk wachtwoord voor aan in Beheer › Accounts."
+ },
+ "admin.ailleurs.gardes": {
+  "one": "1 account heeft hetzelfde nummer en hetzelfde e-mailadres als een account van een andere ruimte van deze installatie. Het houdt zijn wachtwoord.",
+  "other": "{n} accounts hebben hetzelfde nummer en hetzelfde e-mailadres als een account van een andere ruimte van deze installatie. Ze houden hun wachtwoord."
+ },
+ "admin.ailleurs.remplaces": {
+  "one": "1 account bestaat nu alleen in deze ruimte en is niet van u. De accounts van de back-up vervangen het.",
+  "other": "{n} accounts bestaan nu alleen in deze ruimte en zijn niet van u. De accounts van de back-up vervangen ze."
+ },
+ "admin.ailleurs.gestionnaires_perdus": {
+  "one": "1 andere ruimtebeheerder heeft alleen in deze ruimte een account. Na het herstel is deze persoon geen ruimtebeheerder meer. U kunt de rol opnieuw geven in Ruimtes › Personen en toegang.",
+  "other": "{n} andere ruimtebeheerders hebben alleen in deze ruimte een account. Na het herstel zijn ze geen ruimtebeheerder meer. U kunt de rol opnieuw geven in Ruimtes › Personen en toegang."
+ },
+ "admin.ailleurs.admins": "Beheerders in de back-up: {liste}.",
+ "admin.ailleurs.compris_origine": "Ik weet waar deze back-up vandaan komt. Ik accepteer dat de tool hem niet kan controleren.",
+ "admin.ailleurs.compris": "Ik begrijp dat de inhoud van deze back-up alles in de ruimte “{espace}” vervangt.",
+ "admin.ailleurs.erreur_confirmation": "Selecteer om te herstellen beide vakjes en voer {mot} in hoofdletters in.",
+ "admin.ailleurs.reussie": "Herstel voltooid. Deze ruimte is terug in de toestand van de back-up van {date}. Log opnieuw in met uw eigen wachtwoord. Maak daarna een tijdelijk wachtwoord voor de andere accounts aan in Beheer › Accounts. De automatische herinneringen, de AI-assistent en de assistenten (MCP) staan uit: zet ze opnieuw aan op de pagina Herinneringen en in Instellingen.",
+ "admin.ailleurs.reserve": "Alleen een ruimtebeheerder kan een back-up van een andere installatie herstellen.",
+ "admin.ailleurs.conflits": {
+  "one": "1 account uit deze back-up heeft het nummer, het e-mailadres of de gebruikersnaam van een andere persoon, die een account in een andere ruimte heeft ({exemples}). De tool kan deze back-up niet vanaf deze pagina herstellen zonder twee personen te vermengen. Er is niets veranderd. Het IT-team kan hem via de opdrachtregel herstellen (installatiehandleiding, “Restore a backup”).",
+  "other": "{n} accounts uit deze back-up hebben het nummer, het e-mailadres of de gebruikersnaam van andere personen, die een account in een andere ruimte hebben ({exemples}). De tool kan deze back-up niet vanaf deze pagina herstellen zonder twee personen te vermengen. Er is niets veranderd. Het IT-team kan hem via de opdrachtregel herstellen (installatiehandleiding, “Restore a backup”)."
+ },
+ "admin.ailleurs.restaurateur_absent": "De tool vindt het account van de persoon die herstelt niet in de gemeenschappelijke lijst van accounts. Neem contact op met uw IT-team (installatiehandleiding, “Restore a backup”).",
+ "admin.ailleurs.base_piegee": "De database van deze back-up bevat elementen die de tool nooit maakt (triggers, views of berekende kolommen). De tool herstelt hem niet. Er is niets veranderd.",
+ "admin.ailleurs.aide_depot": "Als ruimtebeheerder kunt u ook een back-up van een andere installatie herstellen, bijvoorbeeld na een serverwissel. De tool toont wat er verandert voordat hij iets vervangt.",
+ "admin.ailleurs.historique": "(andere installatie “{nom}”)",
+ "admin.ailleurs.modele_refuse": "Deze back-up bevat gegevens die een back-up van de tool nooit bevat ({modele}). De tool herstelt hem niet. Er is niets veranderd.",
+ "admin.ailleurs.empreinte_changee": "Het bestand is gewijzigd nadat de bevestigingspagina werd getoond. Er is niets veranderd. Voeg het bestand opnieuw toe.",
+ "admin.ailleurs.ia_eteinte": "Na het herstel staan de automatische herinneringen, de AI-assistent en de assistenten (MCP) van deze ruimte uit, en wachtende imports en exports op de achtergrond worden gestopt. Zet ze opnieuw aan op de pagina Herinneringen en in Instellingen als u ze nodig hebt.",
+ "admin.sauvegarde.schema_inattendu": "De database van deze back-up heeft niet de structuur die deze versie van de tool verwacht ({detail}). De tool gebruikt hem niet.",
+ "admin.restauration.erreur.retour": "Het herstel is mislukt nadat de database was vervangen: {erreur} De tool is teruggegaan naar de toestand van vóór het herstel (back-up “{avant}”). Uw gegevens zijn zoals voorheen, maar de assistent-tokens (MCP) van deze ruimte werken niet meer: iedereen maakt een nieuw token aan.",
+ "admin.restauration.erreur.retour_impossible": "Het herstel is mislukt nadat de database was vervangen: {erreur} De tool kon niet teruggaan naar de toestand van vóór het herstel (back-up “{avant}”). Neem contact op met uw IT-team (installatiehandleiding, “If a restore is interrupted”)."
 }

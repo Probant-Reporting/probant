@@ -20,6 +20,8 @@ The first launch opens a wizard with 8 steps. It starts with your own administra
 
 If you leave the wizard, click **Administration › Settings › Resume the setup** to continue.
 
+You have a backup of the tool, made by another server or by the all-in-one version? Create your account at step 1. From step 2, while the installation is empty, open **Start from a backup**, choose the file, and confirm. You keep your password and stay an administrator. The other accounts of the backup have no password: give them a temporary password in **Administration › Accounts**. On an installation in service, a space manager does the same in **Administration › Settings › Hosting**, with **Restore from a .zip file downloaded earlier**.
+
 ## Add a framework {#framework}
 
 1. Click **Administration** in the top bar. On the **Overview**, click **Add a framework** on the line **Frameworks and KPIs**.
@@ -88,6 +90,19 @@ A reader or an auditor never enters or validates anything. When you change the r
 ![Administration, Accounts](../screenshots/en/admin-accounts.png)
 
 To see who signed in and when, click **Sign-in history** in **Administration › Accounts**. Each line gives the date, the account and the result: **Successful**, **Failed** or **Blocked: too many attempts**. A username that matches no account of the space shows only a reference, never the text typed. Filter by result or period, or search a name. Set how long the tool keeps the history in **Administration › Settings › Hosting** (180 days by default).
+
+## Administrator or space manager {#space-manager}
+
+An administrator sets up their space: the accounts, the frameworks, the campaigns and the settings of the space. A space manager sets up the whole installation. Only a space manager can:
+
+- create, rename and archive the spaces, and block the sign-in of a person in all the spaces (**Administration › Settings › Spaces**);
+- change the email server, the email alerts, the external copy of the backups and the automatic updates (**Settings › Hosting** and **Settings › Health**);
+- set up the company sign-in;
+- restore a backup from another installation.
+
+Only a space manager can also change the name, the email or the password of another space manager.
+
+In **Administration › Accounts**, the label **Space manager** shows next to the role. To appoint or remove a space manager, open the account and use the box **Administrator or space manager**. Only a space manager sees the button, and only an active administrator of the main space can be appointed. A space manager who is no longer an active administrator of the main space (other role, deactivated account, blocked sign-in) loses the space manager role: the account page asks you to confirm before it saves. The tool always keeps a space manager who can act: it does not let anyone deactivate, change the role of, delete or block the last one, and asks you to appoint another space manager first. You cannot remove this role from yourself. Each change adds a line to the **History**.
 
 ## Assign the KPIs {#assign}
 
@@ -250,13 +265,13 @@ Each answer is a proposal marked “Proposed by AI”. Nothing is saved until a 
 
 ## Check the hosting and the backups {#hosting}
 
-Go to **Administration › Settings › Hosting**. The page shows the version, the automatic backup, the data check, and the email setup. Click **Create and download a backup** to make a backup at once. The IT team copies the backups to another place. Or a space manager sets **Copy outside the server**: the tool then copies each backup itself to an S3-compatible storage or an SFTP server that the IT team provides, and warns you if a copy fails.
+Go to **Administration › Settings › Hosting**. The page shows the version, the automatic backup, the data check, and the email setup. Click **Create and download a backup** to make a backup at once. The IT team copies the backups to another place. Or a space manager sets up a copy in the box **Copy outside the server**: the tool then copies each backup itself to an S3-compatible storage or an SFTP server that the IT team provides, and warns you if a copy fails.
 
 ![Settings, Hosting](../screenshots/en/hosting.png)
 
 ![Settings, Hosting, Copy outside the server](../screenshots/en/hosting-external-copy.png)
 
-To set up the email server, use the **Emails** box of the same page. Enter the server, the port, the security, the username, the password and the sending address that the IT team gives you. Click **Save**, then **Send a test email**. If the email is not sent, a message gives the cause in plain words. These settings apply to all the spaces: only a space manager can change them. The password is never shown again. If the IT team set the emails in the settings file, the box shows these settings read-only.
+To set up the email server, use the **Emails** box of the same page. These settings apply to all the spaces: only a space manager can change them. Enter the server, the port, the security, the username, the password and the sending address that the IT team gives you. Click **Save**, then **Send a test email**. If the email is not sent, a message gives the cause in plain words. The password is never shown again. If the IT team set the emails in the settings file, the box shows these settings read-only.
 
 ![Settings, Hosting, Emails](../screenshots/en/hosting-emails.png)
 
@@ -264,11 +279,11 @@ To see at a glance if all is well, go to **Administration › Settings › Healt
 
 ![Settings, Health](../screenshots/en/admin-health.png)
 
-The tool can also warn you by email. At the bottom of **Settings › Health**, a space manager turns on **Email alerts** and chooses the recipients: by default the administrators of the main space and the space managers, plus other addresses, for example the mailbox of the IT team. When a problem appears (failed or late backup, disk almost full, stopped background task, failed emails…), the recipients get an email with what to do. Then they get a reminder at most once a day while the problem lasts, and an email when it is resolved. On a new installation, the alerts are on from the start; an installation that existed before them keeps them off until someone turns them on. The page says which case applies. Click **Send a test alert** to check them. When the server is off, the tool cannot warn anyone.
+The tool can also warn you by email. At the bottom of **Settings › Health**, a space manager turns on **Email alerts** and chooses the recipients: by default the administrators of the main space and the space managers, plus other addresses, for example the mailbox of the IT team. When a problem appears (failed or late backup, disk almost full, stopped background task, failed emails…), the recipients get an email with what to do. Then they get a reminder at most once a day while the problem lasts, and an email when it is resolved. On a new installation, the alerts are on from the start. An installation that existed before them keeps them off until a space manager turns them on. The page says which case applies. Click **Send a test alert** to check them. When the server is off, the tool cannot warn anyone.
 
 ![Settings, Health, Email alerts](../screenshots/en/admin-health-alerts.png)
 
-The block **Automatic updates** of **Settings › Hosting** shows the last check of the server and its result. A space manager chooses what happens when a new version is published: **Install it automatically** (at night, after a backup; if the new version does not work, the server goes back to the previous version), **Notify only** (the IT team installs it), or **Off**, and how many days to wait after the publication (3 by default). A task of the server does the work, never the tool itself. If the screen says that the task is not installed, ask the IT team to set it up.
+The box **Automatic updates** of **Settings › Hosting** shows the last check of the server and its result. A space manager chooses what happens when a new version is published: **Install it automatically** (at night, after a backup; if the new version does not work, the server goes back to the previous version), **Notify only** (the IT team installs it), or **Off**, and how many days to wait after the publication (3 by default). After a new installation with one command, the choice is **Install it automatically**. A task of the server does the work, never the tool itself. If the screen says that the task is not installed, ask the IT team to set it up.
 
 ![Settings, Hosting, Automatic updates](../screenshots/en/hosting-auto-updates.png)
 

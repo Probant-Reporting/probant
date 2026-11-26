@@ -86,5 +86,8 @@
  "espaces.selecteur.ici": "huidige ruimte",
  "espaces.selecteur.titre": "Van ruimte wisselen",
  "espaces.liste.aide_bouton": "Gebruik om van ruimte te wisselen de knop met de naam van de ruimte in de bovenbalk. Deze verschijnt zodra u toegang hebt tot twee ruimtes.",
- "espaces.personnes.aide_droits": "Een ruimtebeheerder maakt de ruimtes aan en beheert ze. Een aanmelding die hier is geblokkeerd, is in alle ruimtes geblokkeerd."
+ "espaces.personnes.aide_droits": "Een ruimtebeheerder maakt de ruimtes aan en beheert ze. Een aanmelding die hier is geblokkeerd, is in alle ruimtes geblokkeerd.",
+ "espaces.erreur.dernier_gestionnaire": "{nom} is de laatste ruimtebeheerder die kan handelen. Wijs eerst een andere ruimtebeheerder aan.",
+ "espaces.erreur.archive_dernier_gestionnaire": "Deze ruimte bevat het enige actieve account van de laatste ruimtebeheerder die kan handelen. Wijs eerst een andere ruimtebeheerder aan.",
+ "espaces.erreur.pas_admin_principal": "{nom} kan geen ruimtebeheerder zijn: alleen een actieve beheerder van de hoofdruimte kan dat zijn."
 }

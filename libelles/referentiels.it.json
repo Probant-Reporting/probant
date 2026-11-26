@@ -1244,5 +1244,8 @@
  "referentiels.choisir.depuis": "Aggiungerli anche agli esercizi precedenti?",
  "referentiels.depuis.aide": "Per impostazione predefinita, dal periodo in corso: nessun esercizio passato cambia. Un esercizio chiuso riceve il KPI alla riapertura. Modificabile poi nel contenuto del quadro di riferimento.",
  "referentiels.apercu.depuis": "I KPI nuovi in questo quadro di riferimento sono richiesti",
- "referentiels.depuis.fichier_confirmer": "{code}: questa data rimuove celle (vuote) da un periodo in corso. Modificarla nel contenuto del quadro di riferimento, dove la si conferma."
+ "referentiels.depuis.fichier_confirmer": "{code}: questa data rimuove celle (vuote) da un periodo in corso. Modificarla nel contenuto del quadro di riferimento, dove la si conferma.",
+ "referentiels.mep.depart.titre": "Partire da un backup",
+ "referentiels.mep.depart.aide": "Si dispone di un backup dello strumento, creato su un altro server o un altro computer? Ripristinarlo ora. Sostituisce ciò che è stato impostato in questa procedura guidata. L'account e la password restano gli stessi.",
+ "referentiels.mep.depart.compte_d_abord": "Si dispone di un backup dello strumento? Creare prima il proprio account. Il passaggio successivo permette di partire da quel backup."
 }

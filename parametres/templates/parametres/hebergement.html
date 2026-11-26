@@ -88,12 +88,13 @@ e-mails, contrôle des données, éléments supprimés, puis le volet « Pour l'
           <button type="submit" class="secondaire">{% libelle "admin.fichiers.verifier" %}</button>
         </form>
         <p class="aide-champ">{% libelle "admin.hebergement.depuis_zip_aide" %}</p>
+        {% if gestionnaire %}<p class="aide-champ">{% libelle "admin.ailleurs.aide_depot" %}</p>{% endif %}
       </details>
       <details class="aide-repliable"><summary>{% libelle "admin.hebergement.historique" nombre=restaurations|length %}</summary>
         {% if restaurations %}
         {% libelle "admin.hebergement.ligne_commande" as t_cli %}<table class="table-mep">
           <thead><tr><th>{% libelle "admin.hebergement.hist.restauree" %}</th><th>{% libelle "admin.hebergement.hist.retour" %}</th><th>{% libelle "admin.hebergement.hist.par" %}</th><th>{% libelle "admin.hebergement.hist.avant" %}</th></tr></thead>
-          {% for r in restaurations %}<tr><td>{{ r.date|date_heure_courte }}</td><td>{{ r.date_sauvegarde_texte }} <span class="discret">(v{{ r.version }})</span></td>
+          {% for r in restaurations %}<tr><td>{{ r.date|date_heure_courte }}</td><td>{{ r.date_sauvegarde_texte }} <span class="discret">(v{{ r.version }})</span>{% if r.autre_installation %} <span class="discret">{% libelle "admin.ailleurs.historique" nom=r.installation %}</span>{% endif %}</td>
             <td>{{ r.par|default:t_cli }}</td><td class="discret">{{ r.avant|default:"—" }}</td></tr>{% endfor %}
         </table>
         {% else %}<p class="discret">{% libelle "admin.hebergement.aucune_restauration" %}</p>{% endif %}

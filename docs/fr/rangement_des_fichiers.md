@@ -86,7 +86,7 @@ Le tableau indique qui ajoute chaque sorte de document, où il va, et si les sau
 | Fichier d'import (valeurs, configuration, référentiel, reprise) | Administrateur | `files/pending-imports/`, effacé après l'import ou au bout d'un jour | Non (temporaire) |
 | Gros export (au-delà du seuil de **Paramètres › Hébergement › Gros exports**) | Toute personne qui peut exporter | `files/exports/<nom au hasard>.xlsx` ou `.csv`, jusqu'au téléchargement, 7 jours au plus (réglable) ; puis effacé par le planificateur, aussi au démarrage | Non (refait sur demande) |
 | Archive de sauvegarde | Automatique, ou administrateur / IT | `backups/` | — |
-| Copie d'une archive de sauvegarde hors du serveur | L'outil, quand une destination est réglée (**Paramètres › Hébergement › Copie externe**) | À la destination : `<dossier ou préfixe>/<identifiant de l'installation>/`, rangé comme `backups/` (`backup-….zip`, `spaces/<code>/`, `shared/`). Ce qui est déjà copié est noté dans le registre commun des comptes, jamais dans un fichier du dossier des données. | — |
+| Copie d'une archive de sauvegarde hors du serveur | L'outil, quand une destination est réglée (**Administration › Paramètres › Hébergement**, encart **Copie hors du serveur**) | À la destination : `<dossier ou préfixe>/<identifiant de l'installation>/`, rangé comme `backups/` (`backup-….zip`, `spaces/<code>/`, `shared/`). Ce qui est déjà copié est noté dans le registre commun des comptes, jamais dans un fichier du dossier des données. | — |
 | Export Excel ou CSV | Tout utilisateur | Téléchargé directement, jamais gardé sur le serveur | — |
 
 ### Dossiers des preuves

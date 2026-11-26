@@ -9,6 +9,7 @@ import uuid
 
 from django.core.exceptions import ImproperlyConfigured
 from django.db import DatabaseError, connections
+from django.dispatch import Signal
 from django.utils import timezone
 
 from . import contexte as E
@@ -48,6 +49,191 @@ def est_gestionnaire(utilisateur):
     if utilisateur is None or not getattr(utilisateur, "is_authenticated", False) or not utilisateur.is_active:
         return False
     return Compte.objects.filter(pk=utilisateur.pk, gestionnaire=True, actif=True).exists()
+
+
+# envoyé quand le rôle de gestionnaire des espaces change (``changer_gestionnaire``, ou perte du rôle d'un gestionnaire
+# qui n'est plus administrateur actif de l'espace principal, ``appliquer``) : la ligne d'historique (``collecte.signals``)
+gestionnaire_change = Signal()
+
+
+class DernierGestionnaire(Exception):
+    """Changement refusé : il laisserait l'installation sans gestionnaire des espaces capable d'agir."""
+
+    def __init__(self, message):
+        super().__init__(message)
+        self.message = message
+
+
+def _objet(pk):
+    """Copie du compte dans l'espace courant (objet de la ligne d'historique) ; sans copie ici, le numéro seul."""
+    from referentiel.models import Utilisateur
+
+    return Utilisateur.objects.filter(pk=pk).first() or Utilisateur(pk=pk)
+
+
+def admin_actif_principal(compte_pk, acces=False, compte_actif=None):
+    """Seule règle de « peut être gestionnaire des espaces » (même définition que ``doit_devenir_gestionnaire``) :
+    compte du registre actif, copie de l'espace principal active avec le rôle administrateur. Lue dans la base de
+    l'espace principal ; ``acces`` : (rôle, actif) de cette copie après un changement envisagé (None : aucune copie),
+    ``compte_actif`` : connexion permise après ce changement."""
+    from referentiel.models import Utilisateur
+
+    from .models import Compte
+
+    if compte_actif is None:
+        compte_actif = Compte.objects.filter(pk=compte_pk, actif=True).exists()
+    if acces is False:
+        with E.toutes_les_bases():
+            u = Utilisateur.objects.using(E.declarer(E.PRINCIPAL)).filter(pk=compte_pk).first()
+        acces = (role_index(u), u.is_active) if u is not None else None
+    return bool(compte_actif and acces and acces[0] == "admin" and acces[1])
+
+
+def _gestionnaires():
+    """({numéro : compte}, {numéro : {code : (rôle, actif)}}, codes des espaces ouverts) des gestionnaires des espaces."""
+    from .models import AccesEspace, Compte
+
+    gest = {c.pk: c for c in Compte.objects.filter(gestionnaire=True)}
+    acces = {}
+    for a in AccesEspace.objects.filter(compte_id__in=list(gest)).values("compte_id", "espace__code", "role", "actif"):
+        acces.setdefault(a["compte_id"], {})[a["espace__code"]] = (a["role"], a["actif"])
+    return gest, acces, set(codes_ouverts())
+
+
+def gestionnaires_capables():
+    """Numéros des gestionnaires des espaces capables d'agir aujourd'hui (même règle que ``simuler``) : compte du
+    registre actif et une copie active dans un espace ouvert. Lu par la commande ``espaces`` (avertissement)."""
+    gest, acces, ouverts = _gestionnaires()
+    return [pk for pk, c in gest.items() if c.actif and any(ac for cd, (_, ac) in acces.get(pk, {}).items() if cd in ouverts)]
+
+
+def simuler(compte_pk=None, code=None, role=None, actif=None, supprimee=False, compte_actif=None, archive=None):
+    """Effet d'un changement envisagé sur les gestionnaires des espaces : (refus, perd). Sans écrire.
+
+    Changement : la copie du compte ``compte_pk`` dans l'espace ``code`` prend (``role``, ``actif``) ou est supprimée
+    (``supprimee``) ; ou sa connexion est bloquée ou permise dans tous les espaces (``compte_actif``) ; ou l'espace
+    ``archive`` est archivé.
+    - ``perd`` (règle : un gestionnaire est un administrateur actif de l'espace principal) : le compte est gestionnaire
+      et, après un changement de sa copie de l'espace principal ou de sa connexion, il n'est plus administrateur actif
+      de l'espace principal. Un gestionnaire d'avant cette règle garde le rôle tant qu'on ne touche ni à sa copie de
+      l'espace principal ni à sa connexion.
+    - ``refus`` (règle : jamais d'installation sans gestionnaire capable d'agir) : il y a aujourd'hui au moins un
+      gestionnaire capable d'agir (compte du registre actif et une copie active dans un espace ouvert, comme
+      ``est_gestionnaire``) et il n'y en aurait plus aucun : texte du message ; sinon « »."""
+    from parametres.libelles import libelle
+
+    gest, acces, ouverts = _gestionnaires()
+    if archive is None and compte_pk not in gest:
+        return "", False  # le compte n'est pas gestionnaire : le changement n'en retire aucun
+
+    def apres(pk):
+        actif_reg, acc = gest[pk].actif, dict(acces.get(pk, {}))
+        if pk == compte_pk:
+            if compte_actif is not None:
+                actif_reg = compte_actif
+            if code is not None:
+                if supprimee:
+                    acc.pop(code, None)
+                else:
+                    acc[code] = (role, actif)
+        return actif_reg, acc
+
+    perd = False
+    if compte_pk in gest and (code == E.PRINCIPAL or compte_actif is False):
+        actif_reg, acc = apres(compte_pk)
+        perd = not admin_actif_principal(compte_pk, acces=acc.get(E.PRINCIPAL), compte_actif=actif_reg)
+
+    def capable_apres(pk):
+        actif_reg, acc = apres(pk)
+        return actif_reg and any(ac for cd, (_, ac) in acc.items() if cd in ouverts - {archive})
+
+    avant = gestionnaires_capables()
+    reste = [pk for pk in gest if capable_apres(pk) and not (pk == compte_pk and perd)]
+    if avant and not reste:
+        if archive is not None:
+            return libelle("espaces.erreur.archive_dernier_gestionnaire"), perd
+        return libelle("espaces.erreur.dernier_gestionnaire", nom=gest[compte_pk]), perd
+    return "", perd
+
+
+def appliquer(compte_pk=None, acteur=None, ecrire=None, **changement):
+    """Seule application des deux règles de ``simuler`` à un changement, par toutes les portes (fiche d'un compte,
+    remplacement d'une personne, page Espaces, suppression d'un compte, toute copie enregistrée) : sous verrou des
+    gestionnaires au registre commun, refus (``DernierGestionnaire``) ; sinon, dans la même transaction, l'index des
+    accès du compte est écrit tout de suite (la copie suit), puis ``ecrire()`` (blocage, archivage), puis la perte du
+    rôle de gestionnaire avec une ligne d'historique. Deux administrateurs qui désactivent chacun l'un des deux derniers
+    gestionnaires au même instant : le second voit le premier changement et il est refusé. Renvoie ``perd``."""
+    from django.db import transaction
+    from django.db.models import Q
+
+    from .models import AccesEspace, Compte, Espace
+
+    with E.toutes_les_bases(), transaction.atomic(using=E.COMMUN):
+        list(Compte.objects.select_for_update().filter(Q(gestionnaire=True) | Q(pk=compte_pk or 0)).order_by("pk"))
+        refus, perd = simuler(compte_pk, **changement)
+        if refus:
+            raise DernierGestionnaire(refus)
+        code = changement.get("code")
+        if compte_pk is not None and code is not None and Compte.objects.filter(pk=compte_pk).exists():
+            espace = Espace.objects.filter(code=code).first()
+            if espace is not None and changement.get("supprimee"):
+                AccesEspace.objects.filter(compte_id=compte_pk, espace=espace).delete()
+            elif espace is not None:
+                AccesEspace.objects.update_or_create(compte_id=compte_pk, espace=espace, defaults={
+                    "role": changement.get("role"), "actif": bool(changement.get("actif"))})
+        if ecrire is not None:
+            ecrire()
+        if perd:
+            Compte.objects.filter(pk=compte_pk).update(gestionnaire=False)
+            gestionnaire_change.send(sender=Compte, acteur=acteur, compte=_objet(compte_pk), oui=False)
+    return perd
+
+
+def changer_gestionnaire(acteur, compte_pk, oui):
+    """Seule écriture du rôle de gestionnaire des espaces, depuis la page Espaces (« Personnes et accès ») comme depuis
+    la fiche d'un compte (Administration › Comptes) : (fait, message). Règle :
+    - seul un gestionnaire des espaces actif (``est_gestionnaire``) nomme ou retire : sinon refus (403) ;
+    - on ne se retire pas le rôle à soi-même : celui qui agit reste gestionnaire actif, l'installation n'est donc
+      jamais sans gestionnaire actif ;
+    - seul un administrateur actif de l'espace principal peut être nommé (``admin_actif_principal``) : sinon refus,
+      avec un message ;
+    - acteur et compte relus sous verrou au registre commun : deux gestionnaires qui se retirent l'un l'autre au même
+      instant ne laissent pas l'installation sans gestionnaire (le second, déjà retiré, est refusé) ;
+    - une ligne d'historique (« reglage_compte », champ « gestionnaire ») dans l'espace où l'on agit, écrite par
+      ``collecte.signals`` sur le signal ``gestionnaire_change`` (``espaces`` n'importe pas ``collecte``), dans la même
+      transaction ; aucune quand rien ne change."""
+    from django.core.exceptions import PermissionDenied
+    from django.db import transaction
+    from django.db.models import Q
+
+    from parametres.libelles import libelle
+
+    from .models import Compte
+
+    if not est_gestionnaire(acteur):
+        raise PermissionDenied(libelle("espaces.erreur.reserve"))
+    texte = str(compte_pk or "")
+    if not (texte.isascii() and texte.isdigit() and len(texte) < 19):  # numéro illisible (avant : erreur 500)
+        return False, libelle("espaces.erreur.compte_introuvable")
+    compte_pk = int(texte)
+    with E.atomic(), transaction.atomic(using=E.COMMUN):
+        lus = {c.pk: c for c in Compte.objects.select_for_update().filter(
+            Q(gestionnaire=True) | Q(pk__in=[acteur.pk, compte_pk])).order_by("pk")}
+        moi, c = lus.get(acteur.pk), lus.get(compte_pk)
+        if moi is None or not (moi.gestionnaire and moi.actif):
+            raise PermissionDenied(libelle("espaces.erreur.reserve"))
+        if c is None:
+            return False, libelle("espaces.erreur.compte_introuvable")
+        if c.pk == moi.pk and not oui:
+            return False, libelle("espaces.erreur.soi_meme")
+        message = libelle("espaces.personnes.nomme" if oui else "espaces.personnes.retire", nom=c)
+        if c.gestionnaire == oui:
+            return True, message
+        if oui and not admin_actif_principal(c.pk, compte_actif=c.actif):
+            return False, libelle("espaces.erreur.pas_admin_principal", nom=c)
+        Compte.objects.filter(pk=c.pk).update(gestionnaire=oui)
+        gestionnaire_change.send(sender=Compte, acteur=acteur, compte=_objet(c.pk), oui=oui)
+    return True, message
 
 
 def plus_grand_numero(code):
@@ -386,11 +572,49 @@ def _nouveau_numero(instance, using):
     instance._espaces_rattache = False
 
 
+def _changement_de_role(instance, using, update_fields):
+    """Rôle ou état d'une copie existante qui change : {code, role, actif} (rôle de l'index des accès), sinon None."""
+    from referentiel.models import Utilisateur
+
+    if instance._state.adding or instance.pk is None:
+        return None
+    if update_fields is not None and not {"role", "is_active", "is_superuser"} & set(update_fields):
+        return None
+    with E.toutes_les_bases():
+        ancien = Utilisateur.objects.using(using).filter(pk=instance.pk).values("role", "is_superuser", "is_active").first()
+    if ancien is None:
+        return None
+    avant = ("admin" if ancien["is_superuser"] else ancien["role"], ancien["is_active"])
+    apres = (role_index(instance), instance.is_active)
+    return None if avant == apres else {"code": E.code_de(using), "role": apres[0], "actif": apres[1]}
+
+
 def avant_enregistrement(sender, instance, raw=False, using=None, update_fields=None, **kwargs):
     """``pre_save`` d'une copie : numéro donné par le registre (copie nouvelle), ou champs communs reportés au registre
-    avant l'enregistrement de la copie (règle contre l'élévation de droits vérifiée d'abord)."""
+    avant l'enregistrement de la copie (règle contre l'élévation de droits vérifiée d'abord). Rôle ou état changé : les
+    règles des gestionnaires des espaces (``appliquer`` : jamais sans gestionnaire capable d'agir, perte du rôle de
+    qui n'est plus administrateur actif de l'espace principal), par toutes les portes ; refus vérifié d'abord, sans
+    rien écrire."""
     if raw:
         return
+    changement = _changement_de_role(instance, using, update_fields)
+    if changement is not None:
+        with E.toutes_les_bases():
+            refus, _ = simuler(instance.pk, **changement)
+        if refus:
+            raise DernierGestionnaire(refus)
+    _avant_enregistrement_communs(instance, using, update_fields)
+    if changement is not None:
+        appliquer(instance.pk, acteur=E.acteur_courant(), **changement)
+
+
+def avant_suppression(sender, instance, using=None, **kwargs):
+    """``pre_delete`` d'une copie : mêmes règles des gestionnaires des espaces que pour une désactivation."""
+    if instance.pk is not None:
+        appliquer(instance.pk, acteur=E.acteur_courant(), code=E.code_de(using), supprimee=True)
+
+
+def _avant_enregistrement_communs(instance, using, update_fields):
     from django.core.exceptions import PermissionDenied
     from django.db import IntegrityError
 
@@ -469,10 +693,11 @@ def apres_suppression(sender, instance, using=None, **kwargs):
 
 
 def brancher():
-    from django.db.models.signals import post_delete, post_save, pre_save
+    from django.db.models.signals import post_delete, post_save, pre_delete, pre_save
 
     from referentiel.models import Utilisateur
 
     pre_save.connect(avant_enregistrement, sender=Utilisateur, dispatch_uid="espaces.avant_enregistrement")
+    pre_delete.connect(avant_suppression, sender=Utilisateur, dispatch_uid="espaces.avant_suppression")
     post_save.connect(apres_enregistrement, sender=Utilisateur, dispatch_uid="espaces.apres_enregistrement")
     post_delete.connect(apres_suppression, sender=Utilisateur, dispatch_uid="espaces.apres_suppression")

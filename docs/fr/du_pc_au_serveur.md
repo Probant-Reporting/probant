@@ -2,7 +2,8 @@
 
 Vous avez essayé Probant avec la version tout-en-un sur un ordinateur, et vous y avez saisi de vraies données. Cette
 page explique comment passer ces données sur un serveur sans rien perdre. La partie 1 est pour la personne qui utilise
-l'outil sur l'ordinateur. La partie 2 est pour l'équipe informatique qui installe le serveur. Version anglaise :
+l'outil sur l'ordinateur. La partie 2 est pour l'équipe informatique qui installe le serveur. Sans équipe informatique, donnez la partie 2 à la
+personne ou au prestataire qui installe le serveur. Version anglaise :
 [`docs/from_pc_to_server.md`](../from_pc_to_server.md).
 
 La méthode est simple : vous envoyez tout le dossier `data` de la version tout-en-un. Le serveur s'en sert comme
@@ -13,13 +14,13 @@ dossier des données.
 | Élément | Passe | Commentaire |
 |---|---|---|
 | Comptes et mots de passe | Oui | Chacun se connecte avec le même mot de passe. |
-| Valeurs, référentiels, campagnes, historique, réglages | Oui | |
+| Valeurs, référentiels, campagnes, historique, réglages | Oui | Sauf le mot de passe du serveur d'e-mails, s'il est enregistré dans l'outil : saisissez-le de nouveau sur le serveur. |
 | Preuves et logo | Oui | |
 | Autres espaces | Oui | |
 | Clé de l'assistant IA | Oui | |
 | Jetons des assistants (MCP) | Oui | |
 | Sessions de connexion | Non | Chacun se reconnecte une fois. |
-| Clé secrète | Non | La version tout-en-un garde sa propre clé dans `data/.secret_key_all_in_one`. Le serveur ne s'en sert jamais : il crée la sienne à son premier démarrage. L'étape 4 efface la copie de la clé de l'ordinateur. |
+| Clé secrète | Non | La version tout-en-un garde sa propre clé dans `data/.secret_key_all_in_one`. Le serveur ne s'en sert jamais : il crée la sienne à son premier démarrage. L'étape 4 de la partie 2 efface la copie de la clé de l'ordinateur. |
 | Sauvegardes faites sur l'ordinateur | Oui, comme fichiers | Le serveur les liste, mais **Restaurer…** les refuse : une autre installation les a signées. L'équipe informatique peut quand même en restaurer une, voir [Restaurer une sauvegarde](installation.md#restaurer-une-sauvegarde). |
 
 ## Avant de commencer
@@ -108,8 +109,16 @@ Les deux ordinateurs doivent avoir la même version de l'outil.
 ### Si vous n'avez qu'un fichier de sauvegarde
 
 Si la personne ne peut pas envoyer le dossier `data`, la sauvegarde de l'étape 2 de la partie 1 déplace aussi les
-données, avec ces limites : les mots de passe ne passent pas, et seul l'espace de la sauvegarde passe. Restaurez-la sur
-un serveur avec SQLite, avant que quiconque utilise l'assistant de mise en place :
+données, avec ces limites : les mots de passe ne passent pas, et seul l'espace de la sauvegarde passe.
+
+Le plus simple se fait dans l'outil. Installez le serveur vide. L'administrateur crée son compte à l'étape 1 de
+l'assistant de mise en place, puis ouvre **Partir d'une sauvegarde** à l'étape 2, choisit le fichier et confirme. Cet
+administrateur garde son mot de passe et reste administrateur. Il donne ensuite aux autres comptes un mot de passe
+provisoire dans **Administration › Comptes**. Voyez
+[Restaurer une sauvegarde d'une autre installation](installation.md#restaurer-une-sauvegarde-dune-autre-installation).
+
+L'IT peut aussi la restaurer en ligne de commande, sur un serveur avec SQLite, avant que quiconque utilise l'assistant
+de mise en place :
 
 1. Copiez l'archive dans le volume : `docker compose cp <archive>.zip web:/data/backups/`.
 2. Lancez `docker compose exec web python manage.py restore <archive>.zip --unsigned --other-space --yes`, puis
@@ -121,7 +130,9 @@ un serveur avec SQLite, avant que quiconque utilise l'assistant de mise en place
 
 | Message | Que faire |
 |---|---|
-| « Cette sauvegarde n'a pas été faite par cette installation, ou elle a été modifiée après sa création » (page **Hébergement**) | Normal pour une sauvegarde faite sur l'ordinateur. Utilisez le dossier `data`, ou restaurez la sauvegarde en ligne de commande avec `--unsigned`. |
+| « Cette sauvegarde n'a pas été faite par cette installation, ou elle a été modifiée après sa création » (page **Hébergement**) | Normal pour une sauvegarde faite sur l'ordinateur, quand la personne qui ajoute le fichier n'est pas gestionnaire des espaces. Un gestionnaire des espaces peut la restaurer depuis l'outil. Sinon, utilisez le dossier `data`, ou restaurez la sauvegarde en ligne de commande avec `--unsigned`. |
+| « Cette sauvegarde ne vient pas de cette installation » (page **Hébergement**, ou **Partir d'une sauvegarde** dans l'assistant de mise en place) | Normal pour une sauvegarde faite sur l'ordinateur. Lisez la page, cochez les deux cases et saisissez le mot. |
+| « … autres comptes n'auront pas de mot de passe » (même page) | La sauvegarde n'emporte pas les mots de passe. Après la restauration, donnez à ces comptes un mot de passe provisoire dans **Administration › Comptes**. |
 | « This backup comes from another installation of the tool » (`restore`) | Normal pour une sauvegarde faite sur l'ordinateur. Ajoutez `--other-space` (section [Si vous n'avez qu'un fichier de sauvegarde](#si-vous-navez-quun-fichier-de-sauvegarde)). |
 | « … account(s) of this space have no password on this server » | La sauvegarde n'emporte pas les mots de passe. Faites l'étape 3 de [Si vous n'avez qu'un fichier de sauvegarde](#si-vous-navez-quun-fichier-de-sauvegarde). |
 | `WARNING: this is the demo database` (résumé de démarrage) | Le dossier vient de la démo. Installez le serveur vide : voir [Avant de commencer](#avant-de-commencer). |

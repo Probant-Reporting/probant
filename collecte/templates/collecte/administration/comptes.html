@@ -31,11 +31,13 @@
 <table class="carte-table table-comptes" id="table-comptes" data-triable>{# colonnes triables (_app/13_tableaux.js) #}
   <colgroup><col class="l-176"><col><col class="mq-m l-14p"><col class="mq-m l-190"><col class="mq-s l-210"><col class="mq-xs l-110"></colgroup>
   <thead><tr><th data-tri="texte" data-tri-col="role">{% libelle "admin.comptes.col.role" %}</th><th data-tri="texte" data-tri-col="personne">{% libelle "admin.comptes.col.personne" %}</th><th class="mq-m">{% libelle "admin.comptes.col.equipe" %}</th><th class="mq-m">{% libelle "admin.comptes.col.attributions" %}</th><th class="mq-s" data-tri="date" data-tri-col="connexion">{% libelle "admin.comptes.col.connexion" %}</th><th class="mq-xs">{% libelle "admin.comptes.col.etat" %}</th></tr></thead>
+  {% libelle "espaces.personnes.gestionnaire" as t_gestionnaire %}
   {% for u in comptes %}
+  {# gestionnaire des espaces (registre commun) : étiquette après le rôle ; ni filtre ni tri à part, la recherche le trouve #}
   <tr class="ligne{% if not u.is_active %} inactive{% endif %}" tabindex="0" {% libelle "admin.comptes.ouvrir_ligne" nom=u as t_o %}aria-label="{{ t_o }}" data-url="{% url 'collecte:admin_compte' u.pk %}" data-statut=""
       data-role="{{ u.role }}" data-actif="{{ u.is_active|yesno:'1,0' }}"
-      data-texte="{{ u|lower }} {{ u.email|lower }} {{ u.equipe|lower }} {{ u|choix:"role"|lower }}">
-    <td data-tri="{{ u|choix:"role" }}"><span class="role role-{{ u.role }}">{{ u|choix:"role" }}</span></td>
+      data-texte="{{ u|lower }} {{ u.email|lower }} {{ u.equipe|lower }} {{ u|choix:"role"|lower }}{% if u.pk in gestionnaires %} {{ t_gestionnaire|lower }}{% endif %}">
+    <td data-tri="{{ u|choix:"role" }}"><span class="role role-{{ u.role }}">{{ u|choix:"role" }}</span>{% if u.pk in gestionnaires %} <span class="badge-partage gestionnaire-espaces">{{ t_gestionnaire }}</span>{% endif %}</td>
     <td data-tri="{{ u }}"><span class="personne">{% avatar u %}<span><span class="nom-personne">{{ u }}</span><span class="discret">{{ u.email }}</span>{% if not u.email_joignable %}<span class="connexion attente">{% libelle "admin.comptes.email_a_completer" %}</span>{% endif %}</span></span></td>
     <td class="mq-m">{{ u.equipe|default:"—" }}</td>
     <td class="mq-m attributions-compte">{# SPOC et validation : même police #}{% if u.nb_contrib %}<a href="{% url 'collecte:admin_attributions' %}?role=contributeur&amp;personne={{ u.pk }}">{% libelle "admin.comptes.spoc_de" n=u.nb_contrib %}</a>{% endif %}{% if u.nb_contrib and u.nb_valid %}<br>{% endif %}{% if u.nb_valid %}<a href="{% url 'collecte:admin_attributions' %}?role=validateur&amp;personne={{ u.pk }}">{% libelle "admin.comptes.valide" n=u.nb_valid %}</a>{% endif %}{% if not u.nb_contrib and not u.nb_valid %}<span class="vide">—</span>{% endif %}</td>
